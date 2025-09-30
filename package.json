@@ -1,0 +1,37 @@
+{
+  "name": "l-js-fn",
+  "version": "1.0.0",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "clean": "rm -rf dist",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "build": "npm run clean && tsup src/index.ts --format esm,cjs --dts",
+    "publish:npm": "npm run build && npm publish"
+  },
+  "keywords": [
+    "javascript",
+    "lib",
+    "js-utils",
+    "js-function"
+  ],
+  "author": "jiuxianzai",
+  "license": "ISC",
+  "description": "整理了常用的js方法",
+  "devDependencies": {
+    "@commitlint/cli": "^20.0.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "husky": "^8.0.3",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2"
+  }
+}
