@@ -4,8 +4,8 @@ export * from './libs/array-kit';
 export * from './libs/object-kit';
 export * from './libs/polling-kit';
 export * from './libs/common';
-export * from "./libs/string-kit"
-export * from "./libs/date-kit"
+export * from './libs/string-kit';
+export * from './libs/date-kit';
 
 import * as isKit from './libs/is-kit';
 import * as urlKit from './libs/url-kit';
@@ -15,6 +15,7 @@ import * as pollingKit from './libs/polling-kit';
 import * as common from './libs/common';
 import * as stringKit from './libs/string-kit';
 import * as dateKit from './libs/date-kit';
+import { Result } from './utils/Result';
 
 const L = {
   ...isKit,
@@ -24,7 +25,8 @@ const L = {
   ...pollingKit,
   ...common,
   ...stringKit,
-  ...dateKit
-}
+  ...dateKit,
+  Result,
+};
 
 export default L;
