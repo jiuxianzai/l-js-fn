@@ -61,3 +61,31 @@ export function paginate<T>(arr: T[], page: number, size: number): T[] {
   const endIdx = startIdx + size;
   return arr.slice(startIdx, endIdx);
 }
+
+/**
+ * 把数组对象进行分组，每 groupSize 个一组，返回对象
+ * @param array - 需要分组的数组
+ * @param groupSize - 每组的大小，默认为 10
+ * @returns 返回分组后的对象，键为组号，值为数组
+ */
+export function splitArrayToGroups<T>(array: T[], groupSize: number = 10): Record<number, T[]> {
+  if (!Array.isArray(array)) {
+    throw new Error('参数必须是数组');
+  }
+
+  if (groupSize < 1 || !Number.isInteger(groupSize)) {
+    throw new Error('groupSize 必须是大于 0 的整数');
+  }
+
+  const result: Record<number, T[]> = {};
+
+  for (let i = 0; i < array.length; i++) {
+    const groupIndex = Math.floor(i / groupSize) + 1; // 计算组号
+    if (!result[groupIndex]) {
+      result[groupIndex] = []; // 初始化组
+    }
+    result[groupIndex].push(array[i]);
+  }
+
+  return result;
+}
