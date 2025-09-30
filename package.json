@@ -27,6 +27,10 @@
   "author": "jiuxianzai",
   "license": "ISC",
   "description": "整理了常用的js方法",
+  "files": [
+    "dist/"
+  ],
+  "private": false,
   "devDependencies": {
     "@commitlint/cli": "^20.0.0",
     "@commitlint/config-conventional": "^20.0.0",

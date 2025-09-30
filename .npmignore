@@ -1,0 +1,21 @@
+# 忽略 node_modules（即使 npm 默认忽略，保险起见可以写上）
+node_modules/
+
+# 忽略测试文件
+test/
+
+# 忽略配置文件
+.env
+.git
+.vscode
+.DS_Store
+.idea/
+
+# 忽略 README.md 以外的文档
+*.md
+
+# 忽略文本文件
+*.txt
+
+# 忽略测试包
+packages/
