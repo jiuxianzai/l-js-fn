@@ -4,7 +4,7 @@
  * @param format - 输出格式，默认 `'yyyy-MM-dd HH:mm:ss'`
  * @returns 格式化后的日期字符串
  */
-export function formatDate(date: Date | number, format: string = 'yyyy-MM-dd HH:mm:ss'): string {
+export function dateFormat(date: Date | number, format: string = 'yyyy-MM-dd HH:mm:ss'): string {
   const d = typeof date === 'number' ? new Date(date) : date;
 
   const map: Record<string, number> = {
@@ -38,7 +38,7 @@ export function formatDate(date: Date | number, format: string = 'yyyy-MM-dd HH:
  * @param value - 秒数
  * @returns 格式化后的字符串，例如 "00:12:34"
  */
-export function getSecond(value: number): string {
+export function dateSecond(value: number): string {
   let secondTime = Math.floor(value); // 秒
   let minuteTime = 0; // 分
   let hourTime = 0; // 小时

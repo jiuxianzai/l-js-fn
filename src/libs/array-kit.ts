@@ -5,7 +5,7 @@
  * @param key - 可选属性名，如果传入则根据该属性匹配删除
  * @returns 新数组
  */
-export function delElement<T>(arr: T[], target: T, key: keyof T | null = null): T[] {
+export function arrayDelEl<T>(arr: T[], target: T, key: keyof T | null = null): T[] {
   const isPrimitive = (value: any) => value !== Object(value);
 
   if (isPrimitive(target)) {
@@ -51,7 +51,7 @@ export function arrayUnique<T>(arr: T[]): T[] {
  * @param size - 每页条数（>=1）
  * @returns 当前页数据
  */
-export function paginate<T>(arr: T[], page: number, size: number): T[] {
+export function arrayPaginate<T>(arr: T[], page: number, size: number): T[] {
   if (!Array.isArray(arr) || page < 1 || size < 1) return [];
 
   const totalPages = Math.ceil(arr.length / size);
@@ -68,7 +68,7 @@ export function paginate<T>(arr: T[], page: number, size: number): T[] {
  * @param groupSize - 每组的大小，默认为 10
  * @returns 返回分组后的对象，键为组号，值为数组
  */
-export function splitArrayToGroups<T>(array: T[], groupSize: number = 10): Record<number, T[]> {
+export function arraySplitToGroups<T>(array: T[], groupSize: number = 10): Record<number, T[]> {
   if (!Array.isArray(array)) {
     throw new Error('参数必须是数组');
   }

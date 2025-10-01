@@ -3,7 +3,7 @@
  * @param url - 要解析的 URL，如果不提供则使用当前页面的 URL（仅在浏览器环境下有效）
  * @returns 包含查询参数的对象
  */
-export function getParams<T = Record<string, any>>(url?: string): T {
+export function getUrlParams<T = Record<string, any>>(url?: string): T {
   const isBrowser = typeof window !== 'undefined' && typeof window.location !== 'undefined';
 
   if (!url && !isBrowser) {
@@ -52,8 +52,8 @@ export function getParams<T = Record<string, any>>(url?: string): T {
  * @param key - 查询参数的键
  * @returns 对应的参数值或 null
  */
-export function getParam<T = any>(url: string | undefined, key: string): T | null {
-  const params = getParams<Record<string, any>>(url);
+export function getUrlParam<T = any>(url: string | undefined, key: string): T | null {
+  const params = getUrlParams<Record<string, any>>(url);
   return key in params ? (params[key] as T) : null;
 }
 
@@ -64,7 +64,7 @@ export function getParam<T = any>(url: string | undefined, key: string): T | nul
  * @param paramValue - 参数值
  * @returns 新的 URL 或 null（如果参数无效）
  */
-export function appendParam<T = any>(
+export function appendUrlParam<T = any>(
   url: string,
   paramName: string,
   paramValue?: T
@@ -88,7 +88,7 @@ export function appendParam<T = any>(
  * @param params - 要转换的对象
  * @returns 查询字符串
  */
-export function transParams<T extends Record<string, any>>(params: T): string {
+export function transUrlParams<T extends Record<string, any>>(params: T): string {
   let result = '';
 
   for (const propName of Object.keys(params)) {

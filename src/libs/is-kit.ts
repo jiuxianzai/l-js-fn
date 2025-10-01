@@ -1,4 +1,4 @@
-import * as regex from '../config/regex';
+import {REGEXP} from '../config/regex';
 
 /**
  * 检查值是否为空
@@ -43,7 +43,7 @@ export function isString<T>(value: T): value is T & string {
  * 是否为有效邮箱
  */
 export function isEmail(value: string): boolean {
-  return regex.EMAIL_REGEXP.test(value);
+  return REGEXP.EMAIL.test(value);
 }
 
 /**
@@ -63,7 +63,7 @@ export function isURL(value: string): boolean {
  * 是否为中国大陆身份证号码
  */
 export function isIdCard(idCard: string): boolean {
-  if (!regex.ID_CARD_REGEXP.test(idCard)) return false;
+  if (!REGEXP.ID_CARD.test(idCard)) return false;
   if (idCard.length === 15) return true;
 
   const factors = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];

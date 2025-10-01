@@ -52,7 +52,7 @@ export function objMerge<T extends Record<string, any>, S extends Record<string,
  * @param keys - 需要过滤的 key 数组
  * @returns 新对象
  */
-export function filterProperties<T extends Record<string, any>, K extends keyof T>(
+export function objFilterProp<T extends Record<string, any>, K extends keyof T>(
   obj: T,
   keys: K[]
 ): Omit<T, K> {
@@ -66,56 +66,11 @@ export function filterProperties<T extends Record<string, any>, K extends keyof 
  * @param obj - 源对象
  * @returns 新对象，过滤掉值为 null 或 undefined 的属性
  */
-export function filterNull<T extends Record<string, any>>(obj: T): Partial<T> {
+export function objFilterNull<T extends Record<string, any>>(obj: T): Partial<T> {
   return Object.entries(obj)
     .filter(([_, value]) => value !== null && value !== undefined)
     .reduce((acc, [key, value]) => {
       acc[key as keyof T] = value;
       return acc;
     }, {} as Partial<T>);
-}
-
-/**
- * 将 JavaScript 对象格式化为带 HTML 颜色高亮的字符串（保留缩进结构）。
- * 主要用于在 Vue/HTML 页面中以美观、结构化方式展示 JSON 数据。
- *
- * @param obj - 需要格式化的 JavaScript 对象或数组
- * @param indent - 当前缩进层级（默认从 0 开始，递归使用）
- * @returns 返回已 HTML 格式化并高亮的字符串（可直接赋值给 `v-html` 渲染）
- */
-export function syntaxHighlight<T>(obj: T, indent: number = 0): string {
-  const indentStr = '&nbsp;&nbsp;'.repeat(indent);
-  const nextIndentStr = '&nbsp;&nbsp;'.repeat(indent + 1);
-  let html = '';
-
-  if (Array.isArray(obj)) {
-    html += '[<br>';
-    obj.forEach((item, i) => {
-      html += nextIndentStr + syntaxHighlight(item, indent + 1);
-      if (i < obj.length - 1) html += ',';
-      html += '<br>';
-    });
-    html += indentStr + ']';
-  } else if (obj !== null && typeof obj === 'object') {
-    html += '{<br>';
-    const keys = Object.keys(obj) as (keyof T)[];
-    keys.forEach((key, index) => {
-      const keyHtml = `<span style="color: #b58900">"${String(key)}"</span>`;
-      const valueHtml = syntaxHighlight((obj as any)[key], indent + 1);
-      html += `${nextIndentStr}${keyHtml}: ${valueHtml}`;
-      if (index < keys.length - 1) html += ',';
-      html += '<br>';
-    });
-    html += indentStr + '}';
-  } else if (typeof obj === 'string') {
-    html += `<span style="color: #2aa198">"${obj}"</span>`;
-  } else if (typeof obj === 'number') {
-    html += `<span style="color: #6c71c4">${obj}</span>`;
-  } else if (typeof obj === 'boolean') {
-    html += `<span style="color: #6c71c4">${obj}</span>`;
-  } else if (obj === null) {
-    html += `<span style="color: #6c71c4">null</span>`;
-  }
-
-  return html;
 }
