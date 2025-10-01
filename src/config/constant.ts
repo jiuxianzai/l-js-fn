@@ -1,4 +1,6 @@
-// 常见日期格式
+/**
+ * 常见日期格式
+ */
 export const DATE_FORMAT = {
   FULL: "yyyy-MM-dd HH:mm:ss", // 完整时间
   DATE: "yyyy-MM-dd",          // 年月日
@@ -7,7 +9,9 @@ export const DATE_FORMAT = {
   YEAR_MONTH: "yyyy-MM"        // 年月
 } as const;
 
-// HTTP状态码
+/**
+ * HTTP状态码
+ */
 export const HTTP_STATUS = {
   OK: 200,
   UNAUTHORIZED: 401,

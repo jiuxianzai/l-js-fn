@@ -1,5 +1,5 @@
 /**
- * 通用返回结构
+ * 结果类
  */
 export class Result<T = any> {
     success: boolean;

@@ -1,3 +1,6 @@
+/**
+ * 轮询类
+ */
 export class Polling {
   private timer: ReturnType<typeof setTimeout> | null = null;
   private isPolling = false;

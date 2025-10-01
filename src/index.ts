@@ -9,6 +9,7 @@ export * from './libs/date-kit';
 // 类
 export * from './utils/Result';
 export * from './utils/Polling';
+export * from './utils/WebSocketManager';
 // 常量
 export * from './config/regex';
 export * from './config/constant';
@@ -22,6 +23,7 @@ import * as stringKit from './libs/string-kit';
 import * as dateKit from './libs/date-kit';
 import { Result } from './utils/Result';
 import { Polling } from './utils/Polling';
+import { WebSocketManager } from './utils/WebSocketManager';
 
 const L = {
   ...isKit,
@@ -33,6 +35,7 @@ const L = {
   ...dateKit,
   Polling,
   Result,
+  WebSocketManager
 };
 
 export default L;
