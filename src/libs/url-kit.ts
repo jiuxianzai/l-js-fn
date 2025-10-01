@@ -4,21 +4,19 @@
  * @returns 包含查询参数的对象
  */
 export function getUrlParams<T = Record<string, any>>(url?: string): T {
-  const isBrowser = typeof window !== 'undefined' && typeof window.location !== 'undefined';
+  const isBrowser = typeof window !== "undefined" && typeof window.location !== "undefined";
 
   if (!url && !isBrowser) {
-    throw new Error('URL must be provided in a non-browser environment.');
+    throw new Error("URL must be provided in a non-browser environment.");
   }
 
-  const queryString = url ? url.split('?')[1] : window.location.search.slice(1);
+  const queryString = url ? url.split("?")[1] : window.location.search.slice(1);
   const params: Record<string, any> = {};
 
   if (!queryString) return params as T;
 
-  queryString.split('&').forEach(param => {
-    const [rawKey, value] = param
-      .split('=')
-      .map(part => decodeURIComponent(part.replace(/\+/g, ' ')));
+  queryString.split("&").forEach(param => {
+    const [rawKey, value] = param.split("=").map(part => decodeURIComponent(part.replace(/\+/g, " ")));
     if (!rawKey) return;
 
     const keys = rawKey.split(/[\[\]]/).filter(k => k);
@@ -30,9 +28,9 @@ export function getUrlParams<T = Record<string, any>>(url?: string): T {
           if (!Array.isArray(current[key])) {
             current[key] = [current[key]];
           }
-          current[key].push(value || '');
+          current[key].push(value || "");
         } else {
-          current[key] = value || '';
+          current[key] = value || "";
         }
       } else {
         if (!(key in current)) {
@@ -64,18 +62,13 @@ export function getUrlParam<T = any>(url: string | undefined, key: string): T | 
  * @param paramValue - 参数值
  * @returns 新的 URL 或 null（如果参数无效）
  */
-export function appendUrlParam<T = any>(
-  url: string,
-  paramName: string,
-  paramValue?: T
-): string | null {
-  if (typeof url !== 'string' || typeof paramName !== 'string') return null;
+export function appendUrlParam<T = any>(url: string, paramName: string, paramValue?: T): string | null {
+  if (typeof url !== "string" || typeof paramName !== "string") return null;
 
   try {
-    const hasParams = url.includes('?');
-    const separator = hasParams ? '&' : '?';
-    const encodedValue =
-      paramValue !== undefined ? encodeURIComponent(String(paramValue)) : '';
+    const hasParams = url.includes("?");
+    const separator = hasParams ? "&" : "?";
+    const encodedValue = paramValue !== undefined ? encodeURIComponent(String(paramValue)) : "";
     const paramString = encodedValue ? `${paramName}=${encodedValue}` : paramName;
     return `${url}${separator}${paramString}`;
   } catch {
@@ -89,30 +82,67 @@ export function appendUrlParam<T = any>(
  * @returns 查询字符串
  */
 export function transUrlParams<T extends Record<string, any>>(params: T): string {
-  let result = '';
+  let result = "";
 
   for (const propName of Object.keys(params)) {
     const value = params[propName];
-    const part = encodeURIComponent(propName) + '=';
+    const part = encodeURIComponent(propName) + "=";
 
-    if (value !== null && value !== '' && typeof value !== 'undefined') {
-      if (typeof value === 'object') {
+    if (value !== null && value !== "" && typeof value !== "undefined") {
+      if (typeof value === "object") {
         for (const key of Object.keys(value)) {
           const subValue = value[key];
-          if (subValue !== null && subValue !== '' && typeof subValue !== 'undefined') {
+          if (subValue !== null && subValue !== "" && typeof subValue !== "undefined") {
             const paramKey = `${propName}[${key}]`;
-            result += encodeURIComponent(paramKey) + '=' + encodeURIComponent(subValue) + '&';
+            result += encodeURIComponent(paramKey) + "=" + encodeURIComponent(subValue) + "&";
           }
         }
       } else {
-        result += part + encodeURIComponent(value) + '&';
+        result += part + encodeURIComponent(value) + "&";
       }
     }
   }
 
-  if (result.endsWith('&')) {
+  if (result.endsWith("&")) {
     result = result.slice(0, -1);
   }
 
   return result;
 }
+
+export interface FileInfo {
+  fileName: string;
+  extension: string;
+}
+
+/**
+ * 从 URL 中提取文件名及后缀
+ * @param url 文件 URL
+ * @returns 文件信息
+ * @example
+ * ```js
+ * getFileInfoFromUrl("https://example.com/path/to/file.txt")
+ * // => { fileName: "file.txt", extension: ".txt" }
+ * ```
+ */
+export const getFileInfoToUrl = (url: string): FileInfo => {
+  let fileName = "unknown";
+
+  try {
+    const urlObj = new URL(url);
+    const pathname = urlObj.pathname;
+    fileName = decodeURIComponent(pathname.split("/").pop() || "unknown");
+  } catch {
+    const parts = url.split("/");
+    fileName = parts[parts.length - 1] || "unknown";
+  }
+
+  // 提取后缀
+  const lastDotIndex = fileName.lastIndexOf(".");
+  let extension = "";
+  if (lastDotIndex > 0 && lastDotIndex < fileName.length - 1) {
+    extension = fileName.slice(lastDotIndex);
+  }
+
+  return { fileName, extension };
+};

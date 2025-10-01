@@ -27,8 +27,8 @@ export function arrayDelEl<T>(arr: T[], target: T, key: keyof T | null = null): 
  * @returns 新数组
  */
 export function arrayFill<T>(originArr: T[], num: number, obj: T): T[] {
-  if (!Array.isArray(originArr)) throw new Error('originArr 必须是数组');
-  if (!Number.isInteger(num) || num < 0) throw new Error('num 必须是非负整数');
+  if (!Array.isArray(originArr)) throw new Error("originArr 必须是数组");
+  if (!Number.isInteger(num) || num < 0) throw new Error("num 必须是非负整数");
 
   if (originArr.length >= num) return [...originArr];
   const emptyArr = new Array(num - originArr.length).fill(obj);
@@ -70,11 +70,11 @@ export function arrayPaginate<T>(arr: T[], page: number, size: number): T[] {
  */
 export function arraySplitToGroups<T>(array: T[], groupSize: number = 10): Record<number, T[]> {
   if (!Array.isArray(array)) {
-    throw new Error('参数必须是数组');
+    throw new Error("参数必须是数组");
   }
 
   if (groupSize < 1 || !Number.isInteger(groupSize)) {
-    throw new Error('groupSize 必须是大于 0 的整数');
+    throw new Error("groupSize 必须是大于 0 的整数");
   }
 
   const result: Record<number, T[]> = {};
@@ -89,3 +89,36 @@ export function arraySplitToGroups<T>(array: T[], groupSize: number = 10): Recor
 
   return result;
 }
+
+type Recordable = Record<string, any>;
+type Fn<T> = (item: T, index: number, array: T[]) => boolean;
+/**
+ * 查找数组对象的某个下标
+ * @param ary 查找的数组
+ * @param fn 判断的方法，返回 true 表示找到
+ * @returns 找到的索引，如果未找到返回 -1
+ * @example
+ * const users: User[] = [
+ * { id: 1, name: "Alice" },
+ * { id: 2, name: "Bob" },
+ * { id: 3, name: "Charlie" }
+ * ];
+ *
+ * const index = findIndex(users, user => user.name === "Bob");
+ * console.log(index); // 输出 1
+ */
+export const findIndex = <T = Recordable>(ary: T[], fn: Fn<T>): number => {
+  if (typeof ary.findIndex === "function") {
+    return ary.findIndex(fn);
+  }
+
+  let index = -1;
+  ary.some((item, i, array) => {
+    if (fn(item, i, array)) {
+      index = i;
+      return true; // some 会停止迭代
+    }
+    return false;
+  });
+  return index;
+};

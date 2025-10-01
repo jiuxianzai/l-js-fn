@@ -1,13 +1,13 @@
-import {REGEXP} from '../config/regex';
+import { REGEXP } from "../config/regex";
 
 /**
  * 检查值是否为空
  */
 export function isEmpty<T>(value: T | null | undefined): boolean {
   if (value === null || value === undefined) return true;
-  if (typeof value === 'string') return value.trim() === '';
+  if (typeof value === "string") return value.trim() === "";
   if (Array.isArray(value)) return value.length === 0;
-  if (typeof value === 'object') return Object.keys(value).length === 0;
+  if (typeof value === "object") return Object.keys(value).length === 0;
   return false;
 }
 
@@ -22,21 +22,29 @@ export function isNotEmpty<T>(value: T | null | undefined): boolean {
  * 是否为对象
  */
 export function isObject<T>(value: T): value is T & Record<string, any> {
-  return Object.prototype.toString.call(value) === '[object Object]';
+  return Object.prototype.toString.call(value) === "[object Object]";
 }
 
 /**
  * 是否为数组
  */
 export function isArray<T>(value: T): value is T & unknown[] {
-  return Array.isArray(value) || Object.prototype.toString.call(value) === '[object Array]';
+  return Array.isArray(value) || Object.prototype.toString.call(value) === "[object Array]";
 }
+
+/**
+ * 是否为图片
+ */
+export const isImage = (filename: string): boolean => {
+  const ext = filename.split(".").pop()?.toLowerCase() || "";
+  return ["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg"].includes(ext);
+};
 
 /**
  * 是否为字符串
  */
 export function isString<T>(value: T): value is T & string {
-  return typeof value === 'string' || value instanceof String;
+  return typeof value === "string" || value instanceof String;
 }
 
 /**
@@ -67,12 +75,12 @@ export function isIdCard(idCard: string): boolean {
   if (idCard.length === 15) return true;
 
   const factors = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
-  const checkMap = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'];
+  const checkMap = ["1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2"];
   const checkCode = idCard[17].toUpperCase();
 
   const sum = idCard
     .slice(0, 17)
-    .split('')
+    .split("")
     .reduce((acc, digit, index) => acc + Number(digit) * factors[index], 0);
 
   return checkCode === checkMap[sum % 11];
@@ -82,7 +90,7 @@ export function isIdCard(idCard: string): boolean {
  * 深度比较两个值是否相等
  */
 export function isEqual<T>(value: T, other: T): boolean {
-  if (typeof value !== 'object' && typeof other !== 'object') {
+  if (typeof value !== "object" && typeof other !== "object") {
     if (Number.isNaN(value) && Number.isNaN(other)) return true;
     return value === other;
   }
@@ -102,7 +110,5 @@ export function isEqual<T>(value: T, other: T): boolean {
   const otherKeys = Object.keys(other as object);
   if (valueKeys.length !== otherKeys.length) return false;
 
-  return valueKeys.every(
-    key => key in (other as object) && isEqual((value as any)[key], (other as any)[key])
-  );
+  return valueKeys.every(key => key in (other as object) && isEqual((value as any)[key], (other as any)[key]));
 }
