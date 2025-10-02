@@ -118,7 +118,7 @@ export function transUrlParams<T extends Record<string, any>>(params: T): string
   return result;
 }
 
-export interface FileInfo {
+interface FileInfo {
   fileName: string;
   extension: string;
 }
