@@ -19,3 +19,5 @@ test/
 
 # 忽略测试包
 packages/
+
+__tests__/
