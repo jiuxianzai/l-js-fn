@@ -8,35 +8,6 @@ export function sleep(time: number): Promise<void> {
 }
 
 /**
- * 随机获得一个整数（支持负数）
- * @param min - 最小值（必填参数），可以是负数；
- *              如果只传入一个参数，则该值会作为最大值，最小值默认是 0。
- * @param max - 最大值（可选参数），必须大于 0。
- *              如果不传，则函数会将 min 视为最大值，最小值默认是 0。
- * @returns 返回一个在指定范围内的随机整数。
- */
-export function random(min: number, max?: number): number {
-  if (max === undefined) {
-    max = min;
-    min = 0;
-  }
-
-  if (typeof min !== "number" || typeof max !== "number") {
-    throw new Error("参数必须是数字");
-  }
-
-  if (max <= 0 && arguments.length === 1) {
-    throw new Error("当只有一个参数时，最大值必须大于 0");
-  }
-
-  if (min > max) {
-    throw new Error("最小值不能大于最大值");
-  }
-
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-/**
  * 创建防抖函数
  * @param func - 要防抖的函数
  * @param wait - 等待时间（毫秒）

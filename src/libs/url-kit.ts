@@ -62,19 +62,27 @@ export function getUrlParam<T = any>(url: string | undefined, key: string): T | 
  * @param paramValue - 参数值
  * @returns 新的 URL 或 null（如果参数无效）
  */
-export function appendUrlParam<T = any>(url: string, paramName: string, paramValue?: T): string | null {
-  if (typeof url !== "string" || typeof paramName !== "string") return null;
+export function appendUrlParam<T = any>(
+    url: string,
+    paramName: string,
+    paramValue?: T
+): string | null {
+    if (!url || !paramName) return null;
 
-  try {
-    const hasParams = url.includes("?");
-    const separator = hasParams ? "&" : "?";
-    const encodedValue = paramValue !== undefined ? encodeURIComponent(String(paramValue)) : "";
-    const paramString = encodedValue ? `${paramName}=${encodedValue}` : paramName;
-    return `${url}${separator}${paramString}`;
-  } catch {
-    return null;
-  }
+    try {
+        const hasParams = url.includes("?");
+        const separator = hasParams ? "&" : "?";
+        const encodedValue =
+            paramValue !== undefined ? encodeURIComponent(String(paramValue)) : "";
+        const paramString = encodedValue
+            ? `${paramName}=${encodedValue}`
+            : paramName;
+        return `${url}${separator}${paramString}`;
+    } catch {
+        return null;
+    }
 }
+
 
 /**
  * 将对象转换为 URL 查询字符串，支持嵌套对象

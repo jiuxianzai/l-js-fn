@@ -8,18 +8,12 @@ export class Polling {
   /** 启动轮询 */
   public start<T>(
     asyncMethod: () => Promise<T>,
-    interval: number = 1000,
-    immediate: boolean = true
+    interval = 1000,
+    immediate = true
   ): void {
     if (this.isPolling) {
-      console.warn('Polling is already running.');
+      console.log("Polling is already running.");
       return;
-    }
-
-    if (typeof asyncMethod !== 'function' || typeof interval !== 'number') {
-      throw new Error(
-        'Invalid arguments: asyncMethod must be a function and interval must be a number.'
-      );
     }
 
     this.isPolling = true;
@@ -28,7 +22,7 @@ export class Polling {
       try {
         await asyncMethod();
       } catch (error) {
-        console.error('Error during polling:', error);
+        console.error("Error during polling:", error);
       } finally {
         if (this.isPolling) {
           this.timer = setTimeout(poll, interval);
@@ -46,7 +40,7 @@ export class Polling {
   /** 停止轮询 */
   public stop(): void {
     if (!this.isPolling) {
-      console.warn('Polling is not running.');
+      console.log("Polling is not running.");
       return;
     }
 
@@ -56,7 +50,7 @@ export class Polling {
     }
 
     this.isPolling = false;
-    console.log('Polling has been stopped.');
+    console.log("Polling has been stopped.");
   }
 
   /** 是否正在轮询 */
