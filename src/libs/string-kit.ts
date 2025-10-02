@@ -7,7 +7,7 @@
  * @throws Error - 如果 start 或 count 无效
  */
 export function desensitization(str: string, start: number, count = 3): string {
-  if (!str || typeof str !== "string" || str.length === 0) return "";
+  if (!str || str.length === 0) return "";
 
   if (start < 0 || start >= str.length) {
     throw new Error("start 参数不能大于等于字符串的长度");

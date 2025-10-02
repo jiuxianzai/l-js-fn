@@ -15,11 +15,7 @@ export class WebSocketManager {
   private webSocket: WebSocket | null;
   private timer: ReturnType<typeof setInterval> | null;
 
-  constructor(url: string | unknown, onMessageCallback?: MessageCallback, onErrorCallback?: ErrorCallback) {
-    if (typeof url !== "string") {
-      throw new TypeError("url 参数必须是字符串类型");
-    }
-
+  constructor(url: string, onMessageCallback?: MessageCallback, onErrorCallback?: ErrorCallback) {
     this.url = url;
     this.onMessageCallback = onMessageCallback || null;
     this.onErrorCallback = onErrorCallback || null;
@@ -53,8 +49,8 @@ export class WebSocketManager {
   }
 
   /** 检查 WebSocket 连接状态并发送消息 */
-  public checkConnection<T>(body: object | string, setTime: number | T= 10000) {
-    if (typeof setTime !== "number" || setTime <= 0) {
+  public checkConnection(body: object | string, setTime: number = 10000) {
+    if (setTime <= 0) {
       this.handleError("connection_send_error", "setTime 参数必须是正数");
       return;
     }
@@ -72,8 +68,8 @@ export class WebSocketManager {
   }
 
   /** 尝试重新连接 */
-  public reconnect<T>(delay: number | T = 5000) {
-    if (typeof delay !== "number" || delay <= 0) {
+  public reconnect(delay: number = 5000) {
+    if (delay <= 0) {
       this.handleError("connection_send_error", "delay 参数必须是正数");
       return;
     }
@@ -137,7 +133,7 @@ export class WebSocketManager {
   /** 统一错误处理 */
   private handleError(type: ErrorType, data: unknown) {
     if (this.onErrorCallback) {
-      this.onErrorCallback({ type, data });
+      this.onErrorCallback({type, data});
     } else {
       console.error(type, data);
     }
