@@ -200,3 +200,82 @@ export function syntaxHighlight<T>(obj: T, indent: number = 0): string {
 
   return html;
 }
+
+/**
+ * 加载外部资源
+ * @param name - 资源路径
+ * @param type - 资源类型
+ * @param fun - 回调函数
+ */
+/**
+ * 加载外部资源
+ * @param name - 资源路径
+ * @param type - 资源类型
+ */
+export const loadResource = (name: string, type: "css" | "js" = "js"): Promise<void> => {
+  if (typeof window === "undefined") {
+    return Promise.reject(new Error("Not running in browser environment."));
+  }
+
+  return new Promise((resolve, reject) => {
+    // 避免重复加载
+    const tag = type === "js" ? "script" : "link";
+    const attr = type === "js" ? "src" : "href";
+    const exist = document.querySelector(`${tag}[${attr}="${name}"]`);
+    if (exist) {
+      resolve();
+      return;
+    }
+
+    let ref: HTMLScriptElement | HTMLLinkElement;
+
+    if (type === "js") {
+      ref = document.createElement("script");
+      ref.type = "text/javascript";
+      ref.src = name;
+    } else {
+      ref = document.createElement("link");
+      ref.type = "text/css";
+      ref.rel = "stylesheet";
+      ref.href = name;
+    }
+
+    ref.onload = () => resolve();
+    ref.onerror = () => reject(new Error(`Failed to load ${type}: ${name}`));
+
+    document.head.appendChild(ref);
+  });
+};
+
+/**
+ * 获取设备类型
+ * @returns 设备类型
+ */
+export const getDevice = (): "miniProgram" | "alipayMiniProgram" | "alipay" | "wechat" | "android" | "ios" | "harmony" | "windows" | "macos" | "linux" | "unknown" => {
+  const ua = typeof navigator !== "undefined" ? navigator.userAgent || "" : "";
+  const lowerUA = ua.toLowerCase();
+
+  // 小程序环境
+  if (typeof (globalThis as any).wx !== "undefined" && typeof (globalThis as any).wx.getSystemInfo === "function") {
+    return "miniProgram"; // 微信小程序
+  }
+  if (typeof (globalThis as any).my !== "undefined" && typeof (globalThis as any).my.getSystemInfo === "function") {
+    return "alipayMiniProgram"; // 支付宝小程序
+  }
+
+  // 浏览器内置环境
+  if (/micromessenger/.test(lowerUA)) return "wechat"; // 微信浏览器
+  if (/alipayclient/.test(lowerUA)) return "alipay"; // 支付宝浏览器
+
+  // 手机系统
+  if (/android|adr/.test(lowerUA)) return "android";
+  if (/iphone|ipad|ipod/.test(lowerUA)) return "ios";
+  if (/harmonyos/.test(lowerUA)) return "harmony";
+
+  // 桌面系统
+  if (/windows/.test(lowerUA)) return "windows";
+  if (/macintosh/.test(lowerUA)) return "macos";
+  if (/linux/.test(lowerUA)) return "linux";
+
+  return "unknown";
+};
