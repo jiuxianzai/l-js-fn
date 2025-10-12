@@ -1,20 +1,28 @@
 import { defineConfig } from "tsup";
 
-export default defineConfig({
-  entry: ["src/index.ts"],
-  format: ["esm", "cjs"],
-  dts: true,
-  minify: true,
-  treeshake: true,
-  target: "es2020",
-  outDir: "dist",
-  clean: true,
-  outExtension({ format }) {
-    if (format === "cjs") return { js: ".cjs" };
-    return { js: ".js" };
-  },
-  esbuildOptions(options) {
-    // 删除 console/debugger
-    options.drop = ["console", "debugger"];
-  }
+export default defineConfig((options) => {
+  const isProd = process.env.NODE_ENV === "production";
+  console.log(isProd,"isProd");
+
+  return {
+    entry: ["src/index.ts"],
+    format: ["esm", "cjs"],
+    dts: true,
+    minify: isProd, // 仅生产环境压缩
+    treeshake: true,
+    target: "es2020",
+    outDir: "dist",
+    clean: true,
+    outExtension({ format }) {
+      if (format === "cjs") return { js: ".cjs" };
+      return { js: ".js" };
+    },
+    esbuildOptions(opts) {
+      // 仅生产环境删除 console / debugger
+      if (isProd) {
+        opts.drop = ["console", "debugger"];
+      }
+    },
+    cjsInterop: true,
+  };
 });

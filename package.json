@@ -15,7 +15,7 @@
     "prepare": "husky install",
     "clean": "rimraf dist",
     "reload": "rimraf package-lock.json && rimraf node_modules && npm install",
-    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --minify --treeshake --watch",
     "build": "npm run clean && tsup src/index.ts --format esm,cjs --dts --minify --treeshake",
     "publish:npm": "npm run build && npm publish",
     "test": "jest"

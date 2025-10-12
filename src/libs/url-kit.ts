@@ -1,3 +1,5 @@
+import type { FileInfo } from "../types/index";
+
 /**
  * 解析 URL 查询参数，支持数组参数和嵌套对象参数
  * @param url - 要解析的 URL，如果不提供则使用当前页面的 URL（仅在浏览器环境下有效）
@@ -116,11 +118,6 @@ export function transUrlParams<T extends Record<string, any>>(params: T): string
   }
 
   return result;
-}
-
-interface FileInfo {
-  fileName: string;
-  extension: string;
 }
 
 /**
