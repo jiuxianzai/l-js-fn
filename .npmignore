@@ -21,3 +21,5 @@ test/
 packages/
 
 __tests__/
+
+CHANGELOG.md

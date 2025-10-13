@@ -1,4 +1,5 @@
 import {IPC_TYPE, IPCMessage} from "@/types";
+import {getUuid} from "@/libs/string-kit.ts";
 
 /**
  * 父应用向子应用发送消息
@@ -30,7 +31,7 @@ export class H5Bridge {
    */
   call(eventName: string, params?: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      const uuid = this._getUuid();
+      const uuid = getUuid();
       const msg = {type: IPC_TYPE.REQUEST, eventName, params, id: uuid};
       // 发起请求
       if (this.iframeReady) {
@@ -114,21 +115,5 @@ export class H5Bridge {
       eventName,
       params
     }, '*');
-  }
-
-  private _getUuid(): string {
-    let d = new Date().getTime();
-    let d2 = (typeof performance !== "undefined" && performance.now && performance.now() * 1000) || 0;
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-      let r = Math.random() * 16;
-      if (d > 0) {
-        r = (d + r) % 16 | 0;
-        d = Math.floor(d / 16);
-      } else {
-        r = (d2 + r) % 16 | 0;
-        d2 = Math.floor(d2 / 16);
-      }
-      return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
-    });
   }
 }
