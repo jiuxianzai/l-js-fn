@@ -1,4 +1,4 @@
-import type { FileInfo } from "../types/index";
+import type {FileInfo} from "@/types/index.js";
 
 /**
  * 解析 URL 查询参数，支持数组参数和嵌套对象参数
@@ -65,24 +65,24 @@ export function getUrlParam<T = any>(url: string | undefined, key: string): T | 
  * @returns 新的 URL 或 null（如果参数无效）
  */
 export function appendUrlParam<T = any>(
-    url: string,
-    paramName: string,
-    paramValue?: T
+  url: string,
+  paramName: string,
+  paramValue?: T
 ): string | null {
-    if (!url || !paramName) return null;
+  if (!url || !paramName) return null;
 
-    try {
-        const hasParams = url.includes("?");
-        const separator = hasParams ? "&" : "?";
-        const encodedValue =
-            paramValue !== undefined ? encodeURIComponent(String(paramValue)) : "";
-        const paramString = encodedValue
-            ? `${paramName}=${encodedValue}`
-            : paramName;
-        return `${url}${separator}${paramString}`;
-    } catch {
-        return null;
-    }
+  try {
+    const hasParams = url.includes("?");
+    const separator = hasParams ? "&" : "?";
+    const encodedValue =
+      paramValue !== undefined ? encodeURIComponent(String(paramValue)) : "";
+    const paramString = encodedValue
+      ? `${paramName}=${encodedValue}`
+      : paramName;
+    return `${url}${separator}${paramString}`;
+  } catch {
+    return null;
+  }
 }
 
 
@@ -149,5 +149,5 @@ export const getFileInfoToUrl = (url: string): FileInfo => {
     extension = fileName.slice(lastDotIndex);
   }
 
-  return { fileName, extension };
+  return {fileName, extension};
 };

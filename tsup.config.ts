@@ -1,8 +1,7 @@
-import { defineConfig } from "tsup";
+import {defineConfig} from "tsup";
 
-export default defineConfig((options) => {
+export default defineConfig(() => {
   const isProd = process.env.NODE_ENV === "production";
-  console.log(isProd,"isProd");
 
   return {
     entry: ["src/index.ts"],
@@ -13,9 +12,9 @@ export default defineConfig((options) => {
     target: "es2020",
     outDir: "dist",
     clean: true,
-    outExtension({ format }) {
-      if (format === "cjs") return { js: ".cjs" };
-      return { js: ".js" };
+    outExtension({format}) {
+      if (format === "cjs") return {js: ".cjs"};
+      return {js: ".js"};
     },
     esbuildOptions(opts) {
       // 仅生产环境删除 console / debugger
