@@ -1,37 +1,41 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>iframe</title>
 </head>
+
 <body>
-<h2>iframe</h2>
-<div style="margin-bottom: 20px">
-  <button onclick="getUserInfo()">获取主应用用户id:5的信息</button>
-  <span id="userInfo"></span>
-</div>
-<script type="module">
-  import {IframeBridge} from "../../dist/index.js";
+  <h2>iframe</h2>
+  <div style="margin-bottom: 20px">
+    <button onclick="getUserInfo()">获取主应用用户id:5的信息</button>
 
-  const userInfoEl = document.getElementById("userInfo")
-  const iframeBridge = new IframeBridge();
-  // 注册事件提供调用
-  iframeBridge.register("openDialog", (data) => {
-    alert("iframe: 打开弹窗" + data)
-  })
+    <span id="userInfo"></span>
+  </div>
+  <script type="module">
+    import { IframeBridge } from "../../dist/index.js";
 
-  window.getUserInfo = () => {
-    // 传递事件以及参数给主应用
-    iframeBridge.emit("getUserInfo", 5);
-    // 监听主应用传递的数据
-    iframeBridge.on("getUserInfo", (data) => {
-      console.log(data, "获取到用户信息");
-      userInfoEl.innerHTML = "用户信息：" + JSON.stringify(data);
+    const userInfoEl = document.getElementById("userInfo")
+    const iframeBridge = new IframeBridge();
+    // 注册事件提供调用
+    iframeBridge.register("openDialog", (data) => {
+      alert("iframe: 打开弹窗" + data)
     })
-  }
-</script>
+
+    window.getUserInfo = () => {
+      // 传递事件以及参数给主应用
+      iframeBridge.emit("getUserInfo", 5);
+      // 监听主应用传递的数据
+      iframeBridge.on("getUserInfo", (data) => {
+        console.log(data, "获取到用户信息");
+        userInfoEl.innerHTML = "用户信息：" + JSON.stringify(data);
+      })
+    }
+  </script>
 </body>
+
 </html>

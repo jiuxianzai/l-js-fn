@@ -1,4 +1,4 @@
-import type {FileInfo} from "@/types/index.js";
+import type {FileInfo} from "@/types/index.ts";
 
 /**
  * 解析 URL 查询参数，支持数组参数和嵌套对象参数

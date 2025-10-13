@@ -1,12 +1,4 @@
-type ErrorType = "connection_create_error" | "connection_error" | "connection_close" | "connection_send_error";
-
-interface ErrorPayload {
-  type: ErrorType;
-  data: unknown;
-}
-
-type MessageCallback = (message: string) => void;
-type ErrorCallback = (error: ErrorPayload) => void;
+import { ErrorType,MessageCallback,ErrorCallback } from "@/types";
 
 export class WebSocketManager {
   private url: string;

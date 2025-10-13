@@ -9,7 +9,8 @@ export class IframeBridge {
   private eventHandlers: Record<string, Function[]> = {}
 
   constructor() {
-    window.addEventListener("message", this._onMessage.bind(this))
+    this._onMessage = this._onMessage.bind(this)
+    window.addEventListener("message", this._onMessage)
   }
 
   /**
@@ -92,5 +93,11 @@ export class IframeBridge {
       eventName,
       params
     }, '*')
+  }
+
+  destroy() {
+    window.removeEventListener('message', this._onMessage);
+    this.handles = {}
+    this.eventHandlers = {}
   }
 }

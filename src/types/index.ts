@@ -26,3 +26,12 @@ export enum IPC_TYPE {
   EMIT = 'emit',
 }
 
+export type ErrorType = "connection_create_error" | "connection_error" | "connection_close" | "connection_send_error";
+
+interface ErrorPayload {
+  type: ErrorType;
+  data: unknown;
+}
+
+export type MessageCallback = (message: string) => void;
+export type ErrorCallback = (error: ErrorPayload) => void;

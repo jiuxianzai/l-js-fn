@@ -13,13 +13,11 @@ export class H5Bridge {
   private iframeReady = false;
 
   constructor(private iframe: HTMLIFrameElement | null) {
-    window.addEventListener('message', this._onMessage.bind(this));
+    this._onMessage = this._onMessage.bind(this);
+    this._onIframeLoad = this._onIframeLoad.bind(this);
+    window.addEventListener('message', this._onMessage);
     if (this.iframe) {
-      // iframe 加载完成标记
-      this.iframe.addEventListener('load', () => {
-        this.iframeReady = true;
-        this._flushPending();
-      });
+      this.iframe.addEventListener("load", this._onIframeLoad);
     }
   }
 
@@ -42,6 +40,12 @@ export class H5Bridge {
       // 记录请求
       this.pending[uuid] = {resolve, reject};
     })
+  }
+
+  /** iframe 加载完成时触发 */
+  private _onIframeLoad() {
+    this.iframeReady = true;
+    this._flushPending();
   }
 
   private _flushPending() {
@@ -115,5 +119,26 @@ export class H5Bridge {
       eventName,
       params
     }, '*');
+  }
+
+  destroy() {
+    // 移除 window 监听
+    window.removeEventListener("message", this._onMessage);
+
+    // 移除 iframe load 监听
+    if (this.iframe) {
+      this.iframe.removeEventListener("load", this._onIframeLoad);
+    }
+
+    // 拒绝所有未完成的 Promise
+    Object.values(this.pending).forEach(({reject}) =>
+      reject(new Error("Bridge destroyed"))
+    );
+
+    // 清空数据
+    this.pending = {};
+    this.queue = [];
+    this.eventHandlers = {};
+    this.iframeReady = false;
   }
 }
