@@ -1,4 +1,4 @@
-import { findIndex } from "../src/index";
+import { findIndex } from "../dist/index.cjs";
 
 describe("findIndex test", () => {
   it("应该返回第一个匹配元素索引", () => {

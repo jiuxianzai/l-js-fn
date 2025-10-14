@@ -1,4 +1,4 @@
-import L from "../src/index";
+import L from "../dist/index.cjs";
 
 describe("is校验库测试", () => {
   it("isImage", () => {
