@@ -3,7 +3,7 @@ type DateFormatType = (typeof DATE_FORMAT)[keyof typeof DATE_FORMAT];
 
 /**
  * 将日期或时间戳格式化为指定格式的字符串
- * @param date - 要格式化的日期对象或时间戳（毫秒）
+ * @param input - 输入
  * @param format - 输出格式，默认 `'yyyy-MM-dd HH:mm:ss'`
  * @returns 格式化后的日期字符串
  */
@@ -19,8 +19,8 @@ export function dateFormat(
     d = input;
   } else if (typeof input === 'number') {
     // 处理时间戳：秒级转毫秒
-    const time = input < 1e12 ? input * 1000 : input;
-    d = new Date(time);
+    const ts = input < 1e11 ? input * 1000 : input;
+    d = new Date(ts);
   } else if (typeof input === 'string') {
     let str = input.trim();
 
