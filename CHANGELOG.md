@@ -1,4 +1,7 @@
 ## 更新日志
+#### 1.3.2
+
+- `types`: 修复 package.json 声明类型
 #### 1.3.1
 
 - `types`: 新增 indexToLabel 参数类型
