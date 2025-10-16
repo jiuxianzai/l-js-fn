@@ -52,7 +52,7 @@ export function trim(str: string, pos: "both" | "left" | "right" | "all" = "both
 export function getMobile(): string {
   const prefixArray = ["130", "131", "132", "133", "135", "137", "138", "155", "158", "170", "187", "188", "189"];
   const prefix = prefixArray[Math.floor(Math.random() * prefixArray.length)];
-  const suffix = Array.from({ length: 8 }, () => Math.floor(Math.random() * 10)).join("");
+  const suffix = Array.from({length: 8}, () => Math.floor(Math.random() * 10)).join("");
   return prefix + suffix;
 }
 
@@ -79,10 +79,10 @@ export function getUuid(): string {
 /**
  * 根据数组索引生成序号标识（支持多种格式）
  * @param {number} index - 从0开始的索引
- * @param {'upper'|'lower'|'number'|'chinese'} [type='upper'] - 格式类型
+ * @param {'upper'|'lower'|'number'|'chinese'} [type='upper'] - 格式类型，upper大写 | lower小写 | number数字 | chinese中文
  * @returns {string} 转换后的序号
  */
-export function indexToLabel(index:number, type = 'upper') {
+export function indexToLabel(index: number, type: 'upper' | 'lower' | 'number' | 'chinese' = 'upper') {
   if (index < 0) return '';
 
   // 中文数字表
@@ -90,7 +90,7 @@ export function indexToLabel(index:number, type = 'upper') {
   const chineseUnits = ['', '十', '百', '千'];
 
   // 将数字转中文函数（支持到9999）
-  const toChineseNumber = (num:number) => {
+  const toChineseNumber = (num: number) => {
     if (num === 0) return chineseNums[0];
     let str = '';
     const digits = String(num).split('').reverse();
