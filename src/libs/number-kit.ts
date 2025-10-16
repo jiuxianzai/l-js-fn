@@ -30,17 +30,26 @@ export const formatNumber = (value: string | number, useUnit: boolean = false): 
 };
 
 /**
- * 数字转百分比
- * @param num - 数字或未知输入
- * @param fixed - 保留小数位数，默认 2
- * @returns 百分比字符串
+ * 将小数转为百分比字符串
+ * @param {number|string} value - 输入的小数值（如 0.533234）
+ * @param {number} [decimals=2] - 小数点位数（默认保留2位）
+ * @param {boolean} [round=true] - 是否四舍五入（默认true）
+ * @returns {string} - 格式化后的百分比字符串，如 "53.32%"
  */
-export const numberToPercent = (num: unknown, fixed = 2): string => {
-  if (typeof num !== "number" || isNaN(num)) {
-    throw new TypeError(`Invalid number: ${num}`);
+export function toPercent(value:any, decimals = 2, round = true) {
+  if (value === null || value === undefined || isNaN(value)) return "0%";
+
+  let num = Number(value) * 100;
+
+  if (round) {
+    num = Number(num.toFixed(decimals));
+  } else {
+    const factor = Math.pow(10, decimals);
+    num = Math.floor(num * factor) / factor;
   }
-  return (num * 100).toFixed(fixed) + "%";
-};
+
+  return `${num.toFixed(decimals)}%`;
+}
 
 /**
  * 生成一个随机数（支持负数、整数或浮点数）

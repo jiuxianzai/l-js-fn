@@ -75,3 +75,70 @@ export function getUuid(): string {
     return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
   });
 }
+
+/**
+ * 根据数组索引生成序号标识（支持多种格式）
+ * @param {number} index - 从0开始的索引
+ * @param {'upper'|'lower'|'number'|'chinese'} [type='upper'] - 格式类型
+ * @returns {string} 转换后的序号
+ */
+export function indexToLabel(index:number, type = 'upper') {
+  if (index < 0) return '';
+
+  // 中文数字表
+  const chineseNums = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+  const chineseUnits = ['', '十', '百', '千'];
+
+  // 将数字转中文函数（支持到9999）
+  const toChineseNumber = (num:number) => {
+    if (num === 0) return chineseNums[0];
+    let str = '';
+    const digits = String(num).split('').reverse();
+    for (let i = 0; i < digits.length; i++) {
+      const n = parseInt(digits[i]);
+      if (n === 0) {
+        if (!str.startsWith(chineseNums[0])) str = chineseNums[0] + str;
+      } else {
+        str = chineseNums[n] + chineseUnits[i] + str;
+      }
+    }
+    // 清理“零十”“零百”等情况
+    str = str.replace(/零[十百千]/g, '零').replace(/零+/g, '零').replace(/零$/g, '');
+    return str;
+  };
+
+  switch (type) {
+    case 'upper': {
+      // A, B, C, ..., Z, AA, AB...
+      const A = 'A'.charCodeAt(0);
+      let label = '';
+      let n = index;
+      do {
+        label = String.fromCharCode(A + (n % 26)) + label;
+        n = Math.floor(n / 26) - 1;
+      } while (n >= 0);
+      return label;
+    }
+
+    case 'lower': {
+      const a = 'a'.charCodeAt(0);
+      let label = '';
+      let n = index;
+      do {
+        label = String.fromCharCode(a + (n % 26)) + label;
+        n = Math.floor(n / 26) - 1;
+      } while (n >= 0);
+      return label;
+    }
+
+    case 'number':
+      return (index + 1).toString();
+
+    case 'chinese':
+      return toChineseNumber(index + 1);
+
+    default:
+      return (index + 1).toString();
+  }
+}
+
