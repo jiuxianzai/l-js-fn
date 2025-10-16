@@ -7,6 +7,7 @@ export * from "@/libs/common.ts";
 export * from "@/libs/string-kit.ts";
 export * from "@/libs/date-kit.ts";
 export * from "@/libs/number-kit.ts";
+export * from "@/bom/index.ts"
 // 类
 export * from "@/utils/Result.ts";
 export * from "@/utils/Polling.ts";
@@ -25,6 +26,7 @@ import * as common from "@/libs/common.ts";
 import * as numberKit from "@/libs/number-kit.ts";
 import * as stringKit from "@/libs/string-kit.ts";
 import * as dateKit from "@/libs/date-kit.ts";
+import * as bom from "@/bom/index.ts"
 import {Result} from "@/utils/Result.ts";
 import {Polling} from "@/utils/Polling.ts";
 import {IframeBridge} from "@/utils/ipc/IframeBridge.ts";
@@ -40,6 +42,7 @@ const L = {
   ...stringKit,
   ...dateKit,
   ...numberKit,
+  ...bom,
   Polling,
   Result,
   H5Bridge,

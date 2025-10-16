@@ -29,6 +29,12 @@ export const REGEXP = {
   // 只允许数字
   NUMBER: /^\d+$/,
 
+  // 只允许正整数
+  POSITIVE_NUMBER: /^[1-9]\d*$/,
+
+  // 整数
+  INTEGER: /^(-|\+)?\d+$/,
+
   // 英文 + 数字（常用账号规则）
   EN_OR_NUM: /^[A-Za-z0-9]+$/,
 

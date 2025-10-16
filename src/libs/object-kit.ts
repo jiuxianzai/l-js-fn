@@ -74,3 +74,73 @@ export function objFilterNull<T extends Record<string, any>>(obj: T): Partial<T>
       return acc;
     }, {} as Partial<T>);
 }
+
+/**
+ * 判断对象是否存在属性
+ * @param obj - 对象
+ * @param key - 属性键
+ */
+export function isHasProperties(obj: Record<string, any>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(obj, key)
+}
+
+/**
+ * 将 JSON 对象转换为 FormData
+ * @param data JSON 数据对象
+ * @param formData 可选：已有 FormData 实例（用于递归）
+ * @param parentKey 可选：父级键名前缀
+ * @returns FormData
+ */
+export function jsonToFormData(
+  data: Record<string, any>,
+  formData: FormData = new FormData(),
+  parentKey: string = ''
+): FormData {
+  if (!data || typeof data !== 'object') {
+    throw new TypeError('jsonToFormData: 参数 data 必须是对象');
+  }
+
+  Object.keys(data).forEach((key) => {
+    const value = data[key];
+    if (value === undefined || value === null) return;
+
+    // 构造完整键名
+    const fullKey = parentKey ? `${parentKey}[${key}]` : key;
+
+    if (value instanceof Date) {
+      formData.append(fullKey, value.toISOString());
+    } else if (value instanceof File || value instanceof Blob) {
+      formData.append(fullKey, value);
+    } else if (Array.isArray(value)) {
+      value.forEach((item, index) => {
+        const arrayKey = `${fullKey}[${index}]`;
+        if (typeof item === 'object' && !(item instanceof File)) {
+          jsonToFormData(item, formData, arrayKey);
+        } else {
+          formData.append(arrayKey, item);
+        }
+      });
+    } else if (typeof value === 'object') {
+      // 递归嵌套对象
+      jsonToFormData(value, formData, fullKey);
+    } else {
+      formData.append(fullKey, value);
+    }
+  });
+
+  return formData;
+}
+
+/**
+ * formData 转 json
+ * @param formData
+ */
+export function formDataToObject(formData: FormData): Record<string, any> {
+  const obj: Record<string, any> = {};
+  for (const [key, value] of formData.entries()) {
+    const strValue = value.toString();
+    // 如果全是数字字符串，就转成 number
+    obj[key] = /^\d+$/.test(strValue) ? Number(strValue) : strValue;
+  }
+  return obj;
+}

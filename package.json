@@ -31,7 +31,7 @@
     "publish:feat": "npm version minor && npm run publish:npm",
     "publish:fix": "npm version patch && npm run publish:npm",
     "publish:pre": "npm version prerelease --preid=beta && npm run publish:npm",
-    "test": "jest --coverage"
+    "test": "NODE_NO_WARNINGS=1 NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "keywords": [
     "javascript",

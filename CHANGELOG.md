@@ -1,4 +1,10 @@
 ## 更新日志
+
+#### 1.2.0
+
+- `feat` 新增正则(整数、正整数)
+- `feat` 新增 `isHasProperties`、`scrollTop`、`getScrollPosition`、`setScrollPosition`、`formDataToObject`、`launchFullscreen`、`exitFullscreen` 方法
+
 #### 1.1.2
 
 - `fix` 修复 `dateFormat` 时间戳超出位数误判成秒级
