@@ -13,6 +13,14 @@ export function scrollTop() {
 }
 
 /**
+ * 滚动到底部
+ */
+export function scrollToBottom() {
+  if (!window || !document.body) return;
+  window.scrollTo(0, document.body.scrollHeight)
+}
+
+/**
  * 获取当前页面滚动位置
  * @returns 当前滚动位置 { x, y }
  */
@@ -120,5 +128,24 @@ export async function exitFullscreen(): Promise<boolean> {
   } catch (err) {
     console.error("退出全屏失败：", err)
     return false
+  }
+}
+
+/**
+ * 复制文本到剪贴板
+ */
+export async function copyToClipboard(text: string) {
+  if (!text) return;
+  if (navigator.clipboard) {
+    await navigator.clipboard.writeText(text)
+    return true
+  } else {
+    const input = document.createElement('textarea')
+    input.value = text
+    document.body.appendChild(input)
+    input.select()
+    document.execCommand('copy')
+    document.body.removeChild(input)
+    return true
   }
 }

@@ -42,5 +42,8 @@ export const REGEXP = {
   EN_NUM_UNDER_LINE: /^\w+$/,
 
   // 不包含特殊字符（仅中英文、数字）
-  NO_SPECIAL: /^[\u4e00-\u9fa5A-Za-z0-9]+$/
+  NO_SPECIAL: /^[\u4e00-\u9fa5A-Za-z0-9]+$/,
+
+  // 金额,支持两位小数
+  MONEY: /^(0|[1-9]\d*)(\.\d{1,2})?$/
 } as const;

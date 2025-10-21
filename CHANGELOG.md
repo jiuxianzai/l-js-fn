@@ -1,4 +1,6 @@
 ## 更新日志
+### 1.5.0
+- `feat`: 新增 copyToClipboard, scrollToBottom, MONEY, imageToBase64
 
 #### 1.4.0
 

@@ -1,11 +1,3 @@
-import { createDefaultPreset } from "ts-jest";
-
-const tsJestTransformCfg = createDefaultPreset().transform;
-
 export default {
-  testMatch: ["**/__tests__/**/*.test.ts"],
-  testEnvironment: "node", // node 与 jsdom
-  transform: {
-    ...tsJestTransformCfg
-  }
-};
+  testEnvironment: 'node',  // 或 'jsdom'（测试浏览器环境）
+}

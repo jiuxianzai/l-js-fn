@@ -1,3 +1,5 @@
+import {Result} from "@/utils/Result.ts";
+
 /**
  * 睡眠函数
  * @param time - 睡眠时间，毫秒
@@ -87,7 +89,7 @@ export function deepClone<T>(
   obj: T,
   options?: { cloneFunctions?: boolean; cloneSpecialObjects?: boolean }
 ): T {
-  const { cloneFunctions = false, cloneSpecialObjects = false } = options || {};
+  const {cloneFunctions = false, cloneSpecialObjects = false} = options || {};
   const visited = new WeakMap<any, any>();
 
   const cloneHelper = (value: any): any => {
@@ -265,3 +267,45 @@ export const getDevice = ():
 
   return 'unknown';
 };
+
+/**
+ * 图片转 Base64
+ * @param input 图片 URL 或 File/Blob
+ * @param type 输出类型，默认 image/png
+ * @param quality 压缩质量 (0-1，仅对 jpeg/webp 有效)
+ */
+export function imageToBase64(
+  input: File | Blob | string | null,
+  type: "image/jpeg" | "image/png" | "image/webp" = "image/png",
+  quality: number = 1
+): Promise<Result> {
+  return new Promise((resolve, reject) => {
+    if (!input) return;
+    if (input instanceof File || input instanceof Blob) {
+      const reader = new FileReader()
+      reader.onload = () => resolve(Result.ok(reader.result as string))
+      reader.onerror = () => reject(Result.fail('读取文件失败'))
+      reader.readAsDataURL(input)
+      return
+    }
+
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.src = input
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas')
+        canvas.width = img.width
+        canvas.height = img.height
+        const ctx = canvas.getContext('2d')
+        if (!ctx) throw new Error('Canvas 不可用')
+        ctx.drawImage(img, 0, 0)
+        resolve(Result.ok(canvas.toDataURL(type, quality)))
+      } catch (err) {
+        reject(err)
+      }
+    }
+    img.onerror = () => reject(Result.fail("图片加载失败"))
+    return
+  })
+}
