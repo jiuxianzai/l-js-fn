@@ -3,12 +3,12 @@ type DateFormatType = (typeof DATE_FORMAT)[keyof typeof DATE_FORMAT];
 
 /**
  * 将日期或时间戳格式化为指定格式的字符串
- * @param input - 输入
+ * @param input - 输入,默认当前时间
  * @param format - 输出格式，默认 `'yyyy-MM-dd HH:mm:ss'`
  * @returns 格式化后的日期字符串
  */
 export function dateFormat(
-  input: Date | string | number,
+  input: Date | string | number = new Date(),
   format: DateFormatType = DATE_FORMAT.FULL
 ): string {
   if (input === null || input === undefined || input === '') return '';
@@ -198,3 +198,46 @@ export const monthDays = (time: Date | string | number): number => {
   const month = date.getMonth() + 1; // 下一个月
   return new Date(year, month, 0).getDate();
 };
+
+/**
+ * 计算两个时间的间隔（单位：毫秒）
+ * @param {Date|string|number} start - 开始时间（Date、字符串、时间戳）
+ * @param {Date|string|number} end - 结束时间（Date、字符串、时间戳）
+ * @returns {number} 两个时间的间隔（毫秒）
+ */
+export function getTimeDiff(start: Date | string | number, end: Date | string | number): number {
+  // 判断类型
+  const typeOfStart = Object.prototype.toString.call(start);
+  const typeOfEnd = Object.prototype.toString.call(end);
+
+  // 类型不一致时报错
+  if (typeOfStart !== typeOfEnd) {
+    throw new Error('开始时间和结束时间的类型不一致！请确保两者都为 Date、字符串或数字。');
+  }
+
+  // 显式声明类型为 number
+  let startTime: number = 0;
+  let endTime: number = 0;
+
+  if (typeOfStart === '[object Date]') {
+    startTime = (start as Date).getTime();
+    endTime = (end as Date).getTime();
+  } else if (typeOfStart === '[object String]') {
+    // 统一替换格式以避免 Safari 无法识别 'YYYY-MM-DD HH:mm:ss' 的问题
+    startTime = new Date((start as string).replace(/-/g, '/')).getTime();
+    endTime = new Date((end as string).replace(/-/g, '/')).getTime();
+  } else if (typeOfStart === '[object Number]') {
+    startTime = start as number;
+    endTime = end as number;
+  } else {
+    throw new Error('不支持的时间格式，请使用 Date、字符串或数字类型。');
+  }
+
+  // 检查是否为有效时间
+  if (isNaN(startTime) || isNaN(endTime)) {
+    throw new Error('无效的时间值，请检查输入格式。');
+  }
+
+  // 明确返回 number 类型
+  return endTime - startTime;
+}

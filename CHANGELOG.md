@@ -1,7 +1,14 @@
 ## 更新日志
+
+#### 1.4.0
+
+- `feat`: 新增 dateFormat 默认当前时间参数
+- `feat`: 新增 getTimeDiff 时间间隔
+
 #### 1.3.2
 
 - `types`: 修复 package.json 声明类型
+
 #### 1.3.1
 
 - `types`: 新增 indexToLabel 参数类型
