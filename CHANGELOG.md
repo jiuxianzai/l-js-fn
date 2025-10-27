@@ -1,4 +1,10 @@
 ## 更新日志
+### 1.7.0
+feat: 新增 生成指定数量的不重复随机索引 方法
+
+### 1.6.0
+- 误操作重复更新
+
 ### 1.5.0
 - `feat`: 新增 copyToClipboard, scrollToBottom, MONEY, imageToBase64
 

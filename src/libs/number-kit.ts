@@ -83,3 +83,19 @@ export function random(
   return options.float ? rand : Math.floor(rand);
 }
 
+/**
+ * 生成指定数量的不重复随机索引
+ * @param len - 最大索引（一般为数组长度）
+ * @param count - 需要生成的随机索引数量
+ * @returns 不重复的随机索引数组
+ */
+export function getUniqueRandomIndexes(len: number, count: number): number[] {
+  if (len <= 0) return [];
+  if (count > len) count = len;
+
+  const indexes = new Set<number>();
+  while (indexes.size < count) {
+    indexes.add(random(0, len - 1));
+  }
+  return Array.from(indexes);
+}
