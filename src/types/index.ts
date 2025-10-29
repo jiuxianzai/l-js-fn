@@ -49,3 +49,8 @@ export interface ScrollPosition {
   x: number;
   y: number;
 }
+
+/**
+ * 数组移动操作类型
+ */
+export type MoveAction = 'up' | 'down' | 'top' | 'bottom';
