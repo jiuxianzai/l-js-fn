@@ -1,6 +1,6 @@
 # 忽略 node_modules（即使 npm 默认忽略，保险起见可以写上）
 node_modules/
-
+**/*.d.cts
 # 忽略测试文件
 test/
 

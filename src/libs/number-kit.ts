@@ -10,23 +10,23 @@
  * console.log(formatNumber("abc"));         // "abc" (非数字原样返回)
  */
 export const formatNumber = (value: string | number, useUnit: boolean = false): string => {
-  let num = typeof value === "string" ? parseFloat(value) : value;
+	let num = typeof value === 'string' ? parseFloat(value) : value;
 
-  if (isNaN(num)) return String(value);
+	if (isNaN(num)) return String(value);
 
-  if (useUnit) {
-    // 中文单位
-    if (num >= 1e8) {
-      return `${(num / 1e8).toFixed(2).replace(/\.00$/, "")}亿`;
-    }
-    if (num >= 1e4) {
-      return `${(num / 1e4).toFixed(2).replace(/\.00$/, "")}万`;
-    }
-    return String(num);
-  } else {
-    // 千分位分割
-    return num.toLocaleString("en-US");
-  }
+	if (useUnit) {
+		// 中文单位
+		if (num >= 1e8) {
+			return `${(num / 1e8).toFixed(2).replace(/\.00$/, '')}亿`;
+		}
+		if (num >= 1e4) {
+			return `${(num / 1e4).toFixed(2).replace(/\.00$/, '')}万`;
+		}
+		return String(num);
+	} else {
+		// 千分位分割
+		return num.toLocaleString('en-US');
+	}
 };
 
 /**
@@ -36,19 +36,19 @@ export const formatNumber = (value: string | number, useUnit: boolean = false): 
  * @param {boolean} [round=true] - 是否四舍五入（默认true）
  * @returns {string} - 格式化后的百分比字符串，如 "53.32%"
  */
-export function toPercent(value:any, decimals = 2, round = true) {
-  if (value === null || value === undefined || isNaN(value)) return "0%";
+export function toPercent(value: any, decimals = 2, round = true) {
+	if (value === null || value === undefined || isNaN(value)) return '0%';
 
-  let num = Number(value) * 100;
+	let num = Number(value) * 100;
 
-  if (round) {
-    num = Number(num.toFixed(decimals));
-  } else {
-    const factor = Math.pow(10, decimals);
-    num = Math.floor(num * factor) / factor;
-  }
+	if (round) {
+		num = Number(num.toFixed(decimals));
+	} else {
+		const factor = Math.pow(10, decimals);
+		num = Math.floor(num * factor) / factor;
+	}
 
-  return `${num.toFixed(decimals)}%`;
+	return `${num.toFixed(decimals)}%`;
 }
 
 /**
@@ -61,26 +61,22 @@ export function toPercent(value:any, decimals = 2, round = true) {
  * @param options.float - 是否返回浮点数，默认为 false（返回整数）
  * @returns 在指定范围内的随机数
  */
-export function random(
-  min: number,
-  max?: number,
-  options: { float?: boolean } = {}
-): number {
-  if (max === undefined) {
-    max = min;
-    min = 0;
-  }
+export function random(min: number, max?: number, options: { float?: boolean } = {}): number {
+	if (max === undefined) {
+		max = min;
+		min = 0;
+	}
 
-  if (max <= 0 && arguments.length === 1) {
-    throw new Error("当只有一个参数时，最大值必须大于 0");
-  }
+	if (max <= 0 && arguments.length === 1) {
+		throw new Error('当只有一个参数时，最大值必须大于 0');
+	}
 
-  if (min > max) {
-    throw new Error("最小值不能大于最大值");
-  }
+	if (min > max) {
+		throw new Error('最小值不能大于最大值');
+	}
 
-  const rand = Math.random() * (max - min) + min;
-  return options.float ? rand : Math.floor(rand);
+	const rand = Math.random() * (max - min) + min;
+	return options.float ? rand : Math.floor(rand);
 }
 
 /**
@@ -90,12 +86,12 @@ export function random(
  * @returns 不重复的随机索引数组
  */
 export function getUniqueRandomIndexes(len: number, count: number): number[] {
-  if (len <= 0) return [];
-  if (count > len) count = len;
+	if (len <= 0) return [];
+	if (count > len) count = len;
 
-  const indexes = new Set<number>();
-  while (indexes.size < count) {
-    indexes.add(random(0, len - 1));
-  }
-  return Array.from(indexes);
+	const indexes = new Set<number>();
+	while (indexes.size < count) {
+		indexes.add(random(0, len - 1));
+	}
+	return Array.from(indexes);
 }
