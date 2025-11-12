@@ -24,6 +24,7 @@
     "dev": "tsup src/index.ts --format esm,cjs --dts --minify --treeshake --watch",
     "build": "npm run clean && tsup src/index.ts --format esm,cjs --dts --minify --treeshake",
     "publish:npm": "npm run build && npm publish",
+    "publish:major": "npm version major && npm run publish:npm",
     "publish:feat": "npm version minor && npm run publish:npm",
     "publish:fix": "npm version patch && npm run publish:npm",
     "publish:pre": "npm version prerelease --preid=beta && npm run publish:npm",
