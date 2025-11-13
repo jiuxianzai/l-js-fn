@@ -1,6 +1,6 @@
-import { MoveAction } from '@/types';
-import { Result } from '@/utils/Result';
-import { isArray, isEmpty } from './is-kit';
+import { MoveAction, Primitive } from "@/types";
+import { Result } from "@/utils/Result";
+import { isArray, isEmpty } from "./is-kit";
 /**
  * 从数组中移除指定的元素，返回一个新的数组。
  * @param arr - 需要操作的数组
@@ -8,18 +8,72 @@ import { isArray, isEmpty } from './is-kit';
  * @param key - 可选属性名，如果传入则根据该属性匹配删除
  * @returns 新数组
  */
-export function arrayDelEl<T>(arr: T[], target: T, key: keyof T | null = null): T[] {
-	const isPrimitive = (value: any) => value !== Object(value);
+export function arrayDelEl<T>(
+  arr: T[],
+  target: T,
+  key: keyof T | null = null
+): T[] {
+  const isPrimitive = (value: any) => value !== Object(value);
 
-	if (isPrimitive(target)) {
-		return arr.filter((item) => item !== target);
-	} else {
-		if (key) {
-			return arr.filter((item) => item[key] !== target[key]);
-		} else {
-			return arr.filter((item) => JSON.stringify(item) !== JSON.stringify(target));
-		}
-	}
+  if (isPrimitive(target)) {
+    return arr.filter((item) => item !== target);
+  } else {
+    if (key) {
+      return arr.filter((item) => item[key] !== target[key]);
+    } else {
+      return arr.filter(
+        (item) => JSON.stringify(item) !== JSON.stringify(target)
+      );
+    }
+  }
+}
+
+/**
+ * 根据索引删除数组元素
+ * @param arr - 原数组
+ * @param index - 要删除元素的索引
+ * @returns 新数组，如果索引不合法返回原数组
+ * @example
+ * arrayDelToIndex([1, 2, 3], 1) // [1, 3]
+ */
+export function arrayDelToIndex<T>(arr: T[], index: number): T[] {
+  if (!Array.isArray(arr)) return arr;
+  if (typeof index !== "number" || index < 0 || index >= arr.length) return arr;
+  return arr.slice(0, index).concat(arr.slice(index + 1));
+}
+
+/**
+ * 根据基本类型元素删除数组元素
+ * @param arr - 原数组
+ * @param el - 要删除的元素
+ * @returns 新数组，如果数组中不存在该元素返回原数组
+ * @example
+ * arrayDelToEl([1, 2, 3, 2], 2) // [1, 3]
+ */
+export function arrayDelToEl<T extends Primitive>(arr: T[], el: T): T[] {
+  if (!Array.isArray(arr)) return arr;
+  if (!arr.includes(el)) return arr;
+  return arr.filter((item) => item !== el);
+}
+
+/**
+ * 根据对象数组的键值对删除元素
+ * @param arr - 原数组
+ * @param key - 对象的键
+ * @param value - 要匹配删除的值
+ * @returns 新数组，如果没有匹配项返回原数组
+ * @example
+ * const arr = [{ id: 1, name: 'a' }, { id: 2, name: 'b' }]
+ * arrayDelToKey(arr, 'id', 2) // [{ id: 1, name: 'a' }]
+ */
+export function arrayDelToKey<T extends Record<string, any>>(
+  arr: T[],
+  key: keyof T,
+  value: any
+): T[] {
+  if (!Array.isArray(arr)) return arr;
+  const filtered = arr.filter((item) => item[key] !== value);
+  return filtered.length === arr.length ? arr : filtered;
 }
 
 /**
@@ -30,12 +84,12 @@ export function arrayDelEl<T>(arr: T[], target: T, key: keyof T | null = null): 
  * @returns 新数组
  */
 export function arrayFill<T>(originArr: T[], num: number, obj: T): T[] {
-	if (!Array.isArray(originArr)) throw new Error('originArr 必须是数组');
-	if (!Number.isInteger(num) || num < 0) throw new Error('num 必须是非负整数');
+  if (!Array.isArray(originArr)) throw new Error("originArr 必须是数组");
+  if (!Number.isInteger(num) || num < 0) throw new Error("num 必须是非负整数");
 
-	if (originArr.length >= num) return [...originArr];
-	const emptyArr = new Array(num - originArr.length).fill(obj);
-	return originArr.concat(emptyArr);
+  if (originArr.length >= num) return [...originArr];
+  const emptyArr = new Array(num - originArr.length).fill(obj);
+  return originArr.concat(emptyArr);
 }
 
 /**
@@ -44,7 +98,7 @@ export function arrayFill<T>(originArr: T[], num: number, obj: T): T[] {
  * @returns 去重后的数组
  */
 export function arrayUnique<T>(arr: T[]): T[] {
-	return Array.from(new Set(arr));
+  return Array.from(new Set(arr));
 }
 
 /**
@@ -55,14 +109,14 @@ export function arrayUnique<T>(arr: T[]): T[] {
  * @returns 当前页数据
  */
 export function arrayPaginate<T>(arr: T[], page: number, size: number): T[] {
-	if (!Array.isArray(arr) || page < 1 || size < 1) return [];
+  if (!Array.isArray(arr) || page < 1 || size < 1) return [];
 
-	const totalPages = Math.ceil(arr.length / size);
-	if (page > totalPages) return [];
+  const totalPages = Math.ceil(arr.length / size);
+  if (page > totalPages) return [];
 
-	const startIdx = (page - 1) * size;
-	const endIdx = startIdx + size;
-	return arr.slice(startIdx, endIdx);
+  const startIdx = (page - 1) * size;
+  const endIdx = startIdx + size;
+  return arr.slice(startIdx, endIdx);
 }
 
 /**
@@ -71,26 +125,29 @@ export function arrayPaginate<T>(arr: T[], page: number, size: number): T[] {
  * @param groupSize - 每组的大小，默认为 10
  * @returns 返回分组后的对象，键为组号，值为数组
  */
-export function arraySplitToGroups<T>(array: T[], groupSize: number = 10): Record<number, T[]> {
-	if (!Array.isArray(array)) {
-		throw new Error('参数必须是数组');
-	}
+export function arraySplitToGroups<T>(
+  array: T[],
+  groupSize: number = 10
+): Record<number, T[]> {
+  if (!Array.isArray(array)) {
+    throw new Error("参数必须是数组");
+  }
 
-	if (groupSize < 1 || !Number.isInteger(groupSize)) {
-		throw new Error('groupSize 必须是大于 0 的整数');
-	}
+  if (groupSize < 1 || !Number.isInteger(groupSize)) {
+    throw new Error("groupSize 必须是大于 0 的整数");
+  }
 
-	const result: Record<number, T[]> = {};
+  const result: Record<number, T[]> = {};
 
-	for (let i = 0; i < array.length; i++) {
-		const groupIndex = Math.floor(i / groupSize) + 1; // 计算组号
-		if (!result[groupIndex]) {
-			result[groupIndex] = []; // 初始化组
-		}
-		result[groupIndex].push(array[i]);
-	}
+  for (let i = 0; i < array.length; i++) {
+    const groupIndex = Math.floor(i / groupSize) + 1; // 计算组号
+    if (!result[groupIndex]) {
+      result[groupIndex] = []; // 初始化组
+    }
+    result[groupIndex].push(array[i]);
+  }
 
-	return result;
+  return result;
 }
 
 type Recordable = Record<string, any>;
@@ -111,19 +168,19 @@ type Fn<T> = (item: T, index: number, array: T[]) => boolean;
  * console.log(index); // 输出 1
  */
 export const findIndex = <T = Recordable>(ary: T[], fn: Fn<T>): number => {
-	if (typeof ary.findIndex === 'function') {
-		return ary.findIndex(fn);
-	}
+  if (typeof ary.findIndex === "function") {
+    return ary.findIndex(fn);
+  }
 
-	let index = -1;
-	ary.some((item, i, array) => {
-		if (fn(item, i, array)) {
-			index = i;
-			return true; // some 会停止迭代
-		}
-		return false;
-	});
-	return index;
+  let index = -1;
+  ary.some((item, i, array) => {
+    if (fn(item, i, array)) {
+      index = i;
+      return true; // some 会停止迭代
+    }
+    return false;
+  });
+  return index;
 };
 
 /**
@@ -132,49 +189,55 @@ export const findIndex = <T = Recordable>(ary: T[], fn: Fn<T>): number => {
  * @param idx - 需要移动的元素索引
  * @param action - 移动类型，默认置顶up
  */
-export function moveElement<T>(list: T[], idx: number, action: MoveAction = 'up'): Result<T[]> {
-	if (!isArray(list)) {
-		return Result.fail('参数不是数组', []);
-	}
+export function moveElement<T>(
+  list: T[],
+  idx: number,
+  action: MoveAction = "up"
+): Result<T[]> {
+  if (!isArray(list)) {
+    return Result.fail("参数不是数组", []);
+  }
 
-	if (isEmpty(list)) {
-		return Result.fail('数组为空', []);
-	}
+  if (isEmpty(list)) {
+    return Result.fail("数组为空", []);
+  }
 
-	if (idx < 0 || idx >= list.length) {
-		return Result.fail('索引超出范围', [...list]);
-	}
+  if (idx < 0 || idx >= list.length) {
+    return Result.fail("索引超出范围", [...list]);
+  }
 
-	const newList = [...list];
-	// 需要移动的元素
-	const item = newList[idx];
+  const newList = [...list];
+  // 需要移动的元素
+  const item = newList[idx];
 
-	switch (action) {
-		case 'up':
-			if (idx === 0) return Result.fail('已经是第一个元素', newList);
-			[newList[idx - 1], newList[idx]] = [newList[idx], newList[idx - 1]];
-			break;
+  switch (action) {
+    case "up":
+      if (idx === 0) return Result.fail("已经是第一个元素", newList);
+      [newList[idx - 1], newList[idx]] = [newList[idx], newList[idx - 1]];
+      break;
 
-		case 'down':
-			if (idx === list.length - 1) return Result.fail('已经是最后一个元素', newList);
-			[newList[idx + 1], newList[idx]] = [newList[idx], newList[idx + 1]];
-			break;
+    case "down":
+      if (idx === list.length - 1)
+        return Result.fail("已经是最后一个元素", newList);
+      [newList[idx + 1], newList[idx]] = [newList[idx], newList[idx + 1]];
+      break;
 
-		case 'top':
-			if (idx === 0) return Result.fail('已经是第一个元素', newList);
-			newList.splice(idx, 1);
-			newList.unshift(item);
-			break;
+    case "top":
+      if (idx === 0) return Result.fail("已经是第一个元素", newList);
+      newList.splice(idx, 1);
+      newList.unshift(item);
+      break;
 
-		case 'bottom':
-			if (idx === list.length - 1) return Result.fail('已经是最后一个元素', newList);
-			newList.splice(idx, 1);
-			newList.push(item);
-			break;
+    case "bottom":
+      if (idx === list.length - 1)
+        return Result.fail("已经是最后一个元素", newList);
+      newList.splice(idx, 1);
+      newList.push(item);
+      break;
 
-		default:
-			return Result.fail('无效的操作', newList);
-	}
+    default:
+      return Result.fail("无效的操作", newList);
+  }
 
-	return Result.ok(newList);
+  return Result.ok(newList);
 }

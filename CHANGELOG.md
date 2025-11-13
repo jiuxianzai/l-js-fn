@@ -1,4 +1,9 @@
 ## 更新日志
+### 2.2.0
+
+feat: 新增 arrayDelToIndex 方法
+feat: 新增 arrayDelToEl 方法
+feat: 新增 arrayDelToKey 方法
 
 ### 2.1.0
 

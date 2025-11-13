@@ -54,3 +54,8 @@ export interface ScrollPosition {
  * 数组移动操作类型
  */
 export type MoveAction = 'up' | 'down' | 'top' | 'bottom';
+
+/**
+ * 数组元素类型
+ */
+export type Primitive = string | number | boolean | null | undefined;
