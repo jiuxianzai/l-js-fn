@@ -1,22 +1,22 @@
 {
-	"compilerOptions": {
-		"baseUrl": ".",
-		"target": "ES2019",
-		"module": "ESNext",
-		"moduleResolution": "Node",
-		"declaration": true,
-		"declarationDir": "dist",
-		"outDir": "dist",
-		"strict": true,
-		"esModuleInterop": true,
-		"allowImportingTsExtensions": true,
-		"noEmit": true,
-		"skipLibCheck": true,
-		"lib": ["ES2019", "DOM"],
-		"paths": {
-			"@/*": ["src/*"]
-		}
-	},
-	"include": ["src", "__tests__", "types", "tsup.config.ts"],
-	"exclude": ["node_modules", "dist"]
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ES2019",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "declaration": true,
+    "declarationDir": "dist",
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "lib": ["ES2019", "DOM", "dom.iterable"],
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src", "__tests__", "types", "tsup.config.ts"],
+  "exclude": ["node_modules", "dist"]
 }
