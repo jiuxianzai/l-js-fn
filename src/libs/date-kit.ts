@@ -1,4 +1,4 @@
-import { DATE_FORMAT } from '@/config/constant';
+import { DATE_FORMAT } from '@/config'
 type DateFormatType = (typeof DATE_FORMAT)[keyof typeof DATE_FORMAT];
 
 /**

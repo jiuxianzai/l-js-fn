@@ -1,4 +1,4 @@
-import { REGEXP } from '@/config/regex';
+import { REGEXP } from '@/regex';
 
 /**
  * 检查值是否为空

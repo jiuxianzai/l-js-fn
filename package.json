@@ -7,14 +7,39 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"import": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.js"
-			},
-			"require": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.cjs"
-			}
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		},
+		"./bom": {
+			"types": "./dist/bom/index.d.ts",
+			"import": "./dist/bom/index.js",
+			"require": "./dist/bom/index.cjs"
+		},
+		"./ws": {
+			"types": "./dist/ws/index.d.ts",
+			"import": "./dist/ws/index.js",
+			"require": "./dist/ws/index.cjs"
+		},
+		"./config": {
+			"types": "./dist/config/index.d.ts",
+			"import": "./dist/config/index.js",
+			"require": "./dist/config/index.cjs"
+		},
+		"./ipc": {
+			"types": "./dist/ipc/index.d.ts",
+			"import": "./dist/ipc/index.js",
+			"require": "./dist/ipc/index.cjs"
+		},
+		"./regex": {
+			"types": "./dist/regex/index.d.ts",
+			"import": "./dist/regex/index.js",
+			"require": "./dist/regex/index.cjs"
+		},
+		"./polling": {
+			"types": "./dist/polling/index.d.ts",
+			"import": "./dist/polling/index.js",
+			"require": "./dist/polling/index.cjs"
 		}
 	},
 	"scripts": {
@@ -22,7 +47,7 @@
 		"clean": "rimraf dist",
 		"reload": "rimraf package-lock.json && rimraf node_modules && npm install",
 		"dev": "tsup src/index.ts --format esm,cjs --dts --minify --treeshake --watch",
-		"build": "npm run clean && tsup src/index.ts --format esm,cjs --dts --minify --treeshake",
+		"build": "npm run clean && tsup",
 		"publish:npm": "npm run build && npm publish",
 		"publish:major": "npm version major && npm run publish:npm",
 		"publish:feat": "npm version minor && npm run publish:npm",
