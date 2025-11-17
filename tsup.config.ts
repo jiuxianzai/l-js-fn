@@ -1,14 +1,13 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig(() => {
-  const isProd = process.env.NODE_ENV === "production";
-
+  
   return [
     {
       entry: { index: "src/index.ts" } as Record<string, string>,
       format: ["esm"],
       dts: { entry: { index: "src/index.ts" } as Record<string, string> },
-      minify: isProd,
+      minify: true,
       treeshake: true,
       target: "es2020",
       outDir: "dist",
@@ -18,7 +17,7 @@ export default defineConfig(() => {
         return { js: ".js" };
       },
       esbuildOptions(opts) {
-        if (isProd) {
+        if (true) {
           opts.drop = ["console", "debugger"];
         }
       },
@@ -28,7 +27,7 @@ export default defineConfig(() => {
       entry: { "bom/index": "src/bom/index.ts" } as Record<string, string>,
       format: ["esm"],
       dts: { entry: { "bom/index": "src/bom/index.ts" } as Record<string, string> },
-      minify: isProd,
+      minify: true,
       treeshake: true,
       target: "es2020",
       outDir: "dist",
@@ -38,7 +37,7 @@ export default defineConfig(() => {
         return { js: ".js" };
       },
       esbuildOptions(opts) {
-        if (isProd) {
+        if (true) {
           opts.drop = ["console", "debugger"];
         }
       },
@@ -48,7 +47,7 @@ export default defineConfig(() => {
       entry: { "config/index": "src/config/index.ts" } as Record<string, string>,
       format: ["esm"],
       dts: { entry: { "config/index": "src/config/index.ts" } as Record<string, string> },
-      minify: isProd,
+      minify: true,
       treeshake: true,
       target: "es2020",
       outDir: "dist",
@@ -58,7 +57,7 @@ export default defineConfig(() => {
         return { js: ".js" };
       },
       esbuildOptions(opts) {
-        if (isProd) {
+        if (true) {
           opts.drop = ["console", "debugger"];
         }
       },
@@ -68,7 +67,7 @@ export default defineConfig(() => {
       entry: { "ipc/index": "src/ipc/index.ts" } as Record<string, string>,
       format: ["esm"],
       dts: { entry: { "ipc/index": "src/ipc/index.ts" } as Record<string, string> },
-      minify: isProd,
+      minify: true,
       treeshake: true,
       target: "es2020",
       outDir: "dist",
@@ -78,7 +77,7 @@ export default defineConfig(() => {
         return { js: ".js" };
       },
       esbuildOptions(opts) {
-        if (isProd) {
+        if (true) {
           opts.drop = ["console", "debugger"];
         }
       },
@@ -88,7 +87,7 @@ export default defineConfig(() => {
       entry: { "polling/index": "src/polling/index.ts" } as Record<string, string>,
       format: ["esm"],
       dts: { entry: { "polling/index": "src/polling/index.ts" } as Record<string, string> },
-      minify: isProd,
+      minify: true,
       treeshake: true,
       target: "es2020",
       outDir: "dist",
@@ -98,7 +97,7 @@ export default defineConfig(() => {
         return { js: ".js" };
       },
       esbuildOptions(opts) {
-        if (isProd) {
+        if (true) {
           opts.drop = ["console", "debugger"];
         }
       },
@@ -108,7 +107,7 @@ export default defineConfig(() => {
       entry: { "regex/index": "src/regex/index.ts" } as Record<string, string>,
       format: ["esm"],
       dts: { entry: { "regex/index": "src/regex/index.ts" } as Record<string, string> },
-      minify: isProd,
+      minify: true,
       treeshake: true,
       target: "es2020",
       outDir: "dist",
@@ -118,7 +117,7 @@ export default defineConfig(() => {
         return { js: ".js" };
       },
       esbuildOptions(opts) {
-        if (isProd) {
+        if (true) {
           opts.drop = ["console", "debugger"];
         }
       },
@@ -128,7 +127,7 @@ export default defineConfig(() => {
       entry: { "ws/index": "src/ws/index.ts" } as Record<string, string>,
       format: ["esm"],
       dts: { entry: { "ws/index": "src/ws/index.ts" } as Record<string, string> },
-      minify: isProd,
+      minify: true,
       treeshake: true,
       target: "es2020",
       outDir: "dist",
@@ -138,7 +137,7 @@ export default defineConfig(() => {
         return { js: ".js" };
       },
       esbuildOptions(opts) {
-        if (isProd) {
+        if (true) {
           opts.drop = ["console", "debugger"];
         }
       },
@@ -149,7 +148,7 @@ export default defineConfig(() => {
       entry: { index: "src/index.ts" } as Record<string, string>,
       format: ["cjs"],
       dts: false,
-      minify: isProd,
+      minify: true,
       treeshake: true,
       target: "es2020",
       outDir: "dist",
@@ -159,7 +158,7 @@ export default defineConfig(() => {
         return { js: ".cjs" };
       },
       esbuildOptions(opts) {
-        if (isProd) {
+        if (true) {
           opts.drop = ["console", "debugger"];
         }
       },
@@ -169,7 +168,7 @@ export default defineConfig(() => {
       entry: { "bom/index": "src/bom/index.ts" } as Record<string, string>,
       format: ["cjs"],
       dts: false,
-      minify: isProd,
+      minify: true,
       treeshake: true,
       target: "es2020",
       outDir: "dist",
@@ -179,7 +178,7 @@ export default defineConfig(() => {
         return { js: ".cjs" };
       },
       esbuildOptions(opts) {
-        if (isProd) {
+        if (true) {
           opts.drop = ["console", "debugger"];
         }
       },
@@ -189,7 +188,7 @@ export default defineConfig(() => {
       entry: { "config/index": "src/config/index.ts" } as Record<string, string>,
       format: ["cjs"],
       dts: false,
-      minify: isProd,
+      minify: true,
       treeshake: true,
       target: "es2020",
       outDir: "dist",
@@ -199,7 +198,7 @@ export default defineConfig(() => {
         return { js: ".cjs" };
       },
       esbuildOptions(opts) {
-        if (isProd) {
+        if (true) {
           opts.drop = ["console", "debugger"];
         }
       },
@@ -209,7 +208,7 @@ export default defineConfig(() => {
       entry: { "ipc/index": "src/ipc/index.ts" } as Record<string, string>,
       format: ["cjs"],
       dts: false,
-      minify: isProd,
+      minify: true,
       treeshake: true,
       target: "es2020",
       outDir: "dist",
@@ -219,7 +218,7 @@ export default defineConfig(() => {
         return { js: ".cjs" };
       },
       esbuildOptions(opts) {
-        if (isProd) {
+        if (true) {
           opts.drop = ["console", "debugger"];
         }
       },
@@ -229,7 +228,7 @@ export default defineConfig(() => {
       entry: { "polling/index": "src/polling/index.ts" } as Record<string, string>,
       format: ["cjs"],
       dts: false,
-      minify: isProd,
+      minify: true,
       treeshake: true,
       target: "es2020",
       outDir: "dist",
@@ -239,7 +238,7 @@ export default defineConfig(() => {
         return { js: ".cjs" };
       },
       esbuildOptions(opts) {
-        if (isProd) {
+        if (true) {
           opts.drop = ["console", "debugger"];
         }
       },
@@ -249,7 +248,7 @@ export default defineConfig(() => {
       entry: { "regex/index": "src/regex/index.ts" } as Record<string, string>,
       format: ["cjs"],
       dts: false,
-      minify: isProd,
+      minify: true,
       treeshake: true,
       target: "es2020",
       outDir: "dist",
@@ -259,7 +258,7 @@ export default defineConfig(() => {
         return { js: ".cjs" };
       },
       esbuildOptions(opts) {
-        if (isProd) {
+        if (true) {
           opts.drop = ["console", "debugger"];
         }
       },
@@ -269,7 +268,7 @@ export default defineConfig(() => {
       entry: { "ws/index": "src/ws/index.ts" } as Record<string, string>,
       format: ["cjs"],
       dts: false,
-      minify: isProd,
+      minify: true,
       treeshake: true,
       target: "es2020",
       outDir: "dist",
@@ -279,7 +278,7 @@ export default defineConfig(() => {
         return { js: ".cjs" };
       },
       esbuildOptions(opts) {
-        if (isProd) {
+        if (true) {
           opts.drop = ["console", "debugger"];
         }
       },
