@@ -175,6 +175,28 @@ export function syntaxHighlight<T>(obj: T, indent: number = 0): string {
 }
 
 /**
+ * 将带语法高亮的 HTML 转换为 JSON 对象或纯字符串
+ * 成功解析 JSON ⇒ 返回 object/array
+ * 解析失败 ⇒ 返回未解析的字符串（继续编辑用）
+ */
+export function syntaxHtmlToJson(html: string): Record<string, any> | any[] | string {
+	const jsonString = html
+		.replace(/<span[^>]*>/g, '')
+		.replace(/<\/span>/g, '')
+		.replace(/<\/?pre>/g, '')
+		.replace(/<br\s*\/?>/gi, '\n')
+		.replace(/&nbsp;/g, ' ')
+		.trim();
+
+	try {
+		return JSON.parse(jsonString);
+	} catch (_) {
+		return jsonString;
+	}
+}
+
+
+/**
  * 动态加载外部 js 文件
  * @param {string | null} src js文件路径
  * @returns {Promise<HTMLScriptElement>}

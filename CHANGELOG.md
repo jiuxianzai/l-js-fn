@@ -1,4 +1,8 @@
 ## 更新日志
+### 3.1.0
+
+feat: 新增 syntaxHtmlToJson 方法
+
 ### 3.0.1
 
 fix: 代码压缩开启
