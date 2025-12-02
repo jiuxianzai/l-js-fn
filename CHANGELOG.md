@@ -1,4 +1,8 @@
 ## 更新日志
+### 3.2.0
+
+feat: 新增 validateParams 方法
+
 ### 3.1.0
 
 feat: 新增 syntaxHtmlToJson 方法

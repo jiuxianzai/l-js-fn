@@ -1,89 +1,89 @@
-import { REGEXP } from '@/regex';
+import {REGEXP} from '@/regex';
 
 /**
  * 检查值是否为空
  */
 export function isEmpty<T>(value: T | null | undefined): boolean {
-	if (value === null || value === undefined) return true;
-	if (typeof value === 'string') return value.trim() === '';
-	if (Array.isArray(value)) return value.length === 0;
-	if (typeof value === 'object') return Object.keys(value).length === 0;
-	return false;
+  if (value === null || value === undefined) return true;
+  if (typeof value === 'string') return value.trim() === '';
+  if (Array.isArray(value)) return value.length === 0;
+  if (typeof value === 'object') return Object.keys(value).length === 0;
+  return false;
 }
 
 /**
  * 检查值是否非空
  */
 export function isNotEmpty<T>(value: T | null | undefined): boolean {
-	return !isEmpty(value);
+  return !isEmpty(value);
 }
 
 /**
  * 是否为对象
  */
 export function isObject<T>(value: T): value is T & Record<string, any> {
-	return Object.prototype.toString.call(value) === '[object Object]';
+  return Object.prototype.toString.call(value) === '[object Object]';
 }
 
 /**
  * 是否为数组
  */
 export function isArray<T>(value: T): value is T & unknown[] {
-	return Array.isArray(value) || Object.prototype.toString.call(value) === '[object Array]';
+  return Array.isArray(value) || Object.prototype.toString.call(value) === '[object Array]';
 }
 
 /**
  * 是否为图片
  */
 export const isImage = (filename: string): boolean => {
-	const ext = filename.split('.').pop()?.toLowerCase() || '';
-	return ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].includes(ext);
+  const ext = filename.split('.').pop()?.toLowerCase() || '';
+  return ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].includes(ext);
 };
 
 /**
  * 是否为字符串
  */
 export function isString<T>(value: T): value is T & string {
-	return typeof value === 'string' || value instanceof String;
+  return typeof value === 'string' || value instanceof String;
 }
 
 /**
  * 是否为有效邮箱
  */
 export function isEmail(value: string): boolean {
-	return REGEXP.EMAIL.test(value);
+  return REGEXP.EMAIL.test(value);
 }
 
 /**
  * 是否为合法 URL
  */
 export function isURL(value: string): boolean {
-	if (!value) return false;
-	try {
-		new URL(value);
-		return true;
-	} catch {
-		return false;
-	}
+  if (!value) return false;
+  try {
+    new URL(value);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /**
  * 是否为中国大陆身份证号码
  */
 export function isIdCard(idCard: string): boolean {
-	if (!REGEXP.ID_CARD.test(idCard)) return false;
-	if (idCard.length === 15) return true;
+  if (!REGEXP.ID_CARD.test(idCard)) return false;
+  if (idCard.length === 15) return true;
 
-	const factors = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
-	const checkMap = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'];
-	const checkCode = idCard[17].toUpperCase();
+  const factors = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+  const checkMap = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'];
+  const checkCode = idCard[17].toUpperCase();
 
-	const sum = idCard
-		.slice(0, 17)
-		.split('')
-		.reduce((acc, digit, index) => acc + Number(digit) * factors[index], 0);
+  const sum = idCard
+    .slice(0, 17)
+    .split('')
+    .reduce((acc, digit, index) => acc + Number(digit) * factors[index], 0);
 
-	return checkCode === checkMap[sum % 11];
+  return checkCode === checkMap[sum % 11];
 }
 
 /**
@@ -92,38 +92,53 @@ export function isIdCard(idCard: string): boolean {
  * @returns {boolean} 是否为手机号
  */
 export function isPhoneNumber(phone: string): boolean {
-	// 去掉首尾空格
-	const str = String(phone).trim();
+  // 去掉首尾空格
+  const str = String(phone).trim();
 
-	// 中国大陆手机号正则：1开头，第二位3-9，后面9位数字
-	const regex = REGEXP.PHONE;
+  // 中国大陆手机号正则：1开头，第二位3-9，后面9位数字
+  const regex = REGEXP.PHONE;
 
-	return regex.test(str);
+  return regex.test(str);
 }
 
 /**
  * 深度比较两个值是否相等
  */
 export function isEqual<T>(value: T, other: T): boolean {
-	if (typeof value !== 'object' && typeof other !== 'object') {
-		if (Number.isNaN(value) && Number.isNaN(other)) return true;
-		return value === other;
-	}
+  if (typeof value !== 'object' && typeof other !== 'object') {
+    if (Number.isNaN(value) && Number.isNaN(other)) return true;
+    return value === other;
+  }
 
-	if (value === null && other === null) return true;
-	if (typeof value !== typeof other) return false;
-	if (value === other) return true;
+  if (value === null && other === null) return true;
+  if (typeof value !== typeof other) return false;
+  if (value === other) return true;
 
-	if (Array.isArray(value) && Array.isArray(other)) {
-		if (value.length !== other.length) return false;
-		return value.every((v, i) => isEqual(v, (other as unknown[])[i]));
-	}
+  if (Array.isArray(value) && Array.isArray(other)) {
+    if (value.length !== other.length) return false;
+    return value.every((v, i) => isEqual(v, (other as unknown[])[i]));
+  }
 
-	if (Array.isArray(value) || Array.isArray(other)) return false;
+  if (Array.isArray(value) || Array.isArray(other)) return false;
 
-	const valueKeys = Object.keys(value as object);
-	const otherKeys = Object.keys(other as object);
-	if (valueKeys.length !== otherKeys.length) return false;
+  const valueKeys = Object.keys(value as object);
+  const otherKeys = Object.keys(other as object);
+  if (valueKeys.length !== otherKeys.length) return false;
 
-	return valueKeys.every((key) => key in (other as object) && isEqual((value as any)[key], (other as any)[key]));
+  return valueKeys.every((key) => key in (other as object) && isEqual((value as any)[key], (other as any)[key]));
+}
+
+/**
+ * 校验参数中必填选项是否为空
+ * @param required - 必填字段数组
+ * @param params - 需校验的参数
+ * @return {string | null} - 未通过返回该字段，通过则返回null
+ */
+export function validateParams(required: string[], params: Record<string, any>): string | null {
+  for (const key of required) {
+    if (!params[key]) {
+      return key;
+    }
+  }
+  return null;
 }
