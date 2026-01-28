@@ -1,0 +1,40 @@
+{
+	"$schema": "https://typedoc.org/schema.json",
+	"entryPoints": ["src/index.ts", "src/bom/index.ts", "src/config/index.ts", "src/ipc/index.ts", "src/polling/index.ts", "src/regex/index.ts", "src/ws/index.ts"],
+	"out": "docs/api",
+	"plugin": [],
+	"readme": "none",
+	"excludePrivate": true,
+	"excludeProtected": false,
+	"excludeInternal": true,
+	"hideGenerator": true,
+	"sort": ["source-order"],
+	"kindSortOrder": [
+		"Document",
+		"Reference",
+		"Project",
+		"Module",
+		"Namespace",
+		"Enum",
+		"EnumMember",
+		"Class",
+		"Interface",
+		"TypeAlias",
+		"Constructor",
+		"Property",
+		"Method",
+		"Function",
+		"Variable"
+	],
+	"categorizeByGroup": true,
+	"defaultCategory": "其他",
+	"categoryOrder": ["数组*", "字符串*", "日期*", "对象*", "数字*", "类型判断", "浏览器", "配置", "轮询", "正则", "WebSocket", "IPC", "工具类", "*"],
+	"includeVersion": true,
+	"navigationLinks": {
+		"首页": "https://github.com/jiuxianzai/l-js-fn",
+		"GitHub": "https://github.com/jiuxianzai/l-js-fn"
+	},
+	"searchInComments": true,
+	"searchInDocuments": true,
+	"theme": "default"
+}

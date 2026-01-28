@@ -29,3 +29,16 @@ VERSIONING*
 packages/
 
 __tests__/
+
+# 忽略测试覆盖率报告
+coverage/
+*.lcov
+lcov.info
+
+# 忽略 TypeDoc 配置（不需要发布）
+typedoc.json
+
+# 忽略开发相关
+.eslintrc*
+.prettier*
+.editorconfig
