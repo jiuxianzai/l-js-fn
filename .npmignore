@@ -11,8 +11,16 @@ test/
 .DS_Store
 .idea/
 
-# 忽略 README.md 以外的文档
+# 忽略所有 md 文档（私人项目，不发布到 npm）
 *.md
+!dist/**/*.md
+
+# 明确排除根目录的 md 文档（npm 默认会包含 README，使用多种模式确保排除）
+README*
+CHANGELOG*
+CLAUDE*
+CONTRIBUTING*
+VERSIONING*
 
 # 忽略文本文件
 *.txt
@@ -21,5 +29,3 @@ test/
 packages/
 
 __tests__/
-
-CHANGELOG.md

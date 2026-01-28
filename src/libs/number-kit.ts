@@ -10,17 +10,27 @@
  * console.log(formatNumber("abc"));         // "abc" (非数字原样返回)
  */
 export const formatNumber = (value: string | number, useUnit: boolean = false): string => {
+	// 检查是否为有限数字
+	if (!isFinite(value as number)) {
+		// 处理 Infinity 和 -Infinity
+		if (value === Infinity || value === -Infinity) return String(value);
+		// 非数字字符串原样返回
+		return String(value);
+	}
+
 	let num = typeof value === 'string' ? parseFloat(value) : value;
 
 	if (isNaN(num)) return String(value);
 
 	if (useUnit) {
 		// 中文单位
-		if (num >= 1e8) {
-			return `${(num / 1e8).toFixed(2).replace(/\.00$/, '')}亿`;
+		const absNum = Math.abs(num);
+		const sign = num < 0 ? '-' : '';
+		if (absNum >= 1e8) {
+			return `${sign}${(absNum / 1e8).toFixed(2).replace(/\.00$/, '')}亿`;
 		}
-		if (num >= 1e4) {
-			return `${(num / 1e4).toFixed(2).replace(/\.00$/, '')}万`;
+		if (absNum >= 1e4) {
+			return `${sign}${(absNum / 1e4).toFixed(2).replace(/\.00$/, '')}万`;
 		}
 		return String(num);
 	} else {
@@ -39,16 +49,43 @@ export const formatNumber = (value: string | number, useUnit: boolean = false): 
 export function toPercent(value: any, decimals = 2, round = true) {
 	if (value === null || value === undefined || isNaN(value)) return '0%';
 
-	let num = Number(value) * 100;
-
 	if (round) {
-		num = Number(num.toFixed(decimals));
+		const num = Number(value) * 100;
+		return `${num.toFixed(decimals)}%`;
 	} else {
-		const factor = Math.pow(10, decimals);
-		num = Math.floor(num * factor) / factor;
-	}
+		// 向下取整（截断）：先截断原值，再转百分比
+		const valueStr = value.toString();
+		const dotIndex = valueStr.indexOf('.');
 
-	return `${num.toFixed(decimals)}%`;
+		if (dotIndex === -1) {
+			// 没有小数点，如 123 -> "12300.00%"
+			return `${valueStr}00.${'0'.repeat(decimals)}%`;
+		}
+
+		// 有小数点，先截断到指定小数位，再转百分比
+		const integerPart = valueStr.substring(0, dotIndex);  // "0"
+		let decimalPart = valueStr.substring(dotIndex + 1);  // "5559"
+
+		// 截断到足够的小数位（百分比需要两位小数，所以原值需要 2 + decimals 位）
+		const requiredDecimals = 2 + decimals;
+		if (decimalPart.length > requiredDecimals) {
+			decimalPart = decimalPart.substring(0, requiredDecimals);
+		} else {
+			// 补零
+			decimalPart = decimalPart.padEnd(requiredDecimals, '0');
+		}
+
+		// 移动小数点两位："0" + "5559" = "05559"
+		// 整数部分：取到倒数第2位前（小数点前所有数字）
+		// 小数部分：从倒数第(decimals+2)位到倒数第2位（截断，不四舍五入）
+		const shiftedStr = integerPart + decimalPart;
+		const shiftedInteger = shiftedStr.substring(0, shiftedStr.length - 2);  // "055" -> "55"
+		const shiftedDecimal = shiftedStr.substring(shiftedStr.length - decimals - 2, shiftedStr.length - 2);  // "55" (截断)
+
+		// 去掉前导零并返回
+		const result = `${String(Number(shiftedInteger))}.${shiftedDecimal}%`;
+		return result;
+	}
 }
 
 /**
@@ -91,7 +128,7 @@ export function getUniqueRandomIndexes(len: number, count: number): number[] {
 
 	const indexes = new Set<number>();
 	while (indexes.size < count) {
-		indexes.add(random(0, len - 1));
+		indexes.add(random(0, len));
 	}
 	return Array.from(indexes);
 }

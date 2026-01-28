@@ -71,14 +71,17 @@ export function isURL(value: string): boolean {
  * 是否为中国大陆身份证号码
  */
 export function isIdCard(idCard: string): boolean {
-  if (!REGEXP.ID_CARD.test(idCard)) return false;
-  if (idCard.length === 15) return true;
+  // 转为字符串，支持数字类型输入
+  const str = String(idCard);
+
+  if (!REGEXP.ID_CARD.test(str)) return false;
+  if (str.length === 15) return true;
 
   const factors = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
   const checkMap = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'];
-  const checkCode = idCard[17].toUpperCase();
+  const checkCode = str[17].toUpperCase();
 
-  const sum = idCard
+  const sum = str
     .slice(0, 17)
     .split('')
     .reduce((acc, digit, index) => acc + Number(digit) * factors[index], 0);
