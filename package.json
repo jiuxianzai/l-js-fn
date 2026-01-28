@@ -57,14 +57,35 @@
 	},
 	"keywords": [
 		"javascript",
-		"lib",
-		"js-utils",
-		"js-function"
+		"typescript",
+		"utility",
+		"utils",
+		"toolkit",
+		"helper",
+		"functions",
+		"methods",
+		"esm",
+		"commonjs",
+		"tree-shaking",
+		"modular",
+		"lightweight",
+		"bom",
+		"websocket",
+		"polling",
+		"regex",
+		"date",
+		"array",
+		"object",
+		"string"
 	],
 	"author": "jiuxianzai",
 	"license": "ISC",
-	"description": "整理了常用的js方法",
+	"description": "轻量级 JavaScript 工具函数库，支持模块化导入和 Tree-shaking",
 	"readme": "",
+	"sideEffects": false,
+	"engines": {
+		"node": ">=14.0.0"
+	},
 	"files": [
 		"dist/"
 	],
