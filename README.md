@@ -66,6 +66,12 @@ import { DATE_FORMAT, HTTP_STATUS } from 'l-js-fn/config';
 
 // IPC 通信
 import { H5Bridge, IframeBridge } from 'l-js-fn/ipc';
+
+// 编码/解码
+import { escapeHTML, base64Encode } from 'l-js-fn/encode';
+
+// 文件处理
+import { formatFileSize, isImage } from 'l-js-fn/file';
 ```
 
 ## 📚 API 文档
@@ -121,7 +127,10 @@ import {
   arrayUnique,
   arrayPaginate,
   arraySplitToGroups,
-  moveElement
+  moveElement,
+  groupBy,
+  sample,
+  sampleSize
 } from 'l-js-fn';
 
 // 删除元素
@@ -145,6 +154,20 @@ arraySplitToGroups([1, 2, 3, 4, 5], 2);
 
 // 移动数组元素
 moveElement([1, 2, 3], 1, 'up'); // 移动索引1的元素向上
+
+// 按字段分组对象数组
+groupBy([
+  { name: 'Alice', age: 25 },
+  { name: 'Bob', age: 25 },
+  { name: 'Charlie', age: 30 }
+], 'age');
+// { 25: [{ name: 'Alice', age: 25 }, { name: 'Bob', age: 25 }], 30: [{ name: 'Charlie', age: 30 }] }
+
+// 随机取一个元素
+sample([1, 2, 3, 4, 5]); // 3（随机）
+
+// 随机取 n 个元素
+sampleSize([1, 2, 3, 4, 5], 2); // [2, 5]（随机）
 ```
 
 #### 字符串处理 (string-kit)
@@ -508,6 +531,88 @@ const h5Bridge = new H5Bridge();
 const iframeBridge = new IframeBridge('https://example.com');
 ```
 
+### 编码/解码 (encode)
+
+```typescript
+import {
+  base64Encode,
+  base64Decode,
+  escapeHTML,
+  unescapeHTML,
+  urlEncode,
+  urlDecode,
+  querystringify,
+  parseQueryString
+} from 'l-js-fn/encode';
+
+// Base64 编码/解码（支持 Unicode）
+base64Encode('Hello World'); // 'SGVsbG8gV29ybGQ='
+base64Encode('你好'); // '5L2g5aW9'
+base64Decode('SGVsbG8gV29ybGQ='); // 'Hello World'
+
+// HTML 转义/反转义（防 XSS 攻击）
+escapeHTML('<script>alert("XSS")</script>');
+// '&lt;script&gt;alert(&quot;XSS&quot;)&lt;&#x2F;script&gt;'
+unescapeHTML('&lt;div&gt;'); // '<div>'
+
+// URL 编码/解码
+urlEncode('Hello World!'); // 'Hello%20World!'
+urlDecode('Hello%20World'); // 'Hello World'
+
+// 查询字符串转换
+querystringify({ name: 'John', age: 20 }); // 'name=John&age=20'
+querystringify({ a: [1, 2, 3] }); // 'a=1&a=2&a=3'
+parseQueryString('name=John&age=20'); // { name: 'John', age: '20' }
+parseQueryString('?a=1&a=2'); // { a: ['1', '2'] }
+```
+
+### 文件处理 (file)
+
+```typescript
+import {
+  formatFileSize,
+  getExtension,
+  getFileName,
+  downloadFile,
+  readAsText,
+  readAsDataURL,
+  readAsArrayBuffer,
+  isImage,
+  isVideo,
+  isAudio,
+  isPDF,
+  FileSizeUnit
+} from 'l-js-fn/file';
+
+// 格式化文件大小
+formatFileSize(1024); // { formatted: '1 KB', value: 1, unit: 'KB' }
+formatFileSize(1536000); // { formatted: '1.46 MB', value: 1.46, unit: 'MB' }
+formatFileSize(1024, { precision: 0 }); // { formatted: '1 KB', value: 1, unit: 'KB' }
+formatFileSize(1000, { base: 1000 }); // { formatted: '1 KB', value: 1, unit: 'KB' }
+
+// 文件名处理
+getExtension('image.png'); // '.png'
+getExtension('/path/to/file.txt'); // '.txt'
+getFileName('/path/to/image.png'); // 'image'
+getFileName('document.pdf'); // 'document'
+
+// 浏览器下载文件
+const blob = new Blob(['Hello World'], { type: 'text/plain' });
+downloadFile(blob, 'hello.txt');
+
+// 读取文件内容
+const file = new File(['content'], 'test.txt');
+await readAsText(file); // 'content'
+await readAsDataURL(file); // 'data:text/plain;base64,...'
+await readAsArrayBuffer(file); // ArrayBuffer
+
+// 文件类型判断
+isImage('photo.jpg'); // true
+isVideo('movie.mp4'); // true
+isAudio('music.mp3'); // true
+isPDF('document.pdf'); // true
+```
+
 ## 🌐 浏览器兼容性
 
 - Chrome >= 90
@@ -527,9 +632,12 @@ import { isArray } from 'l-js-fn';
 import { scrollTop } from 'l-js-fn/bom';
 import { Polling } from 'l-js-fn/polling';
 import { WebSocketManager } from 'l-js-fn/ws';
+import { escapeHTML } from 'l-js-fn/encode';
+import { formatFileSize } from 'l-js-fn/file';
 
 // CommonJS 导入
 const { isArray } = require('l-js-fn');
 const { scrollTop } = require('l-js-fn/bom');
+const { escapeHTML } = require('l-js-fn/encode');
 ```
 

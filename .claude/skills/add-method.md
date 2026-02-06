@@ -120,7 +120,6 @@ export * from '@/libs/xxx-kit';
 1. 在子模块的 `index.ts` 中导出
 2. 更新 `tsup.config.ts` 的 `modules` 数组
 3. 更新 `package.json` 的 `exports` 字段
-4. 更新 `typedoc.json` 的 `entryPoints` 数组
 
 **示例（新增 storage 模块）：**
 
@@ -251,7 +250,70 @@ method1('param');
 - `README.md` 的 "按需导入子模块" 示例
 - `CLAUDE.md` 的 "导入方式" 示例
 
-### 第 8 步：提交代码
+### 第 8 步：更新 CHANGELOG.md
+
+**在提交代码前，必须更新 CHANGELOG.md 记录变更！**
+
+**更新位置：** 在 `## [Unreleased]` 部分下添加变更记录
+
+**格式规范：**
+
+```markdown
+## [Unreleased]
+
+### 新增
+- **模块名**: 简要描述新功能（1 句话）
+- **模块名**: 新增 `methodName` 方法，功能说明
+
+### 修复
+- **模块名**: 修复 `methodName` 的具体 bug 描述
+
+### 变更
+- **模块名**: 重要变更说明（如果有 breaking change）
+```
+
+**示例：**
+
+```markdown
+## [Unreleased]
+
+### 新增
+- **数组方法**: 新增 `groupBy` 方法，支持按字段分组对象数组
+- **数组方法**: 新增 `sample` 方法，随机取数组中的一个元素
+- **encode 模块**: 新增编码/解码模块
+  - `base64Encode/base64Decode` - Base64 编码/解码（支持 Unicode）
+  - `escapeHTML/unescapeHTML` - HTML 转义/反转义（防 XSS 攻击）
+
+### 修复
+- **bom 模块**: 修复 `decodedURIComponent` 拼写错误为 `decodeURIComponent`
+```
+
+**注意事项：**
+- 使用简洁清晰的语言描述变更
+- 新增功能写明模块名和方法名
+- Bug 修复写明修复了什么问题
+- 如果有 Breaking Change，必须在"变更"部分标注
+- 每次发布时，将 `[Unreleased]` 的内容移到对应版本号下
+
+**版本号规则（语义化版本）：**
+```
+主版本号.次版本号.修订号 (MAJOR.MINOR.PATCH)
+例如：3.3.0
+
+版本号递增规则：
+- 新增方法、新增模块 → 次版本号 +1（例如：3.2.0 → 3.3.0）
+- 只修复 bug、小改动 → 修订号 +1（例如：3.2.0 → 3.2.1）
+- 整体结构变化、破坏性变更 → 主版本号 +1（例如：2.0.0 → 3.0.0）
+
+发布新版本时的步骤：
+1. 根据 [Unreleased] 的内容判断应该递增哪个版本号
+2. 将 [Unreleased] 的内容移到新版本号下（例如：## [3.4.0] - 2026-XX-XX）
+3. 更新 package.json 中的 version 字段
+4. 提交并打上 git tag
+5. 重新创建空的 [Unreleased] 部分用于下次开发
+```
+
+### 第 9 步：提交代码
 
 **提交信息规范（遵循 Conventional Commits）：**
 
@@ -306,6 +368,7 @@ footer（可选）
 - [ ] 注释包含 `@param`、`@returns`、`@example`
 - [ ] README.md 有使用示例
 - [ ] CLAUDE.md 已更新（如果需要）
+- [ ] CHANGELOG.md 已更新（记录本次变更）
 
 ### 测试
 - [ ] 测试覆盖率 ≥ 80%
@@ -316,7 +379,6 @@ footer（可选）
 ### 构建和配置
 - [ ] `tsup.config.ts` 已更新（如果需要）
 - [ ] `package.json` 的 `exports` 已更新（如果需要）
-- [ ] `typedoc.json` 已更新（如果需要）
 - [ ] `npm run build` 成功
 
 ### 兼容性
@@ -380,16 +442,18 @@ jest.spyOn(Object, 'keys').mockImplementation((obj) => {
 2. 在 `src/index.ts` 添加导出
 3. 在 `__tests__/libs/xxx-kit.test.ts` 添加测试
 4. 更新 README.md 和 CLAUDE.md
-5. 运行 `npm test` 和 `npm run build`
-6. 提交代码
+5. 更新 CHANGELOG.md（记录本次变更）
+6. 运行 `npm test` 和 `npm run build`
+7. 提交代码
 
 ### 新增子模块
 1. 创建 `src/xxx/index.ts`
-2. 更新 `tsup.config.ts`、`package.json`、`typedoc.json`
+2. 更新 `tsup.config.ts`、`package.json`
 3. 创建 `__tests__/xxx/index.test.ts`
 4. 更新 README.md 和 CLAUDE.md
-5. 运行 `npm test` 和 `npm run build`
-6. 提交代码
+5. 更新 CHANGELOG.md（记录本次变更）
+6. 运行 `npm test` 和 `npm run build`
+7. 提交代码
 
 ---
 

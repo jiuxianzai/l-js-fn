@@ -7,6 +7,59 @@
 
 ---
 
+## [Unreleased]
+
+### 新增
+- 记录即将发布的新功能
+
+### 修复
+- 记录即将发布的 bug 修复
+
+---
+
+## [3.3.0] - 2026-02-06
+
+### 新增
+- **数组方法**: 新增 `groupBy` 方法，支持按字段分组对象数组（支持嵌套路径如 `user.id`）
+- **数组方法**: 新增 `sample` 方法，随机取数组中的一个元素
+- **数组方法**: 新增 `sampleSize` 方法，随机取数组中的 n 个不重复元素
+- **encode 模块**: 新增编码/解码子模块
+  - `base64Encode/base64Decode` - Base64 编码/解码（支持 Unicode）
+  - `escapeHTML/unescapeHTML` - HTML 转义/反转义（防 XSS 攻击）
+  - `urlEncode/urlDecode` - URL 编码/解码
+  - `querystringify/parseQueryString` - 查询字符串与对象转换
+- **file 模块**: 新增文件处理子模块
+  - `formatFileSize` - 格式化文件大小（B/KB/MB/GB/TB，支持自定义精度和进制）
+  - `getExtension` - 获取文件扩展名（包含点号）
+  - `getFileName` - 获取文件名（不含路径和扩展名）
+  - `downloadFile` - 触发浏览器下载文件
+  - `readAsText/readAsDataURL/readAsArrayBuffer` - 读取文件内容（Promise 封装）
+  - `isImage/isVideo/isAudio/isPDF` - 文件类型判断
+
+### 修复
+- **bom 模块**: 修复 `decodedURIComponent` 拼写错误为 `decodeURIComponent`
+
+### 文档
+- 更新 README.md 添加新方法和新模块的使用文档
+- 更新 CLAUDE.md 添加新模块说明和测试文件结构
+- 移除 TypeDoc 相关配置和脚本（`typedoc.json`、`docs` 和 `docs:serve` 脚本、`typedoc` 依赖）
+- 更新 `.claude/skills/add-method.md`，在流程中添加 CHANGELOG 更新步骤
+
+### 测试
+- 为新增的数组方法编写 25+ 个测试用例
+- 为 encode 模块编写 60+ 个测试用例
+- 为 file 模块编写 50+ 个测试用例（包括浏览器环境 mock）
+- **测试统计**：19 个测试套件，812 个测试用例全部通过
+
+---
+
+## [3.2.1] - 2026-01-28
+
+### 变更
+- 版本号更新
+
+---
+
 ## [3.2.0] - 2026-01-28
 
 ### 新增

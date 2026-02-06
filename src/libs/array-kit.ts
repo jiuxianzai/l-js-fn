@@ -241,3 +241,98 @@ export function moveElement<T>(
 
   return Result.ok(newList);
 }
+
+/**
+ * 按字段对数组对象进行分组
+ * @param array - 需要分组的数组
+ * @param key - 分组依据的键名（支持嵌套路径，如 'user.id'）
+ * @returns 分组后的对象，键为字段值，值为对应的数组
+ * @example
+ * const users = [
+ *   { name: 'Alice', age: 20, city: 'Beijing' },
+ *   { name: 'Bob', age: 25, city: 'Shanghai' },
+ *   { name: 'Charlie', age: 20, city: 'Beijing' }
+ * ]
+ * groupBy(users, 'age') // { 20: [{...}, {...}], 25: [{...}] }
+ * groupBy(users, 'city') // { Beijing: [{...}, {...}], Shanghai: [{...}] }
+ */
+export function groupBy<T extends Record<string, any>>(
+  array: T[],
+  key: string
+): Record<string, T[]> {
+  if (!Array.isArray(array)) {
+    throw new Error("groupBy: 参数必须是数组");
+  }
+
+  const result: Record<string, T[]> = {};
+
+  for (const item of array) {
+    // 支持嵌套路径，如 'user.id'
+    const groupKey = key.split('.').reduce((obj: any, k) => obj?.[k], item) ?? '__undefined__';
+
+    if (!result[groupKey]) {
+      result[groupKey] = [];
+    }
+
+    result[groupKey].push(item);
+  }
+
+  return result;
+}
+
+/**
+ * 随机获取数组中的一个元素
+ * @param array - 数组
+ * @returns 随机的一个元素，数组为空时返回 undefined
+ * @example
+ * const colors = ['red', 'green', 'blue', 'yellow']
+ * sample(colors) // 'blue' (随机)
+ */
+export function sample<T>(array: T[]): T | undefined {
+  if (!Array.isArray(array) || array.length === 0) {
+    return undefined;
+  }
+
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+}
+
+/**
+ * 随机获取数组中的 n 个元素（不重复）
+ * @param array - 数组
+ * @param n - 要获取的元素数量，默认为 1
+ * @returns 随机选取的元素数组，如果 n 大于数组长度则返回整个数组的乱序结果
+ * @example
+ * const numbers = [1, 2, 3, 4, 5]
+ * sampleSize(numbers, 2) // [3, 1] (随机，不重复)
+ * sampleSize(numbers, 10) // [2, 5, 1, 4, 3] (返回全部乱序)
+ */
+export function sampleSize<T>(array: T[], n: number = 1): T[] {
+  if (!Array.isArray(array) || array.length === 0) {
+    return [];
+  }
+
+  if (n >= array.length) {
+    // Fisher-Yates 洗牌算法
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }
+
+  const result: T[] = [];
+  const copy = [...array];
+  const used = new Set<number>();
+
+  while (result.length < n && used.size < copy.length) {
+    const randomIndex = Math.floor(Math.random() * copy.length);
+    if (!used.has(randomIndex)) {
+      used.add(randomIndex);
+      result.push(copy[randomIndex]);
+    }
+  }
+
+  return result;
+}

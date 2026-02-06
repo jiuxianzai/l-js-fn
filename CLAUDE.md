@@ -32,12 +32,6 @@ npm run publish:fix      # patch 版本升级并发布
 npm run publish:pre      # prerelease 版本升级并发布（beta）
 ```
 
-### 文档
-```bash
-npm run docs           # 使用 TypeDoc 生成 API 文档
-npm run docs:serve     # 在本地 8080 端口预览文档
-```
-
 ## 项目架构
 
 ### 模块化导出结构
@@ -64,6 +58,12 @@ l-js-fn/
 │
 ├── /config           # 配置常量
 │   └── DATE_FORMAT、HTTP_STATUS 等常量定义
+│
+├── /encode           # 编码/解码
+│   └── Base64、HTML、URL 编码转换，查询字符串处理
+│
+├── /file             # 文件处理
+│   └── 文件大小格式化、扩展名获取、文件类型判断、浏览器文件下载/读取
 │
 ├── /ipc              # 跨进程通信
 │   ├── H5Bridge.ts   # H5 与原生通信桥接
@@ -96,6 +96,8 @@ import { WebSocketManager } from 'l-js-fn/ws';
 import { DATE_FORMAT } from 'l-js-fn/config';
 import { H5Bridge, IframeBridge } from 'l-js-fn/ipc';
 import { setStorage, getStorage } from 'l-js-fn/storage';
+import { escapeHTML, base64Encode } from 'l-js-fn/encode';
+import { formatFileSize, isImage } from 'l-js-fn/file';
 ```
 
 ## 构建工具配置
@@ -166,6 +168,8 @@ import { setStorage, getStorage } from 'l-js-fn/storage';
 __tests__/
 ├── bom/index.test.ts
 ├── config/index.test.ts
+├── encode/index.test.ts
+├── file/index.test.ts
 ├── ipc/
 │   ├── H5Bridge.test.ts
 │   └── IframeBridge.test.ts

@@ -14,6 +14,9 @@ import {
 	arraySplitToGroups,
 	findIndex,
 	moveElement,
+	groupBy,
+	sample,
+	sampleSize,
 } from '@/libs/array-kit';
 
 describe('array-kit - 数组操作工具', () => {
@@ -549,6 +552,155 @@ describe('array-kit - 数组操作工具', () => {
 					}
 				}
 			}
+		});
+	});
+
+	// ==================== groupBy 测试 ====================
+	describe('groupBy - 按字段对数组对象进行分组', () => {
+		const users = [
+			{ id: 1, name: 'Alice', age: 20, city: 'Beijing' },
+			{ id: 2, name: 'Bob', age: 25, city: 'Shanghai' },
+			{ id: 3, name: 'Charlie', age: 20, city: 'Beijing' },
+			{ id: 4, name: 'David', age: 25, city: 'Shanghai' },
+		];
+
+		it('应该按数字字段分组', () => {
+			const result = groupBy(users, 'age');
+			expect(result[20]).toHaveLength(2);
+			expect(result[25]).toHaveLength(2);
+			expect(result[20]).toEqual([
+				{ id: 1, name: 'Alice', age: 20, city: 'Beijing' },
+				{ id: 3, name: 'Charlie', age: 20, city: 'Beijing' },
+			]);
+		});
+
+		it('应该按字符串字段分组', () => {
+			const result = groupBy(users, 'city');
+			expect(result['Beijing']).toHaveLength(2);
+			expect(result['Shanghai']).toHaveLength(2);
+		});
+
+		it('应该处理嵌套属性路径', () => {
+			const data = [
+				{ user: { id: 1, name: 'Alice' } },
+				{ user: { id: 2, name: 'Bob' } },
+				{ user: { id: 1, name: 'Charlie' } },
+			];
+			const result = groupBy(data, 'user.id');
+			expect(result[1]).toHaveLength(2);
+		});
+
+		it('应该处理 undefined 或 null 的字段值', () => {
+			const data = [
+				{ id: 1, category: 'A' },
+				{ id: 2, category: null },
+				{ id: 3, category: undefined },
+			];
+			const result = groupBy(data, 'category');
+			expect(result['__undefined__']).toHaveLength(2);
+		});
+
+		it('应该处理空数组', () => {
+			const result = groupBy([], 'id');
+			expect(result).toEqual({});
+		});
+
+		it('应该抛出错误如果参数不是数组', () => {
+			expect(() => groupBy('not array' as any, 'id')).toThrow('参数必须是数组');
+		});
+	});
+
+	// ==================== sample 测试 ====================
+	describe('sample - 随机获取数组中的一个元素', () => {
+		it('应该返回数组中的一个元素', () => {
+			const arr = ['red', 'green', 'blue', 'yellow'];
+			const result = sample(arr);
+			expect(arr).toContain(result);
+		});
+
+		it('应该返回数字数组中的一个元素', () => {
+			const arr = [1, 2, 3, 4, 5];
+			const result = sample(arr);
+			expect(arr).toContain(result);
+			expect(typeof result).toBe('number');
+		});
+
+		it('应该处理空数组', () => {
+			const result = sample([]);
+			expect(result).toBeUndefined();
+		});
+
+		it('应该处理非数组输入', () => {
+			const result = sample('not array' as any);
+			expect(result).toBeUndefined();
+		});
+
+		it('应该返回数组中的唯一元素', () => {
+			const arr = ['only'];
+			const result = sample(arr);
+			expect(result).toBe('only');
+		});
+	});
+
+	// ==================== sampleSize 测试 ====================
+	describe('sampleSize - 随机获取数组中的 n 个元素', () => {
+		it('应该返回指定数量的不重复元素', () => {
+			const arr = [1, 2, 3, 4, 5];
+			const result = sampleSize(arr, 2);
+			expect(result).toHaveLength(2);
+			expect(new Set(result).size).toBe(2); // 不重复
+			expect(arr).toContain(result[0]);
+			expect(arr).toContain(result[1]);
+		});
+
+		it('应该使用默认参数 n=1', () => {
+			const arr = [1, 2, 3, 4, 5];
+			const result = sampleSize(arr);
+			expect(result).toHaveLength(1);
+			expect(arr).toContain(result[0]);
+		});
+
+		it('当 n 大于数组长度时应返回乱序的全部元素', () => {
+			const arr = [1, 2, 3];
+			const result = sampleSize(arr, 10);
+			expect(result).toHaveLength(3);
+			expect(new Set(result).size).toBe(3);
+			});
+
+		it('当 n 等于数组长度时应返回乱序的全部元素', () => {
+			const arr = [1, 2, 3, 4, 5];
+			const result = sampleSize(arr, 5);
+			expect(result).toHaveLength(5);
+			expect(new Set(result).size).toBe(5);
+		});
+
+		it('应该处理空数组', () => {
+			const result = sampleSize([], 3);
+			expect(result).toEqual([]);
+		});
+
+		it('应该处理非数组输入', () => {
+			const result = sampleSize('not array' as any, 3);
+			expect(result).toEqual([]);
+		});
+
+		it('应该处理 n=0', () => {
+			const arr = [1, 2, 3];
+			const result = sampleSize(arr, 0);
+			expect(result).toEqual([]);
+		});
+
+		it('随机结果应该不总是相同（多次测试）', () => {
+			const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+			const results = new Set();
+
+			for (let i = 0; i < 20; i++) {
+				const result = sampleSize(arr, 3);
+				results.add(result.join(','));
+			}
+
+			// 至少应该有几种不同的随机结果
+			expect(results.size).toBeGreaterThan(1);
 		});
 	});
 });
