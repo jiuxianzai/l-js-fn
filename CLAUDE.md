@@ -19,6 +19,8 @@ npm run reload       # 重装依赖（删除 node_modules 和 package-lock.json�
 ### 测试
 ```bash
 npm test             # 运行 Jest 测试
+npm run test:coverage  # 运行测试并生成覆盖率报告
+npm run test:watch      # 监听模式运行测试
 ```
 
 ### 发布
@@ -28,6 +30,12 @@ npm run publish:major    # major 版本升级并发布
 npm run publish:feat     # minor 版本升级并发布
 npm run publish:fix      # patch 版本升级并发布
 npm run publish:pre      # prerelease 版本升级并发布（beta）
+```
+
+### 文档
+```bash
+npm run docs           # 使用 TypeDoc 生成 API 文档
+npm run docs:serve     # 在本地 8080 端口预览文档
 ```
 
 ## 项目架构
@@ -52,7 +60,7 @@ l-js-fn/
 │       └── Result.ts      # Result 类型处理类
 │
 ├── /bom              # 浏览器对象模型方法
-│   └── 滚动、全屏、剪贴板等浏览器 API 封装
+│   └── 滚动、全屏、剪贴板、Cookie 等浏览器 API 封装
 │
 ├── /config           # 配置常量
 │   └── DATE_FORMAT、HTTP_STATUS 等常量定义
@@ -67,6 +75,9 @@ l-js-fn/
 ├── /regex            # 正则表达式常量
 │   └── PHONE、EMAIL、PASSWORD 等常用正则
 │
+├── /storage          # 本地存储工具
+│   └── localStorage/sessionStorage 封装（支持过期时间）
+│
 └── /ws               # WebSocket 管理类
     └── WebSocketManager 类（连接、重连、消息发送）
 ```
@@ -78,12 +89,13 @@ l-js-fn/
 import { isArray, formatDate } from 'l-js-fn';
 
 // 按需导入子模块（推荐）
-import { scrollTop, copyToClipboard } from 'l-js-fn/bom';
+import { scrollTop, copyToClipboard, setCookie, getCookie } from 'l-js-fn/bom';
 import { Polling } from 'l-js-fn/polling';
 import { REGEXP } from 'l-js-fn/regex';
 import { WebSocketManager } from 'l-js-fn/ws';
 import { DATE_FORMAT } from 'l-js-fn/config';
 import { H5Bridge, IframeBridge } from 'l-js-fn/ipc';
+import { setStorage, getStorage } from 'l-js-fn/storage';
 ```
 
 ## 构建工具配置
@@ -148,4 +160,40 @@ import { H5Bridge, IframeBridge } from 'l-js-fn/ipc';
 
 测试环境：node（Jest 配置）
 
-暂无测试文件，建议为工具函数添加单元测试。
+### 测试文件结构
+测试文件位于 `__tests__/` 目录，与源代码结构对应：
+```
+__tests__/
+├── bom/index.test.ts
+├── config/index.test.ts
+├── ipc/
+│   ├── H5Bridge.test.ts
+│   └── IframeBridge.test.ts
+├── libs/
+│   ├── array-kit.test.ts
+│   ├── common.test.ts
+│   ├── date-kit.test.ts
+│   ├── is-kit.test.ts
+│   ├── number-kit.test.ts
+│   ├── object-kit.test.ts
+│   ├── string-kit.test.ts
+│   └── url-kit.test.ts
+├── polling/index.test.ts
+├── regex/index.test.ts
+├── utils/Result.test.ts
+└── ws/index.test.ts
+```
+
+### 覆盖率要求
+- **阈值**：80%（branches、functions、lines、statements）
+- **报告格式**：text、text-summary、lcov、html、json
+- **输出目录**：`coverage/`
+
+### 运行单个测试文件
+```bash
+# 测试单个文件
+npx jest __tests__/libs/is-kit.test.ts
+
+# 测试匹配模式
+npx jest --testNamePattern="should return true"
+```

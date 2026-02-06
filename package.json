@@ -31,15 +31,20 @@
 			"import": "./dist/ipc/index.js",
 			"require": "./dist/ipc/index.cjs"
 		},
+		"./polling": {
+			"types": "./dist/polling/index.d.ts",
+			"import": "./dist/polling/index.js",
+			"require": "./dist/polling/index.cjs"
+		},
 		"./regex": {
 			"types": "./dist/regex/index.d.ts",
 			"import": "./dist/regex/index.js",
 			"require": "./dist/regex/index.cjs"
 		},
-		"./polling": {
-			"types": "./dist/polling/index.d.ts",
-			"import": "./dist/polling/index.js",
-			"require": "./dist/polling/index.cjs"
+		"./storage": {
+			"types": "./dist/storage/index.d.ts",
+			"import": "./dist/storage/index.js",
+			"require": "./dist/storage/index.cjs"
 		}
 	},
 	"scripts": {

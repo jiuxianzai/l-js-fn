@@ -1,6 +1,6 @@
 {
 	"$schema": "https://typedoc.org/schema.json",
-	"entryPoints": ["src/index.ts", "src/bom/index.ts", "src/config/index.ts", "src/ipc/index.ts", "src/polling/index.ts", "src/regex/index.ts", "src/ws/index.ts"],
+	"entryPoints": ["src/index.ts", "src/bom/index.ts", "src/config/index.ts", "src/ipc/index.ts", "src/polling/index.ts", "src/regex/index.ts", "src/storage/index.ts", "src/ws/index.ts"],
 	"out": "docs/api",
 	"plugin": [],
 	"readme": "none",

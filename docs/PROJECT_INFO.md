@@ -492,17 +492,3 @@ const { isArray } = require('l-js-fn');
 const { scrollTop } = require('l-js-fn/bom');
 ```
 
-## 🤝 贡献指南
-
-欢迎贡献代码、报告问题或提出建议！
-
-请查看 [CONTRIBUTING.md](./CONTRTRIBUTING.md) 了解详情。
-
-## 📄 许可证
-
-[ISC](LICENSE)
-
-## 🔗 相关链接
-
-- [npm](https://www.npmjs.com/package/l-js-fn)
-- [GitHub Issues](https://github.com/jiuxianzai/l-js-fn/issues)

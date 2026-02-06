@@ -142,3 +142,174 @@ export async function copyToClipboard(text: string) {
 		return true;
 	}
 }
+
+/**
+ * Cookie 配置选项
+ */
+export interface CookieOptions {
+	/** 过期时间（天数），默认 7 天 */
+	expires?: number;
+	/** 路径，默认 '/' */
+	path?: string;
+	/** 域名 */
+	domain?: string;
+	/** 是否仅 HTTPS 传输 */
+	secure?: boolean;
+	/** 是否禁止 JavaScript 访问（防 XSS） */
+	httpOnly?: boolean;
+	/** SameSite 属性：'strict' | 'lax' | 'none' */
+	sameSite?: 'strict' | 'lax' | 'none';
+}
+
+/**
+ * 设置 Cookie
+ * @param name Cookie 名称
+ * @param value Cookie 值
+ * @param options 配置选项
+ * @example
+ * setCookie('token', 'abc123', { expires: 30, secure: true })
+ * setCookie('user', 'john', { expires: 7, path: '/' })
+ */
+export function setCookie(name: string, value: string, options: CookieOptions = {}): boolean {
+	if (typeof document === 'undefined') {
+		console.warn('setCookie: 当前环境不支持 Cookie');
+		return false;
+	}
+
+	const { expires = 7, path = '/', domain, secure, httpOnly = false, sameSite = 'lax' } = options;
+
+	let cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
+
+	// 过期时间
+	if (expires) {
+		const date = new Date();
+		date.setTime(date.getTime() + expires * 24 * 60 * 60 * 1000);
+		cookie += `; expires=${date.toUTCString()}`;
+	}
+
+	// 路径
+	if (path) {
+		cookie += `; path=${path}`;
+	}
+
+	// 域名
+	if (domain) {
+		cookie += `; domain=${domain}`;
+	}
+
+	// 仅 HTTPS
+	if (secure) {
+		cookie += '; secure';
+	}
+
+	// 禁止 JS 访问
+	if (httpOnly) {
+		cookie += '; httponly';
+	}
+
+	// SameSite
+	if (sameSite) {
+		cookie += `; samesite=${sameSite}`;
+	}
+
+	document.cookie = cookie;
+	return true;
+}
+
+/**
+ * 获取 Cookie
+ * @param name Cookie 名称
+ * @returns Cookie 值，不存在返回 null
+ * @example
+ * getCookie('token') // 'abc123'
+ * getCookie('notexist') // null
+ */
+export function getCookie(name: string): string | null {
+	if (typeof document === 'undefined') {
+		console.warn('getCookie: 当前环境不支持 Cookie');
+		return null;
+	}
+
+	const encodedName = `${encodeURIComponent(name)}=`;
+	const cookies = document.cookie.split(';');
+
+	for (const cookie of cookies) {
+		let trimmedCookie = cookie;
+		while (trimmedCookie.charAt(0) === ' ') {
+			trimmedCookie = trimmedCookie.slice(1);
+		}
+
+		if (trimmedCookie.indexOf(encodedName) === 0) {
+			return decodeURIComponent(trimmedCookie.slice(encodedName.length));
+		}
+	}
+
+	return null;
+}
+
+/**
+ * 删除 Cookie
+ * @param name Cookie 名称
+ * @param options 配置选项（需与设置时保持一致的 path 和 domain）
+ * @example
+ * removeCookie('token')
+ * removeCookie('user', { path: '/', domain: '.example.com' })
+ */
+export function removeCookie(name: string, options: Pick<CookieOptions, 'path' | 'domain'> = {}): boolean {
+	if (typeof document === 'undefined') {
+		console.warn('removeCookie: 当前环境不支持 Cookie');
+		return false;
+	}
+
+	const { path = '/', domain } = options;
+
+	let cookie = `${encodeURIComponent(name)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+
+	if (path) {
+		cookie += `; path=${path}`;
+	}
+
+	if (domain) {
+		cookie += `; domain=${domain}`;
+	}
+
+	document.cookie = cookie;
+	return true;
+}
+
+/**
+ * 获取所有 Cookie
+ * @returns 键值对对象
+ * @example
+ * getAllCookies() // { token: 'abc123', user: 'john' }
+ */
+export function getAllCookies(): Record<string, string> {
+	if (typeof document === 'undefined') {
+		console.warn('getAllCookies: 当前环境不支持 Cookie');
+		return {};
+	}
+
+	const cookies: Record<string, string> = {};
+	const cookieStrings = document.cookie.split(';');
+
+	for (const cookie of cookieStrings) {
+		const [key, ...valueParts] = cookie.split('=');
+		if (key) {
+			const trimmedKey = key.trim();
+			cookies[decodeURIComponent(trimmedKey)] = decodeURIComponent(valueParts.join('='));
+		}
+	}
+
+	return cookies;
+}
+
+/**
+ * 检查 Cookie 是否存在
+ * @param name Cookie 名称
+ * @returns 是否存在
+ * @example
+ * hasCookie('token') // true
+ */
+export function hasCookie(name: string): boolean {
+	return getCookie(name) !== null;
+}

@@ -11,6 +11,11 @@ import {
 	launchFullscreen,
 	exitFullscreen,
 	copyToClipboard,
+	setCookie,
+	getCookie,
+	removeCookie,
+	getAllCookies,
+	hasCookie,
 } from '@/bom';
 
 describe('bom - 浏览器对象模型方法', () => {
@@ -409,6 +414,110 @@ describe('bom - 浏览器对象模型方法', () => {
 
 			expect(document.body.appendChild).toHaveBeenCalledWith(textarea);
 			expect(document.body.removeChild).toHaveBeenCalledWith(textarea);
+		});
+	});
+
+	// ==================== Cookie 测试 ====================
+	describe('Cookie 操作', () => {
+		beforeEach(() => {
+			// Mock document.cookie
+			let cookieStorage: Record<string, string> = {};
+
+			Object.defineProperty(global.document, 'cookie', {
+				get: () => {
+					return Object.entries(cookieStorage)
+						.map(([k, v]) => `${k}=${v}`)
+						.join('; ');
+				},
+				set: (value: string) => {
+					const [cookiePair] = value.split(';');
+					const [key, val] = cookiePair.split('=');
+					if (val && val !== 'Thu, 01 Jan 1970 00:00:00 GMT') {
+						// 不是删除操作
+						cookieStorage[key] = val;
+					} else {
+						// 删除操作
+						delete cookieStorage[key];
+					}
+				},
+				configurable: true,
+			});
+
+			// 清空存储
+			cookieStorage = {};
+		});
+
+		it('应该设置 Cookie', () => {
+			const result = setCookie('test', 'value');
+
+			expect(result).toBe(true);
+			expect(document.cookie).toContain('test=value');
+		});
+
+		it('应该获取 Cookie', () => {
+			setCookie('test', 'value');
+
+			const result = getCookie('test');
+
+			expect(result).toBe('value');
+		});
+
+		it('应该在不存在的 Cookie 时返回 null', () => {
+			const result = getCookie('notexist');
+
+			expect(result).toBe(null);
+		});
+
+		it('应该删除 Cookie', () => {
+			setCookie('test', 'value');
+			expect(getCookie('test')).toBe('value');
+
+			removeCookie('test');
+			expect(getCookie('test')).toBe(null);
+		});
+
+		it('应该支持带路径删除 Cookie', () => {
+			setCookie('test', 'value', { path: '/api' });
+
+			const result = removeCookie('test', { path: '/api' });
+
+			expect(result).toBe(true);
+		});
+
+		it('应该检查 Cookie 是否存在', () => {
+			setCookie('test', 'value');
+
+			expect(hasCookie('test')).toBe(true);
+			expect(hasCookie('notexist')).toBe(false);
+		});
+
+		it('应该获取所有 Cookie', () => {
+			setCookie('user', 'john');
+			setCookie('token', 'abc123');
+
+			const cookies = getAllCookies();
+
+			expect(cookies).toEqual({
+				user: 'john',
+				token: 'abc123',
+			});
+		});
+
+		it('应该处理特殊字符编码', () => {
+			setCookie('test name', 'test value');
+
+			const result = getCookie('test name');
+
+			expect(result).toBe('test value');
+		});
+
+		it('应该在服务端环境下返回 false', () => {
+			global.document = undefined as any;
+
+			expect(setCookie('test', 'value')).toBe(false);
+			expect(getCookie('test')).toBe(null);
+			expect(removeCookie('test')).toBe(false);
+			expect(getAllCookies()).toEqual({});
 		});
 	});
 });

@@ -1,5 +1,40 @@
+# 依赖
 node_modules
+
+# IDE
 .idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# 构建产物
 dist/
 packages/
+
+# 测试覆盖率
+coverage/
+.nyc_output/
+
+# API 文档（生成）
+docs/api/
+
+# 日志
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 系统文件
 .DS_Store
+Thumbs.db
+
+# 环境变量
+.env
+.env.local
+.env.*.local
+
+# 临时文件
+*.tmp
+.cache/

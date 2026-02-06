@@ -11,6 +11,7 @@ const modules = [
 	{ entry: "src/ipc/index.ts", name: "ipc/index" },
 	{ entry: "src/polling/index.ts", name: "polling/index" },
 	{ entry: "src/regex/index.ts", name: "regex/index" },
+	{ entry: "src/storage/index.ts", name: "storage/index" },
 	{ entry: "src/ws/index.ts", name: "ws/index" },
 ] as const;
 
