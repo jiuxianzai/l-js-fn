@@ -9,3 +9,5 @@ export * from '@/libs/date-kit.ts';
 export * from '@/libs/number-kit.ts';
 // 类
 export * from '@/utils/Result.ts';
+
+console.log("测试")
