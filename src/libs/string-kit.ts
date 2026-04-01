@@ -170,3 +170,14 @@ export function filterSpace(val: string) {
 	// 返回结果
 	return v;
 }
+
+/** 将字符串转换为帕斯卡命名法 */
+export function toPascalCase(str: string): string {
+  if (!str) return ''; // 空字符串处理
+
+  return String(str)
+      .replace(/[-_]/g, ' ') // 替换连字符和下划线为空格
+      .replace(/\s+(.)/g, (_, c) => c.toUpperCase()) // 空格后字符转大写
+      .replace(/^(.)/, (_, c) => c.toUpperCase()) // 首字符转大写
+      .replace(/\s/g, ''); // 移除所有空格
+}
