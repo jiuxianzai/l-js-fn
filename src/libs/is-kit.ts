@@ -4,10 +4,22 @@ import {REGEXP} from '@/regex';
  * 检查值是否为空
  */
 export function isEmpty<T>(value: T | null | undefined): boolean {
+  // 1. 处理真正的 null 和 undefined
   if (value === null || value === undefined) return true;
-  if (typeof value === 'string') return value.trim() === '';
+
+  // 2. 处理字符串类型
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    // 检查是否为空字符串，或者是否是字符串形式的 "null" 或 "undefined"
+    return trimmed === '' || trimmed.toLowerCase() === 'null' || trimmed.toLowerCase() === 'undefined';
+  }
+
+  // 3. 处理数组
   if (Array.isArray(value)) return value.length === 0;
+
+  // 4. 处理对象 (注意：null 已经在第一步过滤掉了，所以这里一定是真正的对象)
   if (typeof value === 'object') return Object.keys(value).length === 0;
+
   return false;
 }
 
