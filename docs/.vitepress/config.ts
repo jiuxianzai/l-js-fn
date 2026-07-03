@@ -5,7 +5,13 @@ export default defineConfig({
 	title: 'l-js-fn',
 	description: '轻量级 JavaScript 工具函数库，支持模块化导入和 Tree-shaking',
 	base: '/',
-	lastUpdated: true,
+	lastUpdated: {
+		text: '最后更新于',
+		formatOptions: {
+			dateStyle: 'short',
+			timeStyle: 'short',
+		},
+	},
 
 	themeConfig: {
 		logo: '/logo.svg',
@@ -56,12 +62,24 @@ export default defineConfig({
 		],
 
 		footer: {
-			message: 'Released under the ISC License.',
-			copyright: 'Copyright © 2024-present jiuxianzai',
+			message: '基于 ISC 许可证发布。',
+			copyright: '版权所有 © 2024-present jiuxianzai',
 		},
 
 		search: {
 			provider: 'local',
 		},
+
+		docFooter: {
+			prev: '上一页',
+			next: '下一页',
+		},
+
+		outline: {
+			label: '页面导航',
+		},
+
+		returnToTopLabel: '回到顶部',
+		sidebarMenuLabel: '菜单',
 	},
 })

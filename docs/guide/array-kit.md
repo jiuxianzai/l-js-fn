@@ -83,6 +83,10 @@ arrayDelToEl(['a', 'b', 'a'], 'a');      // ['b']
 arrayDelToEl([true, false, true], true); // [false]
 ```
 
+::: tip 提示
+`arrayDelToEl` 会删除数组中**所有**匹配的元素，而不仅仅是第一个。如需只删除第一个匹配项，请使用 `arrayDelToIndex`。
+:::
+
 ## arrayDelToKey
 
 根据对象数组的键值对删除元素。
@@ -345,4 +349,5 @@ const numbers = [1, 2, 3, 4, 5];
 sampleSize(numbers, 2);   // [3, 1]（随机，不重复）
 sampleSize(numbers, 10);  // [2, 5, 1, 4, 3]（全部乱序）
 sampleSize(numbers);      // [4]（默认 n=1）
+sampleSize(numbers, 0);   // []（n=0 返回空数组）
 ```

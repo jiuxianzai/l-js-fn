@@ -119,7 +119,7 @@ isArray({});             // false
 
 **返回值：** `boolean`
 
-**支持的格式：** `jpg`、`jpeg`、`png`、`gif`、`bmp`、`webp`、`svg`
+**支持的格式：** `jpg`、`jpeg`、`png`、`gif`、`bmp`、`webp`、`svg`、`ico`、`tiff`、`psd`、`raw`、`heic`、`heif`
 
 **示例：**
 
@@ -260,7 +260,15 @@ isEqual([1, 2], [1, 2]);         // true
 isEqual(NaN, NaN);               // true
 isEqual({ a: { b: 1 } }, { a: { b: 1 } }); // true
 isEqual({ a: 1 }, { a: 2 });     // false
+
+// null 与对象比较
+isEqual(null, {}); // false
+isEqual(null, null); // true
 ```
+
+::: warning 注意
+`isEqual(null, {})` 或 `isEqual({}, null)` 等 null 与非 null 对象的比较会返回 `false`，而不会抛出异常。
+:::
 
 ## validateParams
 

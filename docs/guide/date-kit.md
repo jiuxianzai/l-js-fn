@@ -60,6 +60,7 @@ import { dateSecond } from 'l-js-fn';
 dateSecond(3661);   // '01:01:01'
 dateSecond(59);     // '00:00:59'
 dateSecond(86400);  // '24:00:00'
+dateSecond(-1);     // '00:00:01'（负数取绝对值处理）
 ```
 
 ## diffDays

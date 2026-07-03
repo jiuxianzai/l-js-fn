@@ -158,6 +158,10 @@ interface CookieOptions {
 }
 ```
 
+::: warning 注意
+`httpOnly` 选项在客户端设置 Cookie 时无效。`httpOnly` Cookie 只能由服务端通过 `Set-Cookie` 响应头设置。客户端传入此选项只会输出 `console.warn` 警告。
+:::
+
 ### setCookie
 
 设置 Cookie。

@@ -17,21 +17,21 @@ hero:
       link: https://github.com/jiuxianzai/l-js-fn
 
 features:
-  - title: 🚀 轻量级
+  - title: 轻量级
     details: 零依赖，打包体积小，按需引入。
-  - title: 📦 模块化
+  - title: 模块化
     details: 支持按需导入，减少包体积，主包和子模块分离。
-  - title: 🔒 TypeScript
+  - title: TypeScript
     details: 完整的类型定义，享受类型安全的开发体验。
-  - title: 🌐 双模块格式
+  - title: 双模块格式
     details: 同时支持 ESM 和 CJS，兼容各种构建工具。
-  - title: 🎨 Tree-shaking
+  - title: Tree-shaking
     details: 完整支持 Tree-shaking，只打包用到的代码。
-  - title: 💪 工具齐全
+  - title: 工具齐全
     details: 涵盖数组、对象、字符串、日期、URL、正则等常用操作。
 ---
 
-## 📦 安装
+## 安装
 
 ```bash
 npm install l-js-fn
@@ -41,7 +41,7 @@ yarn add l-js-fn
 pnpm add l-js-fn
 ```
 
-## 🚀 快速开始
+## 快速开始
 
 ### 导入主包
 
@@ -61,24 +61,56 @@ import { WebSocketManager } from 'l-js-fn/ws';
 import { Polling } from 'l-js-fn/polling';
 ```
 
-## 📚 文档导航
+## 文档导航
 
-- [is-kit — 类型判断](/guide/is-kit)
-- [array-kit — 数组操作](/guide/array-kit)
-- [string-kit — 字符串处理](/guide/string-kit)
-- [object-kit — 对象操作](/guide/object-kit)
-- [common — 通用工具](/guide/common)
-- [date-kit — 日期处理](/guide/date-kit)
-- [number-kit — 数字处理](/guide/number-kit)
-- [url-kit — URL 处理](/guide/url-kit)
-- [color — 颜色处理](/guide/color)
-- [Result — 结果类](/guide/result)
-- [bom — 浏览器对象模型](/guide/bom)
-- [ws — WebSocket](/guide/ws)
-- [storage — 本地存储](/guide/storage)
-- [polling — 轮询工具](/guide/polling)
-- [ipc — IPC 通信](/guide/ipc)
-- [regex — 正则常量](/guide/regex)
-- [config — 配置常量](/guide/config)
-- [encode — 编码解码](/guide/encode)
-- [file — 文件处理](/guide/file)
+| 模块 | 说明 |
+|------|------|
+| [is-kit](/guide/is-kit) | 类型判断（空值、数组、邮箱、身份证、手机号等） |
+| [array-kit](/guide/array-kit) | 数组操作（增删改查、分页、分组、随机抽样等） |
+| [string-kit](/guide/string-kit) | 字符串处理（脱敏、去除空格、UUID、序号生成等） |
+| [object-kit](/guide/object-kit) | 对象操作（合并、过滤、FormData 转换等） |
+| [common](/guide/common) | 通用工具（防抖、节流、深拷贝、设备检测等） |
+| [date-kit](/guide/date-kit) | 日期处理（格式化、计算、相对时间等） |
+| [number-kit](/guide/number-kit) | 数字处理（格式化、百分比、随机数等） |
+| [url-kit](/guide/url-kit) | URL 处理（参数解析、拼接、转换等） |
+| [color](/guide/color) | 颜色处理（HEX/HSL 转换、图标颜色适配等） |
+| [Result](/guide/result) | 结果类（标准化成功/失败结果封装） |
+| [bom](/guide/bom) | 浏览器对象模型（滚动、全屏、剪贴板、Cookie 等） |
+| [ws](/guide/ws) | WebSocket 管理（连接、心跳、重连等） |
+| [storage](/guide/storage) | 本地存储（localStorage/sessionStorage，支持过期时间） |
+| [polling](/guide/polling) | 轮询工具（异步方法定时执行） |
+| [ipc](/guide/ipc) | IPC 通信（H5 与 Iframe 双向通信） |
+| [regex](/guide/regex) | 正则常量（手机号、邮箱、身份证、URL 等） |
+| [config](/guide/config) | 配置常量（日期格式、HTTP 状态码） |
+| [encode](/guide/encode) | 编码解码（Base64、HTML 转义、URL 编码等） |
+| [file](/guide/file) | 文件处理（大小格式化、类型判断、下载、读取等） |
+
+## 常见问题
+
+### 是否支持服务端/SSR 环境？
+
+大部分工具函数（`is-kit`、`array-kit`、`string-kit`、`object-kit`、`date-kit`、`number-kit`、`url-kit`、`common`、`color`、`Result`、`regex`、`config`、`encode`）可以在任何 JavaScript 环境中使用。
+
+以下模块**仅在浏览器环境**中可用：
+- `bom`（DOM 滚动、全屏、剪贴板、Cookie）
+- `file`（文件下载、读取）
+- `storage`（localStorage/sessionStorage）
+- `ws`（WebSocket）
+- `ipc`（iframe 通信）
+- `polling`（定时轮询）
+
+### `isImage` 在多个模块中出现，应该用哪个？
+
+`is-kit` 和 `file` 模块中都提供了 `isImage` 函数，功能一致（均支持 13 种常见图片格式）。建议：
+- 主包用户直接使用 `import { isImage } from 'l-js-fn'`
+- 子模块用户使用 `import { isImage } from 'l-js-fn/file'`
+- 两者行为完全相同
+
+### 如何正确使用 `Result` 类？
+
+`Result` 的构造函数是私有的，必须通过静态方法创建实例：
+- `Result.ok(data?, message?)` — 创建成功结果
+- `Result.fail(message?, data?)` — 创建失败结果
+::: warning 注意
+`Result.fail()` 的第一个参数是 `message`（默认 `'操作失败'`），第二个参数是 `data`。这与 `Result.ok()` 的参数顺序不同。
+:::

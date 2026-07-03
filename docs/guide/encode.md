@@ -155,7 +155,7 @@ URL 解码。
 |------|------|------|------|
 | str | `string` | 是 | 要解码的字符串 |
 | options | `object` | 否 | 配置选项 |
-| options.component | `boolean` | 否 | 是否解码 URL 组件，默认 `false` |
+| options.component | `boolean` | 否 | 是否使用 `decodeURIComponent` 解码，默认 `false`（使用 `decodeURI`） |
 
 **返回值：** `string`
 
@@ -166,6 +166,9 @@ import { urlDecode } from 'l-js-fn/encode';
 
 urlDecode('Hello%20World');  // 'Hello World'
 urlDecode('%E4%BD%A0%E5%A5%BD'); // '你好'
+
+// 使用 decodeURIComponent 解码更多字符
+urlDecode('Hello%20World%21', { component: true }); // 'Hello World!'
 ```
 
 ## 查询字符串

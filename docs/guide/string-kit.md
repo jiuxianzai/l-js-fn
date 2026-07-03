@@ -134,6 +134,10 @@ searchTextColor('hello', 'hello world', 'blue');
 // "<span style='color: blue'>hello</span> world"
 ```
 
+::: warning 安全提示
+`searchTextColor` 直接生成 HTML 字符串，仅适用于通过 `v-html`/`innerHTML` 渲染的场景。请确保 `text` 参数来自可信来源，避免 XSS 风险。搜索关键词中的正则特殊字符（如 `.`、`*`、`+` 等）会被自动转义。
+:::
+
 ## filterSpace
 
 禁止输入空格，去除字符串首尾空格。

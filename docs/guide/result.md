@@ -4,7 +4,7 @@
 
 ## 概述
 
-`Result` 是一个泛型类，用于封装操作结果，包含以下属性：
+`Result` 是一个泛型类，用于封装操作结果，**构造函数为私有，必须通过静态方法 `Result.ok()` 和 `Result.fail()` 创建实例**。
 
 | 属性 | 类型 | 说明 |
 |------|------|------|
@@ -73,6 +73,12 @@ const fail2 = Result.fail('用户不存在');
 const fail3 = Result.fail('参数错误', { field: 'email' });
 // { success: false, message: '参数错误', data: { field: 'email' } }
 ```
+
+::: warning 参数顺序注意
+`Result.ok(data?, message?)` 的第一个参数是 `data`，第二个是 `message`。\
+`Result.fail(message?, data?)` 的第一个参数是 `message`，第二个是 `data`。\
+两个方法的参数顺序不同。
+:::
 
 ## 实际应用场景
 

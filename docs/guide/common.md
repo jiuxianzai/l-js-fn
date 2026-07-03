@@ -207,6 +207,12 @@ await loadScript('https://example.com/sdk.js');
 // 脚本加载完成
 ```
 
+::: warning 注意
+- 如果脚本已存在（相同 `src`），返回已存在的 `HTMLScriptElement` 的 Promise
+- `src` 为空时返回 `Promise.reject`
+- 仅在浏览器环境中可用
+:::
+
 ## removeScript
 
 移除已加载的 JS 文件。
@@ -266,3 +272,8 @@ console.log(result.data); // 'data:image/png;base64,...'
 const file = document.querySelector('input[type="file"]').files[0];
 const result2 = await imageToBase64(file, 'image/jpeg', 0.8);
 ```
+
+::: warning 注意
+- `imageToBase64` 仅在浏览器环境中可用（依赖 Canvas API）
+- 当 `input` 为 `null` 时，返回 `Result.fail('输入不能为空')`，不会抛出异常
+:::
