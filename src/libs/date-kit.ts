@@ -21,7 +21,7 @@ export function dateFormat(input: Date | string | number = new Date(), format: D
 	} else if (typeof input === 'string') {
 		let str = input.trim();
 
-		// iOS 兼容：将 “-” 替换为 “/”
+		// iOS 兼容：将 "-" 替换为 "/"
 		if (/^\d{4}-\d{2}-\d{2}/.test(str)) {
 			str = str.replace(/-/g, '/');
 		}
@@ -58,7 +58,7 @@ export function dateFormat(input: Date | string | number = new Date(), format: D
  * @returns 格式化后的字符串，例如 "00:12:34"
  */
 export function dateSecond(value: number): string {
-	let secondTime = Math.floor(value); // 秒
+	let secondTime = Math.floor(Math.abs(value)); // 秒，取绝对值处理负数
 	let minuteTime = 0; // 分
 	let hourTime = 0; // 小时
 	let dayTime = 0; // 天
