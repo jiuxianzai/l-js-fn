@@ -49,7 +49,7 @@ export function isArray<T>(value: T): value is T & unknown[] {
  */
 export const isImage = (filename: string): boolean => {
   const ext = filename.split('.').pop()?.toLowerCase() || '';
-  return ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].includes(ext);
+  return ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg', '.ico', '.tiff', '.psd', '.raw', '.heic', '.heif'].includes('.' + ext);
 };
 
 /**
@@ -126,6 +126,7 @@ export function isEqual<T>(value: T, other: T): boolean {
   }
 
   if (value === null && other === null) return true;
+  if (value === null || other === null) return false;
   if (typeof value !== typeof other) return false;
   if (value === other) return true;
 
