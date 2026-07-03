@@ -159,8 +159,14 @@ export function urlDecode(
 		throw new TypeError('urlDecode: 参数必须是字符串');
 	}
 
-	// 默认使用 decodeURIComponent
-	return decodeURIComponent(str);
+	const { component = false } = options;
+
+	if (component) {
+		return decodeURIComponent(str);
+	}
+
+	// 默认使用 decodeURI（与 encodeURI 对称，保留 : / ? # [ ] @ 等字符）
+	return decodeURI(str);
 }
 
 /**
