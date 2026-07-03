@@ -1,0 +1,338 @@
+/* ========================================
+   l-js-fn 文档自定义主题 — 暖金色系 #FEEB9F
+   ======================================== */
+
+/* ---------- 品牌色 ---------- */
+:root {
+  --vp-c-brand-1: #b8860b;
+  --vp-c-brand-2: #c88a00;
+  --vp-c-brand-3: #FEEB9F;
+  --vp-c-brand-soft: rgba(254, 235, 159, 0.28);
+
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(135deg, #c88a00 0%, #FEEB9F 40%, #e0a030 100%);
+
+  --vp-button-brand-bg: #c88a00;
+  --vp-button-brand-hover-bg: #a07500;
+  --vp-button-brand-active-bg: #8b6500;
+  --vp-button-brand-text: var(--vp-c-white);
+  --vp-button-brand-border: transparent;
+
+  --vp-c-bg-soft: #fffdf7;
+  --vp-custom-block-tip-bg: #fffbed;
+  --vp-custom-block-tip-border: #FEEB9F;
+}
+
+.dark {
+  --vp-c-brand-1: #FEEB9F;
+  --vp-c-brand-2: #f0d060;
+  --vp-c-brand-3: #d4a017;
+  --vp-c-brand-soft: rgba(254, 235, 159, 0.16);
+
+  --vp-home-hero-name-background: linear-gradient(135deg, #FEEB9F 0%, #f5d65e 50%, #e0c040 100%);
+
+  --vp-c-bg-soft: #1a1a10;
+  --vp-custom-block-tip-bg: #2d2610;
+  --vp-custom-block-tip-border: #FEEB9F;
+}
+
+/* ---------- 导航栏毛玻璃效果 ---------- */
+.VPNav {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.VPNav:not(.has-sidebar) {
+  background-color: rgba(255, 255, 255, 0.72) !important;
+}
+
+.dark .VPNav:not(.has-sidebar) {
+  background-color: rgba(30, 30, 36, 0.72) !important;
+}
+
+/* ---------- Hero 区域增强 ---------- */
+.VPHero .name {
+  font-size: 56px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: var(--vp-home-hero-name-background);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.VPHero .text {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--vp-c-text-1);
+}
+
+.VPHero .tagline {
+  font-size: 18px;
+  color: var(--vp-c-text-2);
+}
+
+.VPHero .image-container {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+.VPHero .image-bg {
+  background: linear-gradient(135deg, rgba(254, 235, 159, 0.18), rgba(224, 160, 48, 0.12));
+  border-radius: 50%;
+  filter: blur(60px);
+}
+
+/* ---------- 按钮样式 ---------- */
+.VPButton.brand {
+  background: linear-gradient(135deg, #c88a00 0%, #e0a800 100%);
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.VPButton.brand:hover {
+  background: linear-gradient(135deg, #a07500 0%, #c88a00 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(200, 138, 0, 0.35);
+}
+
+.VPButton.alt {
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.VPButton.alt:hover {
+  border-color: var(--vp-c-brand-2);
+  background-color: var(--vp-c-brand-soft);
+  transform: translateY(-1px);
+}
+
+/* ---------- Feature 卡片增强 + 过渡动画 ---------- */
+/* 高特异性选择器覆盖 Vue scoped styles 的 transition 限制 */
+.VPFeatures .item .VPFeature {
+  border: 1px solid var(--vp-c-bg-soft);
+  border-radius: 12px;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.VPFeatures .item .VPFeature:hover {
+  border-color: var(--vp-c-brand-2) !important;
+  box-shadow: 0 12px 32px rgba(200, 138, 0, 0.12);
+  transform: translateY(-4px);
+}
+
+/* Feature 卡片 SVG 图标 (通过 title 伪元素 + mask 注入) */
+.VPFeature .title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.VPFeature .title::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  background-color: var(--vp-c-brand-1);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.VPFeature:hover .title::before {
+  transform: scale(1.15);
+}
+
+/* 1. 轻量级 */
+.VPFeatures .item:nth-child(1) .title::before {
+  mask-image: url('/icons/feather.svg');
+  -webkit-mask-image: url('/icons/feather.svg');
+}
+
+/* 2. 模块化 */
+.VPFeatures .item:nth-child(2) .title::before {
+  mask-image: url('/icons/grid.svg');
+  -webkit-mask-image: url('/icons/grid.svg');
+}
+
+/* 3. TypeScript */
+.VPFeatures .item:nth-child(3) .title::before {
+  mask-image: url('/icons/code.svg');
+  -webkit-mask-image: url('/icons/code.svg');
+}
+
+/* 4. 双模块格式 */
+.VPFeatures .item:nth-child(4) .title::before {
+  mask-image: url('/icons/layers.svg');
+  -webkit-mask-image: url('/icons/layers.svg');
+}
+
+/* 5. Tree-shaking */
+.VPFeatures .item:nth-child(5) .title::before {
+  mask-image: url('/icons/branch.svg');
+  -webkit-mask-image: url('/icons/branch.svg');
+}
+
+/* 6. 工具齐全 */
+.VPFeatures .item:nth-child(6) .title::before {
+  mask-image: url('/icons/wrench.svg');
+  -webkit-mask-image: url('/icons/wrench.svg');
+}
+
+/* ---------- 侧边栏 ---------- */
+.VPSidebar {
+  background-color: var(--vp-c-bg-soft);
+}
+
+.VPSidebar .link:hover {
+  color: var(--vp-c-brand-1);
+}
+
+.VPSidebar .link.active {
+  color: var(--vp-c-brand-1);
+  font-weight: 600;
+}
+
+.VPSidebar .group + .group {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+/* ---------- 代码块 ---------- */
+.vp-code-group {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin: 20px 0;
+}
+
+.dark .vp-code-group {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.vp-code-group .tabs label {
+  font-size: 13px;
+}
+
+div[class*='language-'] {
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+/* inline code */
+:not(pre) > code {
+  color: var(--vp-c-brand-1);
+  background-color: var(--vp-c-brand-soft);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.9em;
+}
+
+/* ---------- 自定义块 (tip/warning/danger) ---------- */
+.custom-block {
+  border-radius: 8px;
+  border-left-width: 4px;
+  padding: 16px 20px;
+  margin: 20px 0;
+}
+
+.custom-block.tip {
+  background-color: var(--vp-custom-block-tip-bg);
+  border-color: var(--vp-custom-block-tip-border);
+}
+
+/* ---------- 滚动条 ---------- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--vp-c-text-3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vp-c-text-2);
+}
+
+/* ---------- 页脚 ---------- */
+.VPFooter {
+  border-top: 1px solid var(--vp-c-divider);
+  padding: 24px 0;
+}
+
+/* ---------- 大纲 (右侧目录) ---------- */
+.VPDocAside .outline-link {
+  transition: color 0.2s ease;
+}
+
+.VPDocAside .outline-link:hover,
+.VPDocAside .outline-link.active {
+  color: var(--vp-c-brand-1) !important;
+}
+
+/* ---------- 搜索框 ---------- */
+.DocSearch-Button {
+  border-radius: 8px !important;
+  background-color: var(--vp-c-bg-soft) !important;
+}
+
+/* ---------- View Transitions API 页面切换动画 ---------- */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+  animation: fade-in 0.15s ease;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ---------- 适配 prefers-reduced-motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .VPHero .image-container,
+  .VPFeature,
+  .VPButton.brand,
+  .VPButton.alt {
+    animation: none;
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ---------- 移动端优化 ---------- */
+@media (max-width: 768px) {
+  .VPHero .name {
+    font-size: 40px;
+  }
+
+  .VPHero .text {
+    font-size: 18px;
+  }
+}
