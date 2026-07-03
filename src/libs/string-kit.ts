@@ -102,7 +102,7 @@ export function indexToLabel(index: number, type: 'upper' | 'lower' | 'number' |
 				str = chineseNums[n] + chineseUnits[i] + str;
 			}
 		}
-		// 清理“零十”“零百”等情况
+		// 清理"零十""零百"等情况
 		str = str
 			.replace(/零[十百千]/g, '零')
 			.replace(/零+/g, '零')
@@ -153,8 +153,10 @@ export function indexToLabel(index: number, type: 'upper' | 'lower' | 'number' |
  * @returns 返回处理后的字符串
  */
 export function searchTextColor(val: string, text = '', color = 'red') {
+	// 转义正则特殊字符，防止正则注入
+	const escaped = val.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 	// 返回内容，添加颜色
-	let v = text.replace(new RegExp(val, 'gi'), `<span style='color: ${color}'>${val}</span>`);
+	let v = text.replace(new RegExp(escaped, 'gi'), `<span style='color: ${color}'>${val}</span>`);
 	// 返回结果
 	return v;
 }
