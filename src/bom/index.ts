@@ -202,9 +202,9 @@ export function setCookie(name: string, value: string, options: CookieOptions = 
 		cookie += '; secure';
 	}
 
-	// 禁止 JS 访问
+	// 注意：httpOnly 只能由服务端设置，客户端设置无效
 	if (httpOnly) {
-		cookie += '; httponly';
+		console.warn('setCookie: httpOnly 只能由服务端设置，客户端设置无效');
 	}
 
 	// SameSite

@@ -62,7 +62,7 @@ export class H5Bridge {
 	/* 接收消息 */
 	private _onMessage(event: MessageEvent<IPCMessage>) {
 		// 只接收this.iframe发送的消息
-		if (event.source !== (this.iframe as HTMLIFrameElement).contentWindow) return;
+		if (!this.iframe || event.source !== this.iframe.contentWindow) return;
 		const { type, id, result, error, eventName, params } = event.data;
 		switch (type) {
 			// 获取响应结果
