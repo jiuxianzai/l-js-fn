@@ -201,12 +201,12 @@ export function syntaxHtmlToJson(html: string): Record<string, any> | any[] | st
  * @param {string | null} src js文件路径
  * @returns {Promise<HTMLScriptElement>}
  */
-export function loadScript(src: string | null): Promise<HTMLScriptElement> | undefined {
-	if (!src) return;
-	// 如果已经加载过，则直接返回
+export function loadScript(src: string | null): Promise<HTMLScriptElement> {
+	if (!src) return Promise.reject(new Error('src 不能为空'));
+	// 如果已经加载过，则直接返回已存在的 script 元素
 	const existing = document.querySelector(`script[src="${src}"]`);
 	if (existing) {
-		return;
+		return Promise.resolve(existing as HTMLScriptElement);
 	}
 	return new Promise((resolve, reject) => {
 		// 创建 script 元素
@@ -286,7 +286,10 @@ export function imageToBase64(
 	quality: number = 1
 ): Promise<Result> {
 	return new Promise((resolve, reject) => {
-		if (!input) return;
+		if (!input) {
+			resolve(Result.fail('输入不能为空'));
+			return;
+		}
 		if (input instanceof File || input instanceof Blob) {
 			const reader = new FileReader();
 			reader.onload = () => resolve(Result.ok(reader.result as string));
