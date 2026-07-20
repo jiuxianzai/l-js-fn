@@ -213,7 +213,7 @@ describe('array-kit - 数组操作工具', () => {
 		});
 
 		it('应该处理空数组', () => {
-			const result = arrayDelToKey([], 'id', 1);
+			const result = arrayDelToKey<{ id: number }>([], 'id', 1);
 			expect(result).toEqual([]);
 		});
 	});

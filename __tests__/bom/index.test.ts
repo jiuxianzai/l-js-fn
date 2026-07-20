@@ -381,7 +381,7 @@ describe('bom - 浏览器对象模型方法', () => {
 
 			const result = await copyToClipboard('');
 
-			expect(result).toBe(undefined);
+			expect(result).toBe(false);
 		});
 
 		it('应该使用 execCommand 作为回退', async () => {

@@ -82,7 +82,7 @@ export function getUuid(): string {
  * @param {'upper'|'lower'|'number'|'chinese'} [type='upper'] - 格式类型，upper大写 | lower小写 | number数字 | chinese中文
  * @returns {string} 转换后的序号
  */
-export function indexToLabel(index: number, type: 'upper' | 'lower' | 'number' | 'chinese' = 'upper') {
+export function indexToLabel(index: number, type: 'upper' | 'lower' | 'number' | 'chinese' = 'upper'): string {
 	if (index < 0) return '';
 
 	// 中文数字表
@@ -150,9 +150,9 @@ export function indexToLabel(index: number, type: 'upper' | 'lower' | 'number' |
  * @param val 当前值字符串
  * @param text 要处理的字符串值
  * @param color 搜索到时字体高亮颜色
- * @returns 返回处理后的字符串
+ * @returns {string} 返回处理后的字符串
  */
-export function searchTextColor(val: string, text = '', color = 'red') {
+export function searchTextColor(val: string, text = '', color = 'red'): string {
 	// 转义正则特殊字符，防止正则注入
 	const escaped = val.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 	// 返回内容，添加颜色
@@ -164,9 +164,9 @@ export function searchTextColor(val: string, text = '', color = 'red') {
 /**
  * 禁止输入空格
  * @param val 当前值字符串
- * @returns 返回处理后的字符串
+ * @returns {string} 返回处理后的字符串
  */
-export function filterSpace(val: string) {
+export function filterSpace(val: string): string {
 	// 匹配空格
 	let v = val.replace(/(^\s*)|(\s*$)/g, '');
 	// 返回结果

@@ -222,8 +222,9 @@ export function loadScript(src: string | null): Promise<HTMLScriptElement> {
 /**
  * 移除已加载的 js 文件
  * @param {string} src js文件路径
+ * @returns {void}
  */
-export function removeScript(src: string) {
+export function removeScript(src: string): void {
 	const script = document.querySelector(`script[src="${src}"]`);
 	if (script && script.parentNode) {
 		script.parentNode.removeChild(script);
@@ -279,12 +280,13 @@ export const getDevice = ():
  * @param input 图片 URL 或 File/Blob
  * @param type 输出类型，默认 image/png
  * @param quality 压缩质量 (0-1，仅对 jpeg/webp 有效)
+ * @returns {Promise<Result<string>>} Base64 数据字符串
  */
 export function imageToBase64(
 	input: File | Blob | string | null,
 	type: 'image/jpeg' | 'image/png' | 'image/webp' = 'image/png',
 	quality: number = 1
-): Promise<Result> {
+): Promise<Result<string>> {
 	return new Promise((resolve, reject) => {
 		if (!input) {
 			resolve(Result.fail('输入不能为空'));

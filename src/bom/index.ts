@@ -2,8 +2,9 @@ import { ScrollPosition } from '@/types';
 
 /**
  * 平滑滚动到顶部
+ * @returns {void}
  */
-export function scrollTop() {
+export function scrollTop(): void {
 	if (!document || !document.documentElement || !document.body) return;
 	const c = document.documentElement.scrollTop || document.body.scrollTop;
 	if (c > 0) {
@@ -14,8 +15,9 @@ export function scrollTop() {
 
 /**
  * 滚动到底部
+ * @returns {void}
  */
-export function scrollToBottom() {
+export function scrollToBottom(): void {
 	if (!window || !document.body) return;
 	window.scrollTo(0, document.body.scrollHeight);
 }
@@ -126,9 +128,11 @@ export async function exitFullscreen(): Promise<boolean> {
 
 /**
  * 复制文本到剪贴板
+ * @param {string} text - 要复制的文本
+ * @returns {Promise<boolean>} 是否复制成功
  */
-export async function copyToClipboard(text: string) {
-	if (!text) return;
+export async function copyToClipboard(text: string): Promise<boolean> {
+	if (!text) return false;
 	if (navigator.clipboard) {
 		await navigator.clipboard.writeText(text);
 		return true;

@@ -41,13 +41,13 @@ export const formatNumber = (value: string | number, useUnit: boolean = false): 
 
 /**
  * 将小数转为百分比字符串
- * @param {number|string} value - 输入的小数值（如 0.533234）
+ * @param {string | number | null | undefined} value - 输入的小数值（如 0.533234）
  * @param {number} [decimals=2] - 小数点位数（默认保留2位）
  * @param {boolean} [round=true] - 是否四舍五入（默认true）
  * @returns {string} - 格式化后的百分比字符串，如 "53.32%"
  */
-export function toPercent(value: any, decimals = 2, round = true) {
-	if (value === null || value === undefined || isNaN(value)) return '0%';
+export function toPercent(value: string | number | null | undefined, decimals: number = 2, round: boolean = true): string {
+	if (value === null || value === undefined || isNaN(value as unknown as number)) return '0%';
 
 	if (round) {
 		const num = Number(value) * 100;
@@ -63,8 +63,8 @@ export function toPercent(value: any, decimals = 2, round = true) {
 		}
 
 		// 有小数点，先截断到指定小数位，再转百分比
-		const integerPart = valueStr.substring(0, dotIndex);  // "0"
-		let decimalPart = valueStr.substring(dotIndex + 1);  // "5559"
+		const integerPart = valueStr.substring(0, dotIndex); // "0"
+		let decimalPart = valueStr.substring(dotIndex + 1); // "5559"
 
 		// 截断到足够的小数位（百分比需要两位小数，所以原值需要 2 + decimals 位）
 		const requiredDecimals = 2 + decimals;
@@ -79,8 +79,8 @@ export function toPercent(value: any, decimals = 2, round = true) {
 		// 整数部分：取到倒数第2位前（小数点前所有数字）
 		// 小数部分：从倒数第(decimals+2)位到倒数第2位（截断，不四舍五入）
 		const shiftedStr = integerPart + decimalPart;
-		const shiftedInteger = shiftedStr.substring(0, shiftedStr.length - 2);  // "055" -> "55"
-		const shiftedDecimal = shiftedStr.substring(shiftedStr.length - decimals - 2, shiftedStr.length - 2);  // "55" (截断)
+		const shiftedInteger = shiftedStr.substring(0, shiftedStr.length - 2); // "055" -> "55"
+		const shiftedDecimal = shiftedStr.substring(shiftedStr.length - decimals - 2, shiftedStr.length - 2); // "55" (截断)
 
 		// 去掉前导零并返回
 		const result = `${String(Number(shiftedInteger))}.${shiftedDecimal}%`;

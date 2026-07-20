@@ -60,7 +60,7 @@ export function arrayDelToEl<T extends Primitive>(arr: T[], el: T): T[] {
  * 根据对象数组的键值对删除元素
  * @param arr - 原数组
  * @param key - 对象的键
- * @param value - 要匹配删除的值
+ * @param value - 要匹配删除的值（类型为 key 对应的字段类型）
  * @returns 新数组，如果没有匹配项返回原数组
  * @example
  * const arr = [{ id: 1, name: 'a' }, { id: 2, name: 'b' }]
@@ -69,7 +69,7 @@ export function arrayDelToEl<T extends Primitive>(arr: T[], el: T): T[] {
 export function arrayDelToKey<T extends Record<string, any>>(
   arr: T[],
   key: keyof T,
-  value: any
+  value: T[keyof T]
 ): T[] {
   if (!Array.isArray(arr)) return arr;
   const filtered = arr.filter((item) => item[key] !== value);

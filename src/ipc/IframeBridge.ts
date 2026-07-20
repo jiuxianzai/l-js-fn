@@ -3,10 +3,13 @@ import { IPC_TYPE, IPCMessage } from '@/types';
 /**
  * 子应用向主应用发送消息
  */
+type RpcHandler = (...args: unknown[]) => unknown | Promise<unknown>;
+type EventHandler = (...args: unknown[]) => void;
+
 export class IframeBridge {
-	private handles: Record<string, Function> = {};
+	private handles: Record<string, RpcHandler> = {};
 	// 注册事件列表
-	private eventHandlers: Record<string, Function[]> = {};
+	private eventHandlers: Record<string, EventHandler[]> = {};
 
 	constructor() {
 		this._onMessage = this._onMessage.bind(this);
@@ -16,9 +19,10 @@ export class IframeBridge {
 	/**
 	 * 注册事件处理函数
 	 * @param eventName - 事件名称
-	 * @param callback - 处理函数
+	 * @param {(...args: unknown[]) => (unknown | Promise<unknown>)} callback - 处理函数
+	 * @returns {void}
 	 */
-	register(eventName: string, callback: Function) {
+	register(eventName: string, callback: RpcHandler): void {
 		this.handles[eventName] = callback;
 	}
 
@@ -63,10 +67,11 @@ export class IframeBridge {
 	/**
 	 * 监听事件
 	 * @param eventName - 事件名称
-	 * @param callback - 处理函数
+	 * @param {(...args: unknown[]) => void} callback - 处理函数
+	 * @returns {void}
 	 * @private
 	 */
-	on(eventName: string, callback: Function) {
+	on(eventName: string, callback: EventHandler): void {
 		if (this.eventHandlers[eventName]) {
 			this.eventHandlers[eventName].push(callback);
 		} else {
@@ -77,9 +82,10 @@ export class IframeBridge {
 	/**
 	 * 移除监听事件
 	 * @param eventName - 事件名称
-	 * @param callback - 移除特定函数的监听(为空默认删除该事件所有监听)
+	 * @param {(...args: unknown[]) => void} [callback] - 移除特定函数的监听(为空默认删除该事件所有监听)
+	 * @returns {void}
 	 */
-	off(eventName: string, callback?: Function) {
+	off(eventName: string, callback?: EventHandler): void {
 		if (callback) {
 			this.eventHandlers[eventName] = this.eventHandlers[eventName].filter((item) => item !== callback);
 		} else {
@@ -89,11 +95,12 @@ export class IframeBridge {
 
 	/**
 	 * 发布事件
-	 * @param eventName - 事件名称
-	 * @param params - 参数
+	 * @param {string} eventName - 事件名称
+	 * @param {unknown} [params] - 参数
+	 * @returns {void}
 	 * @private
 	 */
-	emit(eventName: string, params?: any) {
+	emit(eventName: string, params?: unknown): void {
 		window.parent.postMessage(
 			{
 				type: IPC_TYPE.EMIT,

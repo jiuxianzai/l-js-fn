@@ -34,7 +34,7 @@ export enum IPC_TYPE {
  */
 export type ErrorType = 'connection_create_error' | 'connection_error' | 'connection_close' | 'connection_send_error';
 
-interface ErrorPayload {
+export interface ErrorPayload {
 	type: ErrorType;
 	data: unknown;
 }

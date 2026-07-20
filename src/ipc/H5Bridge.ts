@@ -4,12 +4,17 @@ import { getUuid } from '@/libs/string-kit.ts';
 /**
  * 父应用向子应用发送消息
  */
+type Resolver = (value: unknown) => void;
+type Rejecter = (reason?: unknown) => void;
+type EventHandler = (...args: unknown[]) => void;
+type QueueMessage = { type: IPC_TYPE; eventName: string; params?: unknown; id?: string };
+
 export class H5Bridge {
-	private pending: Record<string, { resolve: Function; reject: Function }> = {};
+	private pending: Record<string, { resolve: Resolver; reject: Rejecter }> = {};
 	// 注册事件列表
-	private eventHandlers: Record<string, Function[]> = {};
+	private eventHandlers: Record<string, EventHandler[]> = {};
 	// 消息队列,用于iframe还未准备好
-	private queue: any[] = [];
+	private queue: QueueMessage[] = [];
 	private iframeReady = false;
 
 	constructor(private iframe: HTMLIFrameElement | null) {
@@ -24,10 +29,10 @@ export class H5Bridge {
 	/**
 	 * 调用方法
 	 * @param eventName - 事件名称
-	 * @param params - 参数(可选)
-	 * @returns Promise<any>
+	 * @param {unknown} [params] - 参数(可选)
+	 * @returns {Promise<unknown>}
 	 */
-	call(eventName: string, params?: any): Promise<any> {
+	call<T = unknown>(eventName: string, params?: unknown): Promise<T> {
 		return new Promise((resolve, reject) => {
 			const uuid = getUuid();
 			const msg = { type: IPC_TYPE.REQUEST, eventName, params, id: uuid };
@@ -38,7 +43,7 @@ export class H5Bridge {
 				this.queue.push(msg);
 			}
 			// 记录请求
-			this.pending[uuid] = { resolve, reject };
+			this.pending[uuid] = { resolve: resolve as Resolver, reject };
 		});
 	}
 
@@ -50,7 +55,8 @@ export class H5Bridge {
 
 	private _flushPending() {
 		while (this.queue.length) {
-			const { type, eventName, params, id } = this.queue.shift();
+			const msg = this.queue.shift()!;
+			const { type, eventName, params, id } = msg;
 			this._postMessage({ type, eventName, params, id });
 		}
 	}
@@ -88,10 +94,11 @@ export class H5Bridge {
 	/**
 	 * 监听事件
 	 * @param eventName - 事件名称
-	 * @param callback - 处理函数
+	 * @param {(...args: unknown[]) => void} callback - 处理函数
+	 * @returns {void}
 	 * @private
 	 */
-	on(eventName: string, callback: Function) {
+	on(eventName: string, callback: EventHandler): void {
 		if (this.eventHandlers[eventName]) {
 			this.eventHandlers[eventName].push(callback);
 		} else {
@@ -102,9 +109,10 @@ export class H5Bridge {
 	/**
 	 * 移除监听事件
 	 * @param eventName - 事件名称
-	 * @param callback - 移除特定函数的监听(为空默认删除该事件所有监听)
+	 * @param {(...args: unknown[]) => void} [callback] - 移除特定函数的监听(为空默认删除该事件所有监听)
+	 * @returns {void}
 	 */
-	off(eventName: string, callback?: Function) {
+	off(eventName: string, callback?: EventHandler): void {
 		if (callback) {
 			this.eventHandlers[eventName] = this.eventHandlers[eventName].filter((item) => item !== callback);
 		} else {
@@ -112,8 +120,13 @@ export class H5Bridge {
 		}
 	}
 
-	/* 发布事件 */
-	emit(eventName: string, params?: any): void {
+	/**
+	 * 发布事件
+	 * @param {string} eventName - 事件名称
+	 * @param {unknown} [params] - 参数
+	 * @returns {void}
+	 */
+	emit(eventName: string, params?: unknown): void {
 		this.iframe?.contentWindow?.postMessage(
 			{
 				type: IPC_TYPE.EMIT,

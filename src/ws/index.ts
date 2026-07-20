@@ -96,7 +96,11 @@ export class WebSocketManager {
   }
 
   /** 发送消息 */
-  public sendWebSocketMessage(message: object | string) {
+  /** 发送消息
+   * @param {object | string} message - 要发送的消息
+   * @returns {void}
+   */
+  public sendWebSocketMessage(message: object | string): void {
     if (!this.webSocket || this.webSocket.readyState !== WebSocket.OPEN) {
       this.handleError('connection_send_error', 'WebSocket 未打开，无法发送消息');
       return;
