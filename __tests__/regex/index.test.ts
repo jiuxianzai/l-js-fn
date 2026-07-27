@@ -282,4 +282,182 @@ describe('regex - 正则表达式常量', () => {
 			expect(REGEXP.MONEY.test(money)).toBe(false);
 		});
 	});
+
+	// ==================== REGEXP.IPV4 测试 ====================
+	describe('REGEXP.IPV4 - IPv4正则', () => {
+		const validIps = ['192.168.1.1', '0.0.0.0', '255.255.255.255', '127.0.0.1', '10.0.0.1'];
+
+		it.each(validIps)('应该验证有效IP: %s', (ip) => {
+			expect(REGEXP.IPV4.test(ip)).toBe(true);
+		});
+
+		const invalidIps = ['256.1.1.1', '192.168.1', '192.168.1.1.1', 'abc.def.ghi.jkl', ''];
+
+		it.each(invalidIps)('应该拒绝无效IP: %s', (ip) => {
+			expect(REGEXP.IPV4.test(ip)).toBe(false);
+		});
+	});
+
+	// ==================== REGEXP.HEX_COLOR 测试 ====================
+	describe('REGEXP.HEX_COLOR - 十六进制颜色正则', () => {
+		const validColors = ['#fff', '#ffffff', '#FFF', '#000000', '#a1b2c3'];
+
+		it.each(validColors)('应该验证有效颜色: %s', (color) => {
+			expect(REGEXP.HEX_COLOR.test(color)).toBe(true);
+		});
+
+		const invalidColors = ['#ffff', '#gggggg', 'fff', 'white', ''];
+
+		it.each(invalidColors)('应该拒绝无效颜色: %s', (color) => {
+			expect(REGEXP.HEX_COLOR.test(color)).toBe(false);
+		});
+	});
+
+	// ==================== REGEXP.POSTAL_CODE 测试 ====================
+	describe('REGEXP.POSTAL_CODE - 邮政编码正则', () => {
+		const validCodes = ['100000', '200001', '518000'];
+
+		it.each(validCodes)('应该验证有效邮编: %s', (code) => {
+			expect(REGEXP.POSTAL_CODE.test(code)).toBe(true);
+		});
+
+		const invalidCodes = ['012345', '12345', '1234567', 'abcdef', ''];
+
+		it.each(invalidCodes)('应该拒绝无效邮编: %s', (code) => {
+			expect(REGEXP.POSTAL_CODE.test(code)).toBe(false);
+		});
+	});
+
+	// ==================== REGEXP.PLATE_NUMBER 测试 ====================
+	describe('REGEXP.PLATE_NUMBER - 车牌号正则', () => {
+		const validPlates = ['京A12345', '沪B67890', '粤C12345D', '京A12345警'];
+
+		it.each(validPlates)('应该验证有效车牌: %s', (plate) => {
+			expect(REGEXP.PLATE_NUMBER.test(plate)).toBe(true);
+		});
+
+		const invalidPlates = ['京12345', 'A12345', '京AI12345', ''];
+
+		it.each(invalidPlates)('应该拒绝无效车牌: %s', (plate) => {
+			expect(REGEXP.PLATE_NUMBER.test(plate)).toBe(false);
+		});
+	});
+
+	// ==================== REGEXP.DECIMAL 测试 ====================
+	describe('REGEXP.DECIMAL - 小数/浮点数正则', () => {
+		const validDecimals = ['0.5', '1.0', '3.14', '-1.5', '100.00'];
+
+		it.each(validDecimals)('应该验证有效小数: %s', (dec) => {
+			expect(REGEXP.DECIMAL.test(dec)).toBe(true);
+		});
+
+		const invalidDecimals = ['1', '0', '.5', '1.', 'abc', ''];
+
+		it.each(invalidDecimals)('应该拒绝非小数: %s', (dec) => {
+			expect(REGEXP.DECIMAL.test(dec)).toBe(false);
+		});
+	});
+
+	// ==================== REGEXP.DATE 测试 ====================
+	describe('REGEXP.DATE - 日期格式正则', () => {
+		const validDates = ['2024-01-01', '2024-12-31', '2024-02-29'];
+
+		it.each(validDates)('应该验证有效日期: %s', (date) => {
+			expect(REGEXP.DATE.test(date)).toBe(true);
+		});
+
+		const invalidDates = ['2024-00-01', '2024-13-01', '2024-01-32', '2024-1-1', '01-01-2024', ''];
+
+		it.each(invalidDates)('应该拒绝无效日期: %s', (date) => {
+			expect(REGEXP.DATE.test(date)).toBe(false);
+		});
+	});
+
+	// ==================== REGEXP.TIME 测试 ====================
+	describe('REGEXP.TIME - 时间格式正则', () => {
+		const validTimes = ['00:00', '12:30', '23:59', '12:30:00', '08:05:59'];
+
+		it.each(validTimes)('应该验证有效时间: %s', (time) => {
+			expect(REGEXP.TIME.test(time)).toBe(true);
+		});
+
+		const invalidTimes = ['24:00', '12:60', '12:3', 'abc', ''];
+
+		it.each(invalidTimes)('应该拒绝无效时间: %s', (time) => {
+			expect(REGEXP.TIME.test(time)).toBe(false);
+		});
+	});
+
+	// ==================== REGEXP.DOMAIN 测试 ====================
+	describe('REGEXP.DOMAIN - 域名正则', () => {
+		const validDomains = ['example.com', 'sub.example.com', 'my-domain.co.jp', 'test123.cn'];
+
+		it.each(validDomains)('应该验证有效域名: %s', (domain) => {
+			expect(REGEXP.DOMAIN.test(domain)).toBe(true);
+		});
+
+		const invalidDomains = ['example', '.com', 'https://example.com', 'exa_mple.com', ''];
+
+		it.each(invalidDomains)('应该拒绝无效域名: %s', (domain) => {
+			expect(REGEXP.DOMAIN.test(domain)).toBe(false);
+		});
+	});
+
+	// ==================== REGEXP.TAX_ID 测试 ====================
+	describe('REGEXP.TAX_ID - 统一社会信用代码正则', () => {
+		const validTaxIds = ['91110108551111111A', '92110108551111111X'];
+
+		it.each(validTaxIds)('应该验证有效信用代码: %s', (code) => {
+			expect(REGEXP.TAX_ID.test(code)).toBe(true);
+		});
+
+		const invalidTaxIds = ['91110108551111111I', '9111010855111111', '9111010855111111111', ''];
+
+		it.each(invalidTaxIds)('应该拒绝无效信用代码: %s', (code) => {
+			expect(REGEXP.TAX_ID.test(code)).toBe(false);
+		});
+	});
+
+	// ==================== REGEXP 引用检查 ====================
+	describe('REGEXP - 常量引用检查', () => {
+		it('应该保持可被导出', () => {
+			expect(REGEXP).toBeDefined();
+		});
+
+		it('应该保持 IPV4 可用', () => {
+			expect(REGEXP.IPV4).toBeDefined();
+		});
+
+		it('应该保持 HEX_COLOR 可用', () => {
+			expect(REGEXP.HEX_COLOR).toBeDefined();
+		});
+
+		it('应该保持 POSTAL_CODE 可用', () => {
+			expect(REGEXP.POSTAL_CODE).toBeDefined();
+		});
+
+		it('应该保持 PLATE_NUMBER 可用', () => {
+			expect(REGEXP.PLATE_NUMBER).toBeDefined();
+		});
+
+		it('应该保持 DECIMAL 可用', () => {
+			expect(REGEXP.DECIMAL).toBeDefined();
+		});
+
+		it('应该保持 DATE_FORMAT 日期可用', () => {
+			expect(REGEXP.DATE).toBeDefined();
+		});
+
+		it('应该保持 TIME 可用', () => {
+			expect(REGEXP.TIME).toBeDefined();
+		});
+
+		it('应该保持 DOMAIN 可用', () => {
+			expect(REGEXP.DOMAIN).toBeDefined();
+		});
+
+		it('应该保持 TAX_ID 可用', () => {
+			expect(REGEXP.TAX_ID).toBeDefined();
+		});
+	});
 });
