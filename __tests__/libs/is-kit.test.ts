@@ -15,6 +15,8 @@ import {
 	isIdCard,
 	isPhoneNumber,
 	isEqual,
+	isHttp,
+	isHttps,
 	validateParams,
 } from '@/libs/is-kit';
 
@@ -223,6 +225,65 @@ describe('is-kit - 类型判断工具', () => {
 			expect(isURL(null as any)).toBe(false);
 			expect(isURL(undefined as any)).toBe(false);
 			expect(isURL(123 as any)).toBe(false);
+		});
+	});
+
+	// ==================== isHttp 测试 ====================
+	describe('isHttp - http链接判断', () => {
+		it('应该正确识别 http 链接', () => {
+			expect(isHttp('http://example.com')).toBe(true);
+			expect(isHttp('http://localhost')).toBe(true);
+			expect(isHttp('http://192.168.1.1')).toBe(true);
+		});
+
+		it('应该处理大写 HTTP', () => {
+			expect(isHttp('HTTP://EXAMPLE.COM')).toBe(true);
+			expect(isHttp('Http://example.com')).toBe(true);
+		});
+
+		it('应该拒绝 https 链接', () => {
+			expect(isHttp('https://example.com')).toBe(false);
+		});
+
+		it('应该拒绝非 http 链接', () => {
+			expect(isHttp('ftp://example.com')).toBe(false);
+			expect(isHttp('example.com')).toBe(false);
+			expect(isHttp('')).toBe(false);
+		});
+
+		it('应该处理边界情况', () => {
+			expect(isHttp(null as any)).toBe(false);
+			expect(isHttp(undefined as any)).toBe(false);
+			expect(isHttp(123 as any)).toBe(false);
+		});
+	});
+
+	// ==================== isHttps 测试 ====================
+	describe('isHttps - https链接判断', () => {
+		it('应该正确识别 https 链接', () => {
+			expect(isHttps('https://example.com')).toBe(true);
+			expect(isHttps('https://localhost')).toBe(true);
+		});
+
+		it('应该处理大写 HTTPS', () => {
+			expect(isHttps('HTTPS://EXAMPLE.COM')).toBe(true);
+			expect(isHttps('Https://example.com')).toBe(true);
+		});
+
+		it('应该拒绝 http 链接', () => {
+			expect(isHttps('http://example.com')).toBe(false);
+		});
+
+		it('应该拒绝非 https 链接', () => {
+			expect(isHttps('ftp://example.com')).toBe(false);
+			expect(isHttps('example.com')).toBe(false);
+			expect(isHttps('')).toBe(false);
+		});
+
+		it('应该处理边界情况', () => {
+			expect(isHttps(null as any)).toBe(false);
+			expect(isHttps(undefined as any)).toBe(false);
+			expect(isHttps(123 as any)).toBe(false);
 		});
 	});
 

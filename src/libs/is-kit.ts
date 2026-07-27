@@ -102,6 +102,22 @@ export function isIdCard(idCard: string): boolean {
 }
 
 /**
+ * 判断是否合法 http 链接
+ */
+export function isHttp(value: string): boolean {
+	if (!value) return false;
+	return String(value).toLowerCase().startsWith('http://');
+}
+
+/**
+ * 判断是否合法 https 链接
+ */
+export function isHttps(value: string): boolean {
+	if (!value) return false;
+	return String(value).toLowerCase().startsWith('https://');
+}
+
+/**
  * 判断是否为合法手机号码（中国大陆）
  * @param {string} phone - 待校验的手机号
  * @returns {boolean} 是否为手机号

@@ -194,6 +194,52 @@ isURL('https://example.com'); // true
 isURL('not-a-url');           // false
 ```
 
+## isHttp
+
+判断是否为 http 链接（忽略大小写）。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| value | `string` | 是 | 待检查的字符串 |
+
+**返回值：** `boolean`
+
+**示例：**
+
+```typescript
+import { isHttp } from 'l-js-fn';
+
+isHttp('http://example.com');  // true
+isHttp('HTTP://EXAMPLE.COM');  // true
+isHttp('https://example.com'); // false
+isHttp('');                    // false
+```
+
+## isHttps
+
+判断是否为 https 链接（忽略大小写）。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| value | `string` | 是 | 待检查的字符串 |
+
+**返回值：** `boolean`
+
+**示例：**
+
+```typescript
+import { isHttps } from 'l-js-fn';
+
+isHttps('https://example.com');  // true
+isHttps('HTTPS://EXAMPLE.COM');  // true
+isHttps('http://example.com');   // false
+isHttps('');                     // false
+```
+
 ## isIdCard
 
 判断是否为有效的中国大陆身份证号码（支持 15 位和 18 位）。
