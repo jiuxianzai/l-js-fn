@@ -107,3 +107,27 @@ import { getUniqueRandomIndexes } from 'l-js-fn';
 getUniqueRandomIndexes(10, 3); // [0, 5, 8]（随机，不重复）
 getUniqueRandomIndexes(5, 5);  // [2, 4, 1, 3, 0]（全部打乱）
 ```
+
+## clamp
+
+将数值限制在指定范围内。
+
+```typescript
+import { clamp } from 'l-js-fn';
+
+clamp(5, 0, 10);  // 5
+clamp(-1, 0, 10); // 0
+clamp(15, 0, 10); // 10
+```
+
+## round
+
+四舍五入到指定小数位。
+
+```typescript
+import { round } from 'l-js-fn';
+
+round(3.14159, 2); // 3.14
+round(3.14159);    // 3
+round(3.5);        // 4
+```

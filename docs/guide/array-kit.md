@@ -351,3 +351,78 @@ sampleSize(numbers, 10);  // [2, 5, 1, 4, 3]（全部乱序）
 sampleSize(numbers);      // [4]（默认 n=1）
 sampleSize(numbers, 0);   // []（n=0 返回空数组）
 ```
+
+## flatten
+
+数组扁平化，支持指定展开深度。
+
+```typescript
+import { flatten } from 'l-js-fn';
+
+flatten([1, [2, [3, 4]], 5]);    // [1, 2, 3, 4, 5]
+flatten([1, [2, [3, 4]], 5], 1); // [1, 2, [3, 4], 5]
+```
+
+## range
+
+生成数字范围数组。
+
+```typescript
+import { range } from 'l-js-fn';
+
+range(0, 5);       // [0, 1, 2, 3, 4, 5]
+range(5, 0, -1);   // [5, 4, 3, 2, 1, 0]
+range(0, 10, 2);   // [0, 2, 4, 6, 8, 10]
+```
+
+## shuffle
+
+Fisher-Yates 洗牌算法打乱数组。
+
+```typescript
+import { shuffle } from 'l-js-fn';
+
+shuffle([1, 2, 3, 4, 5]); // [3, 1, 5, 2, 4]（随机）
+```
+
+## uniqueBy
+
+根据对象数组中指定字段的值去重。
+
+```typescript
+import { uniqueBy } from 'l-js-fn';
+
+const arr = [{ id: 1, name: 'a' }, { id: 2, name: 'b' }, { id: 1, name: 'c' }];
+uniqueBy(arr, 'id'); // [{ id: 1, name: 'a' }, { id: 2, name: 'b' }]
+```
+
+## compact
+
+过滤数组中的 falsy 值。
+
+```typescript
+import { compact } from 'l-js-fn';
+
+compact([0, 1, false, 2, '', 3, null, undefined, NaN]); // [1, 2, 3]
+```
+
+## sum
+
+计算数组元素总和。
+
+```typescript
+import { sum } from 'l-js-fn';
+
+sum([1, 2, 3, 4, 5]); // 15
+```
+
+## last
+
+获取数组最后一个元素。
+
+```typescript
+import { last } from 'l-js-fn';
+
+last([1, 2, 3]); // 3
+last([]);        // undefined
+```

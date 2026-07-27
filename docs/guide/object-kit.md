@@ -155,6 +155,43 @@ const formData = new FormData();
 formData.append('name', 'John');
 formData.append('age', '20');
 
-formDataToObject(formData);
-// { name: 'John', age: 20 }
+	formDataToObject(formData);
+	// { name: 'John', age: 20 }
+```
+
+## pick
+
+从对象中选取指定属性，返回新对象。
+
+```typescript
+import { pick } from 'l-js-fn';
+
+pick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
+```
+
+## get
+
+安全获取对象深层属性值。
+
+```typescript
+import { get } from 'l-js-fn';
+
+const obj = { a: { b: { c: 1 } } };
+get(obj, 'a.b.c');           // 1
+get(obj, 'a.b.d', 'default'); // 'default'
+get({ list: [1, 2, 3] }, 'list[1]'); // 2
+```
+
+## deepMerge
+
+深度合并多个对象。
+
+```typescript
+import { deepMerge } from 'l-js-fn';
+
+deepMerge({ a: { b: 1 } }, { a: { c: 2 } });
+// { a: { b: 1, c: 2 } }
+
+deepMerge({ a: 1 }, { b: 2 }, { c: 3 });
+// { a: 1, b: 2, c: 3 }
 ```

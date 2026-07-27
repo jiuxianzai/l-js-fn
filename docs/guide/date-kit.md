@@ -152,3 +152,36 @@ import { getTimeDiff } from 'l-js-fn';
 getTimeDiff('2024-01-01', '2024-01-02'); // 86400000（1天）
 getTimeDiff(new Date('2024-01-01'), new Date('2024-01-02')); // 86400000
 ```
+
+## addDays
+
+日期加减天数，返回新 Date 对象。
+
+```typescript
+import { addDays } from 'l-js-fn';
+
+addDays(new Date('2024-01-01'), 1);  // 2024-01-02
+addDays(new Date('2024-01-01'), -1); // 2023-12-31
+```
+
+## isLeapYear
+
+判断指定年份是否为闰年。
+
+```typescript
+import { isLeapYear } from 'l-js-fn';
+
+isLeapYear(2024); // true
+isLeapYear(2023); // false
+```
+
+## getWeekDay
+
+获取中文星期几。
+
+```typescript
+import { getWeekDay } from 'l-js-fn';
+
+getWeekDay(new Date('2024-01-01')); // '星期一'
+getWeekDay(); // '星期一'（今天）
+```

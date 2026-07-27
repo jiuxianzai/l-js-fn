@@ -277,3 +277,55 @@ const result2 = await imageToBase64(file, 'image/jpeg', 0.8);
 - `imageToBase64` 仅在浏览器环境中可用（依赖 Canvas API）
 - 当 `input` 为 `null` 时，返回 `Result.fail('输入不能为空')`，不会抛出异常
 :::
+
+## retry
+
+异步函数失败重试。
+
+```typescript
+import { retry } from 'l-js-fn';
+
+const fetchData = retry(
+  async () => {
+    const res = await fetch('/api');
+    if (!res.ok) throw new Error('request failed');
+    return res.json();
+  },
+  { times: 3, delay: 1000 }
+);
+
+await fetchData(); // 失败后最多重试 3 次
+```
+
+## once
+
+包装函数使其只执行一次。
+
+```typescript
+import { once } from 'l-js-fn';
+
+const init = once(() => {
+  console.log('初始化');
+  return 'done';
+});
+
+init(); // 输出 '初始化' → 'done'
+init(); // 直接返回 'done'（无输出）
+```
+
+## memoize
+
+缓存函数计算结果，相同参数不重复执行。
+
+```typescript
+import { memoize } from 'l-js-fn';
+
+const add = memoize((a: number, b: number) => {
+  console.log('计算中');
+  return a + b;
+});
+
+add(1, 2); // 输出 '计算中' → 3
+add(1, 2); // 直接返回 3（缓存命中，无输出）
+add(2, 3); // 输出 '计算中' → 5（不同参数重新计算）
+```

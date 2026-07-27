@@ -181,3 +181,38 @@ toPascalCase('hello_world');  // 'HelloWorld'
 toPascalCase('hello world');  // 'HelloWorld'
 toPascalCase('helloWorld');   // 'HelloWorld'
 ```
+
+## toCamelCase
+
+短横线/下划线/空格命名 → 驼峰命名。
+
+```typescript
+import { toCamelCase } from 'l-js-fn';
+
+toCamelCase('hello-world');  // 'helloWorld'
+toCamelCase('hello_world');  // 'helloWorld'
+toCamelCase('Hello World');  // 'helloWorld'
+```
+
+## toKebabCase
+
+驼峰/帕斯卡/下划线 → 短横线命名。
+
+```typescript
+import { toKebabCase } from 'l-js-fn';
+
+toKebabCase('helloWorld');   // 'hello-world'
+toKebabCase('HelloWorld');   // 'hello-world'
+toKebabCase('hello_world');  // 'hello-world'
+```
+
+## capitalize
+
+首字母大写。
+
+```typescript
+import { capitalize } from 'l-js-fn';
+
+capitalize('hello');        // 'Hello'
+capitalize('hello world');  // 'Hello world'
+```

@@ -5,7 +5,7 @@
 ![npm version](https://badge.fury.io/js/l-js-fn.svg)
 ![downloads](https://img.shields.io/npm/dm/l-js-fn)
 ![license](https://img.shields.io/npm/l/l-js-fn)
-![test pass](https://img.shields.io/badge/tests-930%2F930%20passed-brightgreen)
+![test pass](https://img.shields.io/badge/tests-1003%2F1003%20passed-brightgreen)
 ![coverage](https://img.shields.io/badge/coverage-88%25-brightgreen)
 ![functions](https://img.shields.io/badge/functions-90%25-brightgreen)
 ![branches](https://img.shields.io/badge/branches-87%25-yellowgreen)
@@ -125,6 +125,13 @@ import {
 	groupBy,
 	sample,
 	sampleSize,
+	flatten,
+	range,
+	shuffle,
+	uniqueBy,
+	compact,
+	sum,
+	last,
 } from 'l-js-fn';
 
 // 删除元素
@@ -165,12 +172,35 @@ sample([1, 2, 3, 4, 5]); // 3（随机）
 
 // 随机取 n 个元素
 sampleSize([1, 2, 3, 4, 5], 2); // [2, 5]（随机）
+
+// 数组扁平化
+flatten([1, [2, [3]]]); // [1, 2, 3]
+flatten([1, [2, [3]]], 1); // [1, 2, [3]]
+
+// 生成范围数组
+range(0, 5); // [0, 1, 2, 3, 4, 5]
+range(5, 0, -1); // [5, 4, 3, 2, 1, 0]
+
+// Fisher-Yates 洗牌
+shuffle([1, 2, 3, 4, 5]); // [3, 1, 5, 2, 4]（随机）
+
+// 按对象字段去重
+uniqueBy([{id:1},{id:2},{id:1}], 'id'); // [{id:1},{id:2}]
+
+// 过滤 falsy 值
+compact([0, 1, false, 2, '', 3]); // [1, 2, 3]
+
+// 数组求和
+sum([1, 2, 3, 4, 5]); // 15
+
+// 获取最后一个元素
+last([1, 2, 3]); // 3
 ```
 
 #### 字符串处理 (string-kit)
 
 ```typescript
-import { desensitization, trim, getMobile, getUuid, indexToLabel } from 'l-js-fn';
+import { desensitization, trim, getMobile, getUuid, indexToLabel, toPascalCase, toCamelCase, toKebabCase, capitalize } from 'l-js-fn';
 
 // 字符串脱敏
 desensitization('13800138000', 3, 4); // "138****8000"
@@ -189,12 +219,24 @@ getUuid(); // "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
 indexToLabel(0, 'upper'); // "A"
 indexToLabel(1, 'lower'); // "b"
 indexToLabel(0, 'chinese'); // "一"
+
+// 帕斯卡命名 (PascalCase)
+toPascalCase('hello-world'); // "HelloWorld"
+
+// 驼峰命名 (camelCase)
+toCamelCase('hello-world'); // "helloWorld"
+
+// 短横线命名 (kebab-case)
+toKebabCase('helloWorld'); // "hello-world"
+
+// 首字母大写
+capitalize('hello'); // "Hello"
 ```
 
 #### 对象操作 (object-kit)
 
 ```typescript
-import { objMerge, objFilterProp, objFilterNull, jsonToFormData, formDataToObject } from 'l-js-fn';
+import { objMerge, objFilterProp, objFilterNull, jsonToFormData, formDataToObject, pick, get, deepMerge } from 'l-js-fn';
 
 // 对象合并
 objMerge({ a: 1 }, { b: 2 }); // { a: 1, b: 2 }
@@ -210,12 +252,23 @@ jsonToFormData({ name: 'John', age: 20 }); // FormData
 
 // FormData 转 JSON
 formDataToObject(formData); // { name: 'John', age: 20 }
+
+// 选取属性
+pick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
+
+// 安全深层取值
+get({ a: { b: { c: 1 } } }, 'a.b.c'); // 1
+get({ a: 1 }, 'b.c', 'default'); // 'default'
+
+// 深度合并
+deepMerge({ a: { b: 1 } }, { a: { c: 2 } });
+// { a: { b: 1, c: 2 } }
 ```
 
 #### 日期处理 (date-kit)
 
 ```typescript
-import { dateFormat, dateSecond, diffDays, formatPassTime, monthDays, getTimeDiff } from 'l-js-fn';
+import { dateFormat, dateSecond, diffDays, formatPassTime, monthDays, getTimeDiff, addDays, isLeapYear, getWeekDay } from 'l-js-fn';
 
 // 日期格式化
 dateFormat(new Date()); // "2024-01-01 12:00:00"
@@ -235,12 +288,22 @@ monthDays('2024-02-01'); // 29
 
 // 时间差计算
 getTimeDiff('2024-01-01', '2024-01-02'); // 86400000
+
+// 日期加减天数
+addDays(new Date('2024-01-01'), 1); // 2024-01-02
+addDays(new Date('2024-01-01'), -1); // 2023-12-31
+
+// 闰年判断
+isLeapYear(2024); // true
+
+// 中文星期
+getWeekDay(new Date('2024-01-01')); // '星期一'
 ```
 
 #### 数字处理 (number-kit)
 
 ```typescript
-import { formatNumber, toPercent, random, getUniqueRandomIndexes } from 'l-js-fn';
+import { formatNumber, toPercent, random, getUniqueRandomIndexes, clamp, round } from 'l-js-fn';
 
 // 数字格式化
 formatNumber(1234567); // "1,234,567"
@@ -256,6 +319,13 @@ random(1, 10, { float: true }); // 1-10 之间的随机浮点数
 
 // 生成不重复随机索引
 getUniqueRandomIndexes(10, 3); // [0, 5, 8]
+
+// 限制值范围
+clamp(5, 0, 10); // 5
+clamp(-1, 0, 10); // 0
+
+// 四舍五入
+round(3.14159, 2); // 3.14
 ```
 
 #### URL 处理 (url-kit)
@@ -285,7 +355,7 @@ getFileInfoToUrl('https://example.com/file.txt');
 #### 通用工具 (common)
 
 ```typescript
-import { sleep, debounce, throttle, getType, deepClone, getDevice, imageToBase64 } from 'l-js-fn';
+import { sleep, debounce, throttle, getType, deepClone, getDevice, imageToBase64, retry, once, memoize } from 'l-js-fn';
 
 // 睡眠函数
 await sleep(1000); // 延迟 1 秒
@@ -312,6 +382,20 @@ getDevice(); // "ios" | "android" | "windows" | "macos" | ...
 
 // 图片转 Base64
 const result = await imageToBase64('https://example.com/image.png');
+
+// 异步函数重试
+const fn = retry(async () => fetch('/api'), { times: 3, delay: 1000 });
+await fn();
+
+// 只执行一次
+const init = once(() => console.log('init'));
+init(); // 输出 'init'
+init(); // 无输出（跳过）
+
+// 缓存计算结果
+const add = memoize((a, b) => a + b);
+add(1, 2); // 计算并返回 3
+add(1, 2); // 直接返回 3（缓存命中）
 ```
 
 ### 浏览器对象模型 (bom)
@@ -621,7 +705,7 @@ const { escapeHTML } = require('l-js-fn/encode');
 | 指标       | 数值                   |
 | ---------- | ---------------------- |
 | 测试套件   | 20 passed              |
-| 测试用例 | 930 passed / 930 total |
+| 测试用例 | 1003 passed / 1003 total |
 | 通过率     | 100%                   |
 | 行覆盖率   | 89.04%                 |
 | 分支覆盖率 | 86.86%                 |
@@ -633,12 +717,12 @@ const { escapeHTML } = require('l-js-fn/encode');
 | 模块                    | 用例数 | 通过 | 失败 | 通过率 |
 | ----------------------- | ------ | ---- | ---- | ------ |
 | is-kit (类型判断)       | 63     | 63   | 0    | 100%   |
-| array-kit (数组操作)    | 97     | 97   | 0    | 100%   |
-| string-kit (字符串处理) | 56     | 56   | 0    | 100%   |
-| object-kit (对象操作)   | 42     | 42   | 0    | 100%   |
-| common (通用工具)       | 52     | 52   | 0    | 100%   |
-| date-kit (日期处理)     | 53     | 53   | 0    | 100%   |
-| number-kit (数字处理)   | 45     | 45   | 0    | 100%   |
+| array-kit (数组操作)    | 124    | 124  | 0    | 100%   |
+| string-kit (字符串处理) | 68     | 68   | 0    | 100%   |
+| object-kit (对象操作)   | 53     | 53   | 0    | 100%   |
+| common (通用工具)       | 59     | 59   | 0    | 100%   |
+| date-kit (日期处理)     | 61     | 61   | 0    | 100%   |
+| number-kit (数字处理)   | 53     | 53   | 0    | 100%   |
 | url-kit (URL 处理)      | 49     | 49   | 0    | 100%   |
 | bugfixes (兼容修复)     | 17     | 17   | 0    | 100%   |
 
