@@ -4,7 +4,7 @@ export default defineConfig({
 	lang: 'zh-CN',
 	title: 'l-js-fn',
 	description: '轻量级 JavaScript 工具函数库，支持模块化导入和 Tree-shaking',
-	base: '/',
+	base: '/l-js-fn/',
 	lastUpdated: {
 		text: '最后更新于',
 		formatOptions: {

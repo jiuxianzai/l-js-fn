@@ -5,6 +5,11 @@
 ![npm version](https://badge.fury.io/js/l-js-fn.svg)
 ![downloads](https://img.shields.io/npm/dm/l-js-fn)
 ![license](https://img.shields.io/npm/l/l-js-fn)
+![test pass](https://img.shields.io/badge/tests-930%2F930%20passed-brightgreen)
+![coverage](https://img.shields.io/badge/coverage-88%25-brightgreen)
+![functions](https://img.shields.io/badge/functions-90%25-brightgreen)
+![branches](https://img.shields.io/badge/branches-87%25-yellowgreen)
+[![docs](https://img.shields.io/badge/docs-GitHub%20Pages-42b883)](https://jiuxianzai.github.io/l-js-fn/)
 
 ## ✨ 特性
 
@@ -15,6 +20,7 @@
 - 🎨 **Tree-shaking** - 完整支持 Tree-shaking，只打包用到的代码
 - 💪 **工具齐全** - 涵盖数组、对象、字符串、日期、URL、正则等常用操作
 - 🔧 **高级功能** - WebSocket 管理、轮询、IPC 通信等
+- 📖 **完整文档** - 在线文档见 [GitHub Pages](https://jiuxianzai.github.io/l-js-fn/)
 
 ## 📦 安装
 
@@ -81,19 +87,7 @@ import { formatFileSize, isImage } from 'l-js-fn/file';
 #### 类型判断 (is-kit)
 
 ```typescript
-import {
-  isEmpty,
-  isNotEmpty,
-  isObject,
-  isArray,
-  isString,
-  isEmail,
-  isURL,
-  isIdCard,
-  isPhoneNumber,
-  isEqual,
-  validateParams
-} from 'l-js-fn';
+import { isEmpty, isNotEmpty, isObject, isArray, isString, isEmail, isURL, isIdCard, isPhoneNumber, isEqual, validateParams } from 'l-js-fn';
 
 // 空值检查
 isEmpty(''); // true
@@ -121,16 +115,16 @@ validateParams(['name'], { age: 20 }); // 'name'
 
 ```typescript
 import {
-  arrayDelEl,
-  arrayDelToIndex,
-  arrayFill,
-  arrayUnique,
-  arrayPaginate,
-  arraySplitToGroups,
-  moveElement,
-  groupBy,
-  sample,
-  sampleSize
+	arrayDelEl,
+	arrayDelToIndex,
+	arrayFill,
+	arrayUnique,
+	arrayPaginate,
+	arraySplitToGroups,
+	moveElement,
+	groupBy,
+	sample,
+	sampleSize,
 } from 'l-js-fn';
 
 // 删除元素
@@ -156,11 +150,14 @@ arraySplitToGroups([1, 2, 3, 4, 5], 2);
 moveElement([1, 2, 3], 1, 'up'); // 移动索引1的元素向上
 
 // 按字段分组对象数组
-groupBy([
-  { name: 'Alice', age: 25 },
-  { name: 'Bob', age: 25 },
-  { name: 'Charlie', age: 30 }
-], 'age');
+groupBy(
+	[
+		{ name: 'Alice', age: 25 },
+		{ name: 'Bob', age: 25 },
+		{ name: 'Charlie', age: 30 },
+	],
+	'age'
+);
 // { 25: [{ name: 'Alice', age: 25 }, { name: 'Bob', age: 25 }], 30: [{ name: 'Charlie', age: 30 }] }
 
 // 随机取一个元素
@@ -173,13 +170,7 @@ sampleSize([1, 2, 3, 4, 5], 2); // [2, 5]（随机）
 #### 字符串处理 (string-kit)
 
 ```typescript
-import {
-  desensitization,
-  trim,
-  getMobile,
-  getUuid,
-  indexToLabel
-} from 'l-js-fn';
+import { desensitization, trim, getMobile, getUuid, indexToLabel } from 'l-js-fn';
 
 // 字符串脱敏
 desensitization('13800138000', 3, 4); // "138****8000"
@@ -203,13 +194,7 @@ indexToLabel(0, 'chinese'); // "一"
 #### 对象操作 (object-kit)
 
 ```typescript
-import {
-  objMerge,
-  objFilterProp,
-  objFilterNull,
-  jsonToFormData,
-  formDataToObject
-} from 'l-js-fn';
+import { objMerge, objFilterProp, objFilterNull, jsonToFormData, formDataToObject } from 'l-js-fn';
 
 // 对象合并
 objMerge({ a: 1 }, { b: 2 }); // { a: 1, b: 2 }
@@ -230,14 +215,7 @@ formDataToObject(formData); // { name: 'John', age: 20 }
 #### 日期处理 (date-kit)
 
 ```typescript
-import {
-  dateFormat,
-  dateSecond,
-  diffDays,
-  formatPassTime,
-  monthDays,
-  getTimeDiff
-} from 'l-js-fn';
+import { dateFormat, dateSecond, diffDays, formatPassTime, monthDays, getTimeDiff } from 'l-js-fn';
 
 // 日期格式化
 dateFormat(new Date()); // "2024-01-01 12:00:00"
@@ -262,12 +240,7 @@ getTimeDiff('2024-01-01', '2024-01-02'); // 86400000
 #### 数字处理 (number-kit)
 
 ```typescript
-import {
-  formatNumber,
-  toPercent,
-  random,
-  getUniqueRandomIndexes
-} from 'l-js-fn';
+import { formatNumber, toPercent, random, getUniqueRandomIndexes } from 'l-js-fn';
 
 // 数字格式化
 formatNumber(1234567); // "1,234,567"
@@ -288,13 +261,7 @@ getUniqueRandomIndexes(10, 3); // [0, 5, 8]
 #### URL 处理 (url-kit)
 
 ```typescript
-import {
-  getUrlParams,
-  getUrlParam,
-  appendUrlParam,
-  transUrlParams,
-  getFileInfoToUrl
-} from 'l-js-fn';
+import { getUrlParams, getUrlParam, appendUrlParam, transUrlParams, getFileInfoToUrl } from 'l-js-fn';
 
 // 解析 URL 参数
 getUrlParams('https://example.com?id=1&name=John');
@@ -318,27 +285,19 @@ getFileInfoToUrl('https://example.com/file.txt');
 #### 通用工具 (common)
 
 ```typescript
-import {
-  sleep,
-  debounce,
-  throttle,
-  getType,
-  deepClone,
-  getDevice,
-  imageToBase64
-} from 'l-js-fn';
+import { sleep, debounce, throttle, getType, deepClone, getDevice, imageToBase64 } from 'l-js-fn';
 
 // 睡眠函数
 await sleep(1000); // 延迟 1 秒
 
 // 防抖
 const debouncedFn = debounce(() => {
-  console.log('执行');
+	console.log('执行');
 }, 300);
 
 // 节流
 const throttledFn = throttle(() => {
-  console.log('执行');
+	console.log('执行');
 }, 300);
 
 // 获取类型
@@ -359,18 +318,18 @@ const result = await imageToBase64('https://example.com/image.png');
 
 ```typescript
 import {
-  scrollTop,
-  scrollToBottom,
-  getScrollPosition,
-  setScrollPosition,
-  launchFullscreen,
-  exitFullscreen,
-  copyToClipboard,
-  setCookie,
-  getCookie,
-  removeCookie,
-  hasCookie,
-  getAllCookies
+	scrollTop,
+	scrollToBottom,
+	getScrollPosition,
+	setScrollPosition,
+	launchFullscreen,
+	exitFullscreen,
+	copyToClipboard,
+	setCookie,
+	getCookie,
+	removeCookie,
+	hasCookie,
+	getAllCookies,
 } from 'l-js-fn/bom';
 
 // 平滑滚动到顶部
@@ -405,16 +364,7 @@ getAllCookies(); // { token: 'abc123', user: 'john' }
 ### 本地存储 (storage)
 
 ```typescript
-import {
-  setStorage,
-  getStorage,
-  removeStorage,
-  clearStorage,
-  clearExpiredStorage,
-  setSession,
-  getSession,
-  removeSession
-} from 'l-js-fn/storage';
+import { setStorage, getStorage, removeStorage, clearStorage, clearExpiredStorage, setSession, getSession, removeSession } from 'l-js-fn/storage';
 
 // localStorage 操作（支持过期时间）
 setStorage('user', { name: 'John', age: 20 });
@@ -437,9 +387,9 @@ removeSession('tabData');
 import { WebSocketManager } from 'l-js-fn/ws';
 
 const ws = new WebSocketManager(
-  'ws://localhost:8080',
-  (message) => console.log('收到消息:', message),
-  (error) => console.error('错误:', error)
+	'ws://localhost:8080',
+	(message) => console.log('收到消息:', message),
+	(error) => console.error('错误:', error)
 );
 
 // 发送消息
@@ -464,12 +414,12 @@ const polling = new Polling();
 
 // 启动轮询
 polling.start(
-  async () => {
-    const response = await fetch('https://api.example.com/data');
-    return response.json();
-  },
-  1000, // 间隔 1 秒
-  true // 立即执行
+	async () => {
+		const response = await fetch('https://api.example.com/data');
+		return response.json();
+	},
+	1000, // 间隔 1 秒
+	true // 立即执行
 );
 
 // 停止轮询
@@ -501,6 +451,36 @@ REGEXP.CHINESE.test('中文'); // true
 
 // 金额验证
 REGEXP.MONEY.test('123.45'); // true
+
+// IPv4 地址
+REGEXP.IPV4.test('192.168.1.1'); // true
+
+// 十六进制颜色值
+REGEXP.HEX_COLOR.test('#fff'); // true
+REGEXP.HEX_COLOR.test('#ffffff'); // true
+
+// 中国邮政编码
+REGEXP.POSTAL_CODE.test('100000'); // true
+
+// 车牌号（含新能源）
+REGEXP.PLATE_NUMBER.test('京A12345'); // true
+REGEXP.PLATE_NUMBER.test('粤C12345D'); // true
+
+// 小数/浮点数
+REGEXP.DECIMAL.test('3.14'); // true
+REGEXP.DECIMAL.test('-1.5'); // true
+
+// 日期格式 yyyy-MM-dd
+REGEXP.DATE.test('2024-01-01'); // true
+
+// 时间格式 HH:mm:ss
+REGEXP.TIME.test('12:30:00'); // true
+
+// 域名（不含协议）
+REGEXP.DOMAIN.test('example.com'); // true
+
+// 统一社会信用代码
+REGEXP.TAX_ID.test('91110108551111111A'); // true
 ```
 
 ### 配置常量 (config)
@@ -534,16 +514,7 @@ const iframeBridge = new IframeBridge('https://example.com');
 ### 编码/解码 (encode)
 
 ```typescript
-import {
-  base64Encode,
-  base64Decode,
-  escapeHTML,
-  unescapeHTML,
-  urlEncode,
-  urlDecode,
-  querystringify,
-  parseQueryString
-} from 'l-js-fn/encode';
+import { base64Encode, base64Decode, escapeHTML, unescapeHTML, urlEncode, urlDecode, querystringify, parseQueryString } from 'l-js-fn/encode';
 
 // Base64 编码/解码（支持 Unicode）
 base64Encode('Hello World'); // 'SGVsbG8gV29ybGQ='
@@ -570,18 +541,18 @@ parseQueryString('?a=1&a=2'); // { a: ['1', '2'] }
 
 ```typescript
 import {
-  formatFileSize,
-  getExtension,
-  getFileName,
-  downloadFile,
-  readAsText,
-  readAsDataURL,
-  readAsArrayBuffer,
-  isImage,
-  isVideo,
-  isAudio,
-  isPDF,
-  FileSizeUnit
+	formatFileSize,
+	getExtension,
+	getFileName,
+	downloadFile,
+	readAsText,
+	readAsDataURL,
+	readAsArrayBuffer,
+	isImage,
+	isVideo,
+	isAudio,
+	isPDF,
+	FileSizeUnit,
 } from 'l-js-fn/file';
 
 // 格式化文件大小
@@ -641,3 +612,52 @@ const { scrollTop } = require('l-js-fn/bom');
 const { escapeHTML } = require('l-js-fn/encode');
 ```
 
+## ✅ 测试
+
+本项目使用 [Jest](https://jestjs.io/) 进行单元测试，覆盖率阈值 80%。
+
+### 测试统计
+
+| 指标       | 数值                   |
+| ---------- | ---------------------- |
+| 测试套件   | 20 passed              |
+| 测试用例 | 930 passed / 930 total |
+| 通过率     | 100%                   |
+| 行覆盖率   | 89.04%                 |
+| 分支覆盖率 | 86.86%                 |
+| 函数覆盖率 | 90.26%                 |
+| 语句覆盖率 | 88.07%                 |
+
+#### 核心工具模块
+
+| 模块                    | 用例数 | 通过 | 失败 | 通过率 |
+| ----------------------- | ------ | ---- | ---- | ------ |
+| is-kit (类型判断)       | 63     | 63   | 0    | 100%   |
+| array-kit (数组操作)    | 97     | 97   | 0    | 100%   |
+| string-kit (字符串处理) | 56     | 56   | 0    | 100%   |
+| object-kit (对象操作)   | 42     | 42   | 0    | 100%   |
+| common (通用工具)       | 52     | 52   | 0    | 100%   |
+| date-kit (日期处理)     | 53     | 53   | 0    | 100%   |
+| number-kit (数字处理)   | 45     | 45   | 0    | 100%   |
+| url-kit (URL 处理)      | 49     | 49   | 0    | 100%   |
+| bugfixes (兼容修复)     | 17     | 17   | 0    | 100%   |
+
+#### 子模块
+
+| 模块               | 用例数 | 通过 | 失败 | 通过率 |
+| ------------------ | ------ | ---- | ---- | ------ |
+| bom (浏览器 BOM)   | 39     | 39   | 0    | 100%   |
+| ws (WebSocket)     | 24     | 24   | 0    | 100%   |
+| storage (本地存储) | 18     | 18   | 0    | 100%   |
+| polling (轮询)     | 16     | 16   | 0    | 100%   |
+| ipc (IPC 通信)     | 38     | 38   | 0    | 100%   |
+| regex (正则表达式) | 173 | 173 | 0 | 100% |
+| config (配置常量)  | 21     | 21   | 0    | 100%   |
+| encode (编码/解码) | 54     | 54   | 0    | 100%   |
+| file (文件处理)    | 58     | 58   | 0    | 100%   |
+
+#### 其他
+
+| 模块              | 用例数 | 通过 | 失败 | 通过率 |
+| ----------------- | ------ | ---- | ---- | ------ |
+| Result (结果封装) | 15     | 15   | 0    | 100%   |
