@@ -22,7 +22,7 @@ type HSLColor = { h: number; s: number; l: number };
 type ColorMode = 'dark' | 'light';
 ```
 
-## isValidHexColor
+## isValidHexColor 验证十六进制颜色
 
 判断是否为合法的 HEX 颜色值。
 
@@ -45,7 +45,7 @@ isValidHexColor('FF5733');   // false（缺少#）
 isValidHexColor('#GGGGGG');  // false
 ```
 
-## hexToHSL
+## hexToHSL 十六进制转HSL
 
 将 HEX 颜色转换为 HSL。
 
@@ -69,7 +69,7 @@ hexToHSL('#F53');
 // { h: 9, s: 100, l: 60 }
 ```
 
-## hslToHex
+## hslToHex HSL转十六进制
 
 将 HSL 转换为 HEX 颜色值。
 
@@ -90,7 +90,7 @@ hslToHex({ h: 9, s: 100, l: 60 });
 // '#FF5733'
 ```
 
-## conversionColor
+## conversionColor 颜色明暗转换
 
 根据背景色和模式计算适配的图标颜色。
 

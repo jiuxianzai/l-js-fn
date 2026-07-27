@@ -6,13 +6,17 @@
 
 `Result` 是一个泛型类，用于封装操作结果，**构造函数为私有，必须通过静态方法 `Result.ok()` 和 `Result.fail()` 创建实例**。
 
+## Result 结果类
+
+`Result` 是一个泛型类，用于封装操作结果，**构造函数为私有，必须通过静态方法 `Result.ok()` 和 `Result.fail()` 创建实例**。
+
 | 属性 | 类型 | 说明 |
 |------|------|------|
 | success | `boolean` | 是否成功 |
 | message | `string` | 结果消息 |
 | data | `T` | 附加数据（可选） |
 
-## Result.ok
+## Result.ok 成功结果
 
 创建成功结果。
 
@@ -43,7 +47,7 @@ const ok3 = Result.ok({ id: 1 }, '创建成功');
 // { success: true, message: '创建成功', data: { id: 1 } }
 ```
 
-## Result.fail
+## Result.fail 失败结果
 
 创建失败结果。
 

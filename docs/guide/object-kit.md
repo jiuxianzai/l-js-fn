@@ -2,7 +2,7 @@
 
 对象操作工具集，提供合并、过滤、转换等常用功能。
 
-## objMerge
+## objMerge 合并两个对象
 
 合并两个对象，递归合并嵌套对象，数组会直接复制。
 
@@ -34,7 +34,7 @@ objMerge({ a: 1, b: 2 }, { b: 3, c: 4 }, 'soft');
 // { a: 1, b: 3 }
 ```
 
-## objFilterProp
+## objFilterProp 过滤指定属性
 
 过滤对象中不需要的属性，返回新对象。
 
@@ -60,7 +60,7 @@ objFilterProp(obj, ['a', 'c']);
 // { b: 2 }
 ```
 
-## objFilterNull
+## objFilterNull 过滤空值
 
 过滤对象中的空值（`null` 或 `undefined`）。
 
@@ -81,7 +81,7 @@ objFilterNull({ a: 1, b: null, c: undefined, d: 0 });
 // { a: 1, d: 0 }
 ```
 
-## isHasProperties
+## isHasProperties 判断属性存在
 
 判断对象是否存在指定属性。
 
@@ -103,7 +103,7 @@ isHasProperties({ a: 1, b: 2 }, 'a'); // true
 isHasProperties({ a: 1, b: 2 }, 'c'); // false
 ```
 
-## jsonToFormData
+## jsonToFormData JSON转FormData
 
 将 JSON 对象转换为 `FormData`。
 
@@ -134,7 +134,7 @@ const formData2 = jsonToFormData(nested);
 // FormData { 'user[name]': 'John', 'user[age]': '20' }
 ```
 
-## formDataToObject
+## formDataToObject FormData转对象
 
 将 `FormData` 转换为 JSON 对象。
 
@@ -159,7 +159,7 @@ formData.append('age', '20');
 	// { name: 'John', age: 20 }
 ```
 
-## pick
+## pick 选取指定属性
 
 从对象中选取指定属性，返回新对象。
 
@@ -169,7 +169,7 @@ import { pick } from 'l-js-fn';
 pick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
 ```
 
-## get
+## get 安全深层取值
 
 安全获取对象深层属性值。
 
@@ -182,7 +182,7 @@ get(obj, 'a.b.d', 'default'); // 'default'
 get({ list: [1, 2, 3] }, 'list[1]'); // 2
 ```
 
-## deepMerge
+## deepMerge 深度合并对象
 
 深度合并多个对象。
 

@@ -8,7 +8,7 @@
 import { DATE_FORMAT, HTTP_STATUS } from 'l-js-fn/config';
 ```
 
-## DATE_FORMAT
+## DATE_FORMAT 日期格式常量
 
 常见日期格式常量。
 
@@ -34,7 +34,7 @@ dateFormat(new Date(), DATE_FORMAT.SHORT);     // '01-01'
 dateFormat(new Date(), DATE_FORMAT.YEAR_MONTH);// '2024-01'
 ```
 
-## HTTP_STATUS
+## HTTP_STATUS HTTP状态码
 
 常用 HTTP 状态码常量。
 

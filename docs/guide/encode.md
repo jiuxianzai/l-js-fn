@@ -15,7 +15,7 @@ import {
 
 ## Base64
 
-### base64Encode
+### base64Encode Base64编码
 
 将字符串编码为 Base64（支持 Unicode）。
 
@@ -38,7 +38,7 @@ base64Encode('Hello World'); // 'SGVsbG8gV29ybGQ='
 base64Encode('你好');        // '5L2g5aW9'
 ```
 
-### base64Decode
+### base64Decode Base64解码
 
 将 Base64 字符串解码（支持 Unicode）。
 
@@ -63,7 +63,7 @@ base64Decode('5L2g5aW9');          // '你好'
 
 ## HTML 转义
 
-### escapeHTML
+### escapeHTML HTML转义
 
 HTML 转义（防 XSS 攻击）。
 
@@ -97,7 +97,7 @@ escapeHTML('<script>alert("XSS")</script>');
 // '&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;'
 ```
 
-### unescapeHTML
+### unescapeHTML HTML反转义
 
 HTML 反转义。
 
@@ -120,7 +120,7 @@ unescapeHTML('&lt;div&gt;Hello&lt;/div&gt;');
 
 ## URL 编码
 
-### urlEncode
+### urlEncode URL编码
 
 URL 编码。
 
@@ -145,7 +145,7 @@ urlEncode('你好世界');         // '%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C'
 urlEncode('a/b', { uri: true }); // 'a/b'（URI 模式保留 /）
 ```
 
-### urlDecode
+### urlDecode URL解码
 
 URL 解码。
 
@@ -173,7 +173,7 @@ urlDecode('Hello%20World%21', { component: true }); // 'Hello World!'
 
 ## 查询字符串
 
-### querystringify
+### querystringify 对象转查询字符串
 
 将对象转换为 URL 查询字符串。
 
@@ -197,7 +197,7 @@ querystringify({ a: [1, 2, 3] });
 // 'a=1&a=2&a=3'
 ```
 
-### parseQueryString
+### parseQueryString 查询字符串解析
 
 解析 URL 查询字符串为对象。
 

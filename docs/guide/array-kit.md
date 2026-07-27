@@ -2,7 +2,7 @@
 
 数组操作工具集，提供增删改查、分页、分组、随机抽样等常用功能。
 
-## arrayDelEl
+## arrayDelEl 删除指定元素
 
 从数组中移除指定元素，返回新数组。
 
@@ -37,7 +37,7 @@ arrayDelEl(users, { id: 1, name: 'Alice' });
 // [{ id: 2, name: 'Bob' }]
 ```
 
-## arrayDelToIndex
+## arrayDelToIndex 根据索引删除
 
 根据索引删除数组元素。
 
@@ -60,7 +60,7 @@ arrayDelToIndex([1, 2, 3], 0);   // [2, 3]
 arrayDelToIndex([1, 2, 3], -1);  // [1, 2, 3]（无效索引）
 ```
 
-## arrayDelToEl
+## arrayDelToEl 根据元素值删除
 
 根据基本类型元素删除数组元素。
 
@@ -87,7 +87,7 @@ arrayDelToEl([true, false, true], true); // [false]
 `arrayDelToEl` 会删除数组中**所有**匹配的元素，而不仅仅是第一个。如需只删除第一个匹配项，请使用 `arrayDelToIndex`。
 :::
 
-## arrayDelToKey
+## arrayDelToKey 根据键值对删除
 
 根据对象数组的键值对删除元素。
 
@@ -115,7 +115,7 @@ arrayDelToKey(users, 'id', 2);
 // [{ id: 1, name: 'Alice' }]
 ```
 
-## arrayFill
+## arrayFill 补充到指定长度
 
 补充数组到指定长度。
 
@@ -141,7 +141,7 @@ arrayFill(['a'], 3, null);    // ['a', null, null]
 arrayFill([1, 2, 3], 2, 0);   // [1, 2, 3]（长度已满足）
 ```
 
-## arrayUnique
+## arrayUnique 数组去重
 
 数组去重（使用 `Set`，保留顺序）。
 
@@ -162,7 +162,7 @@ arrayUnique([1, 2, 2, 3, 3, 3]); // [1, 2, 3]
 arrayUnique(['a', 'b', 'a']);    // ['a', 'b']
 ```
 
-## arrayPaginate
+## arrayPaginate 数组分页
 
 数组分页。
 
@@ -189,7 +189,7 @@ arrayPaginate(arr, 4, 3); // [10]
 arrayPaginate(arr, 5, 3); // []（超出范围）
 ```
 
-## arraySplitToGroups
+## arraySplitToGroups 按大小分组
 
 将数组按指定大小分组，返回对象。
 
@@ -216,7 +216,7 @@ arraySplitToGroups([1, 2, 3, 4, 5, 6], 3);
 // { 1: [1, 2, 3], 2: [4, 5, 6] }
 ```
 
-## findIndex
+## findIndex 查找元素索引
 
 查找数组元素的索引（兼容旧浏览器）。
 
@@ -243,7 +243,7 @@ findIndex(users, user => user.name === 'Bob'); // 1
 findIndex([1, 2, 3], item => item === 5);      // -1
 ```
 
-## moveElement
+## moveElement 移动元素位置
 
 移动数组元素位置。
 
@@ -271,7 +271,7 @@ moveElement(arr, 0, 'bottom'); // { success: true, data: [2, 3, 4, 5, 1] }
 moveElement(arr, 0, 'up');     // { success: false, message: '已经是第一个元素', data: [1, 2, 3, 4, 5] }
 ```
 
-## groupBy
+## groupBy 按字段分组
 
 按字段对数组对象进行分组。
 
@@ -304,7 +304,7 @@ groupBy(users, 'city');
 // { Beijing: [...], Shanghai: [...] }
 ```
 
-## sample
+## sample 随机取一个元素
 
 随机获取数组中的一个元素。
 
@@ -326,7 +326,7 @@ sample(colors); // 'blue'（随机）
 sample([]);     // undefined
 ```
 
-## sampleSize
+## sampleSize 随机取N个元素
 
 随机获取数组中的 `n` 个不重复元素。
 
@@ -352,7 +352,7 @@ sampleSize(numbers);      // [4]（默认 n=1）
 sampleSize(numbers, 0);   // []（n=0 返回空数组）
 ```
 
-## flatten
+## flatten 数组扁平化
 
 数组扁平化，支持指定展开深度。
 
@@ -363,7 +363,7 @@ flatten([1, [2, [3, 4]], 5]);    // [1, 2, 3, 4, 5]
 flatten([1, [2, [3, 4]], 5], 1); // [1, 2, [3, 4], 5]
 ```
 
-## range
+## range 生成数字范围
 
 生成数字范围数组。
 
@@ -375,7 +375,7 @@ range(5, 0, -1);   // [5, 4, 3, 2, 1, 0]
 range(0, 10, 2);   // [0, 2, 4, 6, 8, 10]
 ```
 
-## shuffle
+## shuffle 洗牌打乱
 
 Fisher-Yates 洗牌算法打乱数组。
 
@@ -385,7 +385,7 @@ import { shuffle } from 'l-js-fn';
 shuffle([1, 2, 3, 4, 5]); // [3, 1, 5, 2, 4]（随机）
 ```
 
-## uniqueBy
+## uniqueBy 按字段去重
 
 根据对象数组中指定字段的值去重。
 
@@ -396,7 +396,7 @@ const arr = [{ id: 1, name: 'a' }, { id: 2, name: 'b' }, { id: 1, name: 'c' }];
 uniqueBy(arr, 'id'); // [{ id: 1, name: 'a' }, { id: 2, name: 'b' }]
 ```
 
-## compact
+## compact 过滤falsy值
 
 过滤数组中的 falsy 值。
 
@@ -406,7 +406,7 @@ import { compact } from 'l-js-fn';
 compact([0, 1, false, 2, '', 3, null, undefined, NaN]); // [1, 2, 3]
 ```
 
-## sum
+## sum 数组求和
 
 计算数组元素总和。
 
@@ -416,7 +416,7 @@ import { sum } from 'l-js-fn';
 sum([1, 2, 3, 4, 5]); // 15
 ```
 
-## last
+## last 获取最后元素
 
 获取数组最后一个元素。
 

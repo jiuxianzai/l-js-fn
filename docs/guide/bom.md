@@ -14,7 +14,7 @@ import {
 
 ## 滚动操作
 
-### scrollTop
+### scrollTop 滚动到顶部
 
 平滑滚动到页面顶部。
 
@@ -28,7 +28,7 @@ import { scrollTop } from 'l-js-fn/bom';
 scrollTop();
 ```
 
-### scrollToBottom
+### scrollToBottom 滚动到底部
 
 滚动到页面底部。
 
@@ -42,7 +42,7 @@ import { scrollToBottom } from 'l-js-fn/bom';
 scrollToBottom();
 ```
 
-### getScrollPosition
+### getScrollPosition 获取滚动位置
 
 获取当前页面滚动位置。
 
@@ -57,7 +57,7 @@ const pos = getScrollPosition();
 console.log(pos.x, pos.y); // 0, 100
 ```
 
-### setScrollPosition
+### setScrollPosition 设置滚动位置
 
 设置页面滚动位置。
 
@@ -81,7 +81,7 @@ setScrollPosition({ y: 500 }, true);   // 平滑滚动
 
 ## 全屏操作
 
-### launchFullscreen
+### launchFullscreen 进入全屏
 
 进入全屏模式。
 
@@ -105,7 +105,7 @@ if (success) {
 }
 ```
 
-### exitFullscreen
+### exitFullscreen 退出全屏
 
 退出全屏模式。
 
@@ -121,7 +121,7 @@ await exitFullscreen();
 
 ## 剪贴板操作
 
-### copyToClipboard
+### copyToClipboard 复制到剪贴板
 
 复制文本到剪贴板。
 
@@ -162,7 +162,7 @@ interface CookieOptions {
 `httpOnly` 选项在客户端设置 Cookie 时无效。`httpOnly` Cookie 只能由服务端通过 `Set-Cookie` 响应头设置。客户端传入此选项只会输出 `console.warn` 警告。
 :::
 
-### setCookie
+### setCookie 设置Cookie
 
 设置 Cookie。
 
@@ -185,7 +185,7 @@ setCookie('token', 'abc123', { expires: 30, secure: true });
 setCookie('user', 'john', { expires: 7, path: '/' });
 ```
 
-### getCookie
+### getCookie 获取Cookie
 
 获取 Cookie 值。
 
@@ -206,7 +206,7 @@ getCookie('token'); // 'abc123'
 getCookie('notexist'); // null
 ```
 
-### removeCookie
+### removeCookie 删除Cookie
 
 删除 Cookie。
 
@@ -228,7 +228,7 @@ removeCookie('token');
 removeCookie('user', { path: '/', domain: '.example.com' });
 ```
 
-### hasCookie
+### hasCookie 检查Cookie
 
 检查 Cookie 是否存在。
 
@@ -248,7 +248,7 @@ import { hasCookie } from 'l-js-fn/bom';
 hasCookie('token'); // true | false
 ```
 
-### getAllCookies
+### getAllCookies 获取全部Cookie
 
 获取所有 Cookie。
 

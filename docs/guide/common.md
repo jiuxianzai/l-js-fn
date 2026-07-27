@@ -2,7 +2,7 @@
 
 通用工具函数集，提供防抖、节流、深拷贝、设备检测等常用功能。
 
-## sleep
+## sleep 睡眠延迟
 
 睡眠函数，延迟指定毫秒数。
 
@@ -26,7 +26,7 @@ async function demo() {
 }
 ```
 
-## debounce
+## debounce 防抖函数
 
 创建防抖函数。
 
@@ -55,7 +55,7 @@ handleSearch('ab');
 handleSearch('abc'); // 最终只输出 "搜索: abc"
 ```
 
-## throttle
+## throttle 节流函数
 
 创建节流函数。
 
@@ -81,7 +81,7 @@ const handleScroll = throttle(() => {
 window.addEventListener('scroll', handleScroll);
 ```
 
-## getType
+## getType 获取详细类型
 
 获取值的详细类型。
 
@@ -109,7 +109,7 @@ getType(123);            // 'number'
 getType({});             // 'object'
 ```
 
-## deepClone
+## deepClone 深拷贝
 
 深拷贝函数，支持循环引用。
 
@@ -142,7 +142,7 @@ const clonedA = deepClone(a);
 console.log(clonedA.self === clonedA); // true
 ```
 
-## syntaxHighlight
+## syntaxHighlight 语法高亮
 
 将对象格式化为带 HTML 语法高亮的字符串。
 
@@ -164,7 +164,7 @@ const html = syntaxHighlight({ name: 'John', age: 20 });
 // 返回带颜色的 HTML 字符串，可直接用于 v-html
 ```
 
-## syntaxHtmlToJson
+## syntaxHtmlToJson HTML转JSON
 
 将带语法高亮的 HTML 转换回 JSON 对象。
 
@@ -186,7 +186,7 @@ const obj = syntaxHtmlToJson(html);
 // { name: 'John' }
 ```
 
-## loadScript
+## loadScript 动态加载脚本
 
 动态加载外部 JS 文件。
 
@@ -213,7 +213,7 @@ await loadScript('https://example.com/sdk.js');
 - 仅在浏览器环境中可用
 :::
 
-## removeScript
+## removeScript 移除加载的脚本
 
 移除已加载的 JS 文件。
 
@@ -231,7 +231,7 @@ import { removeScript } from 'l-js-fn';
 removeScript('https://example.com/sdk.js');
 ```
 
-## getDevice
+## getDevice 获取设备类型
 
 获取设备类型。
 
@@ -245,7 +245,7 @@ import { getDevice } from 'l-js-fn';
 getDevice(); // 'android' | 'ios' | 'wechat' | ...
 ```
 
-## imageToBase64
+## imageToBase64 图片转Base64
 
 将图片转换为 Base64 字符串。
 
@@ -278,7 +278,7 @@ const result2 = await imageToBase64(file, 'image/jpeg', 0.8);
 - 当 `input` 为 `null` 时，返回 `Result.fail('输入不能为空')`，不会抛出异常
 :::
 
-## retry
+## retry 异步重试
 
 异步函数失败重试。
 
@@ -297,7 +297,7 @@ const fetchData = retry(
 await fetchData(); // 失败后最多重试 3 次
 ```
 
-## once
+## once 只执行一次
 
 包装函数使其只执行一次。
 
@@ -313,7 +313,7 @@ init(); // 输出 '初始化' → 'done'
 init(); // 直接返回 'done'（无输出）
 ```
 
-## memoize
+## memoize 缓存计算结果
 
 缓存函数计算结果，相同参数不重复执行。
 

@@ -8,7 +8,7 @@ WebSocket 管理类，提供连接管理、消息发送、心跳检测、自动�
 import { WebSocketManager } from 'l-js-fn/ws';
 ```
 
-## WebSocketManager
+## WebSocketManager WebSocket管理器
 
 WebSocket 管理类。
 
@@ -38,7 +38,7 @@ const ws = new WebSocketManager(
 );
 ```
 
-### sendWebSocketMessage
+### sendWebSocketMessage 发送消息
 
 发送消息。
 
@@ -57,7 +57,7 @@ ws.sendWebSocketMessage({ type: 'ping', data: 'hello' });
 ws.sendWebSocketMessage('hello');
 ```
 
-### checkConnection
+### checkConnection 检查连接
 
 检查连接并定时发送消息（心跳检测）。
 
@@ -77,7 +77,7 @@ ws.checkConnection({ type: 'heartbeat' }, 5000);
 // 每 5 秒发送一次心跳
 ```
 
-### reconnect
+### reconnect 重新连接
 
 重新连接。
 
@@ -95,7 +95,7 @@ ws.checkConnection({ type: 'heartbeat' }, 5000);
 ws.reconnect(3000); // 3 秒后重新连接
 ```
 
-### getWebSocket
+### getWebSocket 获取实例
 
 获取 WebSocket 实例。
 
@@ -108,7 +108,7 @@ const socket = ws.getWebSocket();
 console.log(socket?.readyState);
 ```
 
-### close
+### close 关闭连接
 
 关闭连接。
 

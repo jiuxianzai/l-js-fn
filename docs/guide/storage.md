@@ -22,7 +22,7 @@ interface StorageOptions {
 }
 ```
 
-### setStorage
+### setStorage localStorage设置
 
 设置 localStorage（支持过期时间）。
 
@@ -45,7 +45,7 @@ setStorage('user', { name: 'John', age: 20 });
 setStorage('token', 'abc123', { expire: 3600 }); // 1小时后过期
 ```
 
-### getStorage
+### getStorage localStorage获取
 
 获取 localStorage（自动处理过期）。
 
@@ -67,7 +67,7 @@ getStorage('expired');  // null（已过期）
 getStorage('notexist'); // null（不存在）
 ```
 
-### removeStorage
+### removeStorage localStorage删除
 
 删除 localStorage。
 
@@ -87,7 +87,7 @@ import { removeStorage } from 'l-js-fn/storage';
 removeStorage('user');
 ```
 
-### clearStorage
+### clearStorage localStorage清空
 
 清空所有 localStorage。
 
@@ -101,7 +101,7 @@ import { clearStorage } from 'l-js-fn/storage';
 clearStorage();
 ```
 
-### clearExpiredStorage
+### clearExpiredStorage 清理过期数据
 
 清理所有已过期的 localStorage。
 
@@ -166,7 +166,7 @@ getStorageLength(); // 3
 
 ## sessionStorage 操作
 
-### setSession
+### setSession sessionStorage设置
 
 设置 sessionStorage。
 
@@ -207,7 +207,7 @@ import { getSession } from 'l-js-fn/storage';
 getSession('tabData'); // { id: 1, name: 'test' }
 ```
 
-### removeSession
+### removeSession sessionStorage删除
 
 删除 sessionStorage。
 

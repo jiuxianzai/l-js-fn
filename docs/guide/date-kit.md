@@ -2,7 +2,7 @@
 
 日期处理工具集，提供格式化、计算、转换等常用功能。
 
-## dateFormat
+## dateFormat 日期格式化
 
 将日期或时间戳格式化为指定格式的字符串。
 
@@ -40,7 +40,7 @@ dateFormat('2024-01-01');                      // '2024-01-01 00:00:00'
 dateFormat(null);                              // ''
 ```
 
-## dateSecond
+## dateSecond 秒数转时间
 
 将秒数转换为 `HH:mm:ss` 格式。
 
@@ -63,7 +63,7 @@ dateSecond(86400);  // '24:00:00'
 dateSecond(-1);     // '00:00:01'（负数取绝对值处理）
 ```
 
-## diffDays
+## diffDays 计算天数差
 
 计算两个日期之间相差的天数（忽略时分秒）。
 
@@ -85,7 +85,7 @@ diffDays('2024-01-01', '2024-01-03');          // 2
 diffDays(new Date('2024-01-01'), new Date('2024-01-10')); // 9
 ```
 
-## formatPassTime
+## formatPassTime 相对时间格式化
 
 格式化过去时间为相对时间字符串。
 
@@ -107,7 +107,7 @@ formatPassTime(new Date());             // '刚刚'
 formatPassTime(Date.now() - 60000);     // '1分钟前'
 ```
 
-## monthDays
+## monthDays 当月总天数
 
 获取指定日期月份的总天数。
 
@@ -129,7 +129,7 @@ monthDays('2023-02-01'); // 28
 monthDays('2024-01-01'); // 31
 ```
 
-## getTimeDiff
+## getTimeDiff 计算时间间隔
 
 计算两个时间的间隔（单位：毫秒）。
 
@@ -153,7 +153,7 @@ getTimeDiff('2024-01-01', '2024-01-02'); // 86400000（1天）
 getTimeDiff(new Date('2024-01-01'), new Date('2024-01-02')); // 86400000
 ```
 
-## addDays
+## addDays 日期加减天数
 
 日期加减天数，返回新 Date 对象。
 
@@ -164,7 +164,7 @@ addDays(new Date('2024-01-01'), 1);  // 2024-01-02
 addDays(new Date('2024-01-01'), -1); // 2023-12-31
 ```
 
-## isLeapYear
+## isLeapYear 闰年判断
 
 判断指定年份是否为闰年。
 
@@ -175,7 +175,7 @@ isLeapYear(2024); // true
 isLeapYear(2023); // false
 ```
 
-## getWeekDay
+## getWeekDay 获取中文星期
 
 获取中文星期几。
 

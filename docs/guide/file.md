@@ -38,7 +38,7 @@ interface FileSizeInfo {
 }
 ```
 
-## formatFileSize
+## formatFileSize 格式化文件大小
 
 格式化文件大小。
 
@@ -73,7 +73,7 @@ formatFileSize(1000, { base: 1000 });
 // { formatted: '1 KB', value: 1, unit: 'KB' }
 ```
 
-## getExtension
+## getExtension 获取文件后缀
 
 获取文件扩展名（包含点号）。
 
@@ -96,7 +96,7 @@ getExtension('filename');           // ''
 getExtension('.gitignore');         // '.gitignore'
 ```
 
-## getFileName
+## getFileName 获取文件名
 
 获取文件名（不含路径和扩展名）。
 
@@ -117,7 +117,7 @@ getFileName('/path/to/image.png');  // 'image'
 getFileName('document.pdf');        // 'document'
 ```
 
-## downloadFile
+## downloadFile 下载文件
 
 触发浏览器下载文件。
 
@@ -145,7 +145,7 @@ const jsonBlob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/
 downloadFile(jsonBlob, 'data.json');
 ```
 
-## readAsText
+## readAsText 读取为文本
 
 读取文本文件内容。
 
@@ -171,7 +171,7 @@ input.addEventListener('change', async (e) => {
 });
 ```
 
-## readAsDataURL
+## readAsDataURL 读取为DataURL
 
 读取文件为 Data URL（Base64）。
 
@@ -196,7 +196,7 @@ input.addEventListener('change', async (e) => {
 });
 ```
 
-## readAsArrayBuffer
+## readAsArrayBuffer 读取为ArrayBuffer
 
 读取文件为 ArrayBuffer。
 
@@ -223,7 +223,7 @@ input.addEventListener('change', async (e) => {
 
 ## 文件类型判断
 
-### isImage
+### isImage 判断图片文件
 
 判断是否为图片文件。
 
@@ -247,7 +247,7 @@ isImage('image.png');    // true
 isImage('document.pdf'); // false
 ```
 
-### isVideo
+### isVideo 判断视频文件
 
 判断是否为视频文件。
 
@@ -271,7 +271,7 @@ isVideo('clip.avi');    // true
 isVideo('audio.mp3');   // false
 ```
 
-### isAudio
+### isAudio 判断音频文件
 
 判断是否为音频文件。
 
@@ -295,7 +295,7 @@ isAudio('sound.wav');   // true
 isVideo('video.mp4');   // false
 ```
 
-### isPDF
+### isPDF 判断PDF文件
 
 判断是否为 PDF 文件。
 

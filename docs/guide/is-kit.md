@@ -2,7 +2,7 @@
 
 类型判断工具集，提供常用的值类型检查、格式验证和深度比较功能。
 
-## isEmpty
+## isEmpty 空值检查
 
 检查值是否为空。
 
@@ -38,7 +38,7 @@ isEmpty({ a: 1 });       // false
 isEmpty(0);              // false
 ```
 
-## isNotEmpty
+## isNotEmpty 非空检查
 
 检查值是否非空，是 `isEmpty` 的反向判断。
 
@@ -60,7 +60,7 @@ isNotEmpty(null);        // false
 isNotEmpty([]);          // false
 ```
 
-## isObject
+## isObject 判断对象
 
 判断是否为普通对象（`[object Object]`）。
 
@@ -84,7 +84,7 @@ isObject(null);          // false
 isObject(new Date());    // false
 ```
 
-## isArray
+## isArray 判断数组
 
 判断是否为数组。
 
@@ -107,7 +107,7 @@ isArray('hello');        // false
 isArray({});             // false
 ```
 
-## isImage
+## isImage 判断图片
 
 判断文件名是否为图片。
 
@@ -130,7 +130,7 @@ isImage('photo.png');    // true
 isImage('doc.pdf');      // false
 ```
 
-## isString
+## isString 判断字符串
 
 判断是否为字符串。
 
@@ -152,7 +152,7 @@ isString(new String('a')); // true
 isString(123);           // false
 ```
 
-## isEmail
+## isEmail 邮箱验证
 
 判断是否为有效邮箱地址。
 
@@ -173,7 +173,7 @@ isEmail('test@example.com');  // true
 isEmail('invalid-email');     // false
 ```
 
-## isURL
+## isURL URL验证
 
 判断是否为合法 URL。
 
@@ -194,7 +194,7 @@ isURL('https://example.com'); // true
 isURL('not-a-url');           // false
 ```
 
-## isHttp
+## isHttp HTTP协议判断
 
 判断是否为 http 链接（忽略大小写）。
 
@@ -217,7 +217,7 @@ isHttp('https://example.com'); // false
 isHttp('');                    // false
 ```
 
-## isHttps
+## isHttps HTTPS协议判断
 
 判断是否为 https 链接（忽略大小写）。
 
@@ -240,7 +240,7 @@ isHttps('http://example.com');   // false
 isHttps('');                     // false
 ```
 
-## isIdCard
+## isIdCard 身份证验证
 
 判断是否为有效的中国大陆身份证号码（支持 15 位和 18 位）。
 
@@ -262,7 +262,7 @@ isIdCard('110101900101123');    // true（15位）
 isIdCard('123456789012345678'); // false
 ```
 
-## isPhoneNumber
+## isPhoneNumber 手机号验证
 
 判断是否为有效的中国大陆手机号码。
 
@@ -283,7 +283,7 @@ isPhoneNumber('13800138000'); // true
 isPhoneNumber('1380013800');  // false
 ```
 
-## isEqual
+## isEqual 深度比较
 
 深度比较两个值是否相等（支持对象、数组、NaN 比较）。
 
@@ -316,7 +316,7 @@ isEqual(null, null); // true
 `isEqual(null, {})` 或 `isEqual({}, null)` 等 null 与非 null 对象的比较会返回 `false`，而不会抛出异常。
 :::
 
-## validateParams
+## validateParams 参数校验
 
 校验参数对象中必填字段是否都存在且非空。
 

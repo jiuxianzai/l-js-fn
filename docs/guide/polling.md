@@ -8,11 +8,11 @@
 import { Polling } from 'l-js-fn/polling';
 ```
 
-## Polling
+## Polling 轮询类
 
 轮询工具类。
 
-### start
+### start 启动轮询
 
 启动轮询。
 
@@ -44,7 +44,7 @@ polling.start(
 );
 ```
 
-### stop
+### stop 停止轮询
 
 停止轮询。
 

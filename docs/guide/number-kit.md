@@ -2,7 +2,7 @@
 
 数字处理工具集，提供格式化、百分比、随机数生成等功能。
 
-## formatNumber
+## formatNumber 格式化数字
 
 格式化数字，支持千分位分割和中文单位。
 
@@ -33,7 +33,7 @@ formatNumber(1500, true);     // '0.15万'
 formatNumber('abc');          // 'abc'
 ```
 
-## toPercent
+## toPercent 转百分比
 
 将小数转为百分比字符串。
 
@@ -58,7 +58,7 @@ toPercent(0.533234, 2, false); // '53.32%'（截断）
 toPercent(null);             // '0%'
 ```
 
-## random
+## random 生成随机数
 
 生成一个随机数（支持负数、整数或浮点数）。
 
@@ -86,7 +86,7 @@ random(1, 10, { float: true }); // 1-10 的随机浮点数
 random(-5, 5);                 // -5 到 5 的随机整数
 ```
 
-## getUniqueRandomIndexes
+## getUniqueRandomIndexes 不重复随机索引
 
 生成指定数量的不重复随机索引。
 
@@ -108,7 +108,7 @@ getUniqueRandomIndexes(10, 3); // [0, 5, 8]（随机，不重复）
 getUniqueRandomIndexes(5, 5);  // [2, 4, 1, 3, 0]（全部打乱）
 ```
 
-## clamp
+## clamp 限制值范围
 
 将数值限制在指定范围内。
 
@@ -120,7 +120,7 @@ clamp(-1, 0, 10); // 0
 clamp(15, 0, 10); // 10
 ```
 
-## round
+## round 四舍五入
 
 四舍五入到指定小数位。
 
