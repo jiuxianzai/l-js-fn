@@ -10,6 +10,9 @@ import {
 	formatPassTime,
 	monthDays,
 	getTimeDiff,
+	addDays,
+	isLeapYear,
+	getWeekDay,
 } from '@/libs/date-kit';
 
 describe('date-kit - 日期处理工具', () => {
@@ -341,6 +344,56 @@ describe('date-kit - 日期处理工具', () => {
 			const start = new Date('2024-01-15 10:00:00.000');
 			const end = new Date('2024-01-15 10:00:00.500');
 			expect(getTimeDiff(start, end)).toBe(500);
+		});
+	});
+
+	// ==================== addDays 测试 ====================
+	describe('addDays - 日期加减天数', () => {
+		it('应该添加天数', () => {
+			const result = addDays(new Date('2024-01-01'), 1);
+			expect(dateFormat(result, 'yyyy-MM-dd')).toBe('2024-01-02');
+		});
+
+		it('应该减去天数', () => {
+			const result = addDays(new Date('2024-01-01'), -1);
+			expect(dateFormat(result, 'yyyy-MM-dd')).toBe('2023-12-31');
+		});
+
+		it('应该支持字符串输入', () => {
+			const result = addDays('2024-01-01', 5);
+			expect(dateFormat(result, 'yyyy-MM-dd')).toBe('2024-01-06');
+		});
+
+		it('应该跨月计算', () => {
+			const result = addDays(new Date('2024-01-31'), 1);
+			expect(dateFormat(result, 'yyyy-MM-dd')).toBe('2024-02-01');
+		});
+	});
+
+	// ==================== isLeapYear 测试 ====================
+	describe('isLeapYear - 闰年判断', () => {
+		it('应该判断闰年', () => {
+			expect(isLeapYear(2024)).toBe(true);
+			expect(isLeapYear(2000)).toBe(true);
+		});
+
+		it('应该判断非闰年', () => {
+			expect(isLeapYear(2023)).toBe(false);
+			expect(isLeapYear(1900)).toBe(false);
+		});
+	});
+
+	// ==================== getWeekDay 测试 ====================
+	describe('getWeekDay - 中文星期', () => {
+		it('应该返回中文星期', () => {
+			expect(getWeekDay(new Date('2024-01-01'))).toBe('星期一');
+			expect(getWeekDay(new Date('2024-01-07'))).toBe('星期日');
+		});
+
+		it('应该支持默认参数（今天）', () => {
+			const result = getWeekDay();
+			const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+			expect(days).toContain(result);
 		});
 	});
 });

@@ -10,6 +10,9 @@ import {
 	isHasProperties,
 	jsonToFormData,
 	formDataToObject,
+	pick,
+	get,
+	deepMerge,
 } from '@/libs/object-kit';
 
 describe('object-kit - 对象操作工具', () => {
@@ -304,6 +307,65 @@ describe('object-kit - 对象操作工具', () => {
 			const formData = new FormData();
 			const result = formDataToObject(formData);
 			expect(result).toEqual({});
+		});
+	});
+
+	// ==================== pick 测试 ====================
+	describe('pick - 选取对象属性', () => {
+		it('应该选取指定属性', () => {
+			expect(pick({ a: 1, b: 2, c: 3 }, ['a', 'c'])).toEqual({ a: 1, c: 3 });
+		});
+
+		it('应该忽略不存在的属性', () => {
+			expect(pick({ a: 1 }, ['a', 'b'] as any)).toEqual({ a: 1 });
+		});
+
+		it('应该处理空 keys', () => {
+			expect(pick({ a: 1 }, [])).toEqual({});
+		});
+	});
+
+	// ==================== get 测试 ====================
+	describe('get - 安全深层取值', () => {
+		const obj = { a: { b: { c: 1 } } };
+
+		it('应该获取深层值', () => {
+			expect(get(obj, 'a.b.c')).toBe(1);
+		});
+
+		it('应该在路径不存在时返回默认值', () => {
+			expect(get(obj, 'a.b.d', 'default')).toBe('default');
+		});
+
+		it('应该处理数组索引', () => {
+			expect(get({ list: [1, 2, 3] }, 'list[1]')).toBe(2);
+		});
+
+		it('应该处理 null 输入', () => {
+			expect(get(null, 'a.b', 'default')).toBe('default');
+		});
+	});
+
+	// ==================== deepMerge 测试 ====================
+	describe('deepMerge - 深度合并', () => {
+		it('应该深度合并对象', () => {
+			const result = deepMerge({ a: { b: 1 } }, { a: { c: 2 } });
+			expect(result).toEqual({ a: { b: 1, c: 2 } });
+		});
+
+		it('应该合并多个对象', () => {
+			const result = deepMerge({ a: 1 }, { b: 2 }, { c: 3 });
+			expect(result).toEqual({ a: 1, b: 2, c: 3 });
+		});
+
+		it('应该覆盖相同的值', () => {
+			const result = deepMerge({ a: 1 }, { a: 2 });
+			expect(result).toEqual({ a: 2 });
+		});
+
+		it('应该处理空对象', () => {
+			const result = deepMerge({ a: 1 }, {}, { b: 2 });
+			expect(result).toEqual({ a: 1, b: 2 });
 		});
 	});
 });

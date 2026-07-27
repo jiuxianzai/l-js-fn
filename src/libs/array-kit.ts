@@ -336,3 +336,121 @@ export function sampleSize<T>(array: T[], n: number = 1): T[] {
 
   return result;
 }
+
+/**
+ * 数组扁平化，将多层嵌套数组展开，支持指定展开深度
+ * @param arr - 需要扁平化的数组
+ * @param depth - 展开深度，默认为 Infinity（完全展开）
+ * @returns 扁平化后的新数组
+ * @example
+ * flatten([1, [2, [3, 4]], 5]) // [1, 2, 3, 4, 5]
+ * flatten([1, [2, [3, 4]], 5], 1) // [1, 2, [3, 4], 5]
+ */
+export function flatten<T>(arr: any[], depth: number = Infinity): T[] {
+	if (!Array.isArray(arr)) return [];
+	return arr.flat(depth) as T[];
+}
+
+/**
+ * 生成一个数字范围数组
+ * @param start - 起始值（包含）
+ * @param end - 结束值（包含）
+ * @param step - 步长，默认为 1
+ * @returns 数字数组
+ * @example
+ * range(0, 5) // [0, 1, 2, 3, 4, 5]
+ * range(5, 0, -1) // [5, 4, 3, 2, 1, 0]
+ * range(0, 10, 2) // [0, 2, 4, 6, 8, 10]
+ */
+export function range(start: number, end: number, step: number = 1): number[] {
+	const result: number[] = [];
+	if (step === 0) return result;
+
+	const ascending = start <= end;
+	const actualStep = Math.abs(step);
+
+	if (ascending) {
+		for (let i = start; i <= end; i += actualStep) {
+			result.push(i);
+		}
+	} else {
+		for (let i = start; i >= end; i -= actualStep) {
+			result.push(i);
+		}
+	}
+
+	return result;
+}
+
+/**
+ * 使用 Fisher-Yates 洗牌算法打乱数组
+ * @param arr - 需要打乱的数组
+ * @returns 打乱后的新数组
+ * @example
+ * shuffle([1, 2, 3, 4, 5]) // [3, 1, 5, 2, 4]（随机）
+ */
+export function shuffle<T>(arr: T[]): T[] {
+	if (!Array.isArray(arr)) return [];
+	const result = [...arr];
+	for (let i = result.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[result[i], result[j]] = [result[j], result[i]];
+	}
+	return result;
+}
+
+/**
+ * 根据对象数组中指定字段的值进行去重（保留第一个出现的元素）
+ * @param arr - 对象数组
+ * @param key - 用于比较的键名
+ * @returns 去重后的新数组
+ * @example
+ * const arr = [{ id: 1, name: 'a' }, { id: 2, name: 'b' }, { id: 1, name: 'c' }]
+ * uniqueBy(arr, 'id') // [{ id: 1, name: 'a' }, { id: 2, name: 'b' }]
+ */
+export function uniqueBy<T extends Record<string, any>>(arr: T[], key: keyof T): T[] {
+	if (!Array.isArray(arr)) return [];
+	const seen = new Set();
+	return arr.filter((item) => {
+		const val = item[key];
+		if (seen.has(val)) return false;
+		seen.add(val);
+		return true;
+	});
+}
+
+/**
+ * 过滤数组中的 falsy 值（null, undefined, false, 0, NaN, ''）
+ * @param arr - 需要处理的数组
+ * @returns 去除 falsy 值后的新数组
+ * @example
+ * compact([0, 1, false, 2, '', 3, null, undefined, NaN]) // [1, 2, 3]
+ */
+export function compact<T>(arr: T[]): T[] {
+	if (!Array.isArray(arr)) return [];
+	return arr.filter(Boolean);
+}
+
+/**
+ * 计算数组中所有元素的总和
+ * @param arr - 数字数组
+ * @returns 总和，空数组返回 0
+ * @example
+ * sum([1, 2, 3, 4, 5]) // 15
+ */
+export function sum(arr: number[]): number {
+	if (!Array.isArray(arr)) return 0;
+	return arr.reduce((acc, val) => acc + (typeof val === 'number' ? val : 0), 0);
+}
+
+/**
+ * 获取数组的最后一个元素
+ * @param arr - 数组
+ * @returns 最后一个元素，空数组返回 undefined
+ * @example
+ * last([1, 2, 3]) // 3
+ */
+export function last<T>(arr: T[]): T | undefined {
+	if (!Array.isArray(arr) || arr.length === 0) return undefined;
+	return arr[arr.length - 1];
+}

@@ -127,3 +127,73 @@ export function formDataToObject(formData: FormData): Record<string, any> {
 	}
 	return obj;
 }
+
+/**
+ * 从对象中选取指定属性，返回新对象
+ * @param obj - 源对象
+ * @param keys - 需要选取的属性名数组
+ * @returns 只包含指定属性的新对象
+ * @example
+ * pick({ a: 1, b: 2, c: 3 }, ['a', 'c']) // { a: 1, c: 3 }
+ */
+export function pick<T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
+	return keys.reduce((acc, key) => {
+		if (key in obj) {
+			acc[key] = obj[key];
+		}
+		return acc;
+	}, {} as Pick<T, K>);
+}
+
+/**
+ * 从对象中安全获取深层属性值
+ * @param obj - 目标对象
+ * @param path - 属性路径，如 'a.b.c' 或 'a[0].b'
+ * @param defaultValue - 当路径不存在时的默认返回值
+ * @returns 属性值或默认值
+ * @example
+ * get({ a: { b: { c: 1 } } }, 'a.b.c') // 1
+ * get({ a: 1 }, 'b.c', 'default') // 'default'
+ */
+export function get<T = any>(obj: any, path: string, defaultValue?: T): T | undefined {
+	if (obj === null || obj === undefined) return defaultValue;
+
+	const keys = path
+		.replace(/\[(\d+)\]/g, '.$1')
+		.split('.')
+		.filter(Boolean);
+
+	let result: any = obj;
+	for (const key of keys) {
+		if (result === null || result === undefined) return defaultValue;
+		result = result[key];
+	}
+
+	return result !== undefined ? result : defaultValue;
+}
+
+/**
+ * 深度合并多个对象，后一个对象的属性会覆盖前一个对象
+ * @param sources - 需要合并的对象数组
+ * @returns 深度合并后的新对象
+ * @example
+ * deepMerge({ a: { b: 1 } }, { a: { c: 2 } }) // { a: { b: 1, c: 2 } }
+ */
+export function deepMerge<T extends Record<string, any>>(...sources: T[]): T {
+	const result: Record<string, any> = {};
+
+	for (const source of sources) {
+		if (!source || typeof source !== 'object') continue;
+
+		for (const key of Object.keys(source)) {
+			const val = source[key];
+			if (val && typeof val === 'object' && !Array.isArray(val) && !(val instanceof Date) && !(val instanceof RegExp)) {
+				result[key] = deepMerge(result[key] || {}, val);
+			} else {
+				result[key] = val;
+			}
+		}
+	}
+
+	return result as T;
+}

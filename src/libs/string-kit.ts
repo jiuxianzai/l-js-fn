@@ -183,3 +183,50 @@ export function toPascalCase(str: string): string {
       .replace(/^(.)/, (_, c) => c.toUpperCase()) // 首字符转大写
       .replace(/\s/g, ''); // 移除所有空格
 }
+
+/**
+ * 短横线/下划线/空格命名 → 驼峰命名
+ * @param str - 输入字符串
+ * @returns 驼峰格式字符串
+ * @example
+ * toCamelCase('hello-world') // 'helloWorld'
+ * toCamelCase('hello_world') // 'helloWorld'
+ * toCamelCase('Hello World') // 'helloWorld'
+ */
+export function toCamelCase(str: string): string {
+	if (!str) return '';
+	return str
+		.replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''))
+		.replace(/^(.)/, (_, c) => c.toLowerCase());
+}
+
+/**
+ * 驼峰/帕斯卡/下划线 → 短横线命名
+ * @param str - 输入字符串
+ * @returns 短横线格式字符串
+ * @example
+ * toKebabCase('helloWorld') // 'hello-world'
+ * toKebabCase('HelloWorld') // 'hello-world'
+ * toKebabCase('hello_world') // 'hello-world'
+ */
+export function toKebabCase(str: string): string {
+	if (!str) return '';
+	return str
+		.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())
+		.replace(/[\s_]+/g, '-')
+		.replace(/^-+|-+$/g, '')
+		.replace(/-+/g, '-');
+}
+
+/**
+ * 将字符串首字母转为大写
+ * @param str - 输入字符串
+ * @returns 首字母大写后的字符串
+ * @example
+ * capitalize('hello') // 'Hello'
+ * capitalize('hello world') // 'Hello world'
+ */
+export function capitalize(str: string): string {
+	if (!str) return '';
+	return str.charAt(0).toUpperCase() + str.slice(1);
+}

@@ -132,3 +132,33 @@ export function getUniqueRandomIndexes(len: number, count: number): number[] {
 	}
 	return Array.from(indexes);
 }
+
+/**
+ * 将数值限制在指定范围内
+ * @param value - 输入值
+ * @param min - 最小值
+ * @param max - 最大值
+ * @returns 限制后的值
+ * @example
+ * clamp(5, 0, 10) // 5
+ * clamp(-1, 0, 10) // 0
+ * clamp(15, 0, 10) // 10
+ */
+export function clamp(value: number, min: number, max: number): number {
+	return Math.min(Math.max(value, min), max);
+}
+
+/**
+ * 将数字四舍五入到指定小数位
+ * @param value - 输入数字
+ * @param precision - 保留的小数位数，默认为 0
+ * @returns 四舍五入后的数字
+ * @example
+ * round(3.14159, 2) // 3.14
+ * round(3.14159) // 3
+ * round(3.5) // 4
+ */
+export function round(value: number, precision: number = 0): number {
+	const factor = Math.pow(10, precision);
+	return Math.round(value * factor) / factor;
+}

@@ -238,3 +238,43 @@ export function getTimeDiff(start: Date | string | number, end: Date | string | 
 	// 明确返回 number 类型
 	return endTime - startTime;
 }
+
+/**
+ * 在当前日期基础上增加或减少天数，返回新日期
+ * @param date - 基准日期
+ * @param days - 要添加的天数（负数表示减少）
+ * @returns 新日期
+ * @example
+ * addDays(new Date('2024-01-01'), 1) // 2024-01-02
+ * addDays(new Date('2024-01-01'), -1) // 2023-12-31
+ */
+export function addDays(date: Date | string | number, days: number): Date {
+	const d = new Date(date);
+	d.setDate(d.getDate() + days);
+	return d;
+}
+
+/**
+ * 判断指定年份是否为闰年
+ * @param year - 年份（如 2024）
+ * @returns 是否闰年
+ * @example
+ * isLeapYear(2024) // true
+ * isLeapYear(2023) // false
+ */
+export function isLeapYear(year: number): boolean {
+	return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+}
+
+/**
+ * 获取指定日期的中文星期几
+ * @param date - 日期（默认今天）
+ * @returns 中文星期
+ * @example
+ * getWeekDay(new Date('2024-01-01')) // '星期一'
+ */
+export function getWeekDay(date: Date | string | number = new Date()): string {
+	const d = new Date(date);
+	const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+	return days[d.getDay()];
+}

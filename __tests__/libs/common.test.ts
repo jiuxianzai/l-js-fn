@@ -12,6 +12,9 @@ import {
 	syntaxHighlight,
 	syntaxHtmlToJson,
 	getDevice,
+	retry,
+	once,
+	memoize,
 } from '@/libs/common';
 
 describe('common - 通用工具方法', () => {
@@ -477,6 +480,85 @@ describe('common - 通用工具方法', () => {
 		it('应该正确识别支付宝小程序', () => {
 			(global.globalThis as any).my = { getSystemInfo: () => {} };
 			expect(getDevice()).toBe('alipayMiniProgram');
+		});
+	});
+
+	// ==================== retry 测试 ====================
+	describe('retry - 异步重试', () => {
+		it('应该在成功时直接返回', async () => {
+			const fn = retry(async () => 'success', { times: 3, delay: 50 });
+			const result = await fn();
+			expect(result).toBe('success');
+		});
+
+		it('应该在失败后重试', async () => {
+			let count = 0;
+			const fn = retry(async () => {
+				count++;
+				if (count < 3) throw new Error('fail');
+				return 'ok';
+			}, { times: 3, delay: 50 });
+
+			const result = await fn();
+			expect(result).toBe('ok');
+			expect(count).toBe(3);
+		});
+
+		it('应该在超过重试次数后抛出错误', async () => {
+			const fn = retry(async () => {
+				throw new Error('always fail');
+			}, { times: 2, delay: 50 });
+
+			await expect(fn()).rejects.toThrow('always fail');
+		});
+	});
+
+	// ==================== once 测试 ====================
+	describe('once - 只执行一次', () => {
+		it('应该只执行一次', () => {
+			let count = 0;
+			const fn = once(() => {
+				count++;
+				return count;
+			});
+
+			expect(fn()).toBe(1);
+			expect(fn()).toBe(1);
+			expect(count).toBe(1);
+		});
+
+		it('应该支持带参数的函数', () => {
+			const fn = once((a: number, b: number) => a + b);
+			expect(fn(1, 2)).toBe(3);
+			expect(fn(3, 4)).toBe(3);
+		});
+	});
+
+	// ==================== memoize 测试 ====================
+	describe('memoize - 缓存计算结果', () => {
+		it('应该缓存结果', () => {
+			let count = 0;
+			const fn = memoize((a: number, b: number) => {
+				count++;
+				return a + b;
+			});
+
+			expect(fn(1, 2)).toBe(3);
+			expect(fn(1, 2)).toBe(3);
+			expect(count).toBe(1);
+		});
+
+		it('应该对不同参数分别缓存', () => {
+			let count = 0;
+			const fn = memoize((a: number) => {
+				count++;
+				return a * 2;
+			});
+
+			expect(fn(1)).toBe(2);
+			expect(fn(2)).toBe(4);
+			expect(fn(1)).toBe(2);
+			expect(count).toBe(2);
 		});
 	});
 });

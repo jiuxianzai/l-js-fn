@@ -320,3 +320,81 @@ export function imageToBase64(
 		return;
 	});
 }
+
+/**
+ * 异步函数失败重试
+ * @param fn - 需要重试的异步函数
+ * @param options - 配置项
+ * @param options.times - 最大重试次数，默认 3
+ * @param options.delay - 每次重试间隔（毫秒），默认 1000
+ * @returns 包装后的函数，返回 Promise
+ * @example
+ * const fn = retry(async () => fetch('/api'), { times: 3, delay: 1000 })
+ * fn().then(res => console.log(res))
+ */
+export function retry<T extends (...args: any[]) => Promise<any>>(
+	fn: T,
+	options: { times?: number; delay?: number } = {}
+): (...args: Parameters<T>) => Promise<ReturnType<T>> {
+	const { times = 3, delay = 1000 } = options;
+
+	return async function (...args: Parameters<T>): Promise<ReturnType<T>> {
+		let lastError: any;
+
+		for (let i = 0; i <= times; i++) {
+			try {
+				return await fn(...args);
+			} catch (error) {
+				lastError = error;
+				if (i < times) {
+					await new Promise((resolve) => setTimeout(resolve, delay));
+				}
+			}
+		}
+
+		throw lastError;
+	};
+}
+
+/**
+ * 包装函数使其只执行一次，多次调用返回首次执行的结果
+ * @param fn - 需要包装的函数
+ * @returns 包装后的函数
+ * @example
+ * const init = once(() => console.log('init'))
+ * init() // 输出 'init'
+ * init() // 无输出
+ */
+export function once<T extends (...args: any[]) => any>(fn: T): (...args: Parameters<T>) => ReturnType<T> {
+	let called = false;
+	let result: ReturnType<T>;
+
+	return function (this: any, ...args: Parameters<T>): ReturnType<T> {
+		if (!called) {
+			called = true;
+			result = fn.apply(this, args);
+		}
+		return result;
+	};
+}
+
+/**
+ * 缓存函数计算结果，相同参数只计算一次（基于 Map 缓存）
+ * @param fn - 需要缓存结果的函数
+ * @returns 包装后的缓存函数
+ * @example
+ * const add = memoize((a: number, b: number) => { console.log('calling'); return a + b })
+ * add(1, 2) // 输出 calling → 3
+ * add(1, 2) // 直接返回 3（无输出）
+ */
+export function memoize<T extends (...args: any[]) => any>(fn: T): (...args: Parameters<T>) => ReturnType<T> {
+	const cache = new Map<string, ReturnType<T>>();
+
+	return function (this: any, ...args: Parameters<T>): ReturnType<T> {
+		const key = JSON.stringify(args);
+		if (cache.has(key)) return cache.get(key)!;
+		const result = fn.apply(this, args);
+		cache.set(key, result);
+		return result;
+	};
+}

@@ -8,6 +8,8 @@ import {
 	toPercent,
 	random,
 	getUniqueRandomIndexes,
+	clamp,
+	round,
 } from '@/libs/number-kit';
 
 describe('number-kit - 数字处理工具', () => {
@@ -278,6 +280,48 @@ describe('number-kit - 数字处理工具', () => {
 		it('应该处理单元素范围', () => {
 			const result = getUniqueRandomIndexes(1, 1);
 			expect(result).toEqual([0]);
+		});
+	});
+
+	// ==================== clamp 测试 ====================
+	describe('clamp - 限制值范围', () => {
+		it('应该返回范围内的值', () => {
+			expect(clamp(5, 0, 10)).toBe(5);
+		});
+
+		it('应该限制小于下限的值', () => {
+			expect(clamp(-1, 0, 10)).toBe(0);
+		});
+
+		it('应该限制大于上限的值', () => {
+			expect(clamp(15, 0, 10)).toBe(10);
+		});
+
+		it('应该处理等于边界的值', () => {
+			expect(clamp(0, 0, 10)).toBe(0);
+			expect(clamp(10, 0, 10)).toBe(10);
+		});
+	});
+
+	// ==================== round 测试 ====================
+	describe('round - 四舍五入', () => {
+		it('应该四舍五入到 0 位小数', () => {
+			expect(round(3.5)).toBe(4);
+			expect(round(3.4)).toBe(3);
+		});
+
+		it('应该四舍五入到指定位数', () => {
+			expect(round(3.14159, 2)).toBe(3.14);
+			expect(round(3.14159, 3)).toBe(3.142);
+		});
+
+		it('应该处理负数', () => {
+			expect(round(-3.5)).toBe(-3);
+			expect(round(-3.6)).toBe(-4);
+		});
+
+		it('应该处理整数', () => {
+			expect(round(3, 2)).toBe(3);
 		});
 	});
 });

@@ -17,6 +17,13 @@ import {
 	groupBy,
 	sample,
 	sampleSize,
+	flatten,
+	range,
+	shuffle,
+	uniqueBy,
+	compact,
+	sum,
+	last,
 } from '@/libs/array-kit';
 
 describe('array-kit - 数组操作工具', () => {
@@ -701,6 +708,143 @@ describe('array-kit - 数组操作工具', () => {
 
 			// 至少应该有几种不同的随机结果
 			expect(results.size).toBeGreaterThan(1);
+		});
+	});
+
+	// ==================== flatten 测试 ====================
+	describe('flatten - 数组扁平化', () => {
+		it('应该完全扁平化嵌套数组', () => {
+			expect(flatten([1, [2, [3, 4]], 5])).toEqual([1, 2, 3, 4, 5]);
+		});
+
+		it('应该支持指定深度', () => {
+			expect(flatten([1, [2, [3, 4]], 5], 1)).toEqual([1, 2, [3, 4], 5]);
+		});
+
+		it('应该处理已扁平的数组', () => {
+			expect(flatten([1, 2, 3])).toEqual([1, 2, 3]);
+		});
+
+		it('应该处理非数组输入', () => {
+			expect(flatten(123 as any)).toEqual([]);
+		});
+	});
+
+	// ==================== range 测试 ====================
+	describe('range - 范围数组生成', () => {
+		it('应该生成正序范围', () => {
+			expect(range(0, 5)).toEqual([0, 1, 2, 3, 4, 5]);
+		});
+
+		it('应该生成倒序范围', () => {
+			expect(range(5, 0, -1)).toEqual([5, 4, 3, 2, 1, 0]);
+		});
+
+		it('应该支持步长', () => {
+			expect(range(0, 10, 2)).toEqual([0, 2, 4, 6, 8, 10]);
+		});
+
+		it('应该在步长为0时返回空数组', () => {
+			expect(range(0, 5, 0)).toEqual([]);
+		});
+	});
+
+	// ==================== shuffle 测试 ====================
+	describe('shuffle - 数组打乱', () => {
+		it('应该返回相同长度的数组', () => {
+			const arr = [1, 2, 3, 4, 5];
+			const result = shuffle(arr);
+			expect(result).toHaveLength(arr.length);
+		});
+
+		it('应该包含所有原始元素', () => {
+			const arr = [1, 2, 3, 4, 5];
+			const result = shuffle(arr);
+			expect(result.sort()).toEqual(arr.sort());
+		});
+
+		it('应该返回新数组（不修改原数组）', () => {
+			const arr = [1, 2, 3];
+			const result = shuffle(arr);
+			expect(result).not.toBe(arr);
+		});
+
+		it('应该处理非数组输入', () => {
+			expect(shuffle(123 as any)).toEqual([]);
+		});
+	});
+
+	// ==================== uniqueBy 测试 ====================
+	describe('uniqueBy - 按字段去重', () => {
+		it('应该按字段去重', () => {
+			const arr = [{ id: 1, name: 'a' }, { id: 2, name: 'b' }, { id: 1, name: 'c' }];
+			expect(uniqueBy(arr, 'id')).toEqual([{ id: 1, name: 'a' }, { id: 2, name: 'b' }]);
+		});
+
+		it('应该处理没有重复的数组', () => {
+			const arr = [{ id: 1 }, { id: 2 }];
+			expect(uniqueBy(arr, 'id')).toEqual([{ id: 1 }, { id: 2 }]);
+		});
+
+		it('应该处理非数组输入', () => {
+			expect(uniqueBy(null as any, 'id')).toEqual([]);
+		});
+	});
+
+	// ==================== compact 测试 ====================
+	describe('compact - 过滤 falsy 值', () => {
+		it('应该过滤 falsy 值', () => {
+			expect(compact([0, 1, false, 2, '', 3, null, undefined, NaN])).toEqual([1, 2, 3]);
+		});
+
+		it('应该保留 truthy 值', () => {
+			expect(compact([1, 'hello', true, {}, []])).toEqual([1, 'hello', true, {}, []]);
+		});
+
+		it('应该处理全 falsy 数组', () => {
+			expect(compact([0, false, '', null])).toEqual([]);
+		});
+
+		it('应该处理非数组输入', () => {
+			expect(compact(123 as any)).toEqual([]);
+		});
+	});
+
+	// ==================== sum 测试 ====================
+	describe('sum - 数组求和', () => {
+		it('应该计算数组总和', () => {
+			expect(sum([1, 2, 3, 4, 5])).toBe(15);
+		});
+
+		it('应该处理空数组', () => {
+			expect(sum([])).toBe(0);
+		});
+
+		it('应该处理负数', () => {
+			expect(sum([-1, 2, -3, 4])).toBe(2);
+		});
+
+		it('应该处理非数组输入', () => {
+			expect(sum(123 as any)).toBe(0);
+		});
+	});
+
+	// ==================== last 测试 ====================
+	describe('last - 获取最后一个元素', () => {
+		it('应该返回最后一个元素', () => {
+			expect(last([1, 2, 3])).toBe(3);
+		});
+
+		it('应该处理单元素数组', () => {
+			expect(last([1])).toBe(1);
+		});
+
+		it('应该处理空数组', () => {
+			expect(last([])).toBeUndefined();
+		});
+
+		it('应该处理非数组输入', () => {
+			expect(last(123 as any)).toBeUndefined();
 		});
 	});
 });

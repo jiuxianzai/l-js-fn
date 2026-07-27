@@ -11,6 +11,10 @@ import {
 	indexToLabel,
 	searchTextColor,
 	filterSpace,
+	toPascalCase,
+	toCamelCase,
+	toKebabCase,
+	capitalize,
 } from '@/libs/string-kit';
 
 describe('string-kit - 字符串处理工具', () => {
@@ -339,6 +343,63 @@ describe('string-kit - 字符串处理工具', () => {
 
 		it('应该处理中间有空格的字符串', () => {
 			expect(filterSpace('hello world test')).toBe('hello world test');
+		});
+	});
+
+	// ==================== toCamelCase 测试 ====================
+	describe('toCamelCase - 转驼峰命名', () => {
+		it('应该转换短横线命名', () => {
+			expect(toCamelCase('hello-world')).toBe('helloWorld');
+		});
+
+		it('应该转换下划线命名', () => {
+			expect(toCamelCase('hello_world')).toBe('helloWorld');
+		});
+
+		it('应该转换空格命名', () => {
+			expect(toCamelCase('Hello World')).toBe('helloWorld');
+		});
+
+		it('应该处理空字符串', () => {
+			expect(toCamelCase('')).toBe('');
+		});
+	});
+
+	// ==================== toKebabCase 测试 ====================
+	describe('toKebabCase - 转短横线命名', () => {
+		it('应该转换驼峰命名', () => {
+			expect(toKebabCase('helloWorld')).toBe('hello-world');
+		});
+
+		it('应该转换帕斯卡命名', () => {
+			expect(toKebabCase('HelloWorld')).toBe('hello-world');
+		});
+
+		it('应该转换下划线命名', () => {
+			expect(toKebabCase('hello_world')).toBe('hello-world');
+		});
+
+		it('应该处理空字符串', () => {
+			expect(toKebabCase('')).toBe('');
+		});
+	});
+
+	// ==================== capitalize 测试 ====================
+	describe('capitalize - 首字母大写', () => {
+		it('应该将首字母大写', () => {
+			expect(capitalize('hello')).toBe('Hello');
+		});
+
+		it('应该仅首字母大写', () => {
+			expect(capitalize('hello world')).toBe('Hello world');
+		});
+
+		it('应该处理已大写的字符串', () => {
+			expect(capitalize('Hello')).toBe('Hello');
+		});
+
+		it('应该处理空字符串', () => {
+			expect(capitalize('')).toBe('');
 		});
 	});
 });
