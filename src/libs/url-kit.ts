@@ -79,6 +79,45 @@ export function appendUrlParam<T = any>(url: string, paramName: string, paramVal
 }
 
 /**
+ * 批量向 URL 添加查询参数，兼容 hash 和 history 模式
+ * @param url - URL 地址
+ * @param params - 参数键值对对象
+ * @returns 新的 URL 字符串，如果 URL 无效则返回 null
+ * @example
+ * appendUrlParams('https://example.com', { name: 'zs', age: '1' })
+ * // => 'https://example.com?name=zs&age=1'
+ * @example
+ * appendUrlParams('https://example.com?id=1', { name: 'zs', age: '1' })
+ * // => 'https://example.com?id=1&name=zs&age=1'
+ * @example
+ * appendUrlParams('https://example.com/#/path', { name: 'zs' })
+ * // => 'https://example.com/?name=zs#/path'
+ */
+export function appendUrlParams<T extends Record<string, any>>(url: string, params: T): string | null {
+	if (!url || !params || Object.keys(params).length === 0) return null;
+
+	try {
+		const hashIndex = url.indexOf('#');
+		const baseWithoutHash = hashIndex !== -1 ? url.substring(0, hashIndex) : url;
+		const hash = hashIndex !== -1 ? url.substring(hashIndex) : '';
+
+		const hasParams = baseWithoutHash.includes('?');
+		const separator = hasParams ? '&' : '?';
+
+		const paramString = Object.entries(params)
+			.filter(([_, value]) => value !== null && value !== '' && typeof value !== 'undefined')
+			.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
+			.join('&');
+
+		if (!paramString) return url;
+
+		return `${baseWithoutHash}${separator}${paramString}${hash}`;
+	} catch {
+		return null;
+	}
+}
+
+/**
  * 将对象转换为 URL 查询字符串，支持嵌套对象
  * @param params - 要转换的对象
  * @returns 查询字符串

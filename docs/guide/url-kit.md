@@ -79,6 +79,42 @@ appendUrlParam('https://example.com?id=1', 'name', 'John');
 // 'https://example.com?id=1&name=John'
 ```
 
+## appendUrlParams 批量添加URL参数
+
+向 URL 批量添加查询参数，兼容 hash 和 history 路由模式，自动判断使用 `?` 还是 `&`。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| url | `string` | 是 | URL 地址 |
+| params | `Record<string, any>` | 是 | 参数键值对对象 |
+
+**返回值：** `string | null` — 新的 URL，参数无效返回 `null`
+
+**示例：**
+
+```typescript
+import { appendUrlParams } from 'l-js-fn';
+
+appendUrlParams('https://example.com', { name: 'zs', age: '1' });
+// 'https://example.com?name=zs&age=1'
+
+appendUrlParams('https://example.com?id=1', { name: 'zs', age: '1' });
+// 'https://example.com?id=1&name=zs&age=1'
+
+// History 模式：hash 在参数之后
+appendUrlParams('https://example.com#section', { name: 'zs' });
+// 'https://example.com?name=zs#section'
+
+// Hash 路由模式
+appendUrlParams('https://example.com/#/path', { name: 'zs' });
+// 'https://example.com/?name=zs#/path'
+
+appendUrlParams('https://example.com/?id=1#/path', { name: 'zs' });
+// 'https://example.com/?id=1&name=zs#/path'
+```
+
 ## transUrlParams 对象转查询字符串
 
 将对象转换为 URL 查询字符串，支持嵌套对象。

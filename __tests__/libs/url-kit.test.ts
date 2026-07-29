@@ -7,6 +7,7 @@ import {
 	getUrlParams,
 	getUrlParam,
 	appendUrlParam,
+	appendUrlParams,
 	transUrlParams,
 	getFileInfoToUrl,
 } from '@/libs/url-kit';
@@ -171,6 +172,102 @@ describe('url-kit - URL 处理工具', () => {
 			const result = appendUrlParam('https://example.com?age=30#section', 'name', 'John');
 			// 实现直接在 hash 后面添加参数
 			expect(result).toBe('https://example.com?age=30#section&name=John');
+		});
+	});
+
+	// ==================== appendUrlParams 测试 ====================
+	describe('appendUrlParams - 批量向 URL 添加查询参数', () => {
+		it('应该向无参数的 URL 添加多个参数', () => {
+			const result = appendUrlParams('https://example.com', { name: 'zs', age: '1' });
+			expect(result).toBe('https://example.com?name=zs&age=1');
+		});
+
+		it('应该向已有参数的 URL 添加参数（使用 &）', () => {
+			const result = appendUrlParams('https://example.com?id=1', { name: 'zs', age: '1' });
+			expect(result).toBe('https://example.com?id=1&name=zs&age=1');
+		});
+
+		it('应该编码参数名和参数值', () => {
+			const result = appendUrlParams('https://example.com', { 'user name': 'John Doe', email: 'john@example.com' });
+			expect(result).toBe('https://example.com?user%20name=John%20Doe&email=john%40example.com');
+		});
+
+		it('应该跳过 null 值', () => {
+			const result = appendUrlParams('https://example.com', { name: 'zs', age: null });
+			expect(result).toBe('https://example.com?name=zs');
+		});
+
+		it('应该跳过空字符串', () => {
+			const result = appendUrlParams('https://example.com', { name: 'zs', age: '' });
+			expect(result).toBe('https://example.com?name=zs');
+		});
+
+		it('应该跳过 undefined 值', () => {
+			const result = appendUrlParams('https://example.com', { name: 'zs', age: undefined as any });
+			expect(result).toBe('https://example.com?name=zs');
+		});
+
+		it('应该保留 0 和 false', () => {
+			const result = appendUrlParams('https://example.com', { count: 0 as any, active: false as any });
+			expect(result).toBe('https://example.com?count=0&active=false');
+		});
+
+		it('应该处理数字值', () => {
+			const result = appendUrlParams('https://example.com', { count: 100, price: 99.99 } as any);
+			expect(result).toBe('https://example.com?count=100&price=99.99');
+		});
+
+		it('应该返回 null 如果 URL 为空', () => {
+			expect(appendUrlParams('', { name: 'zs' })).toBeNull();
+		});
+
+		it('应该返回 null 如果参数对象为空', () => {
+			expect(appendUrlParams('https://example.com', {})).toBeNull();
+		});
+
+		it('应该返回原 URL 如果所有参数值都是空的', () => {
+			const result = appendUrlParams('https://example.com', { name: null as any, age: '' });
+			expect(result).toBe('https://example.com');
+		});
+
+		it('应该处理包含 hash 的 URL（history 模式）', () => {
+			const result = appendUrlParams('https://example.com#section', { name: 'zs' });
+			expect(result).toBe('https://example.com?name=zs#section');
+		});
+
+		it('应该处理包含参数和 hash 的 URL', () => {
+			const result = appendUrlParams('https://example.com?id=1#section', { name: 'zs', age: '1' });
+			expect(result).toBe('https://example.com?id=1&name=zs&age=1#section');
+		});
+
+		it('应该处理 hash 路由模式（/）', () => {
+			const result = appendUrlParams('https://example.com/#/path', { name: 'zs' });
+			expect(result).toBe('https://example.com/?name=zs#/path');
+		});
+
+		it('应该处理 hash 路由模式下已有参数的情况', () => {
+			const result = appendUrlParams('https://example.com/?id=1#/path', { name: 'zs' });
+			expect(result).toBe('https://example.com/?id=1&name=zs#/path');
+		});
+
+		it('应该处理 history 路由模式', () => {
+			const result = appendUrlParams('https://example.com/user/list', { name: 'zs' });
+			expect(result).toBe('https://example.com/user/list?name=zs');
+		});
+
+		it('应该处理 history 路由模式下已有参数的情况', () => {
+			const result = appendUrlParams('https://example.com/user/list?id=1', { name: 'zs' });
+			expect(result).toBe('https://example.com/user/list?id=1&name=zs');
+		});
+
+		it('应该处理包含端口号的 URL', () => {
+			const result = appendUrlParams('https://example.com:8080', { name: 'zs' });
+			expect(result).toBe('https://example.com:8080?name=zs');
+		});
+
+		it('应该处理包含路径、参数和 hash 的完整 URL', () => {
+			const result = appendUrlParams('https://example.com/path/to?page=1#top', { name: 'zs' });
+			expect(result).toBe('https://example.com/path/to?page=1&name=zs#top');
 		});
 	});
 

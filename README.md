@@ -331,7 +331,7 @@ round(3.14159, 2); // 3.14
 #### URL 处理 (url-kit)
 
 ```typescript
-import { getUrlParams, getUrlParam, appendUrlParam, transUrlParams, getFileInfoToUrl } from 'l-js-fn';
+import { getUrlParams, getUrlParam, appendUrlParam, appendUrlParams, transUrlParams, getFileInfoToUrl } from 'l-js-fn';
 
 // 解析 URL 参数
 getUrlParams('https://example.com?id=1&name=John');
@@ -343,6 +343,10 @@ getUrlParam('https://example.com?id=1', 'id'); // '1'
 // 添加 URL 参数
 appendUrlParam('https://example.com', 'id', 1);
 // "https://example.com?id=1"
+
+// 批量添加 URL 参数（兼容 hash/history 模式）
+appendUrlParams('https://example.com?id=1', { name: 'zs', age: '1' });
+// "https://example.com?id=1&name=zs&age=1"
 
 // 对象转 URL 参数
 transUrlParams({ id: 1, name: 'John' }); // "id=1&name=John"
