@@ -51,6 +51,11 @@
 			"import": "./dist/encode/index.js",
 			"require": "./dist/encode/index.cjs"
 		},
+		"./event-bus": {
+			"types": "./dist/event-bus/index.d.ts",
+			"import": "./dist/event-bus/index.js",
+			"require": "./dist/event-bus/index.cjs"
+		},
 		"./file": {
 			"types": "./dist/file/index.d.ts",
 			"import": "./dist/file/index.js",

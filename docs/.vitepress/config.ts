@@ -62,6 +62,7 @@ export default defineConfig({
 					{ text: '正则常量', link: '/guide/regex' },
 					{ text: '配置常量', link: '/guide/config' },
 					{ text: '编码解码', link: '/guide/encode' },
+					{ text: '事件总线', link: '/guide/event-bus' },
 					{ text: '文件处理', link: '/guide/file' },
 				],
 			},

@@ -9,6 +9,7 @@ const modules = [
 	{ entry: "src/bom/index.ts", name: "bom/index" },
 	{ entry: "src/config/index.ts", name: "config/index" },
 	{ entry: "src/encode/index.ts", name: "encode/index" },
+	{ entry: "src/event-bus/index.ts", name: "event-bus/index" },
 	{ entry: "src/file/index.ts", name: "file/index" },
 	{ entry: "src/ipc/index.ts", name: "ipc/index" },
 	{ entry: "src/polling/index.ts", name: "polling/index" },
