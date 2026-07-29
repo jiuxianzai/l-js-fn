@@ -244,8 +244,14 @@ objMerge({ a: 1 }, { b: 2 }); // { a: 1, b: 2 }
 // 过滤属性
 objFilterProp({ a: 1, b: 2, c: 3 }, ['b']); // { a: 1, c: 3 }
 
-// 过滤空值
+// 过滤空值（默认同时过滤 null 和 undefined）
 objFilterNull({ a: 1, b: null, c: undefined }); // { a: 1 }
+
+// 只过滤 null，保留 undefined
+objFilterNull({ a: 1, b: null, c: undefined }, { null: true, undefined: false }); // { a: 1, c: undefined }
+
+// 只过滤 undefined，保留 null
+objFilterNull({ a: 1, b: null, c: undefined }, { null: false, undefined: true }); // { a: 1, b: null }
 
 // JSON 转 FormData
 jsonToFormData({ name: 'John', age: 20 }); // FormData

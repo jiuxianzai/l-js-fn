@@ -33,7 +33,7 @@ export function isNotEmpty<T>(value: T | null | undefined): boolean {
 /**
  * 是否为对象
  */
-export function isObject<T>(value: T): value is T & Record<string, any> {
+export function isObject<T>(value: T): value is T & Record<string, unknown> {
   return Object.prototype.toString.call(value) === '[object Object]';
 }
 
@@ -157,7 +157,7 @@ export function isEqual<T>(value: T, other: T): boolean {
   const otherKeys = Object.keys(other as object);
   if (valueKeys.length !== otherKeys.length) return false;
 
-  return valueKeys.every((key) => key in (other as object) && isEqual((value as any)[key], (other as any)[key]));
+  return valueKeys.every((key) => key in (other as object) && isEqual((value as Record<string, unknown>)[key], (other as Record<string, unknown>)[key]));
 }
 
 /**
@@ -166,7 +166,7 @@ export function isEqual<T>(value: T, other: T): boolean {
  * @param params - 需校验的参数
  * @return {string | null} - 未通过返回该字段，通过则返回null
  */
-export function validateParams(required: string[], params: Record<string, any>): string | null {
+export function validateParams(required: string[], params: Record<string, unknown>): string | null {
   for (const key of required) {
     if (!params[key]) {
       return key;

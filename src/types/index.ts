@@ -11,13 +11,13 @@ export interface FileInfo {
 /**
  * 定义IPC消息体
  */
-export interface IPCMessage<T = any> {
+export interface IPCMessage<T = unknown> {
 	type: IPC_TYPE; // 消息类型
 	id?: string; // 消息ID
 	eventName: string; // 事件名称
 	params?: T; // 参数
 	error?: string; // 错误信息
-	result?: any; // 结果
+	result?: unknown; // 结果
 }
 
 /**

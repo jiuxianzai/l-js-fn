@@ -211,7 +211,7 @@ export function readAsText(file: File, encoding: string = 'utf-8'): Promise<stri
 		const reader = new FileReader();
 
 		reader.onload = () => {
-			resolve(reader.result as string);
+			resolve(typeof reader.result === 'string' ? reader.result : '');
 		};
 
 		reader.onerror = () => {
@@ -249,7 +249,7 @@ export function readAsDataURL(file: File): Promise<string> {
 		const reader = new FileReader();
 
 		reader.onload = () => {
-			resolve(reader.result as string);
+			resolve(typeof reader.result === 'string' ? reader.result : '');
 		};
 
 		reader.onerror = () => {
@@ -287,7 +287,7 @@ export function readAsArrayBuffer(file: File): Promise<ArrayBuffer> {
 		const reader = new FileReader();
 
 		reader.onload = () => {
-			resolve(reader.result as ArrayBuffer);
+			resolve(reader.result instanceof ArrayBuffer ? reader.result : new ArrayBuffer(0));
 		};
 
 		reader.onerror = () => {

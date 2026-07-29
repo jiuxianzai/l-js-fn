@@ -19,7 +19,7 @@ export function sleep(time: number): Promise<void> {
 export function debounce<T extends (...args: any[]) => any>(func: T, wait = 300, immediate = false): (...args: Parameters<T>) => void {
 	let timeout: ReturnType<typeof setTimeout> | null;
 
-	return function (this: any, ...args: Parameters<T>) {
+	return function (this: unknown, ...args: Parameters<T>) {
 		const context = this;
 		const later = function () {
 			timeout = null;
@@ -41,7 +41,7 @@ export function debounce<T extends (...args: any[]) => any>(func: T, wait = 300,
 export function throttle<T extends (...args: any[]) => any>(func: T, wait = 300): (...args: Parameters<T>) => void {
 	let lastTime = 0;
 
-	return function (this: any, ...args: Parameters<T>) {
+	return function (this: unknown, ...args: Parameters<T>) {
 		const now = Date.now();
 		if (now - lastTime >= wait) {
 			func.apply(this, args);
@@ -80,17 +80,17 @@ export function getType<T>(value: T): string {
  */
 export function deepClone<T>(obj: T, options?: { cloneFunctions?: boolean; cloneSpecialObjects?: boolean }): T {
 	const { cloneFunctions = false, cloneSpecialObjects = false } = options || {};
-	const visited = new WeakMap<any, any>();
+	const visited = new WeakMap<object, object>();
 
-	const cloneHelper = (value: any): any => {
-		if (visited.has(value)) return visited.get(value);
-
+	const cloneHelper = (value: unknown): unknown => {
 		if (value === null || typeof value !== 'object') {
 			if (typeof value === 'function' && cloneFunctions) {
-				return value.bind({});
+				return (value as Function).bind({});
 			}
 			return value;
 		}
+
+		if (visited.has(value)) return visited.get(value);
 
 		if (value instanceof Date) return new Date(value.getTime());
 		if (value instanceof RegExp) return new RegExp(value);
@@ -115,12 +115,12 @@ export function deepClone<T>(obj: T, options?: { cloneFunctions?: boolean; clone
 			return value.cloneNode(true);
 		}
 
-		const result: any = Array.isArray(value) ? [] : {};
+		const result: Record<string, unknown> | unknown[] = Array.isArray(value) ? [] : {};
 		visited.set(value, result);
 
 		const keys = Reflect.ownKeys(value);
 		for (const key of keys) {
-			result[key] = cloneHelper(value[key]);
+			(result as Record<string, unknown>)[key as string] = cloneHelper((value as Record<string, unknown>)[key as string]);
 		}
 
 		return result;
@@ -155,7 +155,7 @@ export function syntaxHighlight<T>(obj: T, indent: number = 0): string {
 		const keys = Object.keys(obj) as (keyof T)[];
 		keys.forEach((key, index) => {
 			const keyHtml = `<span style="color: #b58900">"${String(key)}"</span>`;
-			const valueHtml = syntaxHighlight((obj as any)[key], indent + 1);
+			const valueHtml = syntaxHighlight((obj as Record<string, unknown>)[key as string], indent + 1);
 			html += `${nextIndentStr}${keyHtml}: ${valueHtml}`;
 			if (index < keys.length - 1) html += ',';
 			html += '<br>';
@@ -179,7 +179,7 @@ export function syntaxHighlight<T>(obj: T, indent: number = 0): string {
  * 成功解析 JSON ⇒ 返回 object/array
  * 解析失败 ⇒ 返回未解析的字符串（继续编辑用）
  */
-export function syntaxHtmlToJson(html: string): Record<string, any> | any[] | string {
+export function syntaxHtmlToJson(html: string): Record<string, unknown> | unknown[] | string {
 	const jsonString = html
 		.replace(/<span[^>]*>/g, '')
 		.replace(/<\/span>/g, '')
@@ -231,6 +231,11 @@ export function removeScript(src: string): void {
 	}
 }
 
+interface MiniProgramGlobal {
+	wx?: { getSystemInfo?: (...args: unknown[]) => unknown };
+	my?: { getSystemInfo?: (...args: unknown[]) => unknown };
+}
+
 /**
  * 获取设备类型
  * @returns 设备类型
@@ -251,10 +256,10 @@ export const getDevice = ():
 	const lowerUA = ua.toLowerCase();
 
 	// 小程序环境
-	if (typeof (globalThis as any).wx !== 'undefined' && typeof (globalThis as any).wx.getSystemInfo === 'function') {
+	if (typeof (globalThis as MiniProgramGlobal).wx !== 'undefined' && typeof (globalThis as MiniProgramGlobal).wx!.getSystemInfo === 'function') {
 		return 'miniProgram'; // 微信小程序
 	}
-	if (typeof (globalThis as any).my !== 'undefined' && typeof (globalThis as any).my.getSystemInfo === 'function') {
+	if (typeof (globalThis as MiniProgramGlobal).my !== 'undefined' && typeof (globalThis as MiniProgramGlobal).my!.getSystemInfo === 'function') {
 		return 'alipayMiniProgram'; // 支付宝小程序
 	}
 
@@ -294,7 +299,7 @@ export function imageToBase64(
 		}
 		if (input instanceof File || input instanceof Blob) {
 			const reader = new FileReader();
-			reader.onload = () => resolve(Result.ok(reader.result as string));
+			reader.onload = () => resolve(Result.ok(typeof reader.result === 'string' ? reader.result : ''));
 			reader.onerror = () => reject(Result.fail('读取文件失败'));
 			reader.readAsDataURL(input);
 			return;
@@ -339,7 +344,7 @@ export function retry<T extends (...args: any[]) => Promise<any>>(
 	const { times = 3, delay = 1000 } = options;
 
 	return async function (...args: Parameters<T>): Promise<ReturnType<T>> {
-		let lastError: any;
+		let lastError: unknown;
 
 		for (let i = 0; i <= times; i++) {
 			try {
@@ -369,7 +374,7 @@ export function once<T extends (...args: any[]) => any>(fn: T): (...args: Parame
 	let called = false;
 	let result: ReturnType<T>;
 
-	return function (this: any, ...args: Parameters<T>): ReturnType<T> {
+	return function (this: unknown, ...args: Parameters<T>): ReturnType<T> {
 		if (!called) {
 			called = true;
 			result = fn.apply(this, args);
@@ -390,7 +395,7 @@ export function once<T extends (...args: any[]) => any>(fn: T): (...args: Parame
 export function memoize<T extends (...args: any[]) => any>(fn: T): (...args: Parameters<T>) => ReturnType<T> {
 	const cache = new Map<string, ReturnType<T>>();
 
-	return function (this: any, ...args: Parameters<T>): ReturnType<T> {
+	return function (this: unknown, ...args: Parameters<T>): ReturnType<T> {
 		const key = JSON.stringify(args);
 		if (cache.has(key)) return cache.get(key)!;
 		const result = fn.apply(this, args);

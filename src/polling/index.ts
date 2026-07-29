@@ -6,8 +6,8 @@ export class Polling {
 	private isPolling = false;
 
 	/** 启动轮询 */
-	public start<T>(
-		asyncMethod: () => Promise<T>,
+	public start(
+		asyncMethod: () => Promise<unknown>,
 		interval = 1000,
 		immediate = true
 	): void {
@@ -29,8 +29,8 @@ export class Polling {
 	}
 
 	/** 轮询主循环（核心） */
-	private async loop<T>(
-		asyncMethod: () => Promise<T>,
+	private async loop(
+		asyncMethod: () => Promise<unknown>,
 		interval: number
 	): Promise<void> {
 		while (this.isPolling) {

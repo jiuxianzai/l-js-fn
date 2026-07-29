@@ -125,19 +125,19 @@ describe('object-kit - 对象操作工具', () => {
 
 	// ==================== objFilterNull 测试 ====================
 	describe('objFilterNull - 过滤空值', () => {
-		it('应该过滤 null 值', () => {
+		it('应该过滤 null 值（默认行为）', () => {
 			const obj = { a: 1, b: null, c: 3 };
 			const result = objFilterNull(obj);
 			expect(result).toEqual({ a: 1, c: 3 });
 		});
 
-		it('应该过滤 undefined 值', () => {
+		it('应该过滤 undefined 值（默认行为）', () => {
 			const obj = { a: 1, b: undefined, c: 3 };
 			const result = objFilterNull(obj);
 			expect(result).toEqual({ a: 1, c: 3 });
 		});
 
-		it('应该同时过滤 null 和 undefined', () => {
+		it('应该同时过滤 null 和 undefined（默认行为）', () => {
 			const obj = { a: 1, b: null, c: undefined, d: 4 };
 			const result = objFilterNull(obj);
 			expect(result).toEqual({ a: 1, d: 4 });
@@ -164,6 +164,37 @@ describe('object-kit - 对象操作工具', () => {
 			const obj = { a: null, b: undefined, c: null };
 			const result = objFilterNull(obj);
 			expect(result).toEqual({});
+		});
+
+		it('应该支持只过滤 null，保留 undefined（{ null: true, undefined: false }）', () => {
+			const obj = { a: 1, b: null, c: undefined, d: 4 };
+			const result = objFilterNull(obj, { null: true, undefined: false });
+			expect(result).toEqual({ a: 1, c: undefined, d: 4 });
+		});
+
+		it('应该支持只过滤 undefined，保留 null（{ null: false, undefined: true }）', () => {
+			const obj = { a: 1, b: null, c: undefined, d: 4 };
+			const result = objFilterNull(obj, { null: false, undefined: true });
+			expect(result).toEqual({ a: 1, b: null, d: 4 });
+		});
+
+		it('应该支持不过滤任何值（{ null: false, undefined: false }）', () => {
+			const obj = { a: 1, b: null, c: undefined };
+			const result = objFilterNull(obj, { null: false, undefined: false });
+			expect(result).toEqual({ a: 1, b: null, c: undefined });
+		});
+
+		it('保留 undefined 时属性键应存在', () => {
+			const obj: Record<string, any> = { a: undefined };
+			const result = objFilterNull(obj, { null: true, undefined: false });
+			expect('a' in result).toBe(true);
+			expect(result.a).toBeUndefined();
+		});
+
+		it('只传 null option 时 undefined 保持默认过滤', () => {
+			const obj = { a: 1, b: null, c: undefined, d: 4 };
+			const result = objFilterNull(obj, { null: true });
+			expect(result).toEqual({ a: 1, d: 4 });
 		});
 	});
 

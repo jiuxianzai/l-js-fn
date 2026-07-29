@@ -51,11 +51,23 @@ export function objFilterProp<T extends Record<string, any>, K extends keyof T>(
 /**
  * 过滤对象中的空值 (null 或 undefined)
  * @param obj - 源对象
- * @returns 新对象，过滤掉值为 null 或 undefined 的属性
+ * @param options - 过滤选项，默认都过滤
+ * @param options.null - 是否过滤 null，默认 true
+ * @param options.undefined - 是否过滤 undefined，默认 true
+ * @returns 新对象
+ * @example
+ * objFilterNull({ a: 1, b: null, c: undefined }) // { a: 1 }
+ * objFilterNull({ a: 1, b: null, c: undefined }, { null: true, undefined: false }) // { a: 1, c: undefined }
  */
-export function objFilterNull<T extends Record<string, any>>(obj: T): Partial<T> {
+export function objFilterNull<T extends Record<string, any>>(obj: T, options: { null?: boolean; undefined?: boolean } = {}): Partial<T> {
+	const { null: filterNull = true, undefined: filterUndefined = true } = options;
+
 	return Object.entries(obj)
-		.filter(([_, value]) => value !== null && value !== undefined)
+		.filter(([_, value]) => {
+			if (filterNull && value === null) return false;
+			if (filterUndefined && value === undefined) return false;
+			return true;
+		})
 		.reduce((acc, [key, value]) => {
 			acc[key as keyof T] = value;
 			return acc;
@@ -67,7 +79,7 @@ export function objFilterNull<T extends Record<string, any>>(obj: T): Partial<T>
  * @param obj - 对象
  * @param key - 属性键
  */
-export function isHasProperties(obj: Record<string, any>, key: string): boolean {
+export function isHasProperties(obj: object, key: string): boolean {
 	return Object.prototype.hasOwnProperty.call(obj, key);
 }
 
@@ -78,7 +90,7 @@ export function isHasProperties(obj: Record<string, any>, key: string): boolean 
  * @param parentKey 可选：父级键名前缀
  * @returns FormData
  */
-export function jsonToFormData(data: Record<string, any>, formData: FormData = new FormData(), parentKey: string = ''): FormData {
+export function jsonToFormData(data: Record<string, unknown>, formData: FormData = new FormData(), parentKey: string = ''): FormData {
 	if (!data || typeof data !== 'object') {
 		throw new TypeError('jsonToFormData: 参数 data 必须是对象');
 	}
@@ -95,19 +107,19 @@ export function jsonToFormData(data: Record<string, any>, formData: FormData = n
 		} else if (value instanceof File || value instanceof Blob) {
 			formData.append(fullKey, value);
 		} else if (Array.isArray(value)) {
-			value.forEach((item, index) => {
+			value.forEach((item: unknown, index) => {
 				const arrayKey = `${fullKey}[${index}]`;
 				if (typeof item === 'object' && !(item instanceof File)) {
-					jsonToFormData(item, formData, arrayKey);
+					jsonToFormData(item as Record<string, unknown>, formData, arrayKey);
 				} else {
-					formData.append(arrayKey, item);
+					formData.append(arrayKey, item as string | Blob);
 				}
 			});
 		} else if (typeof value === 'object') {
 			// 递归嵌套对象
-			jsonToFormData(value, formData, fullKey);
+			jsonToFormData(value as Record<string, unknown>, formData, fullKey);
 		} else {
-			formData.append(fullKey, value);
+			formData.append(fullKey, value as string | Blob);
 		}
 	});
 
@@ -118,8 +130,8 @@ export function jsonToFormData(data: Record<string, any>, formData: FormData = n
  * formData 转 json
  * @param formData
  */
-export function formDataToObject(formData: FormData): Record<string, any> {
-	const obj: Record<string, any> = {};
+export function formDataToObject(formData: FormData): Record<string, string | number> {
+	const obj: Record<string, string | number> = {};
 	for (const [key, value] of formData.entries()) {
 		const strValue = value.toString();
 		// 如果全是数字字符串，就转成 number
@@ -155,7 +167,7 @@ export function pick<T extends Record<string, any>, K extends keyof T>(obj: T, k
  * get({ a: { b: { c: 1 } } }, 'a.b.c') // 1
  * get({ a: 1 }, 'b.c', 'default') // 'default'
  */
-export function get<T = any>(obj: any, path: string, defaultValue?: T): T | undefined {
+export function get<T = unknown>(obj: unknown, path: string, defaultValue?: T): T | undefined {
 	if (obj === null || obj === undefined) return defaultValue;
 
 	const keys = path
@@ -163,13 +175,13 @@ export function get<T = any>(obj: any, path: string, defaultValue?: T): T | unde
 		.split('.')
 		.filter(Boolean);
 
-	let result: any = obj;
+	let result: unknown = obj;
 	for (const key of keys) {
 		if (result === null || result === undefined) return defaultValue;
-		result = result[key];
+		result = (result as Record<string, unknown>)[key];
 	}
 
-	return result !== undefined ? result : defaultValue;
+	return (result !== undefined ? result : defaultValue) as T | undefined;
 }
 
 /**
@@ -188,7 +200,7 @@ export function deepMerge<T extends Record<string, any>>(...sources: T[]): T {
 		for (const key of Object.keys(source)) {
 			const val = source[key];
 			if (val && typeof val === 'object' && !Array.isArray(val) && !(val instanceof Date) && !(val instanceof RegExp)) {
-				result[key] = deepMerge(result[key] || {}, val);
+				result[key] = deepMerge((result[key] || {}) as Record<string, any>, val as Record<string, any>);
 			} else {
 				result[key] = val;
 			}

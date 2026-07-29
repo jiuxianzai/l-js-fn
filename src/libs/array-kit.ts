@@ -268,7 +268,7 @@ export function groupBy<T extends Record<string, any>>(
 
   for (const item of array) {
     // 支持嵌套路径，如 'user.id'
-    const groupKey = key.split('.').reduce((obj: any, k) => obj?.[k], item) ?? '__undefined__';
+    const groupKey = (key.split('.').reduce((obj: unknown, k) => (obj as Record<string, unknown>)?.[k], item as unknown) ?? '__undefined__') as string;
 
     if (!result[groupKey]) {
       result[groupKey] = [];
@@ -346,7 +346,7 @@ export function sampleSize<T>(array: T[], n: number = 1): T[] {
  * flatten([1, [2, [3, 4]], 5]) // [1, 2, 3, 4, 5]
  * flatten([1, [2, [3, 4]], 5], 1) // [1, 2, [3, 4], 5]
  */
-export function flatten<T>(arr: any[], depth: number = Infinity): T[] {
+export function flatten<T>(arr: readonly unknown[], depth: number = Infinity): T[] {
 	if (!Array.isArray(arr)) return [];
 	return arr.flat(depth) as T[];
 }

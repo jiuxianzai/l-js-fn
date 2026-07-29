@@ -61,7 +61,7 @@ export class H5Bridge {
 		}
 	}
 
-	private _postMessage(msg: { type: IPC_TYPE; eventName: string; params?: any; id?: string }) {
+	private _postMessage(msg: { type: IPC_TYPE; eventName: string; params?: unknown; id?: string }) {
 		this.iframe?.contentWindow?.postMessage(msg, '*');
 	}
 

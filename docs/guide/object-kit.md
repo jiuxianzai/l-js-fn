@@ -62,13 +62,14 @@ objFilterProp(obj, ['a', 'c']);
 
 ## objFilterNull 过滤空值
 
-过滤对象中的空值（`null` 或 `undefined`）。
+过滤对象中的空值（`null` 或 `undefined`），支持通过 `options` 控制过滤行为。
 
 **参数说明：**
 
 | 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
 | obj | `T` | 是 | 源对象 |
+| options | `{ null?: boolean, undefined?: boolean }` | 否 | 过滤选项，默认 `{ null: true, undefined: true }` |
 
 **返回值：** `Partial<T>` — 过滤后的新对象
 
@@ -77,8 +78,17 @@ objFilterProp(obj, ['a', 'c']);
 ```typescript
 import { objFilterNull } from 'l-js-fn';
 
+// 默认过滤 null 和 undefined
 objFilterNull({ a: 1, b: null, c: undefined, d: 0 });
 // { a: 1, d: 0 }
+
+// 只过滤 null，保留 undefined
+objFilterNull({ a: 1, b: null, c: undefined }, { null: true, undefined: false });
+// { a: 1, c: undefined }
+
+// 只过滤 undefined，保留 null
+objFilterNull({ a: 1, b: null, c: undefined }, { null: false, undefined: true });
+// { a: 1, b: null }
 ```
 
 ## isHasProperties 判断属性存在

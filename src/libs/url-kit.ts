@@ -52,7 +52,7 @@ export function getUrlParams<T = Record<string, any>>(url?: string): T {
  * @param key - 查询参数的键
  * @returns 对应的参数值或 null
  */
-export function getUrlParam<T = any>(url: string | undefined, key: string): T | null {
+export function getUrlParam<T = unknown>(url: string | undefined, key: string): T | null {
 	const params = getUrlParams<Record<string, any>>(url);
 	return key in params ? (params[key] as T) : null;
 }
@@ -65,7 +65,7 @@ export function getUrlParam<T = any>(url: string | undefined, key: string): T | 
  * @param options - 可选配置，position 为 'before' 时参数追加到 # 前面（默认 # 后）
  * @returns 新的 URL 或 null（如果参数无效）
  */
-export function appendUrlParam<T = any>(url: string, paramName: string, paramValue?: T, options?: AppendUrlOptions): string | null {
+export function appendUrlParam<T = unknown>(url: string, paramName: string, paramValue?: T, options?: AppendUrlOptions): string | null {
 	if (!url || !paramName) return null;
 
 	try {
