@@ -1,4 +1,4 @@
-import type { FileInfo } from '@/types/index.ts';
+import type { AppendUrlOptions, FileInfo } from '@/types/index.ts';
 
 /**
  * 解析 URL 查询参数，支持数组参数和嵌套对象参数
@@ -62,16 +62,42 @@ export function getUrlParam<T = any>(url: string | undefined, key: string): T | 
  * @param url - URL 地址
  * @param paramName - 参数名
  * @param paramValue - 参数值
+ * @param options - 可选配置，position 为 'before' 时参数追加到 # 前面（默认 # 后）
  * @returns 新的 URL 或 null（如果参数无效）
  */
-export function appendUrlParam<T = any>(url: string, paramName: string, paramValue?: T): string | null {
+export function appendUrlParam<T = any>(url: string, paramName: string, paramValue?: T, options?: AppendUrlOptions): string | null {
 	if (!url || !paramName) return null;
 
 	try {
-		const hasParams = url.includes('?');
-		const separator = hasParams ? '&' : '?';
 		const encodedValue = paramValue !== undefined ? encodeURIComponent(String(paramValue)) : '';
 		const paramString = encodedValue ? `${paramName}=${encodedValue}` : paramName;
+		const position = options?.position || 'after';
+
+		if (position === 'after') {
+			const hashIndex = url.indexOf('#');
+			if (hashIndex === -1) {
+				const hasParams = url.includes('?');
+				const separator = hasParams ? '&' : '?';
+				return `${url}${separator}${paramString}`;
+			}
+
+			const baseUrl = url.substring(0, hashIndex);
+			const hashFragment = url.substring(hashIndex);
+			const hashQueryIndex = hashFragment.indexOf('?');
+			const newHashFragment = hashQueryIndex !== -1 ? `${hashFragment}&${paramString}` : `${hashFragment}?${paramString}`;
+			return `${baseUrl}${newHashFragment}`;
+		}
+
+		const hasParams = url.includes('?');
+		const separator = hasParams ? '&' : '?';
+		const hashIndex = url.indexOf('#');
+		if (hashIndex !== -1) {
+			const baseWithoutHash = url.substring(0, hashIndex);
+			const hash = url.substring(hashIndex);
+			const baseHasParams = baseWithoutHash.includes('?');
+			const baseSeparator = baseHasParams ? '&' : '?';
+			return `${baseWithoutHash}${baseSeparator}${paramString}${hash}`;
+		}
 		return `${url}${separator}${paramString}`;
 	} catch {
 		return null;
@@ -82,8 +108,10 @@ export function appendUrlParam<T = any>(url: string, paramName: string, paramVal
  * 批量向 URL 添加查询参数，兼容 hash 和 history 模式
  * @param url - URL 地址
  * @param params - 参数键值对对象
+ * @param options - 可选配置，position 为 'before' 时参数追加到 # 前面（默认 # 后）
  * @returns 新的 URL 字符串，如果 URL 无效则返回 null
  * @example
+ * // 默认（参数在 # 后）
  * appendUrlParams('https://example.com', { name: 'zs', age: '1' })
  * // => 'https://example.com?name=zs&age=1'
  * @example
@@ -91,25 +119,46 @@ export function appendUrlParam<T = any>(url: string, paramName: string, paramVal
  * // => 'https://example.com?id=1&name=zs&age=1'
  * @example
  * appendUrlParams('https://example.com/#/path', { name: 'zs' })
- * // => 'https://example.com/?name=zs#/path'
+ * // => 'https://example.com/#/path?name=zs'
+ * @example
+ * // 参数在 # 前
+ * appendUrlParams('https://example.com/#/home', { id: '1', name: 'yyp' }, { position: 'before' })
+ * // => 'https://example.com/?id=1&name=yyp#/home'
  */
-export function appendUrlParams<T extends Record<string, any>>(url: string, params: T): string | null {
+export function appendUrlParams<T extends Record<string, any>>(url: string, params: T, options?: AppendUrlOptions): string | null {
 	if (!url || !params || Object.keys(params).length === 0) return null;
 
 	try {
-		const hashIndex = url.indexOf('#');
-		const baseWithoutHash = hashIndex !== -1 ? url.substring(0, hashIndex) : url;
-		const hash = hashIndex !== -1 ? url.substring(hashIndex) : '';
-
-		const hasParams = baseWithoutHash.includes('?');
-		const separator = hasParams ? '&' : '?';
-
 		const paramString = Object.entries(params)
 			.filter(([_, value]) => value !== null && value !== '' && typeof value !== 'undefined')
 			.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
 			.join('&');
 
 		if (!paramString) return url;
+
+		const position = options?.position || 'after';
+
+		if (position === 'after') {
+			const hashIndex = url.indexOf('#');
+			if (hashIndex === -1) {
+				const hasParams = url.includes('?');
+				const separator = hasParams ? '&' : '?';
+				return `${url}${separator}${paramString}`;
+			}
+
+			const baseUrl = url.substring(0, hashIndex);
+			const hashFragment = url.substring(hashIndex);
+			const hashQueryIndex = hashFragment.indexOf('?');
+			const newHashFragment = hashQueryIndex !== -1 ? `${hashFragment}&${paramString}` : `${hashFragment}?${paramString}`;
+			return `${baseUrl}${newHashFragment}`;
+		}
+
+		const hashIndex = url.indexOf('#');
+		const baseWithoutHash = hashIndex !== -1 ? url.substring(0, hashIndex) : url;
+		const hash = hashIndex !== -1 ? url.substring(hashIndex) : '';
+
+		const hasParams = baseWithoutHash.includes('?');
+		const separator = hasParams ? '&' : '?';
 
 		return `${baseWithoutHash}${separator}${paramString}${hash}`;
 	} catch {

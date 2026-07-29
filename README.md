@@ -344,9 +344,15 @@ getUrlParam('https://example.com?id=1', 'id'); // '1'
 appendUrlParam('https://example.com', 'id', 1);
 // "https://example.com?id=1"
 
-// 批量添加 URL 参数（兼容 hash/history 模式）
+// 批量添加 URL 参数（默认追加到 # 后，支持 position: 'before' 控制）
 appendUrlParams('https://example.com?id=1', { name: 'zs', age: '1' });
 // "https://example.com?id=1&name=zs&age=1"
+
+appendUrlParams('https://example.com/#/home', { id: '1', name: 'yyp' });
+// "https://example.com/#/home?id=1&name=yyp"
+
+appendUrlParams('https://example.com/#/home', { id: '1' }, { position: 'before' });
+// "https://example.com/?id=1#/home"
 
 // 对象转 URL 参数
 transUrlParams({ id: 1, name: 'John' }); // "id=1&name=John"

@@ -59,3 +59,11 @@ export type MoveAction = 'up' | 'down' | 'top' | 'bottom';
  * 数组元素类型
  */
 export type Primitive = string | number | boolean | null | undefined;
+
+/**
+ * URL 参数追加配置
+ */
+export interface AppendUrlOptions {
+	/** 参数追加位置：'after' - 在 # 之后（默认），'before' - 在 # 之前 */
+	position?: 'before' | 'after';
+}

@@ -164,14 +164,28 @@ describe('url-kit - URL 处理工具', () => {
 
 		it('应该处理包含 hash 的 URL', () => {
 			const result = appendUrlParam('https://example.com#section', 'name', 'John');
-			// 实现直接在 hash 后面添加参数
 			expect(result).toBe('https://example.com#section?name=John');
 		});
 
 		it('应该处理包含 hash 和参数的 URL', () => {
 			const result = appendUrlParam('https://example.com?age=30#section', 'name', 'John');
-			// 实现直接在 hash 后面添加参数
-			expect(result).toBe('https://example.com?age=30#section&name=John');
+			expect(result).toBe('https://example.com?age=30#section?name=John');
+		});
+
+		// ===== position: 'before' =====
+		it('position=before：应该将参数追加到 # 前面', () => {
+			const result = appendUrlParam('https://example.com/#/home', 'id', '1', { position: 'before' });
+			expect(result).toBe('https://example.com/?id=1#/home');
+		});
+
+		it('position=before：应该处理参数追加到 # 前面已有参数的情况', () => {
+			const result = appendUrlParam('https://example.com/?page=1#/home', 'id', '1', { position: 'before' });
+			expect(result).toBe('https://example.com/?page=1&id=1#/home');
+		});
+
+		it('position=before：无 hash 时退化为默认行为', () => {
+			const result = appendUrlParam('https://example.com', 'name', 'yyp', { position: 'before' });
+			expect(result).toBe('https://example.com?name=yyp');
 		});
 	});
 
@@ -230,24 +244,24 @@ describe('url-kit - URL 处理工具', () => {
 			expect(result).toBe('https://example.com');
 		});
 
-		it('应该处理包含 hash 的 URL（history 模式）', () => {
+		it('应该处理包含 hash 的 URL', () => {
 			const result = appendUrlParams('https://example.com#section', { name: 'zs' });
-			expect(result).toBe('https://example.com?name=zs#section');
+			expect(result).toBe('https://example.com#section?name=zs');
 		});
 
 		it('应该处理包含参数和 hash 的 URL', () => {
 			const result = appendUrlParams('https://example.com?id=1#section', { name: 'zs', age: '1' });
-			expect(result).toBe('https://example.com?id=1&name=zs&age=1#section');
+			expect(result).toBe('https://example.com?id=1#section?name=zs&age=1');
 		});
 
 		it('应该处理 hash 路由模式（/）', () => {
 			const result = appendUrlParams('https://example.com/#/path', { name: 'zs' });
-			expect(result).toBe('https://example.com/?name=zs#/path');
+			expect(result).toBe('https://example.com/#/path?name=zs');
 		});
 
 		it('应该处理 hash 路由模式下已有参数的情况', () => {
 			const result = appendUrlParams('https://example.com/?id=1#/path', { name: 'zs' });
-			expect(result).toBe('https://example.com/?id=1&name=zs#/path');
+			expect(result).toBe('https://example.com/?id=1#/path?name=zs');
 		});
 
 		it('应该处理 history 路由模式', () => {
@@ -267,7 +281,48 @@ describe('url-kit - URL 处理工具', () => {
 
 		it('应该处理包含路径、参数和 hash 的完整 URL', () => {
 			const result = appendUrlParams('https://example.com/path/to?page=1#top', { name: 'zs' });
-			expect(result).toBe('https://example.com/path/to?page=1&name=zs#top');
+			expect(result).toBe('https://example.com/path/to?page=1#top?name=zs');
+		});
+
+		// ===== position: 'before' =====
+		it('position=before：应该将参数追加到 # 前面', () => {
+			const result = appendUrlParams('https://example.com/#/home', { id: '1', name: 'yyp' }, { position: 'before' });
+			expect(result).toBe('https://example.com/?id=1&name=yyp#/home');
+		});
+
+		it('position=before：应该处理 # 前已有参数的情况', () => {
+			const result = appendUrlParams('https://example.com/?page=1#/home', { id: '2' }, { position: 'before' });
+			expect(result).toBe('https://example.com/?page=1&id=2#/home');
+		});
+
+		it('position=before：应该处理 hash 后纯锚点的情况', () => {
+			const result = appendUrlParams('https://example.com#section', { name: 'zs' }, { position: 'before' });
+			expect(result).toBe('https://example.com?name=zs#section');
+		});
+
+		it('position=before：无 hash 时退化为默认行为', () => {
+			const result = appendUrlParams('https://example.com', { name: 'yyp' }, { position: 'before' });
+			expect(result).toBe('https://example.com?name=yyp');
+		});
+
+		it('position=before：无 hash 已有参数时正确拼接', () => {
+			const result = appendUrlParams('https://example.com?id=1', { name: 'yyp' }, { position: 'before' });
+			expect(result).toBe('https://example.com?id=1&name=yyp');
+		});
+
+		it('position=before：应该保留 # 后面的已有参数', () => {
+			const result = appendUrlParams('https://example.com/?name=zs#/path?id=1', { page: '2' }, { position: 'before' });
+			expect(result).toBe('https://example.com/?name=zs&page=2#/path?id=1');
+		});
+
+		it('position=before：应该编码参数', () => {
+			const result = appendUrlParams('https://example.com/#/home', { 'user name': 'John Doe' }, { position: 'before' });
+			expect(result).toBe('https://example.com/?user%20name=John%20Doe#/home');
+		});
+
+		it('position=before：应该跳过 null、空字符串和 undefined 值', () => {
+			const result = appendUrlParams('https://example.com/#/home', { name: 'zs', age: null, foo: '', bar: undefined as any }, { position: 'before' });
+			expect(result).toBe('https://example.com/?name=zs#/home');
 		});
 	});
 

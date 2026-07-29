@@ -55,7 +55,7 @@ getUrlParam('https://example.com?id=1', 'name');  // null
 
 ## appendUrlParam 添加URL参数
 
-向 URL 添加参数。
+向 URL 添加参数，支持控制参数放在 `#` 前或 `#` 后。
 
 **参数说明：**
 
@@ -64,8 +64,9 @@ getUrlParam('https://example.com?id=1', 'name');  // null
 | url | `string` | 是 | URL 地址 |
 | paramName | `string` | 是 | 参数名 |
 | paramValue | `T` | 否 | 参数值 |
+| options | `AppendUrlOptions` | 否 | 配置项，`position` 控制参数追加位置 |
 
-**返回值：** `string \| null` — 新的 URL，参数无效返回 `null`
+**返回值：** `string | null` — 新的 URL，参数无效返回 `null`
 
 **示例：**
 
@@ -77,11 +78,19 @@ appendUrlParam('https://example.com', 'id', 1);
 
 appendUrlParam('https://example.com?id=1', 'name', 'John');
 // 'https://example.com?id=1&name=John'
+
+// 默认追加到 # 后
+appendUrlParam('https://example.com/#/home', 'id', '1');
+// 'https://example.com/#/home?id=1'
+
+// 参数放在 # 前
+appendUrlParam('https://example.com/#/home', 'id', '1', { position: 'before' });
+// 'https://example.com/?id=1#/home'
 ```
 
 ## appendUrlParams 批量添加URL参数
 
-向 URL 批量添加查询参数，兼容 hash 和 history 路由模式，自动判断使用 `?` 还是 `&`。
+向 URL 批量添加查询参数，兼容 hash 和 history 路由模式，自动判断使用 `?` 还是 `&`。默认追加在 `#` 之后，可通过 `position: 'before'` 放在 `#` 之前。
 
 **参数说明：**
 
@@ -89,6 +98,7 @@ appendUrlParam('https://example.com?id=1', 'name', 'John');
 |------|------|------|------|
 | url | `string` | 是 | URL 地址 |
 | params | `Record<string, any>` | 是 | 参数键值对对象 |
+| options | `AppendUrlOptions` | 否 | 配置项，`position` 控制参数放在 `#` 前 (`'before'`) 或 `#` 后 (`'after'`，默认) |
 
 **返回值：** `string | null` — 新的 URL，参数无效返回 `null`
 
@@ -103,16 +113,23 @@ appendUrlParams('https://example.com', { name: 'zs', age: '1' });
 appendUrlParams('https://example.com?id=1', { name: 'zs', age: '1' });
 // 'https://example.com?id=1&name=zs&age=1'
 
-// History 模式：hash 在参数之后
-appendUrlParams('https://example.com#section', { name: 'zs' });
-// 'https://example.com?name=zs#section'
-
-// Hash 路由模式
+// 默认：参数追加到 # 后
 appendUrlParams('https://example.com/#/path', { name: 'zs' });
-// 'https://example.com/?name=zs#/path'
+// 'https://example.com/#/path?name=zs'
 
 appendUrlParams('https://example.com/?id=1#/path', { name: 'zs' });
-// 'https://example.com/?id=1&name=zs#/path'
+// 'https://example.com/?id=1#/path?name=zs'
+
+appendUrlParams('https://example.com#section', { name: 'zs' });
+// 'https://example.com#section?name=zs'
+
+// 参数放在 # 前
+appendUrlParams('https://example.com/#/home', { id: '1', name: 'yyp' }, { position: 'before' });
+// 'https://example.com/?id=1&name=yyp#/home'
+
+// History 模式（无 # 时退化为普通拼接）
+appendUrlParams('https://example.com/user/list', { name: 'zs' });
+// 'https://example.com/user/list?name=zs'
 ```
 
 ## transUrlParams 对象转查询字符串
