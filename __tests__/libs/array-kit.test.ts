@@ -24,6 +24,7 @@ import {
 	compact,
 	sum,
 	last,
+	arrayPluck,
 } from '@/libs/array-kit';
 
 describe('array-kit - 数组操作工具', () => {
@@ -845,6 +846,54 @@ describe('array-kit - 数组操作工具', () => {
 
 		it('应该处理非数组输入', () => {
 			expect(last(123 as any)).toBeUndefined();
+		});
+	});
+
+	// ==================== arrayPluck 测试 ====================
+	describe('arrayPluck - 提取对象数组指定字段', () => {
+		it('应该提取指定字段的值组成数组', () => {
+			const arr = [{ name: 'zz' }, { name: 'yy' }];
+			expect(arrayPluck(arr, 'name')).toEqual(['zz', 'yy']);
+		});
+
+		it('应该提取数字字段', () => {
+			const arr = [{ id: 1 }, { id: 2 }, { id: 3 }];
+			expect(arrayPluck(arr, 'id')).toEqual([1, 2, 3]);
+		});
+
+		it('应该处理空数组', () => {
+			expect(arrayPluck([], 'name' as any)).toEqual([]);
+		});
+
+		it('应该处理非数组输入', () => {
+			expect(arrayPluck(null as any, 'name')).toEqual([]);
+			expect(arrayPluck(undefined as any, 'name')).toEqual([]);
+		});
+
+		it('应该处理字段不存在的情况（过滤 null/undefined）', () => {
+			const arr = [{ name: 'zz' }, { name: 'yy' }] as any[];
+			expect(arrayPluck(arr, 'age')).toEqual([]);
+		});
+
+		it('应该递归提取深层嵌套对象中的字段值', () => {
+			const arr = [
+				{ name: 'zz', children: [{ name: 'yy' }, { name: null }] },
+				{ name: 'xx' },
+			];
+			expect(arrayPluck(arr, 'name' as any)).toEqual(['zz', 'yy', 'xx']);
+		});
+
+		it('应该过滤掉 null 和 undefined 值', () => {
+			const arr = [{ name: 'a' }, { name: null as any }, { name: undefined as any }, { name: 'b' }];
+			expect(arrayPluck(arr, 'name')).toEqual(['a', 'b']);
+		});
+
+		it('应该递归处理嵌套数组中的对象', () => {
+			const arr = [
+				{ items: [{ value: 1 }, { value: 2 }] },
+				{ value: 3 },
+			];
+			expect(arrayPluck(arr, 'value' as any)).toEqual([1, 2, 3]);
 		});
 	});
 });

@@ -18,6 +18,7 @@ import {
 	isHttp,
 	isHttps,
 	validateParams,
+	isInArray,
 } from '@/libs/is-kit';
 
 describe('is-kit - 类型判断工具', () => {
@@ -122,6 +123,45 @@ describe('is-kit - 类型判断工具', () => {
 
 		it('应该正确识别类数组对象', () => {
 			expect(isArray({ 0: 1, 1: 2, length: 2 })).toBe(false);
+		});
+	});
+
+	// ==================== isInArray 测试 ====================
+	describe('isInArray - 检查地址是否在数组中', () => {
+		it('应该正确识别存在的地址', () => {
+			expect(isInArray(['https://example.com', 'https://test.com'], 'https://example.com')).toBe(true);
+			expect(isInArray(['/page/a', '/page/b'], '/page/a')).toBe(true);
+		});
+
+		it('应该正确识别不存在的地址', () => {
+			expect(isInArray(['https://example.com', 'https://test.com'], 'https://other.com')).toBe(false);
+		});
+
+		it('应该正确识别空数组', () => {
+			expect(isInArray([], 'https://example.com')).toBe(false);
+		});
+
+		it('URL 类型应忽略 ? 后的查询参数进行匹配', () => {
+			expect(isInArray(['https://example.com'], 'https://example.com?foo=bar&baz=1')).toBe(true);
+			expect(isInArray(['https://example.com?foo=bar'], 'https://example.com')).toBe(true);
+			expect(isInArray(['https://example.com?a=1'], 'https://example.com?b=2')).toBe(true);
+		});
+
+		it('查询参数不同但基础路径不同时应返回 false', () => {
+			expect(isInArray(['https://example.com'], 'https://other.com?foo=bar')).toBe(false);
+		});
+
+		it('非 URL 类型的字符串应正常比较（不剥离 ? 参数）', () => {
+			expect(isInArray(['a', 'b', 'c'], 'a')).toBe(true);
+			expect(isInArray(['a', 'b', 'c'], 'd')).toBe(false);
+			expect(isInArray(['a?x=1', 'b'], 'a')).toBe(false);
+			expect(isInArray(['a?x=1', 'b'], 'a?x=1')).toBe(true);
+		});
+
+		it('应该处理非数组输入', () => {
+			expect(isInArray(null as any, 'a')).toBe(false);
+			expect(isInArray(undefined as any, 'a')).toBe(false);
+			expect(isInArray('string' as any, 'a')).toBe(false);
 		});
 	});
 

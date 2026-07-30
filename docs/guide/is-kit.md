@@ -199,7 +199,51 @@ isArray({});             // false
 ```
 :::
 
-## 5. isImage 判断图片
+## 5. isInArray 地址数组检查
+
+检查指定地址是否存在于地址数组中，比较时自动忽略 `?` 后的查询参数。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| arr | `string[]` | 是 | 地址数组 |
+| value | `string` | 是 | 需要检查的地址字符串 |
+
+**返回值：** `boolean` — 存在返回 `true`，不存在或数组为空返回 `false`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isInArray } from 'l-js-fn';
+
+isInArray(['https://example.com', 'https://test.com'], 'https://example.com'); // true
+isInArray(['https://example.com'], 'https://example.com?foo=bar'); // true（忽略查询参数）
+isInArray(['https://example.com'], 'https://other.com'); // false
+isInArray([], 'https://example.com'); // false
+```
+
+```js [JavaScript (ESM)]
+import { isInArray } from 'l-js-fn';
+
+isInArray(['https://example.com', 'https://test.com'], 'https://example.com'); // true
+isInArray(['https://example.com'], 'https://example.com?foo=bar'); // true
+isInArray(['https://example.com'], 'https://other.com'); // false
+isInArray([], 'https://example.com'); // false
+```
+
+```js [JavaScript (CJS)]
+const { isInArray } = require('l-js-fn');
+
+isInArray(['https://example.com', 'https://test.com'], 'https://example.com'); // true
+isInArray(['https://example.com'], 'https://example.com?foo=bar'); // true
+isInArray(['https://example.com'], 'https://other.com'); // false
+isInArray([], 'https://example.com'); // false
+```
+:::
+
+## 6. isImage 判断图片
 
 判断文件名是否为图片。
 
@@ -238,7 +282,7 @@ isImage('doc.pdf');      // false
 ```
 :::
 
-## 6. isString 判断字符串
+## 7. isString 判断字符串
 
 判断是否为字符串。
 
@@ -278,7 +322,7 @@ isString(123);           // false
 ```
 :::
 
-## 7. isEmail 邮箱验证
+## 8. isEmail 邮箱验证
 
 判断是否为有效邮箱地址。
 
@@ -315,7 +359,7 @@ isEmail('invalid-email');     // false
 ```
 :::
 
-## 8. isURL URL验证
+## 9. isURL URL验证
 
 判断是否为合法 URL。
 
@@ -352,7 +396,7 @@ isURL('not-a-url');           // false
 ```
 :::
 
-## 9. isHttp HTTP协议判断
+## 10. isHttp HTTP协议判断
 
 判断是否为 http 链接（忽略大小写）。
 
@@ -395,7 +439,7 @@ isHttp('');                    // false
 ```
 :::
 
-## 10. isHttps HTTPS协议判断
+## 11. isHttps HTTPS协议判断
 
 判断是否为 https 链接（忽略大小写）。
 
@@ -438,7 +482,7 @@ isHttps('');                     // false
 ```
 :::
 
-## 11. isIdCard 身份证验证
+## 12. isIdCard 身份证验证
 
 判断是否为有效的中国大陆身份证号码（支持 15 位和 18 位）。
 
@@ -478,7 +522,7 @@ isIdCard('123456789012345678'); // false
 ```
 :::
 
-## 12. isPhoneNumber 手机号验证
+## 13. isPhoneNumber 手机号验证
 
 判断是否为有效的中国大陆手机号码。
 
@@ -515,7 +559,7 @@ isPhoneNumber('1380013800');  // false
 ```
 :::
 
-## 13. isEqual 深度比较
+## 14. isEqual 深度比较
 
 深度比较两个值是否相等（支持对象、数组、NaN 比较）。
 
@@ -578,7 +622,7 @@ isEqual(null, null); // true
 `isEqual(null, {})` 或 `isEqual({}, null)` 等 null 与非 null 对象的比较会返回 `false`，而不会抛出异常。
 :::
 
-## 14. validateParams 参数校验
+## 15. validateParams 参数校验
 
 校验参数对象中必填字段是否都存在且非空。
 

@@ -844,3 +844,66 @@ last([1, 2, 3]); // 3
 last([]);        // undefined
 ```
 :::
+
+## 21. arrayPluck 提取指定字段
+
+递归提取对象数组中指定字段的值，返回扁平数组（自动过滤 `null` 和 `undefined`）。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| arr | `T[]` | 是 | 对象数组（支持深层嵌套） |
+| key | `keyof T` | 是 | 要提取的字段名 |
+
+**返回值：** `T[keyof T][]` — 字段值组成的数组，非数组或空数组返回 `[]`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { arrayPluck } from 'l-js-fn';
+
+arrayPluck([{ name: 'zz' }, { name: 'yy' }], 'name'); // ['zz', 'yy']
+arrayPluck([{ id: 1 }, { id: 2 }], 'id'); // [1, 2]
+
+// 深层嵌套对象
+arrayPluck(
+  [{ name: 'zz', children: [{ name: 'yy' }, { name: null }] }, { name: 'xx' }],
+  'name'
+); // ['zz', 'yy', 'xx']
+
+// 空数组
+arrayPluck([], 'name'); // []
+```
+
+```js [JavaScript (ESM)]
+import { arrayPluck } from 'l-js-fn';
+
+arrayPluck([{ name: 'zz' }, { name: 'yy' }], 'name'); // ['zz', 'yy']
+arrayPluck([{ id: 1 }, { id: 2 }], 'id'); // [1, 2]
+
+// 深层嵌套对象
+arrayPluck(
+  [{ name: 'zz', children: [{ name: 'yy' }, { name: null }] }, { name: 'xx' }],
+  'name'
+); // ['zz', 'yy', 'xx']
+
+arrayPluck([], 'name'); // []
+```
+
+```js [JavaScript (CJS)]
+const { arrayPluck } = require('l-js-fn');
+
+arrayPluck([{ name: 'zz' }, { name: 'yy' }], 'name'); // ['zz', 'yy']
+arrayPluck([{ id: 1 }, { id: 2 }], 'id'); // [1, 2]
+
+// 深层嵌套对象
+arrayPluck(
+  [{ name: 'zz', children: [{ name: 'yy' }, { name: null }] }, { name: 'xx' }],
+  'name'
+); // ['zz', 'yy', 'xx']
+
+arrayPluck([], 'name'); // []
+```
+:::

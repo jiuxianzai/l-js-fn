@@ -454,3 +454,44 @@ export function last<T>(arr: T[]): T | undefined {
 	if (!Array.isArray(arr) || arr.length === 0) return undefined;
 	return arr[arr.length - 1];
 }
+
+/**
+ * 递归提取对象/数组中指定字段的值，返回扁平数组（过滤掉 null 和 undefined）
+ * @param arr - 对象数组
+ * @param key - 要提取的字段名
+ * @returns 字段值组成的数组
+ * @example
+ * arrayPluck([{ name: 'zz' }, { name: 'yy' }], 'name') // ['zz', 'yy']
+ * arrayPluck([{ name: 'zz', children: [{ name: 'yy' }, { name: null }] }], 'name') // ['zz', 'yy']
+ */
+export function arrayPluck<T extends Record<string, any>>(arr: T[], key: keyof T): T[keyof T][] {
+	if (!Array.isArray(arr)) return [];
+	const result: T[keyof T][] = [];
+
+	const collect = (obj: unknown): void => {
+		if (obj === null || obj === undefined) return;
+		if (Array.isArray(obj)) {
+			for (const item of obj) {
+				collect(item);
+			}
+			return;
+		}
+		if (typeof obj === 'object') {
+			const record = obj as Record<string, any>;
+			if (key in record) {
+				const val = record[key as string];
+				if (val !== null && val !== undefined) {
+					result.push(val);
+				}
+			}
+			for (const v of Object.values(record)) {
+				collect(v);
+			}
+		}
+	};
+
+	for (const item of arr) {
+		collect(item);
+	}
+	return result;
+}

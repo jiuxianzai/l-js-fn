@@ -96,7 +96,7 @@ import { md5, aesEncrypt, rsaEncrypt } from 'l-js-fn/crypto';
 #### 类型判断 (is-kit)
 
 ```typescript
-import { isEmpty, isNotEmpty, isObject, isArray, isString, isEmail, isURL, isIdCard, isPhoneNumber, isEqual, validateParams } from 'l-js-fn';
+import { isEmpty, isNotEmpty, isObject, isArray, isInArray, isString, isEmail, isURL, isIdCard, isPhoneNumber, isEqual, validateParams } from 'l-js-fn';
 
 // 空值检查
 isEmpty(''); // true
@@ -118,6 +118,10 @@ isEqual({ a: 1 }, { a: 1 }); // true
 // 参数校验
 validateParams(['name', 'age'], { name: 'John', age: 20 }); // null
 validateParams(['name'], { age: 20 }); // 'name'
+
+// 地址数组检查（忽略 ? 后的查询参数）
+isInArray(['https://example.com'], 'https://example.com?foo=bar'); // true
+isInArray([], 'https://example.com'); // false
 ```
 
 #### 数组操作 (array-kit)
@@ -141,6 +145,7 @@ import {
 	compact,
 	sum,
 	last,
+	arrayPluck,
 } from 'l-js-fn';
 
 // 删除元素
@@ -204,6 +209,9 @@ sum([1, 2, 3, 4, 5]); // 15
 
 // 获取最后一个元素
 last([1, 2, 3]); // 3
+
+// 提取对象数组指定字段为扁平数组（递归深层嵌套，过滤 null/undefined）
+arrayPluck([{ name: 'zz' }, { name: 'yy' }], 'name'); // ['zz', 'yy']
 ```
 
 #### 字符串处理 (string-kit)
