@@ -60,6 +60,11 @@
 			"types": "./dist/file/index.d.ts",
 			"import": "./dist/file/index.js",
 			"require": "./dist/file/index.cjs"
+		},
+		"./crypto": {
+			"types": "./dist/crypto/index.d.ts",
+			"import": "./dist/crypto/index.js",
+			"require": "./dist/crypto/index.cjs"
 		}
 	},
 	"scripts": {
@@ -116,6 +121,14 @@
 	"files": [
 		"dist/"
 	],
+	"peerDependencies": {
+		"sm-crypto": ">=0.3.0"
+	},
+	"peerDependenciesMeta": {
+		"sm-crypto": {
+			"optional": true
+		}
+	},
 	"private": false,
 	"devDependencies": {
 		"@commitlint/cli": "^20.0.0",
@@ -125,6 +138,7 @@
 		"husky": "^8.0.3",
 		"jest": "^30.2.0",
 		"rimraf": "^6.0.1",
+		"sm-crypto": "^0.5.3",
 		"ts-jest": "^29.4.6",
 		"tsup": "^8.5.0",
 		"typescript": "^5.9.3",

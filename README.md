@@ -5,10 +5,10 @@
 ![npm version](https://badge.fury.io/js/l-js-fn.svg)
 ![downloads](https://img.shields.io/npm/dm/l-js-fn)
 ![license](https://img.shields.io/npm/l/l-js-fn)
-![test pass](https://img.shields.io/badge/tests-1003%2F1003%20passed-brightgreen)
+![test pass](https://img.shields.io/badge/tests-1068%2F1068%20passed-brightgreen)
 ![coverage](https://img.shields.io/badge/coverage-88%25-brightgreen)
 ![functions](https://img.shields.io/badge/functions-90%25-brightgreen)
-![branches](https://img.shields.io/badge/branches-87%25-yellowgreen)
+![branches](https://img.shields.io/badge/branches-86%25-yellowgreen)
 [![docs](https://img.shields.io/badge/docs-GitHub%20Pages-42b883)](https://jiuxianzai.github.io/l-js-fn/)
 
 ## ✨ 特性
@@ -19,7 +19,7 @@
 - 🌐 **双模块格式** - 同时支持 ESM 和 CJS
 - 🎨 **Tree-shaking** - 完整支持 Tree-shaking，只打包用到的代码
 - 💪 **工具齐全** - 涵盖数组、对象、字符串、日期、URL、正则等常用操作
-- 🔧 **高级功能** - WebSocket 管理、轮询、IPC 通信等
+- 🔧 **高级功能** - WebSocket 管理、轮询、IPC 通信、事件总线等
 - 📖 **完整文档** - 在线文档见 [GitHub Pages](https://jiuxianzai.github.io/l-js-fn/)
 
 ## 📦 安装
@@ -78,6 +78,15 @@ import { escapeHTML, base64Encode } from 'l-js-fn/encode';
 
 // 文件处理
 import { formatFileSize, isImage } from 'l-js-fn/file';
+
+// 加密模块
+import { md5, aesEncrypt, aesDecrypt, rsaEncrypt, rsaDecrypt, rsaGenerateKeyPair, sm2Encrypt, sm2Decrypt, sm2GenerateKeyPair, sm4Encrypt, sm4Decrypt } from 'l-js-fn/crypto';
+
+// 事件总线
+import { EventBus, eventBus } from 'l-js-fn/event-bus';
+
+// 加密模块
+import { md5, aesEncrypt, rsaEncrypt } from 'l-js-fn/crypto';
 ```
 
 ## 📚 API 文档
@@ -684,6 +693,168 @@ isAudio('music.mp3'); // true
 isPDF('document.pdf'); // true
 ```
 
+### 事件总线 (event-bus)
+
+```typescript
+import { EventBus, eventBus } from 'l-js-fn/event-bus';
+
+// 创建实例
+const bus = new EventBus();
+
+// 订阅事件
+bus.on('login', (user: string) => console.log(user));
+
+// 订阅一次性事件
+bus.once('init', () => console.log('初始化'));
+
+// 发布事件
+bus.emit('login', 'Alice');
+bus.emit('init');
+
+// 取消订阅
+const handler = (data: string) => console.log(data);
+bus.on('data', handler);
+bus.off('data', handler);
+
+// 取消某事件的所有订阅
+bus.off('login');
+
+// 查看监听数量
+bus.listenerCount('login'); // 0
+bus.listenerCount(); // 总数量
+
+// 清除所有事件
+bus.clear();
+
+// 类型安全用法
+type Events = {
+  login: [user: string];
+  logout: [];
+  score: [name: string, points: number];
+};
+const typedBus = new EventBus<Events>();
+typedBus.on('login', (user) => console.log(user)); // user 自动推断为 string
+typedBus.emit('login', 'Bob');
+
+// 全局单例
+eventBus.on('global-event', (msg: string) => console.log(msg));
+eventBus.emit('global-event', 'Hello');
+```
+
+### 加密模块 (crypto)
+
+> **注意**: SM2、SM4 依赖 `sm-crypto` 包，按需安装：`npm install sm-crypto`
+
+```typescript
+import {
+	md5,
+	aesEncrypt,
+	aesDecrypt,
+	rsaEncrypt,
+	rsaDecrypt,
+	rsaGenerateKeyPair,
+	sm2Encrypt,
+	sm2Decrypt,
+	sm2GenerateKeyPair,
+	sm4Encrypt,
+	sm4Decrypt,
+} from 'l-js-fn/crypto';
+```
+
+#### MD5 哈希
+
+```typescript
+// 基本用法
+md5('Hello World'); // "b10a8db164e0754105b7a99be72e3fe5"
+
+// 加盐
+md5('Hello World', { salt: 'mySalt' }); // 加盐后的哈希值
+```
+
+#### AES 对称加密
+
+```typescript
+// CBC 模式（默认）- 自动生成随机 IV
+const encrypted = aesEncrypt('Hello World', { key: 'my-secret-key' });
+const decrypted = aesDecrypt(encrypted, { key: 'my-secret-key' });
+// decrypted === 'Hello World'
+
+// 自定义 IV（32 位 hex 字符串）
+const enc = aesEncrypt('data', { key: 'key', iv: '0123456789abcdef0123456789abcdef' });
+const dec = aesDecrypt(enc, { key: 'key', iv: '0123456789abcdef0123456789abcdef' });
+
+// PBKDF2 密钥派生（加盐）
+const enc2 = aesEncrypt('data', { key: 'password', salt: 'salt123', iterations: 10000 });
+const dec2 = aesDecrypt(enc2, { key: 'password', salt: 'salt123', iterations: 10000 });
+
+// ECB 模式
+aesEncrypt('data', { key: 'key', mode: 'ecb' });
+
+// hex 输出编码
+aesEncrypt('data', { key: 'key', outputEncoding: 'hex' });
+```
+
+#### RSA 非对称加密
+
+```typescript
+// 生成密钥对
+const keyPair = rsaGenerateKeyPair({ keySize: 2048 });
+// { publicKey: '-----BEGIN PUBLIC KEY-----...', privateKey: '-----BEGIN PRIVATE KEY-----...' }
+
+// 生成 DER base64 格式
+rsaGenerateKeyPair({ keySize: 2048, format: 'der-base64' });
+
+// 公钥加密
+const encrypted = rsaEncrypt('Hello RSA', { publicKey: keyPair.publicKey });
+
+// 私钥解密
+const decrypted = rsaDecrypt(encrypted, { privateKey: keyPair.privateKey });
+// decrypted === 'Hello RSA'
+
+// hex 输出编码
+rsaEncrypt('data', { publicKey: keyPair.publicKey, outputEncoding: 'hex' });
+```
+
+#### SM2 国密非对称加密
+
+```bash
+npm install sm-crypto  # 需先安装依赖
+```
+
+```typescript
+// 生成 SM2 密钥对
+const keyPair = await sm2GenerateKeyPair();
+// { publicKey: '04...', privateKey: '...' }
+
+// 公钥加密
+const encrypted = await sm2Encrypt('Hello SM2', { publicKey: keyPair.publicKey });
+
+// 私钥解密
+const decrypted = await sm2Decrypt(encrypted, { privateKey: keyPair.privateKey });
+// decrypted === 'Hello SM2'
+
+// base64 输出编码
+await sm2Encrypt('data', { publicKey: keyPair.publicKey, outputEncoding: 'base64' });
+```
+
+#### SM4 国密对称加密
+
+```typescript
+// CBC 模式（默认）- 自动生成随机 IV
+const encrypted = await sm4Encrypt('Hello SM4', { key: '0123456789abcdeffedcba9876543210' });
+const decrypted = await sm4Decrypt(encrypted, { key: '0123456789abcdeffedcba9876543210' });
+// decrypted === 'Hello SM4'
+
+// 自定义 IV
+await sm4Encrypt('data', { key: '0...0', iv: '000102030405060708090a0b0c0d0e0f' });
+
+// ECB 模式
+await sm4Encrypt('data', { key: '0...0', mode: 'ecb' });
+
+// hex / base64 输出
+await sm4Encrypt('data', { key: '0...0', outputEncoding: 'base64' });
+```
+
 ## 🌐 浏览器兼容性
 
 - Chrome >= 90
@@ -705,6 +876,7 @@ import { Polling } from 'l-js-fn/polling';
 import { WebSocketManager } from 'l-js-fn/ws';
 import { escapeHTML } from 'l-js-fn/encode';
 import { formatFileSize } from 'l-js-fn/file';
+import { EventBus } from 'l-js-fn/event-bus';
 
 // CommonJS 导入
 const { isArray } = require('l-js-fn');
@@ -720,13 +892,13 @@ const { escapeHTML } = require('l-js-fn/encode');
 
 | 指标       | 数值                   |
 | ---------- | ---------------------- |
-| 测试套件   | 20 passed              |
-| 测试用例 | 1003 passed / 1003 total |
+| 测试套件   | 21 passed              |
+| 测试用例 | 1068 passed / 1068 total |
 | 通过率     | 100%                   |
-| 行覆盖率   | 89.04%                 |
-| 分支覆盖率 | 86.86%                 |
-| 函数覆盖率 | 90.26%                 |
-| 语句覆盖率 | 88.07%                 |
+| 行覆盖率   | 88.94%                 |
+| 分支覆盖率 | 86.79%                 |
+| 函数覆盖率 | 90.69%                 |
+| 语句覆盖率 | 88.96%                 |
 
 #### 核心工具模块
 
@@ -755,6 +927,7 @@ const { escapeHTML } = require('l-js-fn/encode');
 | config (配置常量)  | 21     | 21   | 0    | 100%   |
 | encode (编码/解码) | 54     | 54   | 0    | 100%   |
 | file (文件处理)    | 58     | 58   | 0    | 100%   |
+| event-bus (事件总线)| 22     | 22   | 0    | 100%   |
 
 #### 其他
 

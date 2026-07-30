@@ -64,6 +64,7 @@ export default defineConfig({
 					{ text: '编码解码', link: '/guide/encode' },
 					{ text: '事件总线', link: '/guide/event-bus' },
 					{ text: '文件处理', link: '/guide/file' },
+					{ text: '加密模块', link: '/guide/crypto' },
 				],
 			},
 		],
