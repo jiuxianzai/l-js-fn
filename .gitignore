@@ -11,7 +11,7 @@ node_modules
 .claude/
 
 # 构建产物
-dist/
+/dist/
 packages/
 
 # 测试覆盖率
