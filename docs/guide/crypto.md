@@ -80,9 +80,6 @@ import { md5 } from 'l-js-fn/crypto';
 md5('');
 // 'd41d8cd98f00b204e9800998ecf8427e'
 
-md5('abc');
-// '900150983cd24fb0d6963f7d28e17f72'
-
 md5('Hello World');
 // 'b10a8db164e0754105b7a99be72e3fe5'
 ```
@@ -94,19 +91,22 @@ md5('Hello World');
 // 'b10a8db164e0754105b7a99be72e3fe5'
 ```
 :::
+
+### 加盐哈希
+
+加盐可防止彩虹表攻击，即使输入相同，不同盐值也会产生不同的哈希。
+
 ::: code-group
 ```ts [TypeScript]
 import { md5 } from 'l-js-fn/crypto';
 
-// 不加盐
 md5('mypassword');
 // 'a029d0df84eb5549c641e04a9ef389e5'
 
-// 加盐
 md5('mypassword', { salt: 'random-salt-value' });
 // '984c47bda74bdb3f51dbdf5300e675d1'
 
-// 相同输入 + 相同盐值 = 相同结果（可用于密码校验）
+// 相同输入 + 相同盐值 = 相同结果
 const hash = md5('user_input', { salt: 'app_secret' });
 const isValid = hash === md5('user_input', { salt: 'app_secret' });
 // true
@@ -115,17 +115,8 @@ const isValid = hash === md5('user_input', { salt: 'app_secret' });
 ```js [JavaScript (ESM)]
 import { md5 } from 'l-js-fn/crypto';
 
-// 不加盐
-md5('mypassword');
-// 'a029d0df84eb5549c641e04a9ef389e5'
-
-// 加盐
-md5('mypassword', { salt: 'random-salt-value' });
-// '984c47bda74bdb3f51dbdf5300e675d1'
-
-// 相同输入 + 相同盐值 = 相同结果（可用于密码校验）
-const hash = md5('user_input', { salt: 'app_secret' });
-const isValid = hash === md5('user_input', { salt: 'app_secret' });
+const hash = md5('password', { salt: 'my-salt' });
+const isValid = hash === md5('password', { salt: 'my-salt' });
 // true
 ```
 
@@ -135,6 +126,9 @@ const { md5 } = require('l-js-fn/crypto');
 const hash = md5('password', { salt: 'my-salt' });
 ```
 :::
+
+### 实际场景：密码存储校验
+
 ::: code-group
 ```ts [TypeScript]
 import { md5 } from 'l-js-fn/crypto';
@@ -149,35 +143,23 @@ function verifyPassword(password: string, storedHash: string): boolean {
   return hashPassword(password) === storedHash;
 }
 
-// 注册
 const hashed = hashPassword('user1234');
-// 存入数据库
-
-// 登录校验
 const ok = verifyPassword('user1234', hashed);
 // true
 ```
 
 ```js [JavaScript (ESM)]
 import { md5 } from 'l-js-fn/crypto';
-
 const SECRET_KEY = 'your-app-secret-key';
 
-function hashPassword(password: string): string {
+function hashPassword(password) {
   return md5(password, { salt: SECRET_KEY });
 }
-
-function verifyPassword(password: string, storedHash: string): boolean {
+function verifyPassword(password, storedHash) {
   return hashPassword(password) === storedHash;
 }
-
-// 注册
 const hashed = hashPassword('user1234');
-// 存入数据库
-
-// 登录校验
 const ok = verifyPassword('user1234', hashed);
-// true
 ```
 
 ```js [JavaScript (CJS)]
@@ -187,16 +169,11 @@ const SECRET_KEY = 'your-app-secret-key';
 function hashPassword(password) {
   return md5(password, { salt: SECRET_KEY });
 }
-
-function verifyPassword(password, storedHash) {
-  return hashPassword(password) === storedHash;
-}
-
-const hashed = hashPassword('user1234');
-const ok = verifyPassword('user1234', hashed);
-// true
 ```
 :::
+
+### 实际场景：请求签名
+
 ::: code-group
 ```ts [TypeScript]
 import { md5 } from 'l-js-fn/crypto';
@@ -210,22 +187,15 @@ const sign = generateApiSign(
   { userId: '123', timestamp: '1700000000' },
   'api-secret'
 );
-// 将 sign 附带在请求头中
 ```
 
 ```js [JavaScript (ESM)]
 import { md5 } from 'l-js-fn/crypto';
 
-function generateApiSign(params: Record<string, string>, secretKey: string): string {
+function generateApiSign(params, secretKey) {
   const sorted = Object.keys(params).sort().map(k => `${k}=${params[k]}`).join('&');
   return md5(sorted, { salt: secretKey });
 }
-
-const sign = generateApiSign(
-  { userId: '123', timestamp: '1700000000' },
-  'api-secret'
-);
-// 将 sign 附带在请求头中
 ```
 
 ```js [JavaScript (CJS)]
@@ -237,11 +207,32 @@ function generateApiSign(params, secretKey) {
 }
 ```
 :::
+
+---
+
+## AES — 对称加密
+
+AES-128 对称加密/解密算法，支持 CBC 和 ECB 模式，支持 PBKDF2 密钥派生。
+
+### AesOptions
+
+```ts
+interface AesOptions {
+  key: string;
+  iv?: string;
+  mode?: 'cbc' | 'ecb';
+  salt?: string;
+  iterations?: number;
+  outputEncoding?: 'hex' | 'base64';
+}
+```
+
+### 基础加密解密
+
 ::: code-group
 ```ts [TypeScript]
 import { aesEncrypt, aesDecrypt } from 'l-js-fn/crypto';
 
-// CBC 模式（默认），自动生成随机 IV
 const encrypted = aesEncrypt('Hello World', { key: 'my-secret-key' });
 const decrypted = aesDecrypt(encrypted, { key: 'my-secret-key' });
 // 'Hello World'
@@ -250,10 +241,8 @@ const decrypted = aesDecrypt(encrypted, { key: 'my-secret-key' });
 ```js [JavaScript (ESM)]
 import { aesEncrypt, aesDecrypt } from 'l-js-fn/crypto';
 
-// CBC 模式（默认），自动生成随机 IV
 const encrypted = aesEncrypt('Hello World', { key: 'my-secret-key' });
 const decrypted = aesDecrypt(encrypted, { key: 'my-secret-key' });
-// 'Hello World'
 ```
 
 ```js [JavaScript (CJS)]
@@ -261,15 +250,16 @@ const { aesEncrypt, aesDecrypt } = require('l-js-fn/crypto');
 
 const encrypted = aesEncrypt('Hello World', { key: 'my-secret-key' });
 const decrypted = aesDecrypt(encrypted, { key: 'my-secret-key' });
-// 'Hello World'
 ```
 :::
+
+### 自定义 IV
+
 ::: code-group
 ```ts [TypeScript]
 import { aesEncrypt, aesDecrypt } from 'l-js-fn/crypto';
 
 const IV = '0123456789abcdef0123456789abcdef';
-
 const enc = aesEncrypt('secret', { key: 'my-key', iv: IV });
 const dec = aesDecrypt(enc, { key: 'my-key', iv: IV });
 // 'secret'
@@ -281,16 +271,9 @@ aesEncrypt('data', { key: 'k', iv: IV }) === aesEncrypt('data', { key: 'k', iv: 
 
 ```js [JavaScript (ESM)]
 import { aesEncrypt, aesDecrypt } from 'l-js-fn/crypto';
-
 const IV = '0123456789abcdef0123456789abcdef';
-
 const enc = aesEncrypt('secret', { key: 'my-key', iv: IV });
 const dec = aesDecrypt(enc, { key: 'my-key', iv: IV });
-// 'secret'
-
-// 相同输入 + 相同 IV = 相同密文
-aesEncrypt('data', { key: 'k', iv: IV }) === aesEncrypt('data', { key: 'k', iv: IV });
-// true
 ```
 
 ```js [JavaScript (CJS)]
@@ -300,18 +283,19 @@ const enc = aesEncrypt('secret', { key: 'my-key', iv: IV });
 const dec = aesDecrypt(enc, { key: 'my-key', iv: IV });
 ```
 :::
+
+### PBKDF2 密钥派生（加盐）
+
 ::: code-group
 ```ts [TypeScript]
 import { aesEncrypt, aesDecrypt } from 'l-js-fn/crypto';
 
-// 加密时使用盐值派生密钥
 const enc = aesEncrypt('sensitive data', {
   key: 'user-password',
   salt: 'unique-salt-per-user',
   iterations: 10000,
 });
 
-// 解密时必须提供相同参数
 const dec = aesDecrypt(enc, {
   key: 'user-password',
   salt: 'unique-salt-per-user',
@@ -320,54 +304,26 @@ const dec = aesDecrypt(enc, {
 // 'sensitive data'
 
 // 不提供盐值则解密失败
-try {
-  aesDecrypt(enc, { key: 'user-password' });
-} catch (e) {
-  // 解密失败
-}
+try { aesDecrypt(enc, { key: 'user-password' }); } catch (e) {}
 ```
 
 ```js [JavaScript (ESM)]
 import { aesEncrypt, aesDecrypt } from 'l-js-fn/crypto';
 
-// 加密时使用盐值派生密钥
-const enc = aesEncrypt('sensitive data', {
-  key: 'user-password',
-  salt: 'unique-salt-per-user',
-  iterations: 10000,
-});
-
-// 解密时必须提供相同参数
-const dec = aesDecrypt(enc, {
-  key: 'user-password',
-  salt: 'unique-salt-per-user',
-  iterations: 10000,
-});
-// 'sensitive data'
-
-// 不提供盐值则解密失败
-try {
-  aesDecrypt(enc, { key: 'user-password' });
-} catch (e) {
-  // 解密失败
-}
+const enc = aesEncrypt('data', { key: 'password', salt: 'salt', iterations: 10000 });
+const dec = aesDecrypt(enc, { key: 'password', salt: 'salt', iterations: 10000 });
 ```
 
 ```js [JavaScript (CJS)]
 const { aesEncrypt, aesDecrypt } = require('l-js-fn/crypto');
 
-const enc = aesEncrypt('data', {
-  key: 'password',
-  salt: 'salt',
-  iterations: 10000,
-});
-const dec = aesDecrypt(enc, {
-  key: 'password',
-  salt: 'salt',
-  iterations: 10000,
-});
+const enc = aesEncrypt('data', { key: 'password', salt: 'salt', iterations: 10000 });
+const dec = aesDecrypt(enc, { key: 'password', salt: 'salt', iterations: 10000 });
 ```
 :::
+
+### ECB 模式
+
 ::: code-group
 ```ts [TypeScript]
 import { aesEncrypt, aesDecrypt } from 'l-js-fn/crypto';
@@ -376,7 +332,7 @@ const enc = aesEncrypt('data', { key: 'my-key', mode: 'ecb' });
 const dec = aesDecrypt(enc, { key: 'my-key', mode: 'ecb' });
 // 'data'
 
-// ECB 模式下相同输入产生相同输出（确定性）
+// ECB 模式下相同输入产生相同输出
 const e1 = aesEncrypt('hello', { key: 'k', mode: 'ecb' });
 const e2 = aesEncrypt('hello', { key: 'k', mode: 'ecb' });
 e1 === e2; // true
@@ -387,12 +343,6 @@ import { aesEncrypt, aesDecrypt } from 'l-js-fn/crypto';
 
 const enc = aesEncrypt('data', { key: 'my-key', mode: 'ecb' });
 const dec = aesDecrypt(enc, { key: 'my-key', mode: 'ecb' });
-// 'data'
-
-// ECB 模式下相同输入产生相同输出（确定性）
-const e1 = aesEncrypt('hello', { key: 'k', mode: 'ecb' });
-const e2 = aesEncrypt('hello', { key: 'k', mode: 'ecb' });
-e1 === e2; // true
 ```
 
 ```js [JavaScript (CJS)]
@@ -402,33 +352,27 @@ const enc = aesEncrypt('data', { key: 'my-key', mode: 'ecb' });
 const dec = aesDecrypt(enc, { key: 'my-key', mode: 'ecb' });
 ```
 :::
+
+### 输出编码格式
+
 ::: code-group
 ```ts [TypeScript]
 import { aesEncrypt, aesDecrypt } from 'l-js-fn/crypto';
 
 // Base64 输出（默认）
 const b64 = aesEncrypt('data', { key: 'secret', outputEncoding: 'base64' });
-
 // Hex 输出
 const hex = aesEncrypt('data', { key: 'secret', outputEncoding: 'hex' });
 
-// 解密对应编码的密文
-aesDecrypt(b64, { key: 'secret' });              // base64（默认）
-aesDecrypt(hex, { key: 'secret', outputEncoding: 'hex' }); // hex
+aesDecrypt(b64, { key: 'secret' });
+aesDecrypt(hex, { key: 'secret', outputEncoding: 'hex' });
 ```
 
 ```js [JavaScript (ESM)]
 import { aesEncrypt, aesDecrypt } from 'l-js-fn/crypto';
 
-// Base64 输出（默认）
 const b64 = aesEncrypt('data', { key: 'secret', outputEncoding: 'base64' });
-
-// Hex 输出
 const hex = aesEncrypt('data', { key: 'secret', outputEncoding: 'hex' });
-
-// 解密对应编码的密文
-aesDecrypt(b64, { key: 'secret' });              // base64（默认）
-aesDecrypt(hex, { key: 'secret', outputEncoding: 'hex' }); // hex
 ```
 
 ```js [JavaScript (CJS)]
@@ -438,11 +382,14 @@ const b64 = aesEncrypt('data', { key: 'secret', outputEncoding: 'base64' });
 const hex = aesEncrypt('data', { key: 'secret', outputEncoding: 'hex' });
 ```
 :::
+
+### 实际场景：本地敏感数据存储
+
 ::: code-group
 ```ts [TypeScript]
 import { aesEncrypt, aesDecrypt } from 'l-js-fn/crypto';
 
-const APP_SECRET = 'my-app-secret-key-16';
+const APP_SECRET = 'my-app-secret-key16';
 
 function saveSecrets(key: string, value: string): void {
   const encrypted = aesEncrypt(value, { key: APP_SECRET });
@@ -455,115 +402,106 @@ function loadSecrets(key: string): string {
   return aesDecrypt(encrypted, { key: APP_SECRET });
 }
 
-// 存储令牌
 saveSecrets('api_token', 'sk-xxxx-xxxxxxxxxxxxx');
-
-// 读取令牌
 const token = loadSecrets('api_token');
 // 'sk-xxxx-xxxxxxxxxxxxx'
 ```
 
 ```js [JavaScript (ESM)]
 import { aesEncrypt, aesDecrypt } from 'l-js-fn/crypto';
-
-const APP_SECRET = 'my-app-secret-key-16';
-
-function saveSecrets(key: string, value: string): void {
-  const encrypted = aesEncrypt(value, { key: APP_SECRET });
-  localStorage.setItem(key, encrypted);
-}
-
-function loadSecrets(key: string): string {
-  const encrypted = localStorage.getItem(key);
-  if (!encrypted) return '';
-  return aesDecrypt(encrypted, { key: APP_SECRET });
-}
-
-// 存储令牌
-saveSecrets('api_token', 'sk-xxxx-xxxxxxxxxxxxx');
-
-// 读取令牌
-const token = loadSecrets('api_token');
-// 'sk-xxxx-xxxxxxxxxxxxx'
-```
-
-```js [JavaScript (CJS)]
-const { aesEncrypt, aesDecrypt } = require('l-js-fn/crypto');
-const APP_SECRET = 'my-app-secret-key-16';
+const APP_SECRET = 'my-app-secret-key16';
 
 function saveSecrets(key, value) {
   const encrypted = aesEncrypt(value, { key: APP_SECRET });
   localStorage.setItem(key, encrypted);
 }
-
 function loadSecrets(key) {
   const encrypted = localStorage.getItem(key);
-  if (!encrypted) return '';
-  return aesDecrypt(encrypted, { key: APP_SECRET });
+  return encrypted ? aesDecrypt(encrypted, { key: APP_SECRET }) : '';
 }
 
 saveSecrets('token', 'abc123');
 const token = loadSecrets('token');
 ```
+
+```js [JavaScript (CJS)]
+const { aesEncrypt, aesDecrypt } = require('l-js-fn/crypto');
+const APP_SECRET = 'my-app-secret-key16';
+
+function saveSecrets(key, value) {
+  localStorage.setItem(key, aesEncrypt(value, { key: APP_SECRET }));
+}
+```
 :::
+
+---
+
+## RSA — 非对称加密
+
+RSA 非对称加密算法，支持密钥对生成、公钥加密、私钥解密。
+
+### 相关类型
+
+```ts
+interface RsaKeyPair {
+  publicKey: string;
+  privateKey: string;
+}
+
+interface RsaEncryptOptions {
+  publicKey: string;
+  outputEncoding?: 'hex' | 'base64';
+}
+
+interface RsaDecryptOptions {
+  privateKey: string;
+  outputEncoding?: 'hex' | 'base64';
+}
+```
+
+### 生成密钥对
+
 ::: code-group
 ```ts [TypeScript]
 import { rsaGenerateKeyPair } from 'l-js-fn/crypto';
 
 // 默认 2048 位 PEM 格式
 const { publicKey, privateKey } = rsaGenerateKeyPair();
-// publicKey:  '-----BEGIN PUBLIC KEY-----\nMIIB...\n-----END PUBLIC KEY-----'
-// privateKey: '-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END PRIVATE KEY-----'
 
-// 1024 位密钥（不建议用于生产环境）
-const small = rsaGenerateKeyPair({ keySize: 1024 });
+// 1024 位
+rsaGenerateKeyPair({ keySize: 1024 });
 
-// 4096 位更安全
-const secure = rsaGenerateKeyPair({ keySize: 4096 });
+// 4096 位
+rsaGenerateKeyPair({ keySize: 4096 });
 
 // DER-base64 格式（便于网络传输）
-const der = rsaGenerateKeyPair({ keySize: 2048, format: 'der-base64' });
-// { publicKey: 'MIIBIjAN...', privateKey: 'MIIEvAIB...' }
+rsaGenerateKeyPair({ keySize: 2048, format: 'der-base64' });
 ```
 
 ```js [JavaScript (ESM)]
 import { rsaGenerateKeyPair } from 'l-js-fn/crypto';
 
-// 默认 2048 位 PEM 格式
 const { publicKey, privateKey } = rsaGenerateKeyPair();
-// publicKey:  '-----BEGIN PUBLIC KEY-----\nMIIB...\n-----END PUBLIC KEY-----'
-// privateKey: '-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END PRIVATE KEY-----'
-
-// 1024 位密钥（不建议用于生产环境）
-const small = rsaGenerateKeyPair({ keySize: 1024 });
-
-// 4096 位更安全
-const secure = rsaGenerateKeyPair({ keySize: 4096 });
-
-// DER-base64 格式（便于网络传输）
-const der = rsaGenerateKeyPair({ keySize: 2048, format: 'der-base64' });
-// { publicKey: 'MIIBIjAN...', privateKey: 'MIIEvAIB...' }
+console.log(publicKey);
+// -----BEGIN PUBLIC KEY-----
 ```
 
 ```js [JavaScript (CJS)]
 const { rsaGenerateKeyPair } = require('l-js-fn/crypto');
 
 const { publicKey, privateKey } = rsaGenerateKeyPair();
-console.log(publicKey);
-// -----BEGIN PUBLIC KEY-----
-// ...
 ```
 :::
+
+### 公钥加密 / 私钥解密
+
 ::: code-group
 ```ts [TypeScript]
 import { rsaGenerateKeyPair, rsaEncrypt, rsaDecrypt } from 'l-js-fn/crypto';
 
 const { publicKey, privateKey } = rsaGenerateKeyPair();
 
-// 公钥加密
 const encrypted = rsaEncrypt('Hello RSA', { publicKey });
-
-// 私钥解密
 const decrypted = rsaDecrypt(encrypted, { privateKey });
 // 'Hello RSA'
 
@@ -577,18 +515,8 @@ const hexDec = rsaDecrypt(hexEnc, { privateKey, outputEncoding: 'hex' });
 import { rsaGenerateKeyPair, rsaEncrypt, rsaDecrypt } from 'l-js-fn/crypto';
 
 const { publicKey, privateKey } = rsaGenerateKeyPair();
-
-// 公钥加密
 const encrypted = rsaEncrypt('Hello RSA', { publicKey });
-
-// 私钥解密
 const decrypted = rsaDecrypt(encrypted, { privateKey });
-// 'Hello RSA'
-
-// hex 输出编码
-const hexEnc = rsaEncrypt('data', { publicKey, outputEncoding: 'hex' });
-const hexDec = rsaDecrypt(hexEnc, { privateKey, outputEncoding: 'hex' });
-// 'data'
 ```
 
 ```js [JavaScript (CJS)]
@@ -597,110 +525,69 @@ const { rsaGenerateKeyPair, rsaEncrypt, rsaDecrypt } = require('l-js-fn/crypto')
 const { publicKey, privateKey } = rsaGenerateKeyPair();
 const encrypted = rsaEncrypt('Hello RSA', { publicKey });
 const decrypted = rsaDecrypt(encrypted, { privateKey });
-// 'Hello RSA'
 ```
 :::
+
+### 实际场景：前端加密敏感数据
+
 ::: code-group
 ```ts [TypeScript]
 import { rsaGenerateKeyPair, rsaEncrypt, rsaDecrypt } from 'l-js-fn/crypto';
-
-// 服务端生成密钥对，公钥返回给前端，私钥安全保存
-const { publicKey, privateKey } = rsaGenerateKeyPair({ keySize: 2048 });
-
-// === 前端：使用公钥加密用户密码 ===
-function encryptLoginData(password: string, pubKey: string) {
-  return rsaEncrypt(password, { publicKey: pubKey });
-}
-
-const encryptedPassword = encryptLoginData('userPassword123', publicKey);
-
-// 发送 encryptedPassword 到服务端...
-
-// === 服务端：使用私钥解密 ===
-function decryptLoginData(encrypted: string, privKey: string) {
-  return rsaDecrypt(encrypted, { privateKey: privKey });
-}
-
-const originalPassword = decryptLoginData(encryptedPassword, privateKey);
-// 'userPassword123'
-```
-
-```js [JavaScript (ESM)]
-import { rsaGenerateKeyPair, rsaEncrypt, rsaDecrypt } from 'l-js-fn/crypto';
-
-// 服务端生成密钥对，公钥返回给前端，私钥安全保存
-const { publicKey, privateKey } = rsaGenerateKeyPair({ keySize: 2048 });
-
-// === 前端：使用公钥加密用户密码 ===
-function encryptLoginData(password: string, pubKey: string) {
-  return rsaEncrypt(password, { publicKey: pubKey });
-}
-
-const encryptedPassword = encryptLoginData('userPassword123', publicKey);
-
-// 发送 encryptedPassword 到服务端...
-
-// === 服务端：使用私钥解密 ===
-function decryptLoginData(encrypted: string, privKey: string) {
-  return rsaDecrypt(encrypted, { privateKey: privKey });
-}
-
-const originalPassword = decryptLoginData(encryptedPassword, privateKey);
-// 'userPassword123'
-```
-
-```js [JavaScript (CJS)]
-const { rsaGenerateKeyPair, rsaEncrypt, rsaDecrypt } = require('l-js-fn/crypto');
 
 const { publicKey, privateKey } = rsaGenerateKeyPair({ keySize: 2048 });
 
 // 前端加密
-const encrypted = rsaEncrypt('userPassword123', { publicKey });
+function encryptLoginData(password: string, pubKey: string) {
+  return rsaEncrypt(password, { publicKey: pubKey });
+}
 
 // 服务端解密
-const original = rsaDecrypt(encrypted, { privateKey });
+function decryptLoginData(encrypted: string, privKey: string) {
+  return rsaDecrypt(encrypted, { privateKey: privKey });
+}
+
+const encrypted = encryptLoginData('userPassword123', publicKey);
+const original = decryptLoginData(encrypted, privateKey);
 // 'userPassword123'
 ```
+
+```js [JavaScript (ESM)]
+import { rsaGenerateKeyPair, rsaEncrypt, rsaDecrypt } from 'l-js-fn/crypto';
+
+const { publicKey, privateKey } = rsaGenerateKeyPair({ keySize: 2048 });
+const encrypted = rsaEncrypt('userPassword123', { publicKey });
+const original = rsaDecrypt(encrypted, { privateKey });
+```
+
+```js [JavaScript (CJS)]
+const { rsaGenerateKeyPair, rsaEncrypt, rsaDecrypt } = require('l-js-fn/crypto');
+
+const { publicKey, privateKey } = rsaGenerateKeyPair({ keySize: 2048 });
+const encrypted = rsaEncrypt('userPassword123', { publicKey });
+const original = rsaDecrypt(encrypted, { privateKey });
+```
 :::
+
+### 实际场景：JSON 数据加密
+
 ::: code-group
 ```ts [TypeScript]
 import { rsaGenerateKeyPair, rsaEncrypt, rsaDecrypt } from 'l-js-fn/crypto';
 
 const { publicKey, privateKey } = rsaGenerateKeyPair();
 
-const userData = JSON.stringify({
-  name: 'Alice',
-  email: 'alice@example.com',
-  phone: '13800138000',
-});
-
-// 加密 JSON
+const userData = JSON.stringify({ name: 'Alice', email: 'alice@example.com' });
 const encrypted = rsaEncrypt(userData, { publicKey });
-
-// 解密并解析
-const decrypted = rsaDecrypt(encrypted, { privateKey });
-const parsed = JSON.parse(decrypted);
-// { name: 'Alice', email: 'alice@example.com', phone: '13800138000' }
+const parsed = JSON.parse(rsaDecrypt(encrypted, { privateKey }));
+// { name: 'Alice', email: 'alice@example.com' }
 ```
 
 ```js [JavaScript (ESM)]
 import { rsaGenerateKeyPair, rsaEncrypt, rsaDecrypt } from 'l-js-fn/crypto';
 
 const { publicKey, privateKey } = rsaGenerateKeyPair();
-
-const userData = JSON.stringify({
-  name: 'Alice',
-  email: 'alice@example.com',
-  phone: '13800138000',
-});
-
-// 加密 JSON
-const encrypted = rsaEncrypt(userData, { publicKey });
-
-// 解密并解析
-const decrypted = rsaDecrypt(encrypted, { privateKey });
-const parsed = JSON.parse(decrypted);
-// { name: 'Alice', email: 'alice@example.com', phone: '13800138000' }
+const data = JSON.stringify({ name: 'Alice', email: 'alice@example.com' });
+const parsed = JSON.parse(rsaDecrypt(rsaEncrypt(data, { publicKey }), { privateKey }));
 ```
 
 ```js [JavaScript (CJS)]
@@ -708,19 +595,46 @@ const { rsaGenerateKeyPair, rsaEncrypt, rsaDecrypt } = require('l-js-fn/crypto')
 
 const { publicKey, privateKey } = rsaGenerateKeyPair();
 const data = JSON.stringify({ name: 'Alice', email: 'alice@example.com' });
-const encrypted = rsaEncrypt(data, { publicKey });
-const parsed = JSON.parse(rsaDecrypt(encrypted, { privateKey }));
+const parsed = JSON.parse(rsaDecrypt(rsaEncrypt(data, { publicKey }), { privateKey }));
 ```
 :::
+
+---
+
+## SM2 — 国密非对称加密
+
+SM2 椭圆曲线公钥密码算法，所有方法均为异步，按需依赖 `sm-crypto`。
+
+> **依赖安装**：`npm install sm-crypto`
+
+### 相关类型
+
+```ts
+interface Sm2KeyPair {
+  publicKey: string;
+  privateKey: string;
+}
+
+interface Sm2EncryptOptions {
+  publicKey: string;
+  outputEncoding?: 'hex' | 'base64';
+}
+
+interface Sm2DecryptOptions {
+  privateKey: string;
+}
+```
+
+### 生成密钥对
+
 ::: code-group
 ```ts [TypeScript]
 import { sm2GenerateKeyPair } from 'l-js-fn/crypto';
 
 const { publicKey, privateKey } = await sm2GenerateKeyPair();
-// publicKey:  '04a1b2c3...' (130 位 hex 字符串)
-// privateKey: '0123456789...' (64 位 hex 字符串)
+// publicKey:  '04a1b2c3...' (130 位 hex)
+// privateKey: '0123456789...' (64 位 hex)
 
-// 每次生成的密钥对不同
 const pair2 = await sm2GenerateKeyPair();
 pair2.publicKey !== publicKey; // true
 ```
@@ -728,13 +642,10 @@ pair2.publicKey !== publicKey; // true
 ```js [JavaScript (ESM)]
 import { sm2GenerateKeyPair } from 'l-js-fn/crypto';
 
-const { publicKey, privateKey } = await sm2GenerateKeyPair();
-// publicKey:  '04a1b2c3...' (130 位 hex 字符串)
-// privateKey: '0123456789...' (64 位 hex 字符串)
-
-// 每次生成的密钥对不同
-const pair2 = await sm2GenerateKeyPair();
-pair2.publicKey !== publicKey; // true
+(async () => {
+  const { publicKey, privateKey } = await sm2GenerateKeyPair();
+  console.log(publicKey.length); // 130
+})();
 ```
 
 ```js [JavaScript (CJS)]
@@ -742,10 +653,12 @@ const { sm2GenerateKeyPair } = require('l-js-fn/crypto');
 
 (async () => {
   const { publicKey, privateKey } = await sm2GenerateKeyPair();
-  console.log(publicKey.length); // 130
 })();
 ```
 :::
+
+### 公钥加密 / 私钥解密
+
 ::: code-group
 ```ts [TypeScript]
 import { sm2GenerateKeyPair, sm2Encrypt, sm2Decrypt } from 'l-js-fn/crypto';
@@ -758,9 +671,9 @@ const decHex = await sm2Decrypt(encHex, { privateKey });
 // 'Hello SM2'
 
 // Base64 输出
-const encBase64 = await sm2Encrypt('data', { publicKey, outputEncoding: 'base64' });
-const decBase64 = await sm2Decrypt(encBase64, { privateKey });
-// 'data'（自动识别 base64 格式密文）
+const encB64 = await sm2Encrypt('data', { publicKey, outputEncoding: 'base64' });
+const decB64 = await sm2Decrypt(encB64, { privateKey });
+// 'data'
 
 // 中文数据
 const encCn = await sm2Encrypt('你好世界', { publicKey });
@@ -771,22 +684,11 @@ const decCn = await sm2Decrypt(encCn, { privateKey });
 ```js [JavaScript (ESM)]
 import { sm2GenerateKeyPair, sm2Encrypt, sm2Decrypt } from 'l-js-fn/crypto';
 
-const { publicKey, privateKey } = await sm2GenerateKeyPair();
-
-// Hex 输出（默认）
-const encHex = await sm2Encrypt('Hello SM2', { publicKey });
-const decHex = await sm2Decrypt(encHex, { privateKey });
-// 'Hello SM2'
-
-// Base64 输出
-const encBase64 = await sm2Encrypt('data', { publicKey, outputEncoding: 'base64' });
-const decBase64 = await sm2Decrypt(encBase64, { privateKey });
-// 'data'（自动识别 base64 格式密文）
-
-// 中文数据
-const encCn = await sm2Encrypt('你好世界', { publicKey });
-const decCn = await sm2Decrypt(encCn, { privateKey });
-// '你好世界'
+(async () => {
+  const { publicKey, privateKey } = await sm2GenerateKeyPair();
+  const encrypted = await sm2Encrypt('Hello', { publicKey });
+  const decrypted = await sm2Decrypt(encrypted, { privateKey });
+})();
 ```
 
 ```js [JavaScript (CJS)]
@@ -796,65 +698,45 @@ const { sm2GenerateKeyPair, sm2Encrypt, sm2Decrypt } = require('l-js-fn/crypto')
   const { publicKey, privateKey } = await sm2GenerateKeyPair();
   const encrypted = await sm2Encrypt('Hello', { publicKey });
   const decrypted = await sm2Decrypt(encrypted, { privateKey });
-  console.log(decrypted); // 'Hello'
 })();
 ```
 :::
+
+### 实际场景：国密通信加密
+
 ::: code-group
 ```ts [TypeScript]
 import { sm2GenerateKeyPair, sm2Encrypt, sm2Decrypt } from 'l-js-fn/crypto';
 
-// 服务端生成密钥对
 const { publicKey, privateKey } = await sm2GenerateKeyPair();
-// 将 publicKey 发送给客户端，privateKey 安全保存
 
-// === 客户端：使用公钥加密请求数据 ===
+// 客户端加密
 async function encryptRequest(data: string, pubKey: string) {
   return await sm2Encrypt(data, { publicKey: pubKey, outputEncoding: 'base64' });
 }
 
-const securePayload = await encryptRequest(
+const payload = await encryptRequest(
   JSON.stringify({ name: 'Alice', idCard: '110101199001011234' }),
   publicKey
 );
-// 发送 securePayload 到服务端
 
-// === 服务端：使用私钥解密 ===
+// 服务端解密
 async function decryptRequest(encrypted: string, privKey: string) {
   return await sm2Decrypt(encrypted, { privateKey: privKey });
 }
 
-const original = await decryptRequest(securePayload, privateKey);
-const parsed = JSON.parse(original);
+const original = JSON.parse(await decryptRequest(payload, privateKey));
 // { name: 'Alice', idCard: '110101199001011234' }
 ```
 
 ```js [JavaScript (ESM)]
 import { sm2GenerateKeyPair, sm2Encrypt, sm2Decrypt } from 'l-js-fn/crypto';
 
-// 服务端生成密钥对
-const { publicKey, privateKey } = await sm2GenerateKeyPair();
-// 将 publicKey 发送给客户端，privateKey 安全保存
-
-// === 客户端：使用公钥加密请求数据 ===
-async function encryptRequest(data: string, pubKey: string) {
-  return await sm2Encrypt(data, { publicKey: pubKey, outputEncoding: 'base64' });
-}
-
-const securePayload = await encryptRequest(
-  JSON.stringify({ name: 'Alice', idCard: '110101199001011234' }),
-  publicKey
-);
-// 发送 securePayload 到服务端
-
-// === 服务端：使用私钥解密 ===
-async function decryptRequest(encrypted: string, privKey: string) {
-  return await sm2Decrypt(encrypted, { privateKey: privKey });
-}
-
-const original = await decryptRequest(securePayload, privateKey);
-const parsed = JSON.parse(original);
-// { name: 'Alice', idCard: '110101199001011234' }
+(async () => {
+  const { publicKey, privateKey } = await sm2GenerateKeyPair();
+  const enc = await sm2Encrypt('sensitive data', { publicKey, outputEncoding: 'base64' });
+  const dec = await sm2Decrypt(enc, { privateKey });
+})();
 ```
 
 ```js [JavaScript (CJS)]
@@ -862,23 +744,39 @@ const { sm2GenerateKeyPair, sm2Encrypt, sm2Decrypt } = require('l-js-fn/crypto')
 
 (async () => {
   const { publicKey, privateKey } = await sm2GenerateKeyPair();
-
-  // 加密
-  const enc = await sm2Encrypt('sensitive data', { publicKey, outputEncoding: 'base64' });
-
-  // 解密
+  const enc = await sm2Encrypt('data', { publicKey, outputEncoding: 'base64' });
   const dec = await sm2Decrypt(enc, { privateKey });
-  console.log(dec); // 'sensitive data'
 })();
 ```
 :::
+
+---
+
+## SM4 — 国密对称加密
+
+SM4 分组密码算法，所有方法均为异步，按需依赖 `sm-crypto`。CBC 模式未指定 IV 时会自动生成随机 IV。
+
+> **依赖安装**：`npm install sm-crypto`
+
+### Sm4Options
+
+```ts
+interface Sm4Options {
+  key: string;
+  iv?: string;
+  mode?: 'cbc' | 'ecb';
+  outputEncoding?: 'hex' | 'base64';
+}
+```
+
+### 基础加密解密
+
 ::: code-group
 ```ts [TypeScript]
 import { sm4Encrypt, sm4Decrypt } from 'l-js-fn/crypto';
 
 const KEY = '0123456789abcdeffedcba9876543210';
 
-// CBC 模式（默认），自动生成随机 IV
 const encrypted = await sm4Encrypt('Hello SM4', { key: KEY });
 const decrypted = await sm4Decrypt(encrypted, { key: KEY });
 // 'Hello SM4'
@@ -886,17 +784,6 @@ const decrypted = await sm4Decrypt(encrypted, { key: KEY });
 
 ```js [JavaScript (ESM)]
 import { sm4Encrypt, sm4Decrypt } from 'l-js-fn/crypto';
-
-const KEY = '0123456789abcdeffedcba9876543210';
-
-// CBC 模式（默认），自动生成随机 IV
-const encrypted = await sm4Encrypt('Hello SM4', { key: KEY });
-const decrypted = await sm4Decrypt(encrypted, { key: KEY });
-// 'Hello SM4'
-```
-
-```js [JavaScript (CJS)]
-const { sm4Encrypt, sm4Decrypt } = require('l-js-fn/crypto');
 
 const KEY = '0123456789abcdeffedcba9876543210';
 
@@ -905,7 +792,20 @@ const KEY = '0123456789abcdeffedcba9876543210';
   const decrypted = await sm4Decrypt(encrypted, { key: KEY });
 })();
 ```
+
+```js [JavaScript (CJS)]
+const { sm4Encrypt, sm4Decrypt } = require('l-js-fn/crypto');
+const KEY = '0123456789abcdeffedcba9876543210';
+
+(async () => {
+  const encrypted = await sm4Encrypt('Hello SM4', { key: KEY });
+  const decrypted = await sm4Decrypt(encrypted, { key: KEY });
+})();
+```
 :::
+
+### 自定义 IV
+
 ::: code-group
 ```ts [TypeScript]
 import { sm4Encrypt, sm4Decrypt } from 'l-js-fn/crypto';
@@ -926,12 +826,10 @@ const IV = '000102030405060708090a0b0c0d0e0f';
 
 const enc = await sm4Encrypt('data', { key: KEY, iv: IV });
 const dec = await sm4Decrypt(enc, { key: KEY, iv: IV });
-// 'data'
 ```
 
 ```js [JavaScript (CJS)]
 const { sm4Encrypt, sm4Decrypt } = require('l-js-fn/crypto');
-
 const KEY = '0123456789abcdeffedcba9876543210';
 const IV = '000102030405060708090a0b0c0d0e0f';
 
@@ -939,6 +837,9 @@ const enc = await sm4Encrypt('data', { key: KEY, iv: IV });
 const dec = await sm4Decrypt(enc, { key: KEY, iv: IV });
 ```
 :::
+
+### ECB 模式与输出编码
+
 ::: code-group
 ```ts [TypeScript]
 import { sm4Encrypt, sm4Decrypt } from 'l-js-fn/crypto';
@@ -948,38 +849,24 @@ const KEY = '0123456789abcdeffedcba9876543210';
 // ECB 模式
 const encEcb = await sm4Encrypt('data', { key: KEY, mode: 'ecb' });
 const decEcb = await sm4Decrypt(encEcb, { key: KEY, mode: 'ecb' });
-// 'data'
 
 // Hex 输出（默认）
 const encHex = await sm4Encrypt('data', { key: KEY, outputEncoding: 'hex' });
 const decHex = await sm4Decrypt(encHex, { key: KEY, outputEncoding: 'hex' });
-// 'data'
 
 // Base64 输出
 const encB64 = await sm4Encrypt('data', { key: KEY, outputEncoding: 'base64' });
 const decB64 = await sm4Decrypt(encB64, { key: KEY, outputEncoding: 'base64' });
-// 'data'
 ```
 
 ```js [JavaScript (ESM)]
 import { sm4Encrypt, sm4Decrypt } from 'l-js-fn/crypto';
-
 const KEY = '0123456789abcdeffedcba9876543210';
 
-// ECB 模式
-const encEcb = await sm4Encrypt('data', { key: KEY, mode: 'ecb' });
-const decEcb = await sm4Decrypt(encEcb, { key: KEY, mode: 'ecb' });
-// 'data'
-
-// Hex 输出（默认）
-const encHex = await sm4Encrypt('data', { key: KEY, outputEncoding: 'hex' });
-const decHex = await sm4Decrypt(encHex, { key: KEY, outputEncoding: 'hex' });
-// 'data'
-
-// Base64 输出
-const encB64 = await sm4Encrypt('data', { key: KEY, outputEncoding: 'base64' });
-const decB64 = await sm4Decrypt(encB64, { key: KEY, outputEncoding: 'base64' });
-// 'data'
+(async () => {
+  const enc = await sm4Encrypt('data', { key: KEY, mode: 'ecb' });
+  const dec = await sm4Decrypt(enc, { key: KEY, mode: 'ecb' });
+})();
 ```
 
 ```js [JavaScript (CJS)]
@@ -992,11 +879,13 @@ const KEY = '0123456789abcdeffedcba9876543210';
 })();
 ```
 :::
+
+### 实际场景：国密业务数据加密
+
 ::: code-group
 ```ts [TypeScript]
 import { sm4Encrypt, sm4Decrypt } from 'l-js-fn/crypto';
 
-// 生成随机的 SM4 密钥（32 位 hex）
 function generateSm4Key(): string {
   return Array.from({ length: 32 }, () =>
     Math.floor(Math.random() * 16).toString(16)
@@ -1004,9 +893,7 @@ function generateSm4Key(): string {
 }
 
 const sm4Key = generateSm4Key();
-// 'a3f1e204b7c8d9056e7a1234ab5690c1'
 
-// 加密业务数据
 const businessData = JSON.stringify({
   orderId: '202401010001',
   amount: '100.00',
@@ -1014,67 +901,35 @@ const businessData = JSON.stringify({
 });
 
 const encrypted = await sm4Encrypt(businessData, {
-  key: sm4Key,
-  outputEncoding: 'base64',
-  mode: 'cbc',
+  key: sm4Key, outputEncoding: 'base64', mode: 'cbc',
 });
 
-// 解密
 const decrypted = await sm4Decrypt(encrypted, {
-  key: sm4Key,
-  outputEncoding: 'base64',
-  mode: 'cbc',
+  key: sm4Key, outputEncoding: 'base64', mode: 'cbc',
 });
 const data = JSON.parse(decrypted);
-// { orderId: '202401010001', amount: '100.00', timestamp: 1704067200000 }
+// { orderId: '202401010001', amount: '100.00', ... }
 ```
 
 ```js [JavaScript (ESM)]
 import { sm4Encrypt, sm4Decrypt } from 'l-js-fn/crypto';
-
-// 生成随机的 SM4 密钥（32 位 hex）
-function generateSm4Key(): string {
-  return Array.from({ length: 32 }, () =>
-    Math.floor(Math.random() * 16).toString(16)
-  ).join('');
-}
-
-const sm4Key = generateSm4Key();
-// 'a3f1e204b7c8d9056e7a1234ab5690c1'
-
-// 加密业务数据
-const businessData = JSON.stringify({
-  orderId: '202401010001',
-  amount: '100.00',
-  timestamp: Date.now(),
-});
-
-const encrypted = await sm4Encrypt(businessData, {
-  key: sm4Key,
-  outputEncoding: 'base64',
-  mode: 'cbc',
-});
-
-// 解密
-const decrypted = await sm4Decrypt(encrypted, {
-  key: sm4Key,
-  outputEncoding: 'base64',
-  mode: 'cbc',
-});
-const data = JSON.parse(decrypted);
-// { orderId: '202401010001', amount: '100.00', timestamp: 1704067200000 }
-```
-
-```js [JavaScript (CJS)]
-const { sm4Encrypt, sm4Decrypt } = require('l-js-fn/crypto');
-
 const KEY = '0123456789abcdeffedcba9876543210';
 
 (async () => {
   const data = JSON.stringify({ orderId: '001', amount: '100.00' });
   const enc = await sm4Encrypt(data, { key: KEY, outputEncoding: 'base64' });
   const dec = JSON.parse(await sm4Decrypt(enc, { key: KEY, outputEncoding: 'base64' }));
-  console.log(dec); // { orderId: '001', amount: '100.00' }
+})();
+```
+
+```js [JavaScript (CJS)]
+const { sm4Encrypt, sm4Decrypt } = require('l-js-fn/crypto');
+const KEY = '0123456789abcdeffedcba9876543210';
+
+(async () => {
+  const data = JSON.stringify({ orderId: '001', amount: '100.00' });
+  const enc = await sm4Encrypt(data, { key: KEY, outputEncoding: 'base64' });
+  const dec = JSON.parse(await sm4Decrypt(enc, { key: KEY, outputEncoding: 'base64' }));
 })();
 ```
 :::
