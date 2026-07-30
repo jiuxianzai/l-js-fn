@@ -73,7 +73,7 @@
 		"reload": "rimraf package-lock.json && rimraf node_modules && npm install",
 		"dev": "tsup src/index.ts --format esm,cjs --dts --minify --treeshake --watch",
 		"build": "npm run clean && tsup",
-		"test": "NODE_NO_WARNINGS=1 NODE_OPTIONS=--experimental-vm-modules jest",
+		"test": "NODE_NO_WARNINGS=1 NODE_OPTIONS=--experimental-vm-modules jest && NODE_NO_WARNINGS=1 node scripts/test-dist-esm.mjs",
 		"test:coverage": "NODE_NO_WARNINGS=1 NODE_OPTIONS=--experimental-vm-modules jest --coverage",
 		"test:watch": "NODE_NO_WARNINGS=1 NODE_OPTIONS=--experimental-vm-modules jest --watch",
 		"docs:dev": "vitepress dev docs",

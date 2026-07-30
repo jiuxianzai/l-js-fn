@@ -4,15 +4,16 @@
 		"module": "ESNext",
 		"moduleResolution": "bundler",
 		"baseUrl": ".",
+		"ignoreDeprecations": "6.0",
 		"declaration": true,
 		"declarationDir": "dist",
 		"outDir": "dist",
 		"strict": true,
 		"esModuleInterop": true,
 		"allowImportingTsExtensions": true,
-    "noEmit": true,
-    "skipLibCheck": true,
-    "lib": ["ES2019", "DOM", "dom.iterable"],
+		"noEmit": true,
+		"skipLibCheck": true,
+		"lib": ["ES2019", "DOM", "dom.iterable"],
 		"paths": {
 			"@/*": ["src/*"]
 		}
