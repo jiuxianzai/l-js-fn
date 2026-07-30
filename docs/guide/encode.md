@@ -4,7 +4,8 @@
 
 **导入方式：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import {
   base64Encode, base64Decode,
   escapeHTML, unescapeHTML,
@@ -12,6 +13,25 @@ import {
   querystringify, parseQueryString
 } from 'l-js-fn/encode';
 ```
+
+```js [JavaScript (ESM)]
+import {
+  base64Encode, base64Decode,
+  escapeHTML, unescapeHTML,
+  urlEncode, urlDecode,
+  querystringify, parseQueryString
+} from 'l-js-fn/encode';
+```
+
+```js [JavaScript (CJS)]
+const {
+  base64Encode, base64Decode,
+  escapeHTML, unescapeHTML,
+  urlEncode, urlDecode,
+  querystringify, parseQueryString
+} = require('l-js-fn/encode');
+```
+:::
 
 ## Base64
 
@@ -31,12 +51,28 @@ import {
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { base64Encode } from 'l-js-fn/encode';
 
 base64Encode('Hello World'); // 'SGVsbG8gV29ybGQ='
 base64Encode('你好');        // '5L2g5aW9'
 ```
+
+```js [JavaScript (ESM)]
+import { base64Encode } from 'l-js-fn/encode';
+
+base64Encode('Hello World'); // 'SGVsbG8gV29ybGQ='
+base64Encode('你好');        // '5L2g5aW9'
+```
+
+```js [JavaScript (CJS)]
+const { base64Encode } = require('l-js-fn/encode');
+
+base64Encode('Hello World'); // 'SGVsbG8gV29ybGQ='
+base64Encode('你好');        // '5L2g5aW9'
+```
+:::
 
 ### base64Decode Base64解码
 
@@ -54,12 +90,28 @@ base64Encode('你好');        // '5L2g5aW9'
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { base64Decode } from 'l-js-fn/encode';
 
 base64Decode('SGVsbG8gV29ybGQ='); // 'Hello World'
 base64Decode('5L2g5aW9');          // '你好'
 ```
+
+```js [JavaScript (ESM)]
+import { base64Decode } from 'l-js-fn/encode';
+
+base64Decode('SGVsbG8gV29ybGQ='); // 'Hello World'
+base64Decode('5L2g5aW9');          // '你好'
+```
+
+```js [JavaScript (CJS)]
+const { base64Decode } = require('l-js-fn/encode');
+
+base64Decode('SGVsbG8gV29ybGQ='); // 'Hello World'
+base64Decode('5L2g5aW9');          // '你好'
+```
+:::
 
 ## HTML 转义
 
@@ -90,12 +142,28 @@ HTML 转义（防 XSS 攻击）。
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { escapeHTML } from 'l-js-fn/encode';
 
 escapeHTML('<script>alert("XSS")</script>');
 // '&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;'
 ```
+
+```js [JavaScript (ESM)]
+import { escapeHTML } from 'l-js-fn/encode';
+
+escapeHTML('<script>alert("XSS")</script>');
+// '&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;'
+```
+
+```js [JavaScript (CJS)]
+const { escapeHTML } = require('l-js-fn/encode');
+
+escapeHTML('<script>alert("XSS")</script>');
+// '&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;'
+```
+:::
 
 ### unescapeHTML HTML反转义
 
@@ -111,12 +179,28 @@ HTML 反转义。
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { unescapeHTML } from 'l-js-fn/encode';
 
 unescapeHTML('&lt;div&gt;Hello&lt;/div&gt;');
 // '<div>Hello</div>'
 ```
+
+```js [JavaScript (ESM)]
+import { unescapeHTML } from 'l-js-fn/encode';
+
+unescapeHTML('&lt;div&gt;Hello&lt;/div&gt;');
+// '<div>Hello</div>'
+```
+
+```js [JavaScript (CJS)]
+const { unescapeHTML } = require('l-js-fn/encode');
+
+unescapeHTML('&lt;div&gt;Hello&lt;/div&gt;');
+// '<div>Hello</div>'
+```
+:::
 
 ## URL 编码
 
@@ -137,13 +221,31 @@ URL 编码。
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { urlEncode } from 'l-js-fn/encode';
 
 urlEncode('Hello World!');    // 'Hello%20World%21'
 urlEncode('你好世界');         // '%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C'
 urlEncode('a/b', { uri: true }); // 'a/b'（URI 模式保留 /）
 ```
+
+```js [JavaScript (ESM)]
+import { urlEncode } from 'l-js-fn/encode';
+
+urlEncode('Hello World!');    // 'Hello%20World%21'
+urlEncode('你好世界');         // '%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C'
+urlEncode('a/b', { uri: true }); // 'a/b'（URI 模式保留 /）
+```
+
+```js [JavaScript (CJS)]
+const { urlEncode } = require('l-js-fn/encode');
+
+urlEncode('Hello World!');    // 'Hello%20World%21'
+urlEncode('你好世界');         // '%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C'
+urlEncode('a/b', { uri: true }); // 'a/b'（URI 模式保留 /）
+```
+:::
 
 ### urlDecode URL解码
 
@@ -161,7 +263,8 @@ URL 解码。
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { urlDecode } from 'l-js-fn/encode';
 
 urlDecode('Hello%20World');  // 'Hello World'
@@ -170,6 +273,27 @@ urlDecode('%E4%BD%A0%E5%A5%BD'); // '你好'
 // 使用 decodeURIComponent 解码更多字符
 urlDecode('Hello%20World%21', { component: true }); // 'Hello World!'
 ```
+
+```js [JavaScript (ESM)]
+import { urlDecode } from 'l-js-fn/encode';
+
+urlDecode('Hello%20World');  // 'Hello World'
+urlDecode('%E4%BD%A0%E5%A5%BD'); // '你好'
+
+// 使用 decodeURIComponent 解码更多字符
+urlDecode('Hello%20World%21', { component: true }); // 'Hello World!'
+```
+
+```js [JavaScript (CJS)]
+const { urlDecode } = require('l-js-fn/encode');
+
+urlDecode('Hello%20World');  // 'Hello World'
+urlDecode('%E4%BD%A0%E5%A5%BD'); // '你好'
+
+// 使用 decodeURIComponent 解码更多字符
+urlDecode('Hello%20World%21', { component: true }); // 'Hello World!'
+```
+:::
 
 ## 查询字符串
 
@@ -187,7 +311,8 @@ urlDecode('Hello%20World%21', { component: true }); // 'Hello World!'
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { querystringify } from 'l-js-fn/encode';
 
 querystringify({ name: 'John', age: 20 });
@@ -196,6 +321,27 @@ querystringify({ name: 'John', age: 20 });
 querystringify({ a: [1, 2, 3] });
 // 'a=1&a=2&a=3'
 ```
+
+```js [JavaScript (ESM)]
+import { querystringify } from 'l-js-fn/encode';
+
+querystringify({ name: 'John', age: 20 });
+// 'name=John&age=20'
+
+querystringify({ a: [1, 2, 3] });
+// 'a=1&a=2&a=3'
+```
+
+```js [JavaScript (CJS)]
+const { querystringify } = require('l-js-fn/encode');
+
+querystringify({ name: 'John', age: 20 });
+// 'name=John&age=20'
+
+querystringify({ a: [1, 2, 3] });
+// 'a=1&a=2&a=3'
+```
+:::
 
 ### parseQueryString 查询字符串解析
 
@@ -211,7 +357,8 @@ querystringify({ a: [1, 2, 3] });
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { parseQueryString } from 'l-js-fn/encode';
 
 parseQueryString('name=John&age=20');
@@ -220,3 +367,24 @@ parseQueryString('name=John&age=20');
 parseQueryString('?a=1&a=2');
 // { a: ['1', '2'] }
 ```
+
+```js [JavaScript (ESM)]
+import { parseQueryString } from 'l-js-fn/encode';
+
+parseQueryString('name=John&age=20');
+// { name: 'John', age: '20' }
+
+parseQueryString('?a=1&a=2');
+// { a: ['1', '2'] }
+```
+
+```js [JavaScript (CJS)]
+const { parseQueryString } = require('l-js-fn/encode');
+
+parseQueryString('name=John&age=20');
+// { name: 'John', age: '20' }
+
+parseQueryString('?a=1&a=2');
+// { a: ['1', '2'] }
+```
+:::

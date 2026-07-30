@@ -4,7 +4,8 @@
 
 **导入方式：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import {
   formatFileSize, getExtension, getFileName,
   downloadFile, readAsText, readAsDataURL, readAsArrayBuffer,
@@ -12,11 +13,28 @@ import {
 } from 'l-js-fn/file';
 ```
 
+```js [JavaScript (ESM)]
+import {
+  formatFileSize, getExtension, getFileName,
+  downloadFile, readAsText, readAsDataURL, readAsArrayBuffer,
+  isImage, isVideo, isAudio, isPDF
+} from 'l-js-fn/file';
+```
+
+```js [JavaScript (CJS)]
+const {
+  formatFileSize, getExtension, getFileName,
+  downloadFile, readAsText, readAsDataURL, readAsArrayBuffer,
+  isImage, isVideo, isAudio, isPDF
+} = require('l-js-fn/file');
+```
+:::
+
 ## FileSizeUnit
 
 文件大小单位枚举：
 
-```typescript
+```ts
 enum FileSizeUnit {
   Byte = 'B',
   KiloByte = 'KB',
@@ -30,7 +48,7 @@ enum FileSizeUnit {
 
 文件大小信息接口：
 
-```typescript
+```ts
 interface FileSizeInfo {
   formatted: string;  // 格式化后的字符串
   value: number;      // 数值
@@ -57,7 +75,8 @@ interface FileSizeInfo {
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { formatFileSize } from 'l-js-fn/file';
 
 formatFileSize(1024);
@@ -73,6 +92,39 @@ formatFileSize(1000, { base: 1000 });
 // { formatted: '1 KB', value: 1, unit: 'KB' }
 ```
 
+```js [JavaScript (ESM)]
+import { formatFileSize } from 'l-js-fn/file';
+
+formatFileSize(1024);
+// { formatted: '1 KB', value: 1, unit: 'KB' }
+
+formatFileSize(1536000);
+// { formatted: '1.46 MB', value: 1.46, unit: 'MB' }
+
+formatFileSize(1024, { precision: 0 });
+// { formatted: '1 KB', value: 1, unit: 'KB' }
+
+formatFileSize(1000, { base: 1000 });
+// { formatted: '1 KB', value: 1, unit: 'KB' }
+```
+
+```js [JavaScript (CJS)]
+const { formatFileSize } = require('l-js-fn/file');
+
+formatFileSize(1024);
+// { formatted: '1 KB', value: 1, unit: 'KB' }
+
+formatFileSize(1536000);
+// { formatted: '1.46 MB', value: 1.46, unit: 'MB' }
+
+formatFileSize(1024, { precision: 0 });
+// { formatted: '1 KB', value: 1, unit: 'KB' }
+
+formatFileSize(1000, { base: 1000 });
+// { formatted: '1 KB', value: 1, unit: 'KB' }
+```
+:::
+
 ## getExtension 获取文件后缀
 
 获取文件扩展名（包含点号）。
@@ -87,7 +139,8 @@ formatFileSize(1000, { base: 1000 });
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { getExtension } from 'l-js-fn/file';
 
 getExtension('image.png');          // '.png'
@@ -95,6 +148,25 @@ getExtension('/path/to/file.txt');  // '.txt'
 getExtension('filename');           // ''
 getExtension('.gitignore');         // '.gitignore'
 ```
+
+```js [JavaScript (ESM)]
+import { getExtension } from 'l-js-fn/file';
+
+getExtension('image.png');          // '.png'
+getExtension('/path/to/file.txt');  // '.txt'
+getExtension('filename');           // ''
+getExtension('.gitignore');         // '.gitignore'
+```
+
+```js [JavaScript (CJS)]
+const { getExtension } = require('l-js-fn/file');
+
+getExtension('image.png');          // '.png'
+getExtension('/path/to/file.txt');  // '.txt'
+getExtension('filename');           // ''
+getExtension('.gitignore');         // '.gitignore'
+```
+:::
 
 ## getFileName 获取文件名
 
@@ -110,12 +182,28 @@ getExtension('.gitignore');         // '.gitignore'
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { getFileName } from 'l-js-fn/file';
 
 getFileName('/path/to/image.png');  // 'image'
 getFileName('document.pdf');        // 'document'
 ```
+
+```js [JavaScript (ESM)]
+import { getFileName } from 'l-js-fn/file';
+
+getFileName('/path/to/image.png');  // 'image'
+getFileName('document.pdf');        // 'document'
+```
+
+```js [JavaScript (CJS)]
+const { getFileName } = require('l-js-fn/file');
+
+getFileName('/path/to/image.png');  // 'image'
+getFileName('document.pdf');        // 'document'
+```
+:::
 
 ## downloadFile 下载文件
 
@@ -132,7 +220,8 @@ getFileName('document.pdf');        // 'document'
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { downloadFile } from 'l-js-fn/file';
 
 // 下载文本文件
@@ -144,6 +233,33 @@ const data = { name: 'John', age: 20 };
 const jsonBlob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
 downloadFile(jsonBlob, 'data.json');
 ```
+
+```js [JavaScript (ESM)]
+import { downloadFile } from 'l-js-fn/file';
+
+// 下载文本文件
+const blob = new Blob(['Hello World'], { type: 'text/plain' });
+downloadFile(blob, 'hello.txt');
+
+// 下载 JSON 数据
+const data = { name: 'John', age: 20 };
+const jsonBlob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+downloadFile(jsonBlob, 'data.json');
+```
+
+```js [JavaScript (CJS)]
+const { downloadFile } = require('l-js-fn/file');
+
+// 下载文本文件
+const blob = new Blob(['Hello World'], { type: 'text/plain' });
+downloadFile(blob, 'hello.txt');
+
+// 下载 JSON 数据
+const data = { name: 'John', age: 20 };
+const jsonBlob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+downloadFile(jsonBlob, 'data.json');
+```
+:::
 
 ## readAsText 读取为文本
 
@@ -160,7 +276,8 @@ downloadFile(jsonBlob, 'data.json');
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { readAsText } from 'l-js-fn/file';
 
 const input = document.querySelector('input[type="file"]');
@@ -170,6 +287,29 @@ input.addEventListener('change', async (e) => {
   console.log(content);
 });
 ```
+
+```js [JavaScript (ESM)]
+import { readAsText } from 'l-js-fn/file';
+
+const input = document.querySelector('input[type="file"]');
+input.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  const content = await readAsText(file);
+  console.log(content);
+});
+```
+
+```js [JavaScript (CJS)]
+const { readAsText } = require('l-js-fn/file');
+
+const input = document.querySelector('input[type="file"]');
+input.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  const content = await readAsText(file);
+  console.log(content);
+});
+```
+:::
 
 ## readAsDataURL 读取为DataURL
 
@@ -185,7 +325,8 @@ input.addEventListener('change', async (e) => {
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { readAsDataURL } from 'l-js-fn/file';
 
 const input = document.querySelector('input[type="file"]');
@@ -195,6 +336,29 @@ input.addEventListener('change', async (e) => {
   img.src = dataUrl; // 直接显示图片
 });
 ```
+
+```js [JavaScript (ESM)]
+import { readAsDataURL } from 'l-js-fn/file';
+
+const input = document.querySelector('input[type="file"]');
+input.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  const dataUrl = await readAsDataURL(file);
+  img.src = dataUrl; // 直接显示图片
+});
+```
+
+```js [JavaScript (CJS)]
+const { readAsDataURL } = require('l-js-fn/file');
+
+const input = document.querySelector('input[type="file"]');
+input.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  const dataUrl = await readAsDataURL(file);
+  img.src = dataUrl; // 直接显示图片
+});
+```
+:::
 
 ## readAsArrayBuffer 读取为ArrayBuffer
 
@@ -210,7 +374,8 @@ input.addEventListener('change', async (e) => {
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { readAsArrayBuffer } from 'l-js-fn/file';
 
 const input = document.querySelector('input[type="file"]');
@@ -220,6 +385,29 @@ input.addEventListener('change', async (e) => {
   console.log(new Uint8Array(buffer));
 });
 ```
+
+```js [JavaScript (ESM)]
+import { readAsArrayBuffer } from 'l-js-fn/file';
+
+const input = document.querySelector('input[type="file"]');
+input.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  const buffer = await readAsArrayBuffer(file);
+  console.log(new Uint8Array(buffer));
+});
+```
+
+```js [JavaScript (CJS)]
+const { readAsArrayBuffer } = require('l-js-fn/file');
+
+const input = document.querySelector('input[type="file"]');
+input.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  const buffer = await readAsArrayBuffer(file);
+  console.log(new Uint8Array(buffer));
+});
+```
+:::
 
 ## 文件类型判断
 
@@ -239,13 +427,31 @@ input.addEventListener('change', async (e) => {
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isImage } from 'l-js-fn/file';
 
 isImage('photo.jpg');    // true
 isImage('image.png');    // true
 isImage('document.pdf'); // false
 ```
+
+```js [JavaScript (ESM)]
+import { isImage } from 'l-js-fn/file';
+
+isImage('photo.jpg');    // true
+isImage('image.png');    // true
+isImage('document.pdf'); // false
+```
+
+```js [JavaScript (CJS)]
+const { isImage } = require('l-js-fn/file');
+
+isImage('photo.jpg');    // true
+isImage('image.png');    // true
+isImage('document.pdf'); // false
+```
+:::
 
 ### isVideo 判断视频文件
 
@@ -263,13 +469,31 @@ isImage('document.pdf'); // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isVideo } from 'l-js-fn/file';
 
 isVideo('movie.mp4');   // true
 isVideo('clip.avi');    // true
 isVideo('audio.mp3');   // false
 ```
+
+```js [JavaScript (ESM)]
+import { isVideo } from 'l-js-fn/file';
+
+isVideo('movie.mp4');   // true
+isVideo('clip.avi');    // true
+isVideo('audio.mp3');   // false
+```
+
+```js [JavaScript (CJS)]
+const { isVideo } = require('l-js-fn/file');
+
+isVideo('movie.mp4');   // true
+isVideo('clip.avi');    // true
+isVideo('audio.mp3');   // false
+```
+:::
 
 ### isAudio 判断音频文件
 
@@ -287,13 +511,31 @@ isVideo('audio.mp3');   // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isAudio } from 'l-js-fn/file';
 
 isAudio('music.mp3');   // true
 isAudio('sound.wav');   // true
 isVideo('video.mp4');   // false
 ```
+
+```js [JavaScript (ESM)]
+import { isAudio } from 'l-js-fn/file';
+
+isAudio('music.mp3');   // true
+isAudio('sound.wav');   // true
+isVideo('video.mp4');   // false
+```
+
+```js [JavaScript (CJS)]
+const { isAudio } = require('l-js-fn/file');
+
+isAudio('music.mp3');   // true
+isAudio('sound.wav');   // true
+isVideo('video.mp4');   // false
+```
+:::
 
 ### isPDF 判断PDF文件
 
@@ -309,9 +551,25 @@ isVideo('video.mp4');   // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isPDF } from 'l-js-fn/file';
 
 isPDF('document.pdf');  // true
 isPDF('file.txt');      // false
 ```
+
+```js [JavaScript (ESM)]
+import { isPDF } from 'l-js-fn/file';
+
+isPDF('document.pdf');  // true
+isPDF('file.txt');      // false
+```
+
+```js [JavaScript (CJS)]
+const { isPDF } = require('l-js-fn/file');
+
+isPDF('document.pdf');  // true
+isPDF('file.txt');      // false
+```
+:::

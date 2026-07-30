@@ -30,7 +30,8 @@
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { dateFormat } from 'l-js-fn';
 
 dateFormat(new Date());                        // '2024-01-01 12:00:00'
@@ -39,6 +40,27 @@ dateFormat(1704067200000);                     // '2024-01-01 00:00:00'
 dateFormat('2024-01-01');                      // '2024-01-01 00:00:00'
 dateFormat(null);                              // ''
 ```
+
+```js [JavaScript (ESM)]
+import { dateFormat } from 'l-js-fn';
+
+dateFormat(new Date());                        // '2024-01-01 12:00:00'
+dateFormat(new Date(), 'yyyy-MM-dd');          // '2024-01-01'
+dateFormat(1704067200000);                     // '2024-01-01 00:00:00'
+dateFormat('2024-01-01');                      // '2024-01-01 00:00:00'
+dateFormat(null);                              // ''
+```
+
+```js [JavaScript (CJS)]
+const { dateFormat } = require('l-js-fn');
+
+dateFormat(new Date());                        // '2024-01-01 12:00:00'
+dateFormat(new Date(), 'yyyy-MM-dd');          // '2024-01-01'
+dateFormat(1704067200000);                     // '2024-01-01 00:00:00'
+dateFormat('2024-01-01');                      // '2024-01-01 00:00:00'
+dateFormat(null);                              // ''
+```
+:::
 
 ## dateSecond 秒数转时间
 
@@ -54,7 +76,8 @@ dateFormat(null);                              // ''
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { dateSecond } from 'l-js-fn';
 
 dateSecond(3661);   // '01:01:01'
@@ -62,6 +85,25 @@ dateSecond(59);     // '00:00:59'
 dateSecond(86400);  // '24:00:00'
 dateSecond(-1);     // '00:00:01'（负数取绝对值处理）
 ```
+
+```js [JavaScript (ESM)]
+import { dateSecond } from 'l-js-fn';
+
+dateSecond(3661);   // '01:01:01'
+dateSecond(59);     // '00:00:59'
+dateSecond(86400);  // '24:00:00'
+dateSecond(-1);     // '00:00:01'（负数取绝对值处理）
+```
+
+```js [JavaScript (CJS)]
+const { dateSecond } = require('l-js-fn');
+
+dateSecond(3661);   // '01:01:01'
+dateSecond(59);     // '00:00:59'
+dateSecond(86400);  // '24:00:00'
+dateSecond(-1);     // '00:00:01'（负数取绝对值处理）
+```
+:::
 
 ## diffDays 计算天数差
 
@@ -78,12 +120,28 @@ dateSecond(-1);     // '00:00:01'（负数取绝对值处理）
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { diffDays } from 'l-js-fn';
 
 diffDays('2024-01-01', '2024-01-03');          // 2
 diffDays(new Date('2024-01-01'), new Date('2024-01-10')); // 9
 ```
+
+```js [JavaScript (ESM)]
+import { diffDays } from 'l-js-fn';
+
+diffDays('2024-01-01', '2024-01-03');          // 2
+diffDays(new Date('2024-01-01'), new Date('2024-01-10')); // 9
+```
+
+```js [JavaScript (CJS)]
+const { diffDays } = require('l-js-fn');
+
+diffDays('2024-01-01', '2024-01-03');          // 2
+diffDays(new Date('2024-01-01'), new Date('2024-01-10')); // 9
+```
+:::
 
 ## formatPassTime 相对时间格式化
 
@@ -99,13 +157,31 @@ diffDays(new Date('2024-01-01'), new Date('2024-01-10')); // 9
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { formatPassTime } from 'l-js-fn';
 
 formatPassTime('2020-01-01 12:12:12'); // '3年前'
 formatPassTime(new Date());             // '刚刚'
 formatPassTime(Date.now() - 60000);     // '1分钟前'
 ```
+
+```js [JavaScript (ESM)]
+import { formatPassTime } from 'l-js-fn';
+
+formatPassTime('2020-01-01 12:12:12'); // '3年前'
+formatPassTime(new Date());             // '刚刚'
+formatPassTime(Date.now() - 60000);     // '1分钟前'
+```
+
+```js [JavaScript (CJS)]
+const { formatPassTime } = require('l-js-fn');
+
+formatPassTime('2020-01-01 12:12:12'); // '3年前'
+formatPassTime(new Date());             // '刚刚'
+formatPassTime(Date.now() - 60000);     // '1分钟前'
+```
+:::
 
 ## monthDays 当月总天数
 
@@ -121,13 +197,31 @@ formatPassTime(Date.now() - 60000);     // '1分钟前'
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { monthDays } from 'l-js-fn';
 
 monthDays('2024-02-01'); // 29（闰年）
 monthDays('2023-02-01'); // 28
 monthDays('2024-01-01'); // 31
 ```
+
+```js [JavaScript (ESM)]
+import { monthDays } from 'l-js-fn';
+
+monthDays('2024-02-01'); // 29（闰年）
+monthDays('2023-02-01'); // 28
+monthDays('2024-01-01'); // 31
+```
+
+```js [JavaScript (CJS)]
+const { monthDays } = require('l-js-fn');
+
+monthDays('2024-02-01'); // 29（闰年）
+monthDays('2023-02-01'); // 28
+monthDays('2024-01-01'); // 31
+```
+:::
 
 ## getTimeDiff 计算时间间隔
 
@@ -146,42 +240,106 @@ monthDays('2024-01-01'); // 31
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { getTimeDiff } from 'l-js-fn';
 
 getTimeDiff('2024-01-01', '2024-01-02'); // 86400000（1天）
 getTimeDiff(new Date('2024-01-01'), new Date('2024-01-02')); // 86400000
 ```
 
+```js [JavaScript (ESM)]
+import { getTimeDiff } from 'l-js-fn';
+
+getTimeDiff('2024-01-01', '2024-01-02'); // 86400000（1天）
+getTimeDiff(new Date('2024-01-01'), new Date('2024-01-02')); // 86400000
+```
+
+```js [JavaScript (CJS)]
+const { getTimeDiff } = require('l-js-fn');
+
+getTimeDiff('2024-01-01', '2024-01-02'); // 86400000（1天）
+getTimeDiff(new Date('2024-01-01'), new Date('2024-01-02')); // 86400000
+```
+:::
+
 ## addDays 日期加减天数
 
 日期加减天数，返回新 Date 对象。
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { addDays } from 'l-js-fn';
 
 addDays(new Date('2024-01-01'), 1);  // 2024-01-02
 addDays(new Date('2024-01-01'), -1); // 2023-12-31
 ```
 
+```js [JavaScript (ESM)]
+import { addDays } from 'l-js-fn';
+
+addDays(new Date('2024-01-01'), 1);  // 2024-01-02
+addDays(new Date('2024-01-01'), -1); // 2023-12-31
+```
+
+```js [JavaScript (CJS)]
+const { addDays } = require('l-js-fn');
+
+addDays(new Date('2024-01-01'), 1);  // 2024-01-02
+addDays(new Date('2024-01-01'), -1); // 2023-12-31
+```
+:::
+
 ## isLeapYear 闰年判断
 
 判断指定年份是否为闰年。
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isLeapYear } from 'l-js-fn';
 
 isLeapYear(2024); // true
 isLeapYear(2023); // false
 ```
 
+```js [JavaScript (ESM)]
+import { isLeapYear } from 'l-js-fn';
+
+isLeapYear(2024); // true
+isLeapYear(2023); // false
+```
+
+```js [JavaScript (CJS)]
+const { isLeapYear } = require('l-js-fn');
+
+isLeapYear(2024); // true
+isLeapYear(2023); // false
+```
+:::
+
 ## getWeekDay 获取中文星期
 
 获取中文星期几。
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { getWeekDay } from 'l-js-fn';
 
 getWeekDay(new Date('2024-01-01')); // '星期一'
 getWeekDay(); // '星期一'（今天）
 ```
+
+```js [JavaScript (ESM)]
+import { getWeekDay } from 'l-js-fn';
+
+getWeekDay(new Date('2024-01-01')); // '星期一'
+getWeekDay(); // '星期一'（今天）
+```
+
+```js [JavaScript (CJS)]
+const { getWeekDay } = require('l-js-fn');
+
+getWeekDay(new Date('2024-01-01')); // '星期一'
+getWeekDay(); // '星期一'（今天）
+```
+:::

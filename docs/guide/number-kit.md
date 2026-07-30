@@ -17,7 +17,8 @@
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { formatNumber } from 'l-js-fn';
 
 // 千分位分割
@@ -32,6 +33,39 @@ formatNumber(1500, true);     // '0.15万'
 // 非数字
 formatNumber('abc');          // 'abc'
 ```
+
+```js [JavaScript (ESM)]
+import { formatNumber } from 'l-js-fn';
+
+// 千分位分割
+formatNumber(1234567);        // '1,234,567'
+formatNumber('1234567');      // '1,234,567'
+
+// 中文单位
+formatNumber(1234567, true);  // '123.46万'
+formatNumber(123456789, true);// '1.23亿'
+formatNumber(1500, true);     // '0.15万'
+
+// 非数字
+formatNumber('abc');          // 'abc'
+```
+
+```js [JavaScript (CJS)]
+const { formatNumber } = require('l-js-fn');
+
+// 千分位分割
+formatNumber(1234567);        // '1,234,567'
+formatNumber('1234567');      // '1,234,567'
+
+// 中文单位
+formatNumber(1234567, true);  // '123.46万'
+formatNumber(123456789, true);// '1.23亿'
+formatNumber(1500, true);     // '0.15万'
+
+// 非数字
+formatNumber('abc');          // 'abc'
+```
+:::
 
 ## toPercent 转百分比
 
@@ -49,7 +83,8 @@ formatNumber('abc');          // 'abc'
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { toPercent } from 'l-js-fn';
 
 toPercent(0.5332);           // '53.32%'
@@ -57,6 +92,25 @@ toPercent(0.5332, 1);        // '53.3%'
 toPercent(0.533234, 2, false); // '53.32%'（截断）
 toPercent(null);             // '0%'
 ```
+
+```js [JavaScript (ESM)]
+import { toPercent } from 'l-js-fn';
+
+toPercent(0.5332);           // '53.32%'
+toPercent(0.5332, 1);        // '53.3%'
+toPercent(0.533234, 2, false); // '53.32%'（截断）
+toPercent(null);             // '0%'
+```
+
+```js [JavaScript (CJS)]
+const { toPercent } = require('l-js-fn');
+
+toPercent(0.5332);           // '53.32%'
+toPercent(0.5332, 1);        // '53.3%'
+toPercent(0.533234, 2, false); // '53.32%'（截断）
+toPercent(null);             // '0%'
+```
+:::
 
 ## random 生成随机数
 
@@ -77,7 +131,8 @@ toPercent(null);             // '0%'
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { random } from 'l-js-fn';
 
 random(10);                    // 0-10 的随机整数
@@ -85,6 +140,25 @@ random(1, 10);                 // 1-10 的随机整数
 random(1, 10, { float: true }); // 1-10 的随机浮点数
 random(-5, 5);                 // -5 到 5 的随机整数
 ```
+
+```js [JavaScript (ESM)]
+import { random } from 'l-js-fn';
+
+random(10);                    // 0-10 的随机整数
+random(1, 10);                 // 1-10 的随机整数
+random(1, 10, { float: true }); // 1-10 的随机浮点数
+random(-5, 5);                 // -5 到 5 的随机整数
+```
+
+```js [JavaScript (CJS)]
+const { random } = require('l-js-fn');
+
+random(10);                    // 0-10 的随机整数
+random(1, 10);                 // 1-10 的随机整数
+random(1, 10, { float: true }); // 1-10 的随机浮点数
+random(-5, 5);                 // -5 到 5 的随机整数
+```
+:::
 
 ## getUniqueRandomIndexes 不重复随机索引
 
@@ -101,18 +175,35 @@ random(-5, 5);                 // -5 到 5 的随机整数
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { getUniqueRandomIndexes } from 'l-js-fn';
 
 getUniqueRandomIndexes(10, 3); // [0, 5, 8]（随机，不重复）
 getUniqueRandomIndexes(5, 5);  // [2, 4, 1, 3, 0]（全部打乱）
 ```
 
+```js [JavaScript (ESM)]
+import { getUniqueRandomIndexes } from 'l-js-fn';
+
+getUniqueRandomIndexes(10, 3); // [0, 5, 8]（随机，不重复）
+getUniqueRandomIndexes(5, 5);  // [2, 4, 1, 3, 0]（全部打乱）
+```
+
+```js [JavaScript (CJS)]
+const { getUniqueRandomIndexes } = require('l-js-fn');
+
+getUniqueRandomIndexes(10, 3); // [0, 5, 8]（随机，不重复）
+getUniqueRandomIndexes(5, 5);  // [2, 4, 1, 3, 0]（全部打乱）
+```
+:::
+
 ## clamp 限制值范围
 
 将数值限制在指定范围内。
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { clamp } from 'l-js-fn';
 
 clamp(5, 0, 10);  // 5
@@ -120,14 +211,49 @@ clamp(-1, 0, 10); // 0
 clamp(15, 0, 10); // 10
 ```
 
+```js [JavaScript (ESM)]
+import { clamp } from 'l-js-fn';
+
+clamp(5, 0, 10);  // 5
+clamp(-1, 0, 10); // 0
+clamp(15, 0, 10); // 10
+```
+
+```js [JavaScript (CJS)]
+const { clamp } = require('l-js-fn');
+
+clamp(5, 0, 10);  // 5
+clamp(-1, 0, 10); // 0
+clamp(15, 0, 10); // 10
+```
+:::
+
 ## round 四舍五入
 
 四舍五入到指定小数位。
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { round } from 'l-js-fn';
 
 round(3.14159, 2); // 3.14
 round(3.14159);    // 3
 round(3.5);        // 4
 ```
+
+```js [JavaScript (ESM)]
+import { round } from 'l-js-fn';
+
+round(3.14159, 2); // 3.14
+round(3.14159);    // 3
+round(3.5);        // 4
+```
+
+```js [JavaScript (CJS)]
+const { round } = require('l-js-fn');
+
+round(3.14159, 2); // 3.14
+round(3.14159);    // 3
+round(3.5);        // 4
+```
+:::

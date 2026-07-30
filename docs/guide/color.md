@@ -6,7 +6,7 @@
 
 HSL 颜色结构类型定义。
 
-```typescript
+```ts
 type HSLColor = { h: number; s: number; l: number };
 ```
 
@@ -18,7 +18,7 @@ type HSLColor = { h: number; s: number; l: number };
 
 颜色模式枚举类型。
 
-```typescript
+```ts
 type ColorMode = 'dark' | 'light';
 ```
 
@@ -36,7 +36,8 @@ type ColorMode = 'dark' | 'light';
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isValidHexColor } from 'l-js-fn';
 
 isValidHexColor('#FF5733');  // true
@@ -44,6 +45,25 @@ isValidHexColor('#F53');     // true（3位简写）
 isValidHexColor('FF5733');   // false（缺少#）
 isValidHexColor('#GGGGGG');  // false
 ```
+
+```js [JavaScript (ESM)]
+import { isValidHexColor } from 'l-js-fn';
+
+isValidHexColor('#FF5733');  // true
+isValidHexColor('#F53');     // true（3位简写）
+isValidHexColor('FF5733');   // false（缺少#）
+isValidHexColor('#GGGGGG');  // false
+```
+
+```js [JavaScript (CJS)]
+const { isValidHexColor } = require('l-js-fn');
+
+isValidHexColor('#FF5733');  // true
+isValidHexColor('#F53');     // true（3位简写）
+isValidHexColor('FF5733');   // false（缺少#）
+isValidHexColor('#GGGGGG');  // false
+```
+:::
 
 ## hexToHSL 十六进制转HSL
 
@@ -59,7 +79,8 @@ isValidHexColor('#GGGGGG');  // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { hexToHSL } from 'l-js-fn';
 
 hexToHSL('#FF5733');
@@ -68,6 +89,27 @@ hexToHSL('#FF5733');
 hexToHSL('#F53');
 // { h: 9, s: 100, l: 60 }
 ```
+
+```js [JavaScript (ESM)]
+import { hexToHSL } from 'l-js-fn';
+
+hexToHSL('#FF5733');
+// { h: 9, s: 100, l: 60 }
+
+hexToHSL('#F53');
+// { h: 9, s: 100, l: 60 }
+```
+
+```js [JavaScript (CJS)]
+const { hexToHSL } = require('l-js-fn');
+
+hexToHSL('#FF5733');
+// { h: 9, s: 100, l: 60 }
+
+hexToHSL('#F53');
+// { h: 9, s: 100, l: 60 }
+```
+:::
 
 ## hslToHex HSL转十六进制
 
@@ -83,12 +125,28 @@ hexToHSL('#F53');
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { hslToHex } from 'l-js-fn';
 
 hslToHex({ h: 9, s: 100, l: 60 });
 // '#FF5733'
 ```
+
+```js [JavaScript (ESM)]
+import { hslToHex } from 'l-js-fn';
+
+hslToHex({ h: 9, s: 100, l: 60 });
+// '#FF5733'
+```
+
+```js [JavaScript (CJS)]
+const { hslToHex } = require('l-js-fn');
+
+hslToHex({ h: 9, s: 100, l: 60 });
+// '#FF5733'
+```
+:::
 
 ## conversionColor 颜色明暗转换
 
@@ -109,7 +167,8 @@ hslToHex({ h: 9, s: 100, l: 60 });
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { conversionColor } from 'l-js-fn';
 
 // 深色模式（降低亮度）
@@ -124,3 +183,36 @@ conversionColor('#FF5733', 'light');
 conversionColor('invalid');
 // '#000000'
 ```
+
+```js [JavaScript (ESM)]
+import { conversionColor } from 'l-js-fn';
+
+// 深色模式（降低亮度）
+conversionColor('#FF5733', 'dark');
+// '#993300'
+
+// 浅色模式（提升亮度）
+conversionColor('#FF5733', 'light');
+// '#FF9980'
+
+// 非法颜色兜底
+conversionColor('invalid');
+// '#000000'
+```
+
+```js [JavaScript (CJS)]
+const { conversionColor } = require('l-js-fn');
+
+// 深色模式（降低亮度）
+conversionColor('#FF5733', 'dark');
+// '#993300'
+
+// 浅色模式（提升亮度）
+conversionColor('#FF5733', 'light');
+// '#FF9980'
+
+// 非法颜色兜底
+conversionColor('invalid');
+// '#000000'
+```
+:::

@@ -4,7 +4,8 @@
 
 **导入方式：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import {
   setStorage, getStorage, removeStorage, clearStorage,
   clearExpiredStorage, hasStorage, getStorageKeys, getStorageLength,
@@ -12,11 +13,28 @@ import {
 } from 'l-js-fn/storage';
 ```
 
+```js [JavaScript (ESM)]
+import {
+  setStorage, getStorage, removeStorage, clearStorage,
+  clearExpiredStorage, hasStorage, getStorageKeys, getStorageLength,
+  setSession, getSession, removeSession, clearSession, hasSession, getSessionKeys
+} from 'l-js-fn/storage';
+```
+
+```js [JavaScript (CJS)]
+const {
+  setStorage, getStorage, removeStorage, clearStorage,
+  clearExpiredStorage, hasStorage, getStorageKeys, getStorageLength,
+  setSession, getSession, removeSession, clearSession, hasSession, getSessionKeys
+} = require('l-js-fn/storage');
+```
+:::
+
 ## localStorage 操作
 
 ### StorageOptions
 
-```typescript
+```ts
 interface StorageOptions {
   expire?: number; // 过期时间（秒），默认 -1（永不过期）
 }
@@ -38,12 +56,28 @@ interface StorageOptions {
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { setStorage } from 'l-js-fn/storage';
 
 setStorage('user', { name: 'John', age: 20 });
 setStorage('token', 'abc123', { expire: 3600 }); // 1小时后过期
 ```
+
+```js [JavaScript (ESM)]
+import { setStorage } from 'l-js-fn/storage';
+
+setStorage('user', { name: 'John', age: 20 });
+setStorage('token', 'abc123', { expire: 3600 }); // 1小时后过期
+```
+
+```js [JavaScript (CJS)]
+const { setStorage } = require('l-js-fn/storage');
+
+setStorage('user', { name: 'John', age: 20 });
+setStorage('token', 'abc123', { expire: 3600 }); // 1小时后过期
+```
+:::
 
 ### getStorage localStorage获取
 
@@ -59,13 +93,31 @@ setStorage('token', 'abc123', { expire: 3600 }); // 1小时后过期
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { getStorage } from 'l-js-fn/storage';
 
 getStorage('user');     // { name: 'John', age: 20 }
 getStorage('expired');  // null（已过期）
 getStorage('notexist'); // null（不存在）
 ```
+
+```js [JavaScript (ESM)]
+import { getStorage } from 'l-js-fn/storage';
+
+getStorage('user');     // { name: 'John', age: 20 }
+getStorage('expired');  // null（已过期）
+getStorage('notexist'); // null（不存在）
+```
+
+```js [JavaScript (CJS)]
+const { getStorage } = require('l-js-fn/storage');
+
+getStorage('user');     // { name: 'John', age: 20 }
+getStorage('expired');  // null（已过期）
+getStorage('notexist'); // null（不存在）
+```
+:::
 
 ### removeStorage localStorage删除
 
@@ -81,11 +133,25 @@ getStorage('notexist'); // null（不存在）
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { removeStorage } from 'l-js-fn/storage';
 
 removeStorage('user');
 ```
+
+```js [JavaScript (ESM)]
+import { removeStorage } from 'l-js-fn/storage';
+
+removeStorage('user');
+```
+
+```js [JavaScript (CJS)]
+const { removeStorage } = require('l-js-fn/storage');
+
+removeStorage('user');
+```
+:::
 
 ### clearStorage localStorage清空
 
@@ -95,11 +161,25 @@ removeStorage('user');
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { clearStorage } from 'l-js-fn/storage';
 
 clearStorage();
 ```
+
+```js [JavaScript (ESM)]
+import { clearStorage } from 'l-js-fn/storage';
+
+clearStorage();
+```
+
+```js [JavaScript (CJS)]
+const { clearStorage } = require('l-js-fn/storage');
+
+clearStorage();
+```
+:::
 
 ### clearExpiredStorage 清理过期数据
 
@@ -109,12 +189,28 @@ clearStorage();
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { clearExpiredStorage } from 'l-js-fn/storage';
 
 const count = clearExpiredStorage();
 console.log(`清理了 ${count} 个过期项`);
 ```
+
+```js [JavaScript (ESM)]
+import { clearExpiredStorage } from 'l-js-fn/storage';
+
+const count = clearExpiredStorage();
+console.log(`清理了 ${count} 个过期项`);
+```
+
+```js [JavaScript (CJS)]
+const { clearExpiredStorage } = require('l-js-fn/storage');
+
+const count = clearExpiredStorage();
+console.log(`清理了 ${count} 个过期项`);
+```
+:::
 
 ### hasStorage
 
@@ -130,11 +226,25 @@ console.log(`清理了 ${count} 个过期项`);
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { hasStorage } from 'l-js-fn/storage';
 
 hasStorage('user'); // true
 ```
+
+```js [JavaScript (ESM)]
+import { hasStorage } from 'l-js-fn/storage';
+
+hasStorage('user'); // true
+```
+
+```js [JavaScript (CJS)]
+const { hasStorage } = require('l-js-fn/storage');
+
+hasStorage('user'); // true
+```
+:::
 
 ### getStorageKeys
 
@@ -144,11 +254,25 @@ hasStorage('user'); // true
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { getStorageKeys } from 'l-js-fn/storage';
 
 getStorageKeys(); // ['user', 'token', 'settings']
 ```
+
+```js [JavaScript (ESM)]
+import { getStorageKeys } from 'l-js-fn/storage';
+
+getStorageKeys(); // ['user', 'token', 'settings']
+```
+
+```js [JavaScript (CJS)]
+const { getStorageKeys } = require('l-js-fn/storage');
+
+getStorageKeys(); // ['user', 'token', 'settings']
+```
+:::
 
 ### getStorageLength
 
@@ -158,11 +282,25 @@ getStorageKeys(); // ['user', 'token', 'settings']
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { getStorageLength } from 'l-js-fn/storage';
 
 getStorageLength(); // 3
 ```
+
+```js [JavaScript (ESM)]
+import { getStorageLength } from 'l-js-fn/storage';
+
+getStorageLength(); // 3
+```
+
+```js [JavaScript (CJS)]
+const { getStorageLength } = require('l-js-fn/storage');
+
+getStorageLength(); // 3
+```
+:::
 
 ## sessionStorage 操作
 
@@ -181,11 +319,25 @@ getStorageLength(); // 3
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { setSession } from 'l-js-fn/storage';
 
 setSession('tabData', { id: 1, name: 'test' });
 ```
+
+```js [JavaScript (ESM)]
+import { setSession } from 'l-js-fn/storage';
+
+setSession('tabData', { id: 1, name: 'test' });
+```
+
+```js [JavaScript (CJS)]
+const { setSession } = require('l-js-fn/storage');
+
+setSession('tabData', { id: 1, name: 'test' });
+```
+:::
 
 ### getSession
 
@@ -201,11 +353,25 @@ setSession('tabData', { id: 1, name: 'test' });
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { getSession } from 'l-js-fn/storage';
 
 getSession('tabData'); // { id: 1, name: 'test' }
 ```
+
+```js [JavaScript (ESM)]
+import { getSession } from 'l-js-fn/storage';
+
+getSession('tabData'); // { id: 1, name: 'test' }
+```
+
+```js [JavaScript (CJS)]
+const { getSession } = require('l-js-fn/storage');
+
+getSession('tabData'); // { id: 1, name: 'test' }
+```
+:::
 
 ### removeSession sessionStorage删除
 
@@ -221,11 +387,25 @@ getSession('tabData'); // { id: 1, name: 'test' }
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { removeSession } from 'l-js-fn/storage';
 
 removeSession('tabData');
 ```
+
+```js [JavaScript (ESM)]
+import { removeSession } from 'l-js-fn/storage';
+
+removeSession('tabData');
+```
+
+```js [JavaScript (CJS)]
+const { removeSession } = require('l-js-fn/storage');
+
+removeSession('tabData');
+```
+:::
 
 ### clearSession
 
@@ -235,11 +415,25 @@ removeSession('tabData');
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { clearSession } from 'l-js-fn/storage';
 
 clearSession();
 ```
+
+```js [JavaScript (ESM)]
+import { clearSession } from 'l-js-fn/storage';
+
+clearSession();
+```
+
+```js [JavaScript (CJS)]
+const { clearSession } = require('l-js-fn/storage');
+
+clearSession();
+```
+:::
 
 ### hasSession
 
@@ -255,11 +449,25 @@ clearSession();
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { hasSession } from 'l-js-fn/storage';
 
 hasSession('tabData'); // true
 ```
+
+```js [JavaScript (ESM)]
+import { hasSession } from 'l-js-fn/storage';
+
+hasSession('tabData'); // true
+```
+
+```js [JavaScript (CJS)]
+const { hasSession } = require('l-js-fn/storage');
+
+hasSession('tabData'); // true
+```
+:::
 
 ### getSessionKeys
 
@@ -269,8 +477,22 @@ hasSession('tabData'); // true
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { getSessionKeys } from 'l-js-fn/storage';
 
 getSessionKeys(); // ['tabData', 'formState']
 ```
+
+```js [JavaScript (ESM)]
+import { getSessionKeys } from 'l-js-fn/storage';
+
+getSessionKeys(); // ['tabData', 'formState']
+```
+
+```js [JavaScript (CJS)]
+const { getSessionKeys } = require('l-js-fn/storage');
+
+getSessionKeys(); // ['tabData', 'formState']
+```
+:::

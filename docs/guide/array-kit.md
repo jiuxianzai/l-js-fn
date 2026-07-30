@@ -18,7 +18,8 @@
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { arrayDelEl } from 'l-js-fn';
 
 // 基本类型
@@ -37,6 +38,45 @@ arrayDelEl(users, { id: 1, name: 'Alice' });
 // [{ id: 2, name: 'Bob' }]
 ```
 
+```js [JavaScript (ESM)]
+import { arrayDelEl } from 'l-js-fn';
+
+// 基本类型
+arrayDelEl([1, 2, 3, 2], 2); // [1, 3]
+
+// 对象数组（通过 key 匹配）
+const users = [
+  { id: 1, name: 'Alice' },
+  { id: 2, name: 'Bob' }
+];
+arrayDelEl(users, { id: 2, name: 'Bob' }, 'id');
+// [{ id: 1, name: 'Alice' }]
+
+// 对象数组（JSON 序列化匹配）
+arrayDelEl(users, { id: 1, name: 'Alice' });
+// [{ id: 2, name: 'Bob' }]
+```
+
+```js [JavaScript (CJS)]
+const { arrayDelEl } = require('l-js-fn');
+
+// 基本类型
+arrayDelEl([1, 2, 3, 2], 2); // [1, 3]
+
+// 对象数组（通过 key 匹配）
+const users = [
+  { id: 1, name: 'Alice' },
+  { id: 2, name: 'Bob' }
+];
+arrayDelEl(users, { id: 2, name: 'Bob' }, 'id');
+// [{ id: 1, name: 'Alice' }]
+
+// 对象数组（JSON 序列化匹配）
+arrayDelEl(users, { id: 1, name: 'Alice' });
+// [{ id: 2, name: 'Bob' }]
+```
+:::
+
 ## arrayDelToIndex 根据索引删除
 
 根据索引删除数组元素。
@@ -52,13 +92,31 @@ arrayDelEl(users, { id: 1, name: 'Alice' });
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { arrayDelToIndex } from 'l-js-fn';
 
 arrayDelToIndex([1, 2, 3], 1);   // [1, 3]
 arrayDelToIndex([1, 2, 3], 0);   // [2, 3]
 arrayDelToIndex([1, 2, 3], -1);  // [1, 2, 3]（无效索引）
 ```
+
+```js [JavaScript (ESM)]
+import { arrayDelToIndex } from 'l-js-fn';
+
+arrayDelToIndex([1, 2, 3], 1);   // [1, 3]
+arrayDelToIndex([1, 2, 3], 0);   // [2, 3]
+arrayDelToIndex([1, 2, 3], -1);  // [1, 2, 3]（无效索引）
+```
+
+```js [JavaScript (CJS)]
+const { arrayDelToIndex } = require('l-js-fn');
+
+arrayDelToIndex([1, 2, 3], 1);   // [1, 3]
+arrayDelToIndex([1, 2, 3], 0);   // [2, 3]
+arrayDelToIndex([1, 2, 3], -1);  // [1, 2, 3]（无效索引）
+```
+:::
 
 ## arrayDelToEl 根据元素值删除
 
@@ -75,13 +133,31 @@ arrayDelToIndex([1, 2, 3], -1);  // [1, 2, 3]（无效索引）
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { arrayDelToEl } from 'l-js-fn';
 
 arrayDelToEl([1, 2, 3, 2], 2);           // [1, 3]
 arrayDelToEl(['a', 'b', 'a'], 'a');      // ['b']
 arrayDelToEl([true, false, true], true); // [false]
 ```
+
+```js [JavaScript (ESM)]
+import { arrayDelToEl } from 'l-js-fn';
+
+arrayDelToEl([1, 2, 3, 2], 2);           // [1, 3]
+arrayDelToEl(['a', 'b', 'a'], 'a');      // ['b']
+arrayDelToEl([true, false, true], true); // [false]
+```
+
+```js [JavaScript (CJS)]
+const { arrayDelToEl } = require('l-js-fn');
+
+arrayDelToEl([1, 2, 3, 2], 2);           // [1, 3]
+arrayDelToEl(['a', 'b', 'a'], 'a');      // ['b']
+arrayDelToEl([true, false, true], true); // [false]
+```
+:::
 
 ::: tip 提示
 `arrayDelToEl` 会删除数组中**所有**匹配的元素，而不仅仅是第一个。如需只删除第一个匹配项，请使用 `arrayDelToIndex`。
@@ -103,7 +179,8 @@ arrayDelToEl([true, false, true], true); // [false]
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { arrayDelToKey } from 'l-js-fn';
 
 const users = [
@@ -114,6 +191,31 @@ const users = [
 arrayDelToKey(users, 'id', 2);
 // [{ id: 1, name: 'Alice' }]
 ```
+
+```js [JavaScript (ESM)]
+import { arrayDelToKey } from 'l-js-fn';
+
+const users = [
+  { id: 1, name: 'Alice' },
+  { id: 2, name: 'Bob' },
+  { id: 2, name: 'David' }
+];
+arrayDelToKey(users, 'id', 2);
+// [{ id: 1, name: 'Alice' }]
+```
+
+```js [JavaScript (CJS)]
+const { arrayDelToKey } = require('l-js-fn');
+
+const users = [
+  { id: 1, name: 'Alice' },
+  { id: 2, name: 'Bob' },
+  { id: 2, name: 'David' }
+];
+arrayDelToKey(users, 'id', 2);
+// [{ id: 1, name: 'Alice' }]
+```
+:::
 
 ## arrayFill 补充到指定长度
 
@@ -133,13 +235,31 @@ arrayDelToKey(users, 'id', 2);
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { arrayFill } from 'l-js-fn';
 
 arrayFill([1, 2], 5, 0);      // [1, 2, 0, 0, 0]
 arrayFill(['a'], 3, null);    // ['a', null, null]
 arrayFill([1, 2, 3], 2, 0);   // [1, 2, 3]（长度已满足）
 ```
+
+```js [JavaScript (ESM)]
+import { arrayFill } from 'l-js-fn';
+
+arrayFill([1, 2], 5, 0);      // [1, 2, 0, 0, 0]
+arrayFill(['a'], 3, null);    // ['a', null, null]
+arrayFill([1, 2, 3], 2, 0);   // [1, 2, 3]（长度已满足）
+```
+
+```js [JavaScript (CJS)]
+const { arrayFill } = require('l-js-fn');
+
+arrayFill([1, 2], 5, 0);      // [1, 2, 0, 0, 0]
+arrayFill(['a'], 3, null);    // ['a', null, null]
+arrayFill([1, 2, 3], 2, 0);   // [1, 2, 3]（长度已满足）
+```
+:::
 
 ## arrayUnique 数组去重
 
@@ -155,12 +275,28 @@ arrayFill([1, 2, 3], 2, 0);   // [1, 2, 3]（长度已满足）
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { arrayUnique } from 'l-js-fn';
 
 arrayUnique([1, 2, 2, 3, 3, 3]); // [1, 2, 3]
 arrayUnique(['a', 'b', 'a']);    // ['a', 'b']
 ```
+
+```js [JavaScript (ESM)]
+import { arrayUnique } from 'l-js-fn';
+
+arrayUnique([1, 2, 2, 3, 3, 3]); // [1, 2, 3]
+arrayUnique(['a', 'b', 'a']);    // ['a', 'b']
+```
+
+```js [JavaScript (CJS)]
+const { arrayUnique } = require('l-js-fn');
+
+arrayUnique([1, 2, 2, 3, 3, 3]); // [1, 2, 3]
+arrayUnique(['a', 'b', 'a']);    // ['a', 'b']
+```
+:::
 
 ## arrayPaginate 数组分页
 
@@ -178,7 +314,8 @@ arrayUnique(['a', 'b', 'a']);    // ['a', 'b']
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { arrayPaginate } from 'l-js-fn';
 
 const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -188,6 +325,29 @@ arrayPaginate(arr, 2, 3); // [4, 5, 6]
 arrayPaginate(arr, 4, 3); // [10]
 arrayPaginate(arr, 5, 3); // []（超出范围）
 ```
+
+```js [JavaScript (ESM)]
+import { arrayPaginate } from 'l-js-fn';
+
+const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+arrayPaginate(arr, 1, 3); // [1, 2, 3]
+arrayPaginate(arr, 2, 3); // [4, 5, 6]
+arrayPaginate(arr, 4, 3); // [10]
+arrayPaginate(arr, 5, 3); // []（超出范围）
+```
+
+```js [JavaScript (CJS)]
+const { arrayPaginate } = require('l-js-fn');
+
+const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+arrayPaginate(arr, 1, 3); // [1, 2, 3]
+arrayPaginate(arr, 2, 3); // [4, 5, 6]
+arrayPaginate(arr, 4, 3); // [10]
+arrayPaginate(arr, 5, 3); // []（超出范围）
+```
+:::
 
 ## arraySplitToGroups 按大小分组
 
@@ -206,7 +366,8 @@ arrayPaginate(arr, 5, 3); // []（超出范围）
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { arraySplitToGroups } from 'l-js-fn';
 
 arraySplitToGroups([1, 2, 3, 4, 5], 2);
@@ -215,6 +376,27 @@ arraySplitToGroups([1, 2, 3, 4, 5], 2);
 arraySplitToGroups([1, 2, 3, 4, 5, 6], 3);
 // { 1: [1, 2, 3], 2: [4, 5, 6] }
 ```
+
+```js [JavaScript (ESM)]
+import { arraySplitToGroups } from 'l-js-fn';
+
+arraySplitToGroups([1, 2, 3, 4, 5], 2);
+// { 1: [1, 2], 2: [3, 4], 3: [5] }
+
+arraySplitToGroups([1, 2, 3, 4, 5, 6], 3);
+// { 1: [1, 2, 3], 2: [4, 5, 6] }
+```
+
+```js [JavaScript (CJS)]
+const { arraySplitToGroups } = require('l-js-fn');
+
+arraySplitToGroups([1, 2, 3, 4, 5], 2);
+// { 1: [1, 2], 2: [3, 4], 3: [5] }
+
+arraySplitToGroups([1, 2, 3, 4, 5, 6], 3);
+// { 1: [1, 2, 3], 2: [4, 5, 6] }
+```
+:::
 
 ## findIndex 查找元素索引
 
@@ -231,7 +413,8 @@ arraySplitToGroups([1, 2, 3, 4, 5, 6], 3);
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { findIndex } from 'l-js-fn';
 
 const users = [
@@ -242,6 +425,31 @@ const users = [
 findIndex(users, user => user.name === 'Bob'); // 1
 findIndex([1, 2, 3], item => item === 5);      // -1
 ```
+
+```js [JavaScript (ESM)]
+import { findIndex } from 'l-js-fn';
+
+const users = [
+  { id: 1, name: 'Alice' },
+  { id: 2, name: 'Bob' }
+];
+
+findIndex(users, user => user.name === 'Bob'); // 1
+findIndex([1, 2, 3], item => item === 5);      // -1
+```
+
+```js [JavaScript (CJS)]
+const { findIndex } = require('l-js-fn');
+
+const users = [
+  { id: 1, name: 'Alice' },
+  { id: 2, name: 'Bob' }
+];
+
+findIndex(users, user => user.name === 'Bob'); // 1
+findIndex([1, 2, 3], item => item === 5);      // -1
+```
+:::
 
 ## moveElement 移动元素位置
 
@@ -259,7 +467,8 @@ findIndex([1, 2, 3], item => item === 5);      // -1
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { moveElement } from 'l-js-fn';
 
 const arr = [1, 2, 3, 4, 5];
@@ -270,6 +479,31 @@ moveElement(arr, 4, 'top');    // { success: true, data: [5, 1, 2, 3, 4] }
 moveElement(arr, 0, 'bottom'); // { success: true, data: [2, 3, 4, 5, 1] }
 moveElement(arr, 0, 'up');     // { success: false, message: '已经是第一个元素', data: [1, 2, 3, 4, 5] }
 ```
+
+```js [JavaScript (ESM)]
+import { moveElement } from 'l-js-fn';
+
+const arr = [1, 2, 3, 4, 5];
+
+moveElement(arr, 2, 'up');     // { success: true, data: [1, 3, 2, 4, 5] }
+moveElement(arr, 2, 'down');   // { success: true, data: [1, 2, 4, 3, 5] }
+moveElement(arr, 4, 'top');    // { success: true, data: [5, 1, 2, 3, 4] }
+moveElement(arr, 0, 'bottom'); // { success: true, data: [2, 3, 4, 5, 1] }
+moveElement(arr, 0, 'up');     // { success: false, message: '已经是第一个元素', data: [1, 2, 3, 4, 5] }
+```
+
+```js [JavaScript (CJS)]
+const { moveElement } = require('l-js-fn');
+
+const arr = [1, 2, 3, 4, 5];
+
+moveElement(arr, 2, 'up');     // { success: true, data: [1, 3, 2, 4, 5] }
+moveElement(arr, 2, 'down');   // { success: true, data: [1, 2, 4, 3, 5] }
+moveElement(arr, 4, 'top');    // { success: true, data: [5, 1, 2, 3, 4] }
+moveElement(arr, 0, 'bottom'); // { success: true, data: [2, 3, 4, 5, 1] }
+moveElement(arr, 0, 'up');     // { success: false, message: '已经是第一个元素', data: [1, 2, 3, 4, 5] }
+```
+:::
 
 ## groupBy 按字段分组
 
@@ -288,7 +522,8 @@ moveElement(arr, 0, 'up');     // { success: false, message: '已经是第一个
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { groupBy } from 'l-js-fn';
 
 const users = [
@@ -304,6 +539,39 @@ groupBy(users, 'city');
 // { Beijing: [...], Shanghai: [...] }
 ```
 
+```js [JavaScript (ESM)]
+import { groupBy } from 'l-js-fn';
+
+const users = [
+  { name: 'Alice', age: 20, city: 'Beijing' },
+  { name: 'Bob', age: 25, city: 'Shanghai' },
+  { name: 'Charlie', age: 20, city: 'Beijing' }
+];
+
+groupBy(users, 'age');
+// { 20: [{ name: 'Alice', ... }, { name: 'Charlie', ... }], 25: [{ name: 'Bob', ... }] }
+
+groupBy(users, 'city');
+// { Beijing: [...], Shanghai: [...] }
+```
+
+```js [JavaScript (CJS)]
+const { groupBy } = require('l-js-fn');
+
+const users = [
+  { name: 'Alice', age: 20, city: 'Beijing' },
+  { name: 'Bob', age: 25, city: 'Shanghai' },
+  { name: 'Charlie', age: 20, city: 'Beijing' }
+];
+
+groupBy(users, 'age');
+// { 20: [{ name: 'Alice', ... }, { name: 'Charlie', ... }], 25: [{ name: 'Bob', ... }] }
+
+groupBy(users, 'city');
+// { Beijing: [...], Shanghai: [...] }
+```
+:::
+
 ## sample 随机取一个元素
 
 随机获取数组中的一个元素。
@@ -318,13 +586,31 @@ groupBy(users, 'city');
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { sample } from 'l-js-fn';
 
 const colors = ['red', 'green', 'blue'];
 sample(colors); // 'blue'（随机）
 sample([]);     // undefined
 ```
+
+```js [JavaScript (ESM)]
+import { sample } from 'l-js-fn';
+
+const colors = ['red', 'green', 'blue'];
+sample(colors); // 'blue'（随机）
+sample([]);     // undefined
+```
+
+```js [JavaScript (CJS)]
+const { sample } = require('l-js-fn');
+
+const colors = ['red', 'green', 'blue'];
+sample(colors); // 'blue'（随机）
+sample([]);     // undefined
+```
+:::
 
 ## sampleSize 随机取N个元素
 
@@ -341,7 +627,8 @@ sample([]);     // undefined
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { sampleSize } from 'l-js-fn';
 
 const numbers = [1, 2, 3, 4, 5];
@@ -352,22 +639,62 @@ sampleSize(numbers);      // [4]（默认 n=1）
 sampleSize(numbers, 0);   // []（n=0 返回空数组）
 ```
 
+```js [JavaScript (ESM)]
+import { sampleSize } from 'l-js-fn';
+
+const numbers = [1, 2, 3, 4, 5];
+
+sampleSize(numbers, 2);   // [3, 1]（随机，不重复）
+sampleSize(numbers, 10);  // [2, 5, 1, 4, 3]（全部乱序）
+sampleSize(numbers);      // [4]（默认 n=1）
+sampleSize(numbers, 0);   // []（n=0 返回空数组）
+```
+
+```js [JavaScript (CJS)]
+const { sampleSize } = require('l-js-fn');
+
+const numbers = [1, 2, 3, 4, 5];
+
+sampleSize(numbers, 2);   // [3, 1]（随机，不重复）
+sampleSize(numbers, 10);  // [2, 5, 1, 4, 3]（全部乱序）
+sampleSize(numbers);      // [4]（默认 n=1）
+sampleSize(numbers, 0);   // []（n=0 返回空数组）
+```
+:::
+
 ## flatten 数组扁平化
 
 数组扁平化，支持指定展开深度。
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { flatten } from 'l-js-fn';
 
 flatten([1, [2, [3, 4]], 5]);    // [1, 2, 3, 4, 5]
 flatten([1, [2, [3, 4]], 5], 1); // [1, 2, [3, 4], 5]
 ```
 
+```js [JavaScript (ESM)]
+import { flatten } from 'l-js-fn';
+
+flatten([1, [2, [3, 4]], 5]);    // [1, 2, 3, 4, 5]
+flatten([1, [2, [3, 4]], 5], 1); // [1, 2, [3, 4], 5]
+```
+
+```js [JavaScript (CJS)]
+const { flatten } = require('l-js-fn');
+
+flatten([1, [2, [3, 4]], 5]);    // [1, 2, 3, 4, 5]
+flatten([1, [2, [3, 4]], 5], 1); // [1, 2, [3, 4], 5]
+```
+:::
+
 ## range 生成数字范围
 
 生成数字范围数组。
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { range } from 'l-js-fn';
 
 range(0, 5);       // [0, 1, 2, 3, 4, 5]
@@ -375,54 +702,145 @@ range(5, 0, -1);   // [5, 4, 3, 2, 1, 0]
 range(0, 10, 2);   // [0, 2, 4, 6, 8, 10]
 ```
 
+```js [JavaScript (ESM)]
+import { range } from 'l-js-fn';
+
+range(0, 5);       // [0, 1, 2, 3, 4, 5]
+range(5, 0, -1);   // [5, 4, 3, 2, 1, 0]
+range(0, 10, 2);   // [0, 2, 4, 6, 8, 10]
+```
+
+```js [JavaScript (CJS)]
+const { range } = require('l-js-fn');
+
+range(0, 5);       // [0, 1, 2, 3, 4, 5]
+range(5, 0, -1);   // [5, 4, 3, 2, 1, 0]
+range(0, 10, 2);   // [0, 2, 4, 6, 8, 10]
+```
+:::
+
 ## shuffle 洗牌打乱
 
 Fisher-Yates 洗牌算法打乱数组。
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { shuffle } from 'l-js-fn';
 
 shuffle([1, 2, 3, 4, 5]); // [3, 1, 5, 2, 4]（随机）
 ```
 
+```js [JavaScript (ESM)]
+import { shuffle } from 'l-js-fn';
+
+shuffle([1, 2, 3, 4, 5]); // [3, 1, 5, 2, 4]（随机）
+```
+
+```js [JavaScript (CJS)]
+const { shuffle } = require('l-js-fn');
+
+shuffle([1, 2, 3, 4, 5]); // [3, 1, 5, 2, 4]（随机）
+```
+:::
+
 ## uniqueBy 按字段去重
 
 根据对象数组中指定字段的值去重。
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { uniqueBy } from 'l-js-fn';
 
 const arr = [{ id: 1, name: 'a' }, { id: 2, name: 'b' }, { id: 1, name: 'c' }];
 uniqueBy(arr, 'id'); // [{ id: 1, name: 'a' }, { id: 2, name: 'b' }]
 ```
 
+```js [JavaScript (ESM)]
+import { uniqueBy } from 'l-js-fn';
+
+const arr = [{ id: 1, name: 'a' }, { id: 2, name: 'b' }, { id: 1, name: 'c' }];
+uniqueBy(arr, 'id'); // [{ id: 1, name: 'a' }, { id: 2, name: 'b' }]
+```
+
+```js [JavaScript (CJS)]
+const { uniqueBy } = require('l-js-fn');
+
+const arr = [{ id: 1, name: 'a' }, { id: 2, name: 'b' }, { id: 1, name: 'c' }];
+uniqueBy(arr, 'id'); // [{ id: 1, name: 'a' }, { id: 2, name: 'b' }]
+```
+:::
+
 ## compact 过滤falsy值
 
 过滤数组中的 falsy 值。
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { compact } from 'l-js-fn';
 
 compact([0, 1, false, 2, '', 3, null, undefined, NaN]); // [1, 2, 3]
 ```
 
+```js [JavaScript (ESM)]
+import { compact } from 'l-js-fn';
+
+compact([0, 1, false, 2, '', 3, null, undefined, NaN]); // [1, 2, 3]
+```
+
+```js [JavaScript (CJS)]
+const { compact } = require('l-js-fn');
+
+compact([0, 1, false, 2, '', 3, null, undefined, NaN]); // [1, 2, 3]
+```
+:::
+
 ## sum 数组求和
 
 计算数组元素总和。
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { sum } from 'l-js-fn';
 
 sum([1, 2, 3, 4, 5]); // 15
 ```
 
+```js [JavaScript (ESM)]
+import { sum } from 'l-js-fn';
+
+sum([1, 2, 3, 4, 5]); // 15
+```
+
+```js [JavaScript (CJS)]
+const { sum } = require('l-js-fn');
+
+sum([1, 2, 3, 4, 5]); // 15
+```
+:::
+
 ## last 获取最后元素
 
 获取数组最后一个元素。
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { last } from 'l-js-fn';
 
 last([1, 2, 3]); // 3
 last([]);        // undefined
 ```
+
+```js [JavaScript (ESM)]
+import { last } from 'l-js-fn';
+
+last([1, 2, 3]); // 3
+last([]);        // undefined
+```
+
+```js [JavaScript (CJS)]
+const { last } = require('l-js-fn');
+
+last([1, 2, 3]); // 3
+last([]);        // undefined
+```
+:::

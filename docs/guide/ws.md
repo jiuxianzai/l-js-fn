@@ -4,9 +4,19 @@ WebSocket 管理类，提供连接管理、消息发送、心跳检测、自动�
 
 **导入方式：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { WebSocketManager } from 'l-js-fn/ws';
 ```
+
+```js [JavaScript (ESM)]
+import { WebSocketManager } from 'l-js-fn/ws';
+```
+
+```js [JavaScript (CJS)]
+const { WebSocketManager } = require('l-js-fn/ws');
+```
+:::
 
 ## WebSocketManager WebSocket管理器
 
@@ -24,7 +34,8 @@ WebSocket 管理类。
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { WebSocketManager } from 'l-js-fn/ws';
 
 const ws = new WebSocketManager(
@@ -37,6 +48,35 @@ const ws = new WebSocketManager(
   }
 );
 ```
+
+```js [JavaScript (ESM)]
+import { WebSocketManager } from 'l-js-fn/ws';
+
+const ws = new WebSocketManager(
+  'ws://localhost:8080',
+  (message) => {
+    console.log('收到消息:', message);
+  },
+  (error) => {
+    console.error('错误:', error);
+  }
+);
+```
+
+```js [JavaScript (CJS)]
+const { WebSocketManager } = require('l-js-fn/ws');
+
+const ws = new WebSocketManager(
+  'ws://localhost:8080',
+  (message) => {
+    console.log('收到消息:', message);
+  },
+  (error) => {
+    console.error('错误:', error);
+  }
+);
+```
+:::
 
 ### sendWebSocketMessage 发送消息
 
@@ -124,7 +164,7 @@ ws.close();
 
 ### ErrorType
 
-```typescript
+```ts
 type ErrorType =
   | 'connection_create_error'  // 连接创建失败
   | 'connection_error'          // 连接错误
@@ -134,7 +174,7 @@ type ErrorType =
 
 ### ErrorPayload
 
-```typescript
+```ts
 interface ErrorPayload {
   type: ErrorType;
   data: unknown;
@@ -143,7 +183,8 @@ interface ErrorPayload {
 
 ### 使用示例
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { WebSocketManager } from 'l-js-fn/ws';
 
 const ws = new WebSocketManager(
@@ -173,3 +214,66 @@ ws.checkConnection({ type: 'ping' }, 30000);
 // 页面卸载时关闭
 window.addEventListener('beforeunload', () => ws.close());
 ```
+
+```js [JavaScript (ESM)]
+import { WebSocketManager } from 'l-js-fn/ws';
+
+const ws = new WebSocketManager(
+  'wss://api.example.com/ws',
+  (message) => {
+    console.log('收到:', message);
+  },
+  (error) => {
+    switch (error.type) {
+      case 'connection_close':
+        console.log('连接已关闭');
+        ws.reconnect();
+        break;
+      case 'connection_error':
+        console.error('连接错误:', error.data);
+        break;
+    }
+  }
+);
+
+// 发送消息
+ws.sendWebSocketMessage({ type: 'subscribe', channel: 'orders' });
+
+// 心跳
+ws.checkConnection({ type: 'ping' }, 30000);
+
+// 页面卸载时关闭
+window.addEventListener('beforeunload', () => ws.close());
+```
+
+```js [JavaScript (CJS)]
+const { WebSocketManager } = require('l-js-fn/ws');
+
+const ws = new WebSocketManager(
+  'wss://api.example.com/ws',
+  (message) => {
+    console.log('收到:', message);
+  },
+  (error) => {
+    switch (error.type) {
+      case 'connection_close':
+        console.log('连接已关闭');
+        ws.reconnect();
+        break;
+      case 'connection_error':
+        console.error('连接错误:', error.data);
+        break;
+    }
+  }
+);
+
+// 发送消息
+ws.sendWebSocketMessage({ type: 'subscribe', channel: 'orders' });
+
+// 心跳
+ws.checkConnection({ type: 'ping' }, 30000);
+
+// 页面卸载时关闭
+window.addEventListener('beforeunload', () => ws.close());
+```
+:::

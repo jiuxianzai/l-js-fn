@@ -4,9 +4,19 @@
 
 **导入方式：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { DATE_FORMAT, HTTP_STATUS } from 'l-js-fn/config';
 ```
+
+```js [JavaScript (ESM)]
+import { DATE_FORMAT, HTTP_STATUS } from 'l-js-fn/config';
+```
+
+```js [JavaScript (CJS)]
+const { DATE_FORMAT, HTTP_STATUS } = require('l-js-fn/config');
+```
+:::
 
 ## DATE_FORMAT 日期格式常量
 
@@ -22,7 +32,8 @@ import { DATE_FORMAT, HTTP_STATUS } from 'l-js-fn/config';
 
 ### 使用示例
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { DATE_FORMAT } from 'l-js-fn/config';
 import { dateFormat } from 'l-js-fn';
 
@@ -33,6 +44,31 @@ dateFormat(new Date(), DATE_FORMAT.TIME);      // '12:00:00'
 dateFormat(new Date(), DATE_FORMAT.SHORT);     // '01-01'
 dateFormat(new Date(), DATE_FORMAT.YEAR_MONTH);// '2024-01'
 ```
+
+```js [JavaScript (ESM)]
+import { DATE_FORMAT } from 'l-js-fn/config';
+import { dateFormat } from 'l-js-fn';
+
+// 使用预定义格式
+dateFormat(new Date(), DATE_FORMAT.FULL);      // '2024-01-01 12:00:00'
+dateFormat(new Date(), DATE_FORMAT.DATE);      // '2024-01-01'
+dateFormat(new Date(), DATE_FORMAT.TIME);      // '12:00:00'
+dateFormat(new Date(), DATE_FORMAT.SHORT);     // '01-01'
+dateFormat(new Date(), DATE_FORMAT.YEAR_MONTH);// '2024-01'
+```
+
+```js [JavaScript (CJS)]
+const { DATE_FORMAT } = require('l-js-fn/config');
+const { dateFormat } = require('l-js-fn');
+
+// 使用预定义格式
+dateFormat(new Date(), DATE_FORMAT.FULL);      // '2024-01-01 12:00:00'
+dateFormat(new Date(), DATE_FORMAT.DATE);      // '2024-01-01'
+dateFormat(new Date(), DATE_FORMAT.TIME);      // '12:00:00'
+dateFormat(new Date(), DATE_FORMAT.SHORT);     // '01-01'
+dateFormat(new Date(), DATE_FORMAT.YEAR_MONTH);// '2024-01'
+```
+:::
 
 ## HTTP_STATUS HTTP状态码
 
@@ -49,7 +85,8 @@ dateFormat(new Date(), DATE_FORMAT.YEAR_MONTH);// '2024-01'
 
 ### 使用示例
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { HTTP_STATUS } from 'l-js-fn/config';
 
 // 状态码判断
@@ -80,3 +117,68 @@ fetch('/api/data')
     return response.json();
   });
 ```
+
+```js [JavaScript (ESM)]
+import { HTTP_STATUS } from 'l-js-fn/config';
+
+// 状态码判断
+function handleResponse(status: number) {
+  switch (status) {
+    case HTTP_STATUS.OK:
+      return '请求成功';
+    case HTTP_STATUS.UNAUTHORIZED:
+      return '请先登录';
+    case HTTP_STATUS.FORBIDDEN:
+      return '没有权限';
+    case HTTP_STATUS.NOT_FOUND:
+      return '资源不存在';
+    case HTTP_STATUS.SERVER_ERROR:
+      return '服务器错误';
+    default:
+      return '未知错误';
+  }
+}
+
+// 请求拦截器
+fetch('/api/data')
+  .then(response => {
+    if (response.status === HTTP_STATUS.UNAUTHORIZED) {
+      // 跳转到登录页
+      window.location.href = '/login';
+    }
+    return response.json();
+  });
+```
+
+```js [JavaScript (CJS)]
+const { HTTP_STATUS } = require('l-js-fn/config');
+
+// 状态码判断
+function handleResponse(status: number) {
+  switch (status) {
+    case HTTP_STATUS.OK:
+      return '请求成功';
+    case HTTP_STATUS.UNAUTHORIZED:
+      return '请先登录';
+    case HTTP_STATUS.FORBIDDEN:
+      return '没有权限';
+    case HTTP_STATUS.NOT_FOUND:
+      return '资源不存在';
+    case HTTP_STATUS.SERVER_ERROR:
+      return '服务器错误';
+    default:
+      return '未知错误';
+  }
+}
+
+// 请求拦截器
+fetch('/api/data')
+  .then(response => {
+    if (response.status === HTTP_STATUS.UNAUTHORIZED) {
+      // 跳转到登录页
+      window.location.href = '/login';
+    }
+    return response.json();
+  });
+```
+:::

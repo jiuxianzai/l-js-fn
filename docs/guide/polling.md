@@ -4,9 +4,19 @@
 
 **导入方式：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { Polling } from 'l-js-fn/polling';
 ```
+
+```js [JavaScript (ESM)]
+import { Polling } from 'l-js-fn/polling';
+```
+
+```js [JavaScript (CJS)]
+const { Polling } = require('l-js-fn/polling');
+```
+:::
 
 ## Polling 轮询类
 
@@ -28,7 +38,8 @@ import { Polling } from 'l-js-fn/polling';
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { Polling } from 'l-js-fn/polling';
 
 const polling = new Polling();
@@ -43,6 +54,39 @@ polling.start(
   true   // 立即执行
 );
 ```
+
+```js [JavaScript (ESM)]
+import { Polling } from 'l-js-fn/polling';
+
+const polling = new Polling();
+
+polling.start(
+  async () => {
+    const response = await fetch('https://api.example.com/data');
+    const data = await response.json();
+    console.log(data);
+  },
+  5000,  // 每 5 秒执行一次
+  true   // 立即执行
+);
+```
+
+```js [JavaScript (CJS)]
+const { Polling } = require('l-js-fn/polling');
+
+const polling = new Polling();
+
+polling.start(
+  async () => {
+    const response = await fetch('https://api.example.com/data');
+    const data = await response.json();
+    console.log(data);
+  },
+  5000,  // 每 5 秒执行一次
+  true   // 立即执行
+);
+```
+:::
 
 ### stop 停止轮询
 
@@ -70,7 +114,8 @@ console.log(polling.running); // true | false
 
 ## 完整示例
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { Polling } from 'l-js-fn/polling';
 
 const polling = new Polling();
@@ -98,3 +143,62 @@ setTimeout(() => {
   }
 }, 5 * 60 * 1000);
 ```
+
+```js [JavaScript (ESM)]
+import { Polling } from 'l-js-fn/polling';
+
+const polling = new Polling();
+
+// 启动轮询
+polling.start(
+  async () => {
+    const response = await fetch('/api/status');
+    const data = await response.json();
+    
+    if (data.status === 'completed') {
+      console.log('任务完成');
+      polling.stop();
+    }
+  },
+  2000,  // 每 2 秒检查一次
+  true
+);
+
+// 5 分钟后自动停止
+setTimeout(() => {
+  if (polling.running) {
+    polling.stop();
+    console.log('轮询超时');
+  }
+}, 5 * 60 * 1000);
+```
+
+```js [JavaScript (CJS)]
+const { Polling } = require('l-js-fn/polling');
+
+const polling = new Polling();
+
+// 启动轮询
+polling.start(
+  async () => {
+    const response = await fetch('/api/status');
+    const data = await response.json();
+    
+    if (data.status === 'completed') {
+      console.log('任务完成');
+      polling.stop();
+    }
+  },
+  2000,  // 每 2 秒检查一次
+  true
+);
+
+// 5 分钟后自动停止
+setTimeout(() => {
+  if (polling.running) {
+    polling.stop();
+    console.log('轮询超时');
+  }
+}, 5 * 60 * 1000);
+```
+:::

@@ -18,7 +18,8 @@ URL 处理工具集，提供参数解析、拼接、转换等功能。
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { getUrlParams } from 'l-js-fn';
 
 getUrlParams('https://example.com?id=1&name=John');
@@ -30,6 +31,33 @@ getUrlParams('https://example.com?a=1&a=2');
 getUrlParams('https://example.com?user[name]=John&user[age]=20');
 // { user: { name: 'John', age: '20' } }
 ```
+
+```js [JavaScript (ESM)]
+import { getUrlParams } from 'l-js-fn';
+
+getUrlParams('https://example.com?id=1&name=John');
+// { id: '1', name: 'John' }
+
+getUrlParams('https://example.com?a=1&a=2');
+// { a: ['1', '2'] }
+
+getUrlParams('https://example.com?user[name]=John&user[age]=20');
+// { user: { name: 'John', age: '20' } }
+```
+
+```js [JavaScript (CJS)]
+const { getUrlParams } = require('l-js-fn');
+
+getUrlParams('https://example.com?id=1&name=John');
+// { id: '1', name: 'John' }
+
+getUrlParams('https://example.com?a=1&a=2');
+// { a: ['1', '2'] }
+
+getUrlParams('https://example.com?user[name]=John&user[age]=20');
+// { user: { name: 'John', age: '20' } }
+```
+:::
 
 ## getUrlParam 获取单个参数
 
@@ -46,12 +74,28 @@ getUrlParams('https://example.com?user[name]=John&user[age]=20');
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { getUrlParam } from 'l-js-fn';
 
 getUrlParam('https://example.com?id=1', 'id');    // '1'
 getUrlParam('https://example.com?id=1', 'name');  // null
 ```
+
+```js [JavaScript (ESM)]
+import { getUrlParam } from 'l-js-fn';
+
+getUrlParam('https://example.com?id=1', 'id');    // '1'
+getUrlParam('https://example.com?id=1', 'name');  // null
+```
+
+```js [JavaScript (CJS)]
+const { getUrlParam } = require('l-js-fn');
+
+getUrlParam('https://example.com?id=1', 'id');    // '1'
+getUrlParam('https://example.com?id=1', 'name');  // null
+```
+:::
 
 ## appendUrlParam 添加URL参数
 
@@ -70,7 +114,8 @@ getUrlParam('https://example.com?id=1', 'name');  // null
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { appendUrlParam } from 'l-js-fn';
 
 appendUrlParam('https://example.com', 'id', 1);
@@ -88,6 +133,43 @@ appendUrlParam('https://example.com/#/home', 'id', '1', { position: 'before' });
 // 'https://example.com/?id=1#/home'
 ```
 
+```js [JavaScript (ESM)]
+import { appendUrlParam } from 'l-js-fn';
+
+appendUrlParam('https://example.com', 'id', 1);
+// 'https://example.com?id=1'
+
+appendUrlParam('https://example.com?id=1', 'name', 'John');
+// 'https://example.com?id=1&name=John'
+
+// 默认追加到 # 后
+appendUrlParam('https://example.com/#/home', 'id', '1');
+// 'https://example.com/#/home?id=1'
+
+// 参数放在 # 前
+appendUrlParam('https://example.com/#/home', 'id', '1', { position: 'before' });
+// 'https://example.com/?id=1#/home'
+```
+
+```js [JavaScript (CJS)]
+const { appendUrlParam } = require('l-js-fn');
+
+appendUrlParam('https://example.com', 'id', 1);
+// 'https://example.com?id=1'
+
+appendUrlParam('https://example.com?id=1', 'name', 'John');
+// 'https://example.com?id=1&name=John'
+
+// 默认追加到 # 后
+appendUrlParam('https://example.com/#/home', 'id', '1');
+// 'https://example.com/#/home?id=1'
+
+// 参数放在 # 前
+appendUrlParam('https://example.com/#/home', 'id', '1', { position: 'before' });
+// 'https://example.com/?id=1#/home'
+```
+:::
+
 ## appendUrlParams 批量添加URL参数
 
 向 URL 批量添加查询参数，兼容 hash 和 history 路由模式，自动判断使用 `?` 还是 `&`。默认追加在 `#` 之后，可通过 `position: 'before'` 放在 `#` 之前。
@@ -104,7 +186,8 @@ appendUrlParam('https://example.com/#/home', 'id', '1', { position: 'before' });
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { appendUrlParams } from 'l-js-fn';
 
 appendUrlParams('https://example.com', { name: 'zs', age: '1' });
@@ -132,6 +215,63 @@ appendUrlParams('https://example.com/user/list', { name: 'zs' });
 // 'https://example.com/user/list?name=zs'
 ```
 
+```js [JavaScript (ESM)]
+import { appendUrlParams } from 'l-js-fn';
+
+appendUrlParams('https://example.com', { name: 'zs', age: '1' });
+// 'https://example.com?name=zs&age=1'
+
+appendUrlParams('https://example.com?id=1', { name: 'zs', age: '1' });
+// 'https://example.com?id=1&name=zs&age=1'
+
+// 默认：参数追加到 # 后
+appendUrlParams('https://example.com/#/path', { name: 'zs' });
+// 'https://example.com/#/path?name=zs'
+
+appendUrlParams('https://example.com/?id=1#/path', { name: 'zs' });
+// 'https://example.com/?id=1#/path?name=zs'
+
+appendUrlParams('https://example.com#section', { name: 'zs' });
+// 'https://example.com#section?name=zs'
+
+// 参数放在 # 前
+appendUrlParams('https://example.com/#/home', { id: '1', name: 'yyp' }, { position: 'before' });
+// 'https://example.com/?id=1&name=yyp#/home'
+
+// History 模式（无 # 时退化为普通拼接）
+appendUrlParams('https://example.com/user/list', { name: 'zs' });
+// 'https://example.com/user/list?name=zs'
+```
+
+```js [JavaScript (CJS)]
+const { appendUrlParams } = require('l-js-fn');
+
+appendUrlParams('https://example.com', { name: 'zs', age: '1' });
+// 'https://example.com?name=zs&age=1'
+
+appendUrlParams('https://example.com?id=1', { name: 'zs', age: '1' });
+// 'https://example.com?id=1&name=zs&age=1'
+
+// 默认：参数追加到 # 后
+appendUrlParams('https://example.com/#/path', { name: 'zs' });
+// 'https://example.com/#/path?name=zs'
+
+appendUrlParams('https://example.com/?id=1#/path', { name: 'zs' });
+// 'https://example.com/?id=1#/path?name=zs'
+
+appendUrlParams('https://example.com#section', { name: 'zs' });
+// 'https://example.com#section?name=zs'
+
+// 参数放在 # 前
+appendUrlParams('https://example.com/#/home', { id: '1', name: 'yyp' }, { position: 'before' });
+// 'https://example.com/?id=1&name=yyp#/home'
+
+// History 模式（无 # 时退化为普通拼接）
+appendUrlParams('https://example.com/user/list', { name: 'zs' });
+// 'https://example.com/user/list?name=zs'
+```
+:::
+
 ## transUrlParams 对象转查询字符串
 
 将对象转换为 URL 查询字符串，支持嵌套对象。
@@ -146,7 +286,8 @@ appendUrlParams('https://example.com/user/list', { name: 'zs' });
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { transUrlParams } from 'l-js-fn';
 
 transUrlParams({ id: 1, name: 'John' });
@@ -155,6 +296,27 @@ transUrlParams({ id: 1, name: 'John' });
 transUrlParams({ user: { name: 'John', age: 20 } });
 // 'user[name]=John&user[age]=20'
 ```
+
+```js [JavaScript (ESM)]
+import { transUrlParams } from 'l-js-fn';
+
+transUrlParams({ id: 1, name: 'John' });
+// 'id=1&name=John'
+
+transUrlParams({ user: { name: 'John', age: 20 } });
+// 'user[name]=John&user[age]=20'
+```
+
+```js [JavaScript (CJS)]
+const { transUrlParams } = require('l-js-fn');
+
+transUrlParams({ id: 1, name: 'John' });
+// 'id=1&name=John'
+
+transUrlParams({ user: { name: 'John', age: 20 } });
+// 'user[name]=John&user[age]=20'
+```
+:::
 
 ## getFileInfoToUrl 提取文件信息
 
@@ -170,7 +332,8 @@ transUrlParams({ user: { name: 'John', age: 20 } });
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { getFileInfoToUrl } from 'l-js-fn';
 
 getFileInfoToUrl('https://example.com/path/to/file.txt');
@@ -179,3 +342,24 @@ getFileInfoToUrl('https://example.com/path/to/file.txt');
 getFileInfoToUrl('https://example.com/image.png');
 // { fileName: 'image.png', extension: '.png' }
 ```
+
+```js [JavaScript (ESM)]
+import { getFileInfoToUrl } from 'l-js-fn';
+
+getFileInfoToUrl('https://example.com/path/to/file.txt');
+// { fileName: 'file.txt', extension: '.txt' }
+
+getFileInfoToUrl('https://example.com/image.png');
+// { fileName: 'image.png', extension: '.png' }
+```
+
+```js [JavaScript (CJS)]
+const { getFileInfoToUrl } = require('l-js-fn');
+
+getFileInfoToUrl('https://example.com/path/to/file.txt');
+// { fileName: 'file.txt', extension: '.txt' }
+
+getFileInfoToUrl('https://example.com/image.png');
+// { fileName: 'image.png', extension: '.png' }
+```
+:::

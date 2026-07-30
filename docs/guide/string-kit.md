@@ -20,13 +20,31 @@
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { desensitization } from 'l-js-fn';
 
 desensitization('13800138000', 3, 4); // '138****8000'
 desensitization('123456789', 3, 3);   // '123***789'
 desensitization('', 0);                // ''
 ```
+
+```js [JavaScript (ESM)]
+import { desensitization } from 'l-js-fn';
+
+desensitization('13800138000', 3, 4); // '138****8000'
+desensitization('123456789', 3, 3);   // '123***789'
+desensitization('', 0);                // ''
+```
+
+```js [JavaScript (CJS)]
+const { desensitization } = require('l-js-fn');
+
+desensitization('13800138000', 3, 4); // '138****8000'
+desensitization('123456789', 3, 3);   // '123***789'
+desensitization('', 0);                // ''
+```
+:::
 
 ## trim 去除空格
 
@@ -43,7 +61,8 @@ desensitization('', 0);                // ''
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { trim } from 'l-js-fn';
 
 trim('  hello  ');         // 'hello'
@@ -51,6 +70,25 @@ trim('  hello  ', 'left'); // 'hello  '
 trim('  hello  ', 'right');// '  hello'
 trim('  hello  ', 'all');  // 'hello'
 ```
+
+```js [JavaScript (ESM)]
+import { trim } from 'l-js-fn';
+
+trim('  hello  ');         // 'hello'
+trim('  hello  ', 'left'); // 'hello  '
+trim('  hello  ', 'right');// '  hello'
+trim('  hello  ', 'all');  // 'hello'
+```
+
+```js [JavaScript (CJS)]
+const { trim } = require('l-js-fn');
+
+trim('  hello  ');         // 'hello'
+trim('  hello  ', 'left'); // 'hello  '
+trim('  hello  ', 'right');// '  hello'
+trim('  hello  ', 'all');  // 'hello'
+```
+:::
 
 ## getMobile 随机生成手机号
 
@@ -60,11 +98,25 @@ trim('  hello  ', 'all');  // 'hello'
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { getMobile } from 'l-js-fn';
 
 getMobile(); // '13800138000'（随机）
 ```
+
+```js [JavaScript (ESM)]
+import { getMobile } from 'l-js-fn';
+
+getMobile(); // '13800138000'（随机）
+```
+
+```js [JavaScript (CJS)]
+const { getMobile } = require('l-js-fn');
+
+getMobile(); // '13800138000'（随机）
+```
+:::
 
 ## getUuid 生成UUID
 
@@ -74,11 +126,25 @@ getMobile(); // '13800138000'（随机）
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { getUuid } from 'l-js-fn';
 
 getUuid(); // 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
 ```
+
+```js [JavaScript (ESM)]
+import { getUuid } from 'l-js-fn';
+
+getUuid(); // 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+```
+
+```js [JavaScript (CJS)]
+const { getUuid } = require('l-js-fn');
+
+getUuid(); // 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+```
+:::
 
 ## indexToLabel 索引转序号
 
@@ -95,7 +161,8 @@ getUuid(); // 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { indexToLabel } from 'l-js-fn';
 
 indexToLabel(0);            // 'A'
@@ -107,6 +174,33 @@ indexToLabel(0, 'number');  // '1'
 indexToLabel(0, 'chinese'); // '一'
 indexToLabel(10, 'chinese');// '十一'
 ```
+
+```js [JavaScript (ESM)]
+import { indexToLabel } from 'l-js-fn';
+
+indexToLabel(0);            // 'A'
+indexToLabel(1);            // 'B'
+indexToLabel(25);           // 'Z'
+indexToLabel(26);           // 'AA'
+indexToLabel(0, 'lower');   // 'a'
+indexToLabel(0, 'number');  // '1'
+indexToLabel(0, 'chinese'); // '一'
+indexToLabel(10, 'chinese');// '十一'
+```
+
+```js [JavaScript (CJS)]
+const { indexToLabel } = require('l-js-fn');
+
+indexToLabel(0);            // 'A'
+indexToLabel(1);            // 'B'
+indexToLabel(25);           // 'Z'
+indexToLabel(26);           // 'AA'
+indexToLabel(0, 'lower');   // 'a'
+indexToLabel(0, 'number');  // '1'
+indexToLabel(0, 'chinese'); // '一'
+indexToLabel(10, 'chinese');// '十一'
+```
+:::
 
 ## searchTextColor 匹配文字变色
 
@@ -124,7 +218,8 @@ indexToLabel(10, 'chinese');// '十一'
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { searchTextColor } from 'l-js-fn';
 
 searchTextColor('hello', 'hello world');
@@ -133,6 +228,27 @@ searchTextColor('hello', 'hello world');
 searchTextColor('hello', 'hello world', 'blue');
 // "<span style='color: blue'>hello</span> world"
 ```
+
+```js [JavaScript (ESM)]
+import { searchTextColor } from 'l-js-fn';
+
+searchTextColor('hello', 'hello world');
+// "<span style='color: red'>hello</span> world"
+
+searchTextColor('hello', 'hello world', 'blue');
+// "<span style='color: blue'>hello</span> world"
+```
+
+```js [JavaScript (CJS)]
+const { searchTextColor } = require('l-js-fn');
+
+searchTextColor('hello', 'hello world');
+// "<span style='color: red'>hello</span> world"
+
+searchTextColor('hello', 'hello world', 'blue');
+// "<span style='color: blue'>hello</span> world"
+```
+:::
 
 ::: warning 安全提示
 `searchTextColor` 直接生成 HTML 字符串，仅适用于通过 `v-html`/`innerHTML` 渲染的场景。请确保 `text` 参数来自可信来源，避免 XSS 风险。搜索关键词中的正则特殊字符（如 `.`、`*`、`+` 等）会被自动转义。
@@ -152,12 +268,28 @@ searchTextColor('hello', 'hello world', 'blue');
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { filterSpace } from 'l-js-fn';
 
 filterSpace('  hello  ');  // 'hello'
 filterSpace(' hello world '); // 'hello world'
 ```
+
+```js [JavaScript (ESM)]
+import { filterSpace } from 'l-js-fn';
+
+filterSpace('  hello  ');  // 'hello'
+filterSpace(' hello world '); // 'hello world'
+```
+
+```js [JavaScript (CJS)]
+const { filterSpace } = require('l-js-fn');
+
+filterSpace('  hello  ');  // 'hello'
+filterSpace(' hello world '); // 'hello world'
+```
+:::
 
 ## toPascalCase 转帕斯卡命名
 
@@ -173,7 +305,8 @@ filterSpace(' hello world '); // 'hello world'
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { toPascalCase } from 'l-js-fn';
 
 toPascalCase('hello-world');  // 'HelloWorld'
@@ -182,11 +315,31 @@ toPascalCase('hello world');  // 'HelloWorld'
 toPascalCase('helloWorld');   // 'HelloWorld'
 ```
 
+```js [JavaScript (ESM)]
+import { toPascalCase } from 'l-js-fn';
+
+toPascalCase('hello-world');  // 'HelloWorld'
+toPascalCase('hello_world');  // 'HelloWorld'
+toPascalCase('hello world');  // 'HelloWorld'
+toPascalCase('helloWorld');   // 'HelloWorld'
+```
+
+```js [JavaScript (CJS)]
+const { toPascalCase } = require('l-js-fn');
+
+toPascalCase('hello-world');  // 'HelloWorld'
+toPascalCase('hello_world');  // 'HelloWorld'
+toPascalCase('hello world');  // 'HelloWorld'
+toPascalCase('helloWorld');   // 'HelloWorld'
+```
+:::
+
 ## toCamelCase 转驼峰命名
 
 短横线/下划线/空格命名 → 驼峰命名。
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { toCamelCase } from 'l-js-fn';
 
 toCamelCase('hello-world');  // 'helloWorld'
@@ -194,11 +347,29 @@ toCamelCase('hello_world');  // 'helloWorld'
 toCamelCase('Hello World');  // 'helloWorld'
 ```
 
+```js [JavaScript (ESM)]
+import { toCamelCase } from 'l-js-fn';
+
+toCamelCase('hello-world');  // 'helloWorld'
+toCamelCase('hello_world');  // 'helloWorld'
+toCamelCase('Hello World');  // 'helloWorld'
+```
+
+```js [JavaScript (CJS)]
+const { toCamelCase } = require('l-js-fn');
+
+toCamelCase('hello-world');  // 'helloWorld'
+toCamelCase('hello_world');  // 'helloWorld'
+toCamelCase('Hello World');  // 'helloWorld'
+```
+:::
+
 ## toKebabCase 转短横线命名
 
 驼峰/帕斯卡/下划线 → 短横线命名。
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { toKebabCase } from 'l-js-fn';
 
 toKebabCase('helloWorld');   // 'hello-world'
@@ -206,13 +377,46 @@ toKebabCase('HelloWorld');   // 'hello-world'
 toKebabCase('hello_world');  // 'hello-world'
 ```
 
+```js [JavaScript (ESM)]
+import { toKebabCase } from 'l-js-fn';
+
+toKebabCase('helloWorld');   // 'hello-world'
+toKebabCase('HelloWorld');   // 'hello-world'
+toKebabCase('hello_world');  // 'hello-world'
+```
+
+```js [JavaScript (CJS)]
+const { toKebabCase } = require('l-js-fn');
+
+toKebabCase('helloWorld');   // 'hello-world'
+toKebabCase('HelloWorld');   // 'hello-world'
+toKebabCase('hello_world');  // 'hello-world'
+```
+:::
+
 ## capitalize 首字母大写
 
 首字母大写。
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { capitalize } from 'l-js-fn';
 
 capitalize('hello');        // 'Hello'
 capitalize('hello world');  // 'Hello world'
 ```
+
+```js [JavaScript (ESM)]
+import { capitalize } from 'l-js-fn';
+
+capitalize('hello');        // 'Hello'
+capitalize('hello world');  // 'Hello world'
+```
+
+```js [JavaScript (CJS)]
+const { capitalize } = require('l-js-fn');
+
+capitalize('hello');        // 'Hello'
+capitalize('hello world');  // 'Hello world'
+```
+:::

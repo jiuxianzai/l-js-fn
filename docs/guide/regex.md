@@ -4,9 +4,19 @@
 
 **导入方式：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { REGEXP } from 'l-js-fn/regex';
 ```
+
+```js [JavaScript (ESM)]
+import { REGEXP } from 'l-js-fn/regex';
+```
+
+```js [JavaScript (CJS)]
+const { REGEXP } = require('l-js-fn/regex');
+```
+:::
 
 ## 常量列表
 
@@ -32,7 +42,8 @@ import { REGEXP } from 'l-js-fn/regex';
 
 ### 基础验证
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { REGEXP } from 'l-js-fn/regex';
 
 // 手机号验证
@@ -48,9 +59,43 @@ REGEXP.ID_CARD.test('110101199001011234'); // true
 REGEXP.ID_CARD.test('123456789012345678'); // false
 ```
 
+```js [JavaScript (ESM)]
+import { REGEXP } from 'l-js-fn/regex';
+
+// 手机号验证
+REGEXP.PHONE.test('13800138000');        // true
+REGEXP.PHONE.test('1380013800');         // false
+
+// 邮箱验证
+REGEXP.EMAIL.test('test@example.com');   // true
+REGEXP.EMAIL.test('invalid-email');      // false
+
+// 身份证验证
+REGEXP.ID_CARD.test('110101199001011234'); // true
+REGEXP.ID_CARD.test('123456789012345678'); // false
+```
+
+```js [JavaScript (CJS)]
+const { REGEXP } = require('l-js-fn/regex');
+
+// 手机号验证
+REGEXP.PHONE.test('13800138000');        // true
+REGEXP.PHONE.test('1380013800');         // false
+
+// 邮箱验证
+REGEXP.EMAIL.test('test@example.com');   // true
+REGEXP.EMAIL.test('invalid-email');      // false
+
+// 身份证验证
+REGEXP.ID_CARD.test('110101199001011234'); // true
+REGEXP.ID_CARD.test('123456789012345678'); // false
+```
+:::
+
 ### 表单验证
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { REGEXP } from 'l-js-fn/regex';
 
 function validateForm(data: { phone?: string; email?: string; password?: string }) {
@@ -72,9 +117,55 @@ function validateForm(data: { phone?: string; email?: string; password?: string 
 }
 ```
 
+```js [JavaScript (ESM)]
+import { REGEXP } from 'l-js-fn/regex';
+
+function validateForm(data: { phone?: string; email?: string; password?: string }) {
+  const errors: string[] = [];
+
+  if (data.phone && !REGEXP.PHONE.test(data.phone)) {
+    errors.push('手机号格式不正确');
+  }
+
+  if (data.email && !REGEXP.EMAIL.test(data.email)) {
+    errors.push('邮箱格式不正确');
+  }
+
+  if (data.password && !REGEXP.PASSWORD.test(data.password)) {
+    errors.push('密码必须为8-16位，包含大小写字母、数字和特殊字符');
+  }
+
+  return errors;
+}
+```
+
+```js [JavaScript (CJS)]
+const { REGEXP } = require('l-js-fn/regex');
+
+function validateForm(data: { phone?: string; email?: string; password?: string }) {
+  const errors: string[] = [];
+
+  if (data.phone && !REGEXP.PHONE.test(data.phone)) {
+    errors.push('手机号格式不正确');
+  }
+
+  if (data.email && !REGEXP.EMAIL.test(data.email)) {
+    errors.push('邮箱格式不正确');
+  }
+
+  if (data.password && !REGEXP.PASSWORD.test(data.password)) {
+    errors.push('密码必须为8-16位，包含大小写字母、数字和特殊字符');
+  }
+
+  return errors;
+}
+```
+:::
+
 ### 输入限制
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { REGEXP } from 'l-js-fn/regex';
 
 // 只允许输入中文
@@ -87,3 +178,32 @@ function isValidMoney(amount: string): boolean {
   return REGEXP.MONEY.test(amount);
 }
 ```
+
+```js [JavaScript (ESM)]
+import { REGEXP } from 'l-js-fn/regex';
+
+// 只允许输入中文
+function isChinese(input: string): boolean {
+  return REGEXP.CHINESE.test(input);
+}
+
+// 金额格式检查
+function isValidMoney(amount: string): boolean {
+  return REGEXP.MONEY.test(amount);
+}
+```
+
+```js [JavaScript (CJS)]
+const { REGEXP } = require('l-js-fn/regex');
+
+// 只允许输入中文
+function isChinese(input: string): boolean {
+  return REGEXP.CHINESE.test(input);
+}
+
+// 金额格式检查
+function isValidMoney(amount: string): boolean {
+  return REGEXP.MONEY.test(amount);
+}
+```
+:::

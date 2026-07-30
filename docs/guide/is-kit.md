@@ -23,7 +23,8 @@
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isEmpty } from 'l-js-fn';
 
 isEmpty(null);           // true
@@ -37,6 +38,37 @@ isEmpty([1, 2]);         // false
 isEmpty({ a: 1 });       // false
 isEmpty(0);              // false
 ```
+
+```js [JavaScript (ESM)]
+import { isEmpty } from 'l-js-fn';
+
+isEmpty(null);           // true
+isEmpty(undefined);      // true
+isEmpty('');             // true
+isEmpty('null');         // true
+isEmpty([]);             // true
+isEmpty({});             // true
+isEmpty('hello');        // false
+isEmpty([1, 2]);         // false
+isEmpty({ a: 1 });       // false
+isEmpty(0);              // false
+```
+
+```js [JavaScript (CJS)]
+const { isEmpty } = require('l-js-fn');
+
+isEmpty(null);           // true
+isEmpty(undefined);      // true
+isEmpty('');             // true
+isEmpty('null');         // true
+isEmpty([]);             // true
+isEmpty({});             // true
+isEmpty('hello');        // false
+isEmpty([1, 2]);         // false
+isEmpty({ a: 1 });       // false
+isEmpty(0);              // false
+```
+:::
 
 ## isNotEmpty 非空检查
 
@@ -52,13 +84,31 @@ isEmpty(0);              // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isNotEmpty } from 'l-js-fn';
 
 isNotEmpty('hello');     // true
 isNotEmpty(null);        // false
 isNotEmpty([]);          // false
 ```
+
+```js [JavaScript (ESM)]
+import { isNotEmpty } from 'l-js-fn';
+
+isNotEmpty('hello');     // true
+isNotEmpty(null);        // false
+isNotEmpty([]);          // false
+```
+
+```js [JavaScript (CJS)]
+const { isNotEmpty } = require('l-js-fn');
+
+isNotEmpty('hello');     // true
+isNotEmpty(null);        // false
+isNotEmpty([]);          // false
+```
+:::
 
 ## isObject 判断对象
 
@@ -74,7 +124,8 @@ isNotEmpty([]);          // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isObject } from 'l-js-fn';
 
 isObject({});            // true
@@ -83,6 +134,27 @@ isObject([]);            // false
 isObject(null);          // false
 isObject(new Date());    // false
 ```
+
+```js [JavaScript (ESM)]
+import { isObject } from 'l-js-fn';
+
+isObject({});            // true
+isObject({ a: 1 });      // true
+isObject([]);            // false
+isObject(null);          // false
+isObject(new Date());    // false
+```
+
+```js [JavaScript (CJS)]
+const { isObject } = require('l-js-fn');
+
+isObject({});            // true
+isObject({ a: 1 });      // true
+isObject([]);            // false
+isObject(null);          // false
+isObject(new Date());    // false
+```
+:::
 
 ## isArray 判断数组
 
@@ -98,7 +170,8 @@ isObject(new Date());    // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isArray } from 'l-js-fn';
 
 isArray([1, 2, 3]);      // true
@@ -106,6 +179,25 @@ isArray([]);             // true
 isArray('hello');        // false
 isArray({});             // false
 ```
+
+```js [JavaScript (ESM)]
+import { isArray } from 'l-js-fn';
+
+isArray([1, 2, 3]);      // true
+isArray([]);             // true
+isArray('hello');        // false
+isArray({});             // false
+```
+
+```js [JavaScript (CJS)]
+const { isArray } = require('l-js-fn');
+
+isArray([1, 2, 3]);      // true
+isArray([]);             // true
+isArray('hello');        // false
+isArray({});             // false
+```
+:::
 
 ## isImage 判断图片
 
@@ -123,12 +215,28 @@ isArray({});             // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isImage } from 'l-js-fn';
 
 isImage('photo.png');    // true
 isImage('doc.pdf');      // false
 ```
+
+```js [JavaScript (ESM)]
+import { isImage } from 'l-js-fn';
+
+isImage('photo.png');    // true
+isImage('doc.pdf');      // false
+```
+
+```js [JavaScript (CJS)]
+const { isImage } = require('l-js-fn');
+
+isImage('photo.png');    // true
+isImage('doc.pdf');      // false
+```
+:::
 
 ## isString 判断字符串
 
@@ -144,13 +252,31 @@ isImage('doc.pdf');      // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isString } from 'l-js-fn';
 
 isString('hello');       // true
 isString(new String('a')); // true
 isString(123);           // false
 ```
+
+```js [JavaScript (ESM)]
+import { isString } from 'l-js-fn';
+
+isString('hello');       // true
+isString(new String('a')); // true
+isString(123);           // false
+```
+
+```js [JavaScript (CJS)]
+const { isString } = require('l-js-fn');
+
+isString('hello');       // true
+isString(new String('a')); // true
+isString(123);           // false
+```
+:::
 
 ## isEmail 邮箱验证
 
@@ -166,12 +292,28 @@ isString(123);           // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isEmail } from 'l-js-fn';
 
 isEmail('test@example.com');  // true
 isEmail('invalid-email');     // false
 ```
+
+```js [JavaScript (ESM)]
+import { isEmail } from 'l-js-fn';
+
+isEmail('test@example.com');  // true
+isEmail('invalid-email');     // false
+```
+
+```js [JavaScript (CJS)]
+const { isEmail } = require('l-js-fn');
+
+isEmail('test@example.com');  // true
+isEmail('invalid-email');     // false
+```
+:::
 
 ## isURL URL验证
 
@@ -187,12 +329,28 @@ isEmail('invalid-email');     // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isURL } from 'l-js-fn';
 
 isURL('https://example.com'); // true
 isURL('not-a-url');           // false
 ```
+
+```js [JavaScript (ESM)]
+import { isURL } from 'l-js-fn';
+
+isURL('https://example.com'); // true
+isURL('not-a-url');           // false
+```
+
+```js [JavaScript (CJS)]
+const { isURL } = require('l-js-fn');
+
+isURL('https://example.com'); // true
+isURL('not-a-url');           // false
+```
+:::
 
 ## isHttp HTTP协议判断
 
@@ -208,7 +366,8 @@ isURL('not-a-url');           // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isHttp } from 'l-js-fn';
 
 isHttp('http://example.com');  // true
@@ -216,6 +375,25 @@ isHttp('HTTP://EXAMPLE.COM');  // true
 isHttp('https://example.com'); // false
 isHttp('');                    // false
 ```
+
+```js [JavaScript (ESM)]
+import { isHttp } from 'l-js-fn';
+
+isHttp('http://example.com');  // true
+isHttp('HTTP://EXAMPLE.COM');  // true
+isHttp('https://example.com'); // false
+isHttp('');                    // false
+```
+
+```js [JavaScript (CJS)]
+const { isHttp } = require('l-js-fn');
+
+isHttp('http://example.com');  // true
+isHttp('HTTP://EXAMPLE.COM');  // true
+isHttp('https://example.com'); // false
+isHttp('');                    // false
+```
+:::
 
 ## isHttps HTTPS协议判断
 
@@ -231,7 +409,8 @@ isHttp('');                    // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isHttps } from 'l-js-fn';
 
 isHttps('https://example.com');  // true
@@ -239,6 +418,25 @@ isHttps('HTTPS://EXAMPLE.COM');  // true
 isHttps('http://example.com');   // false
 isHttps('');                     // false
 ```
+
+```js [JavaScript (ESM)]
+import { isHttps } from 'l-js-fn';
+
+isHttps('https://example.com');  // true
+isHttps('HTTPS://EXAMPLE.COM');  // true
+isHttps('http://example.com');   // false
+isHttps('');                     // false
+```
+
+```js [JavaScript (CJS)]
+const { isHttps } = require('l-js-fn');
+
+isHttps('https://example.com');  // true
+isHttps('HTTPS://EXAMPLE.COM');  // true
+isHttps('http://example.com');   // false
+isHttps('');                     // false
+```
+:::
 
 ## isIdCard 身份证验证
 
@@ -254,13 +452,31 @@ isHttps('');                     // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isIdCard } from 'l-js-fn';
 
 isIdCard('110101199001011234'); // true（18位）
 isIdCard('110101900101123');    // true（15位）
 isIdCard('123456789012345678'); // false
 ```
+
+```js [JavaScript (ESM)]
+import { isIdCard } from 'l-js-fn';
+
+isIdCard('110101199001011234'); // true（18位）
+isIdCard('110101900101123');    // true（15位）
+isIdCard('123456789012345678'); // false
+```
+
+```js [JavaScript (CJS)]
+const { isIdCard } = require('l-js-fn');
+
+isIdCard('110101199001011234'); // true（18位）
+isIdCard('110101900101123');    // true（15位）
+isIdCard('123456789012345678'); // false
+```
+:::
 
 ## isPhoneNumber 手机号验证
 
@@ -276,12 +492,28 @@ isIdCard('123456789012345678'); // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isPhoneNumber } from 'l-js-fn';
 
 isPhoneNumber('13800138000'); // true
 isPhoneNumber('1380013800');  // false
 ```
+
+```js [JavaScript (ESM)]
+import { isPhoneNumber } from 'l-js-fn';
+
+isPhoneNumber('13800138000'); // true
+isPhoneNumber('1380013800');  // false
+```
+
+```js [JavaScript (CJS)]
+const { isPhoneNumber } = require('l-js-fn');
+
+isPhoneNumber('13800138000'); // true
+isPhoneNumber('1380013800');  // false
+```
+:::
 
 ## isEqual 深度比较
 
@@ -298,7 +530,8 @@ isPhoneNumber('1380013800');  // false
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { isEqual } from 'l-js-fn';
 
 isEqual({ a: 1 }, { a: 1 });     // true
@@ -311,6 +544,35 @@ isEqual({ a: 1 }, { a: 2 });     // false
 isEqual(null, {}); // false
 isEqual(null, null); // true
 ```
+
+```js [JavaScript (ESM)]
+import { isEqual } from 'l-js-fn';
+
+isEqual({ a: 1 }, { a: 1 });     // true
+isEqual([1, 2], [1, 2]);         // true
+isEqual(NaN, NaN);               // true
+isEqual({ a: { b: 1 } }, { a: { b: 1 } }); // true
+isEqual({ a: 1 }, { a: 2 });     // false
+
+// null 与对象比较
+isEqual(null, {}); // false
+isEqual(null, null); // true
+```
+
+```js [JavaScript (CJS)]
+const { isEqual } = require('l-js-fn');
+
+isEqual({ a: 1 }, { a: 1 });     // true
+isEqual([1, 2], [1, 2]);         // true
+isEqual(NaN, NaN);               // true
+isEqual({ a: { b: 1 } }, { a: { b: 1 } }); // true
+isEqual({ a: 1 }, { a: 2 });     // false
+
+// null 与对象比较
+isEqual(null, {}); // false
+isEqual(null, null); // true
+```
+:::
 
 ::: warning 注意
 `isEqual(null, {})` 或 `isEqual({}, null)` 等 null 与非 null 对象的比较会返回 `false`，而不会抛出异常。
@@ -331,9 +593,25 @@ isEqual(null, null); // true
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { validateParams } from 'l-js-fn';
 
 validateParams(['name', 'age'], { name: 'John', age: 20 }); // null
 validateParams(['name'], { age: 20 }); // 'name'
 ```
+
+```js [JavaScript (ESM)]
+import { validateParams } from 'l-js-fn';
+
+validateParams(['name', 'age'], { name: 'John', age: 20 }); // null
+validateParams(['name'], { age: 20 }); // 'name'
+```
+
+```js [JavaScript (CJS)]
+const { validateParams } = require('l-js-fn');
+
+validateParams(['name', 'age'], { name: 'John', age: 20 }); // null
+validateParams(['name'], { age: 20 }); // 'name'
+```
+:::

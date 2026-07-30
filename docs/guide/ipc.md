@@ -4,15 +4,25 @@ IPC（进程间通信）工具集，提供 H5 与 Iframe 之间的双向通信�
 
 **导入方式：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { H5Bridge, IframeBridge } from 'l-js-fn/ipc';
 ```
+
+```js [JavaScript (ESM)]
+import { H5Bridge, IframeBridge } from 'l-js-fn/ipc';
+```
+
+```js [JavaScript (CJS)]
+const { H5Bridge, IframeBridge } = require('l-js-fn/ipc');
+```
+:::
 
 ## IPCMessage
 
 消息体类型定义：
 
-```typescript
+```ts
 interface IPCMessage<T = any> {
   type: IPC_TYPE;    // 消息类型
   id?: string;       // 消息 ID
@@ -25,7 +35,7 @@ interface IPCMessage<T = any> {
 
 ### IPC_TYPE 枚举
 
-```typescript
+```ts
 enum IPC_TYPE {
   REQUEST = 'request',   // 请求
   RESPONSE = 'response', // 响应
@@ -47,12 +57,28 @@ enum IPC_TYPE {
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { H5Bridge } from 'l-js-fn/ipc';
 
 const iframe = document.getElementById('myIframe') as HTMLIFrameElement;
 const bridge = new H5Bridge(iframe);
 ```
+
+```js [JavaScript (ESM)]
+import { H5Bridge } from 'l-js-fn/ipc';
+
+const iframe = document.getElementById('myIframe') as HTMLIFrameElement;
+const bridge = new H5Bridge(iframe);
+```
+
+```js [JavaScript (CJS)]
+const { H5Bridge } = require('l-js-fn/ipc');
+
+const iframe = document.getElementById('myIframe') as HTMLIFrameElement;
+const bridge = new H5Bridge(iframe);
+```
+:::
 
 ### call
 
@@ -148,11 +174,25 @@ bridge.destroy();
 
 **示例：**
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { IframeBridge } from 'l-js-fn/ipc';
 
 const bridge = new IframeBridge();
 ```
+
+```js [JavaScript (ESM)]
+import { IframeBridge } from 'l-js-fn/ipc';
+
+const bridge = new IframeBridge();
+```
+
+```js [JavaScript (CJS)]
+const { IframeBridge } = require('l-js-fn/ipc');
+
+const bridge = new IframeBridge();
+```
+:::
 
 ### register
 
@@ -246,7 +286,8 @@ bridge.destroy();
 <iframe id="child" src="./child.html"></iframe>
 ```
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { H5Bridge } from 'l-js-fn/ipc';
 
 const iframe = document.getElementById('child') as HTMLIFrameElement;
@@ -271,9 +312,61 @@ bridge.on('ready', () => {
 window.addEventListener('beforeunload', () => bridge.destroy());
 ```
 
+```js [JavaScript (ESM)]
+import { H5Bridge } from 'l-js-fn/ipc';
+
+const iframe = document.getElementById('child') as HTMLIFrameElement;
+const bridge = new H5Bridge(iframe);
+
+// 调用子应用方法
+async function getUser() {
+  try {
+    const user = await bridge.call('getUser', { id: 1 });
+    console.log('用户信息:', user);
+  } catch (error) {
+    console.error('获取失败:', error);
+  }
+}
+
+// 监听子应用事件
+bridge.on('ready', () => {
+  console.log('子应用准备就绪');
+});
+
+// 页面卸载时销毁
+window.addEventListener('beforeunload', () => bridge.destroy());
+```
+
+```js [JavaScript (CJS)]
+const { H5Bridge } = require('l-js-fn/ipc');
+
+const iframe = document.getElementById('child') as HTMLIFrameElement;
+const bridge = new H5Bridge(iframe);
+
+// 调用子应用方法
+async function getUser() {
+  try {
+    const user = await bridge.call('getUser', { id: 1 });
+    console.log('用户信息:', user);
+  } catch (error) {
+    console.error('获取失败:', error);
+  }
+}
+
+// 监听子应用事件
+bridge.on('ready', () => {
+  console.log('子应用准备就绪');
+});
+
+// 页面卸载时销毁
+window.addEventListener('beforeunload', () => bridge.destroy());
+```
+:::
+
 ### 子应用（Iframe）
 
-```typescript
+::: code-group
+```ts [TypeScript]
 import { IframeBridge } from 'l-js-fn/ipc';
 
 const bridge = new IframeBridge();
@@ -290,3 +383,40 @@ bridge.emit('ready');
 // 页面卸载时销毁
 window.addEventListener('beforeunload', () => bridge.destroy());
 ```
+
+```js [JavaScript (ESM)]
+import { IframeBridge } from 'l-js-fn/ipc';
+
+const bridge = new IframeBridge();
+
+// 注册可被调用的方法
+bridge.register('getUser', async (params) => {
+  const response = await fetch(`/api/users/${params.id}`);
+  return response.json();
+});
+
+// 通知父应用
+bridge.emit('ready');
+
+// 页面卸载时销毁
+window.addEventListener('beforeunload', () => bridge.destroy());
+```
+
+```js [JavaScript (CJS)]
+const { IframeBridge } = require('l-js-fn/ipc');
+
+const bridge = new IframeBridge();
+
+// 注册可被调用的方法
+bridge.register('getUser', async (params) => {
+  const response = await fetch(`/api/users/${params.id}`);
+  return response.json();
+});
+
+// 通知父应用
+bridge.emit('ready');
+
+// 页面卸载时销毁
+window.addEventListener('beforeunload', () => bridge.destroy());
+```
+:::
