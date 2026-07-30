@@ -2,7 +2,7 @@
 
 颜色处理工具集，提供 HEX 与 HSL 互转、图标颜色适配等功能。
 
-## HSLColor
+## 1. HSLColor
 
 HSL 颜色结构类型定义。
 
@@ -14,7 +14,7 @@ type HSLColor = { h: number; s: number; l: number };
 - `s`：饱和度（0-100）
 - `l`：亮度（0-100）
 
-## ColorMode
+## 2. ColorMode
 
 颜色模式枚举类型。
 
@@ -22,7 +22,7 @@ type HSLColor = { h: number; s: number; l: number };
 type ColorMode = 'dark' | 'light';
 ```
 
-## isValidHexColor 验证十六进制颜色
+## 3. isValidHexColor 验证十六进制颜色
 
 判断是否为合法的 HEX 颜色值。
 
@@ -65,7 +65,7 @@ isValidHexColor('#GGGGGG');  // false
 ```
 :::
 
-## hexToHSL 十六进制转HSL
+## 4. hexToHSL 十六进制转HSL
 
 将 HEX 颜色转换为 HSL。
 
@@ -111,7 +111,7 @@ hexToHSL('#F53');
 ```
 :::
 
-## hslToHex HSL转十六进制
+## 5. hslToHex HSL转十六进制
 
 将 HSL 转换为 HEX 颜色值。
 
@@ -148,7 +148,7 @@ hslToHex({ h: 9, s: 100, l: 60 });
 ```
 :::
 
-## conversionColor 颜色明暗转换
+## 6. conversionColor 颜色明暗转换
 
 根据背景色和模式计算适配的图标颜色。
 

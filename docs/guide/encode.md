@@ -33,9 +33,9 @@ const {
 ```
 :::
 
-## Base64
+## 1. Base64
 
-### base64Encode Base64编码
+### 1.1 base64Encode Base64编码
 
 将字符串编码为 Base64（支持 Unicode）。
 
@@ -74,7 +74,7 @@ base64Encode('你好');        // '5L2g5aW9'
 ```
 :::
 
-### base64Decode Base64解码
+### 1.2 base64Decode Base64解码
 
 将 Base64 字符串解码（支持 Unicode）。
 
@@ -113,9 +113,9 @@ base64Decode('5L2g5aW9');          // '你好'
 ```
 :::
 
-## HTML 转义
+## 2. HTML 转义
 
-### escapeHTML HTML转义
+### 2.1 escapeHTML HTML转义
 
 HTML 转义（防 XSS 攻击）。
 
@@ -165,7 +165,7 @@ escapeHTML('<script>alert("XSS")</script>');
 ```
 :::
 
-### unescapeHTML HTML反转义
+### 2.2 unescapeHTML HTML反转义
 
 HTML 反转义。
 
@@ -202,9 +202,9 @@ unescapeHTML('&lt;div&gt;Hello&lt;/div&gt;');
 ```
 :::
 
-## URL 编码
+## 3. URL 编码
 
-### urlEncode URL编码
+### 3.1 urlEncode URL编码
 
 URL 编码。
 
@@ -247,7 +247,7 @@ urlEncode('a/b', { uri: true }); // 'a/b'（URI 模式保留 /）
 ```
 :::
 
-### urlDecode URL解码
+### 3.2 urlDecode URL解码
 
 URL 解码。
 
@@ -295,9 +295,9 @@ urlDecode('Hello%20World%21', { component: true }); // 'Hello World!'
 ```
 :::
 
-## 查询字符串
+## 4. 查询字符串
 
-### querystringify 对象转查询字符串
+### 4.1 querystringify 对象转查询字符串
 
 将对象转换为 URL 查询字符串。
 
@@ -343,7 +343,7 @@ querystringify({ a: [1, 2, 3] });
 ```
 :::
 
-### parseQueryString 查询字符串解析
+### 4.2 parseQueryString 查询字符串解析
 
 解析 URL 查询字符串为对象。
 

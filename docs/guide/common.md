@@ -2,7 +2,7 @@
 
 通用工具函数集，提供防抖、节流、深拷贝、设备检测等常用功能。
 
-## sleep 睡眠延迟
+## 1. sleep 睡眠延迟
 
 睡眠函数，延迟指定毫秒数。
 
@@ -48,7 +48,7 @@ async function demo() {
 ```
 :::
 
-## debounce 防抖函数
+## 2. debounce 防抖函数
 
 创建防抖函数。
 
@@ -105,7 +105,7 @@ handleSearch('abc'); // 最终只输出 "搜索: abc"
 ```
 :::
 
-## throttle 节流函数
+## 3. throttle 节流函数
 
 创建节流函数。
 
@@ -155,7 +155,7 @@ window.addEventListener('scroll', handleScroll);
 ```
 :::
 
-## getType 获取详细类型
+## 4. getType 获取详细类型
 
 获取值的详细类型。
 
@@ -213,7 +213,7 @@ getType({});             // 'object'
 ```
 :::
 
-## deepClone 深拷贝
+## 5. deepClone 深拷贝
 
 深拷贝函数，支持循环引用。
 
@@ -280,7 +280,7 @@ console.log(clonedA.self === clonedA); // true
 ```
 :::
 
-## syntaxHighlight 语法高亮
+## 6. syntaxHighlight 语法高亮
 
 将对象格式化为带 HTML 语法高亮的字符串。
 
@@ -318,7 +318,7 @@ const html = syntaxHighlight({ name: 'John', age: 20 });
 ```
 :::
 
-## syntaxHtmlToJson HTML转JSON
+## 7. syntaxHtmlToJson HTML转JSON
 
 将带语法高亮的 HTML 转换回 JSON 对象。
 
@@ -358,7 +358,7 @@ const obj = syntaxHtmlToJson(html);
 ```
 :::
 
-## loadScript 动态加载脚本
+## 8. loadScript 动态加载脚本
 
 动态加载外部 JS 文件。
 
@@ -401,7 +401,7 @@ await loadScript('https://example.com/sdk.js');
 - 仅在浏览器环境中可用
 :::
 
-## removeScript 移除加载的脚本
+## 9. removeScript 移除加载的脚本
 
 移除已加载的 JS 文件。
 
@@ -433,7 +433,7 @@ removeScript('https://example.com/sdk.js');
 ```
 :::
 
-## getDevice 获取设备类型
+## 10. getDevice 获取设备类型
 
 获取设备类型。
 
@@ -461,7 +461,7 @@ getDevice(); // 'android' | 'ios' | 'wechat' | ...
 ```
 :::
 
-## imageToBase64 图片转Base64
+## 11. imageToBase64 图片转Base64
 
 将图片转换为 Base64 字符串。
 
@@ -520,7 +520,7 @@ const result2 = await imageToBase64(file, 'image/jpeg', 0.8);
 - 当 `input` 为 `null` 时，返回 `Result.fail('输入不能为空')`，不会抛出异常
 :::
 
-## retry 异步重试
+## 12. retry 异步重试
 
 异步函数失败重试。
 
@@ -571,7 +571,7 @@ await fetchData(); // 失败后最多重试 3 次
 ```
 :::
 
-## once 只执行一次
+## 13. once 只执行一次
 
 包装函数使其只执行一次。
 
@@ -613,7 +613,7 @@ init(); // 直接返回 'done'（无输出）
 ```
 :::
 
-## memoize 缓存计算结果
+## 14. memoize 缓存计算结果
 
 缓存函数计算结果，相同参数不重复执行。
 

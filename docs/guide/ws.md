@@ -18,11 +18,11 @@ const { WebSocketManager } = require('l-js-fn/ws');
 ```
 :::
 
-## WebSocketManager WebSocket管理器
+## 1. WebSocketManager WebSocket管理器
 
 WebSocket 管理类。
 
-### 构造函数
+### 1.1 构造函数
 
 **参数说明：**
 
@@ -78,7 +78,7 @@ const ws = new WebSocketManager(
 ```
 :::
 
-### sendWebSocketMessage 发送消息
+### 1.2 sendWebSocketMessage 发送消息
 
 发送消息。
 
@@ -97,7 +97,7 @@ ws.sendWebSocketMessage({ type: 'ping', data: 'hello' });
 ws.sendWebSocketMessage('hello');
 ```
 
-### checkConnection 检查连接
+### 1.3 checkConnection 检查连接
 
 检查连接并定时发送消息（心跳检测）。
 
@@ -117,7 +117,7 @@ ws.checkConnection({ type: 'heartbeat' }, 5000);
 // 每 5 秒发送一次心跳
 ```
 
-### reconnect 重新连接
+### 1.4 reconnect 重新连接
 
 重新连接。
 
@@ -135,7 +135,7 @@ ws.checkConnection({ type: 'heartbeat' }, 5000);
 ws.reconnect(3000); // 3 秒后重新连接
 ```
 
-### getWebSocket 获取实例
+### 1.5 getWebSocket 获取实例
 
 获取 WebSocket 实例。
 
@@ -148,7 +148,7 @@ const socket = ws.getWebSocket();
 console.log(socket?.readyState);
 ```
 
-### close 关闭连接
+### 1.6 close 关闭连接
 
 关闭连接。
 
@@ -160,9 +160,9 @@ console.log(socket?.readyState);
 ws.close();
 ```
 
-## 错误类型
+## 2. 错误类型
 
-### ErrorType
+### 2.1 ErrorType
 
 ```ts
 type ErrorType =
@@ -172,7 +172,7 @@ type ErrorType =
   | 'connection_send_error';    // 发送消息失败
 ```
 
-### ErrorPayload
+### 2.2 ErrorPayload
 
 ```ts
 interface ErrorPayload {
@@ -181,7 +181,7 @@ interface ErrorPayload {
 }
 ```
 
-### 使用示例
+### 2.3 使用示例
 
 ::: code-group
 ```ts [TypeScript]

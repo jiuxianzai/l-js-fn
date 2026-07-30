@@ -18,11 +18,11 @@ const { Polling } = require('l-js-fn/polling');
 ```
 :::
 
-## Polling 轮询类
+## 1. Polling 轮询类
 
 轮询工具类。
 
-### start 启动轮询
+### 1.1 start 启动轮询
 
 启动轮询。
 
@@ -88,7 +88,7 @@ polling.start(
 ```
 :::
 
-### stop 停止轮询
+### 1.2 stop 停止轮询
 
 停止轮询。
 
@@ -100,7 +100,7 @@ polling.start(
 polling.stop();
 ```
 
-### running
+### 1.3 running
 
 获取轮询状态（getter）。
 
@@ -112,7 +112,7 @@ polling.stop();
 console.log(polling.running); // true | false
 ```
 
-## 完整示例
+## 2. 完整示例
 
 ::: code-group
 ```ts [TypeScript]

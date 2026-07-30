@@ -30,9 +30,9 @@ const {
 ```
 :::
 
-## localStorage 操作
+## 1. localStorage 操作
 
-### StorageOptions
+### 1.1 StorageOptions
 
 ```ts
 interface StorageOptions {
@@ -40,7 +40,7 @@ interface StorageOptions {
 }
 ```
 
-### setStorage localStorage设置
+### 1.2 setStorage localStorage设置
 
 设置 localStorage（支持过期时间）。
 
@@ -79,7 +79,7 @@ setStorage('token', 'abc123', { expire: 3600 }); // 1小时后过期
 ```
 :::
 
-### getStorage localStorage获取
+### 1.3 getStorage localStorage获取
 
 获取 localStorage（自动处理过期）。
 
@@ -119,7 +119,7 @@ getStorage('notexist'); // null（不存在）
 ```
 :::
 
-### removeStorage localStorage删除
+### 1.4 removeStorage localStorage删除
 
 删除 localStorage。
 
@@ -153,7 +153,7 @@ removeStorage('user');
 ```
 :::
 
-### clearStorage localStorage清空
+### 1.5 clearStorage localStorage清空
 
 清空所有 localStorage。
 
@@ -181,7 +181,7 @@ clearStorage();
 ```
 :::
 
-### clearExpiredStorage 清理过期数据
+### 1.6 clearExpiredStorage 清理过期数据
 
 清理所有已过期的 localStorage。
 
@@ -212,7 +212,7 @@ console.log(`清理了 ${count} 个过期项`);
 ```
 :::
 
-### hasStorage
+### 1.7 hasStorage
 
 检查 localStorage 是否存在且未过期。
 
@@ -246,7 +246,7 @@ hasStorage('user'); // true
 ```
 :::
 
-### getStorageKeys
+### 1.8 getStorageKeys
 
 获取所有 localStorage 的键名。
 
@@ -274,7 +274,7 @@ getStorageKeys(); // ['user', 'token', 'settings']
 ```
 :::
 
-### getStorageLength
+### 1.9 getStorageLength
 
 获取 localStorage 的数量。
 
@@ -302,9 +302,9 @@ getStorageLength(); // 3
 ```
 :::
 
-## sessionStorage 操作
+## 2. sessionStorage 操作
 
-### setSession sessionStorage设置
+### 2.1 setSession sessionStorage设置
 
 设置 sessionStorage。
 
@@ -339,7 +339,7 @@ setSession('tabData', { id: 1, name: 'test' });
 ```
 :::
 
-### getSession
+### 2.2 getSession
 
 获取 sessionStorage。
 
@@ -373,7 +373,7 @@ getSession('tabData'); // { id: 1, name: 'test' }
 ```
 :::
 
-### removeSession sessionStorage删除
+### 2.3 removeSession sessionStorage删除
 
 删除 sessionStorage。
 
@@ -407,7 +407,7 @@ removeSession('tabData');
 ```
 :::
 
-### clearSession
+### 2.4 clearSession
 
 清空所有 sessionStorage。
 
@@ -435,7 +435,7 @@ clearSession();
 ```
 :::
 
-### hasSession
+### 2.5 hasSession
 
 检查 sessionStorage 是否存在。
 
@@ -469,7 +469,7 @@ hasSession('tabData'); // true
 ```
 :::
 
-### getSessionKeys
+### 2.6 getSessionKeys
 
 获取所有 sessionStorage 的键名。
 

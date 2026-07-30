@@ -2,7 +2,7 @@
 
 数组操作工具集，提供增删改查、分页、分组、随机抽样等常用功能。
 
-## arrayDelEl 删除指定元素
+## 1. arrayDelEl 删除指定元素
 
 从数组中移除指定元素，返回新数组。
 
@@ -77,7 +77,7 @@ arrayDelEl(users, { id: 1, name: 'Alice' });
 ```
 :::
 
-## arrayDelToIndex 根据索引删除
+## 2. arrayDelToIndex 根据索引删除
 
 根据索引删除数组元素。
 
@@ -118,7 +118,7 @@ arrayDelToIndex([1, 2, 3], -1);  // [1, 2, 3]（无效索引）
 ```
 :::
 
-## arrayDelToEl 根据元素值删除
+## 3. arrayDelToEl 根据元素值删除
 
 根据基本类型元素删除数组元素。
 
@@ -163,7 +163,7 @@ arrayDelToEl([true, false, true], true); // [false]
 `arrayDelToEl` 会删除数组中**所有**匹配的元素，而不仅仅是第一个。如需只删除第一个匹配项，请使用 `arrayDelToIndex`。
 :::
 
-## arrayDelToKey 根据键值对删除
+## 4. arrayDelToKey 根据键值对删除
 
 根据对象数组的键值对删除元素。
 
@@ -217,7 +217,7 @@ arrayDelToKey(users, 'id', 2);
 ```
 :::
 
-## arrayFill 补充到指定长度
+## 5. arrayFill 补充到指定长度
 
 补充数组到指定长度。
 
@@ -261,7 +261,7 @@ arrayFill([1, 2, 3], 2, 0);   // [1, 2, 3]（长度已满足）
 ```
 :::
 
-## arrayUnique 数组去重
+## 6. arrayUnique 数组去重
 
 数组去重（使用 `Set`，保留顺序）。
 
@@ -298,7 +298,7 @@ arrayUnique(['a', 'b', 'a']);    // ['a', 'b']
 ```
 :::
 
-## arrayPaginate 数组分页
+## 7. arrayPaginate 数组分页
 
 数组分页。
 
@@ -349,7 +349,7 @@ arrayPaginate(arr, 5, 3); // []（超出范围）
 ```
 :::
 
-## arraySplitToGroups 按大小分组
+## 8. arraySplitToGroups 按大小分组
 
 将数组按指定大小分组，返回对象。
 
@@ -398,7 +398,7 @@ arraySplitToGroups([1, 2, 3, 4, 5, 6], 3);
 ```
 :::
 
-## findIndex 查找元素索引
+## 9. findIndex 查找元素索引
 
 查找数组元素的索引（兼容旧浏览器）。
 
@@ -451,7 +451,7 @@ findIndex([1, 2, 3], item => item === 5);      // -1
 ```
 :::
 
-## moveElement 移动元素位置
+## 10. moveElement 移动元素位置
 
 移动数组元素位置。
 
@@ -505,7 +505,7 @@ moveElement(arr, 0, 'up');     // { success: false, message: '已经是第一个
 ```
 :::
 
-## groupBy 按字段分组
+## 11. groupBy 按字段分组
 
 按字段对数组对象进行分组。
 
@@ -572,7 +572,7 @@ groupBy(users, 'city');
 ```
 :::
 
-## sample 随机取一个元素
+## 12. sample 随机取一个元素
 
 随机获取数组中的一个元素。
 
@@ -612,7 +612,7 @@ sample([]);     // undefined
 ```
 :::
 
-## sampleSize 随机取N个元素
+## 13. sampleSize 随机取N个元素
 
 随机获取数组中的 `n` 个不重复元素。
 
@@ -662,7 +662,7 @@ sampleSize(numbers, 0);   // []（n=0 返回空数组）
 ```
 :::
 
-## flatten 数组扁平化
+## 14. flatten 数组扁平化
 
 数组扁平化，支持指定展开深度。
 
@@ -689,7 +689,7 @@ flatten([1, [2, [3, 4]], 5], 1); // [1, 2, [3, 4], 5]
 ```
 :::
 
-## range 生成数字范围
+## 15. range 生成数字范围
 
 生成数字范围数组。
 
@@ -719,7 +719,7 @@ range(0, 10, 2);   // [0, 2, 4, 6, 8, 10]
 ```
 :::
 
-## shuffle 洗牌打乱
+## 16. shuffle 洗牌打乱
 
 Fisher-Yates 洗牌算法打乱数组。
 
@@ -743,7 +743,7 @@ shuffle([1, 2, 3, 4, 5]); // [3, 1, 5, 2, 4]（随机）
 ```
 :::
 
-## uniqueBy 按字段去重
+## 17. uniqueBy 按字段去重
 
 根据对象数组中指定字段的值去重。
 
@@ -770,7 +770,7 @@ uniqueBy(arr, 'id'); // [{ id: 1, name: 'a' }, { id: 2, name: 'b' }]
 ```
 :::
 
-## compact 过滤falsy值
+## 18. compact 过滤falsy值
 
 过滤数组中的 falsy 值。
 
@@ -794,7 +794,7 @@ compact([0, 1, false, 2, '', 3, null, undefined, NaN]); // [1, 2, 3]
 ```
 :::
 
-## sum 数组求和
+## 19. sum 数组求和
 
 计算数组元素总和。
 
@@ -818,7 +818,7 @@ sum([1, 2, 3, 4, 5]); // 15
 ```
 :::
 
-## last 获取最后元素
+## 20. last 获取最后元素
 
 获取数组最后一个元素。
 

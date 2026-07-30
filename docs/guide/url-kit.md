@@ -2,7 +2,7 @@
 
 URL 处理工具集，提供参数解析、拼接、转换等功能。
 
-## getUrlParams 解析URL查询参数
+## 1. getUrlParams 解析URL查询参数
 
 解析 URL 查询参数，支持数组参数和嵌套对象参数。
 
@@ -59,7 +59,7 @@ getUrlParams('https://example.com?user[name]=John&user[age]=20');
 ```
 :::
 
-## getUrlParam 获取单个参数
+## 2. getUrlParam 获取单个参数
 
 获取指定查询参数的值。
 
@@ -97,7 +97,7 @@ getUrlParam('https://example.com?id=1', 'name');  // null
 ```
 :::
 
-## appendUrlParam 添加URL参数
+## 3. appendUrlParam 添加URL参数
 
 向 URL 添加参数，支持控制参数放在 `#` 前或 `#` 后。
 
@@ -170,7 +170,7 @@ appendUrlParam('https://example.com/#/home', 'id', '1', { position: 'before' });
 ```
 :::
 
-## appendUrlParams 批量添加URL参数
+## 4. appendUrlParams 批量添加URL参数
 
 向 URL 批量添加查询参数，兼容 hash 和 history 路由模式，自动判断使用 `?` 还是 `&`。默认追加在 `#` 之后，可通过 `position: 'before'` 放在 `#` 之前。
 
@@ -272,7 +272,7 @@ appendUrlParams('https://example.com/user/list', { name: 'zs' });
 ```
 :::
 
-## transUrlParams 对象转查询字符串
+## 5. transUrlParams 对象转查询字符串
 
 将对象转换为 URL 查询字符串，支持嵌套对象。
 
@@ -318,7 +318,7 @@ transUrlParams({ user: { name: 'John', age: 20 } });
 ```
 :::
 
-## getFileInfoToUrl 提取文件信息
+## 6. getFileInfoToUrl 提取文件信息
 
 从 URL 中提取文件名及后缀。
 

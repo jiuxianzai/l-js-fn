@@ -18,7 +18,7 @@ const { H5Bridge, IframeBridge } = require('l-js-fn/ipc');
 ```
 :::
 
-## IPCMessage
+## 1. IPCMessage
 
 消息体类型定义：
 
@@ -33,7 +33,7 @@ interface IPCMessage<T = any> {
 }
 ```
 
-### IPC_TYPE 枚举
+### 1.1 IPC_TYPE 枚举
 
 ```ts
 enum IPC_TYPE {
@@ -43,11 +43,11 @@ enum IPC_TYPE {
 }
 ```
 
-## H5Bridge
+## 2. H5Bridge
 
 父应用向子应用（Iframe）发送消息的桥接类。
 
-### 构造函数
+### 2.1 构造函数
 
 **参数说明：**
 
@@ -80,7 +80,7 @@ const bridge = new H5Bridge(iframe);
 ```
 :::
 
-### call
+### 2.2 call
 
 调用子应用的方法。
 
@@ -101,7 +101,7 @@ const result = await bridge.call('getUserInfo', { id: 1 });
 console.log(result);
 ```
 
-### on
+### 2.3 on
 
 监听子应用触发的事件。
 
@@ -120,7 +120,7 @@ bridge.on('dataChanged', (data) => {
 });
 ```
 
-### off
+### 2.4 off
 
 移除监听事件。
 
@@ -137,7 +137,7 @@ bridge.on('dataChanged', (data) => {
 bridge.off('dataChanged'); // 移除所有监听
 ```
 
-### emit
+### 2.5 emit
 
 向子应用发布事件。
 
@@ -154,7 +154,7 @@ bridge.off('dataChanged'); // 移除所有监听
 bridge.emit('updateConfig', { theme: 'dark' });
 ```
 
-### destroy
+### 2.6 destroy
 
 销毁桥接实例，清理所有监听和未完成的 Promise。
 
@@ -164,11 +164,11 @@ bridge.emit('updateConfig', { theme: 'dark' });
 bridge.destroy();
 ```
 
-## IframeBridge
+## 3. IframeBridge
 
 子应用向父应用发送消息的桥接类。
 
-### 构造函数
+### 3.1 构造函数
 
 无需参数。
 
@@ -194,7 +194,7 @@ const bridge = new IframeBridge();
 ```
 :::
 
-### register
+### 3.2 register
 
 注册事件处理函数。
 
@@ -215,7 +215,7 @@ bridge.register('getUserInfo', async (params) => {
 });
 ```
 
-### on
+### 3.3 on
 
 监听父应用触发的事件。
 
@@ -234,7 +234,7 @@ bridge.on('updateConfig', (config) => {
 });
 ```
 
-### off
+### 3.4 off
 
 移除监听事件。
 
@@ -251,7 +251,7 @@ bridge.on('updateConfig', (config) => {
 bridge.off('updateConfig');
 ```
 
-### emit
+### 3.5 emit
 
 向父应用发布事件。
 
@@ -268,7 +268,7 @@ bridge.off('updateConfig');
 bridge.emit('dataChanged', { id: 1, status: 'completed' });
 ```
 
-### destroy
+### 3.6 destroy
 
 销毁桥接实例。
 
@@ -278,9 +278,9 @@ bridge.emit('dataChanged', { id: 1, status: 'completed' });
 bridge.destroy();
 ```
 
-## 完整使用示例
+## 4. 完整使用示例
 
-### 父应用（H5）
+### 4.1 父应用（H5）
 
 ```html
 <iframe id="child" src="./child.html"></iframe>
@@ -363,7 +363,7 @@ window.addEventListener('beforeunload', () => bridge.destroy());
 ```
 :::
 
-### 子应用（Iframe）
+### 4.2 子应用（Iframe）
 
 ::: code-group
 ```ts [TypeScript]

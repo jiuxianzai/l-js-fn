@@ -2,7 +2,7 @@
 
 类型判断工具集，提供常用的值类型检查、格式验证和深度比较功能。
 
-## isEmpty 空值检查
+## 1. isEmpty 空值检查
 
 检查值是否为空。
 
@@ -70,7 +70,7 @@ isEmpty(0);              // false
 ```
 :::
 
-## isNotEmpty 非空检查
+## 2. isNotEmpty 非空检查
 
 检查值是否非空，是 `isEmpty` 的反向判断。
 
@@ -110,7 +110,7 @@ isNotEmpty([]);          // false
 ```
 :::
 
-## isObject 判断对象
+## 3. isObject 判断对象
 
 判断是否为普通对象（`[object Object]`）。
 
@@ -156,7 +156,7 @@ isObject(new Date());    // false
 ```
 :::
 
-## isArray 判断数组
+## 4. isArray 判断数组
 
 判断是否为数组。
 
@@ -199,7 +199,7 @@ isArray({});             // false
 ```
 :::
 
-## isImage 判断图片
+## 5. isImage 判断图片
 
 判断文件名是否为图片。
 
@@ -238,7 +238,7 @@ isImage('doc.pdf');      // false
 ```
 :::
 
-## isString 判断字符串
+## 6. isString 判断字符串
 
 判断是否为字符串。
 
@@ -278,7 +278,7 @@ isString(123);           // false
 ```
 :::
 
-## isEmail 邮箱验证
+## 7. isEmail 邮箱验证
 
 判断是否为有效邮箱地址。
 
@@ -315,7 +315,7 @@ isEmail('invalid-email');     // false
 ```
 :::
 
-## isURL URL验证
+## 8. isURL URL验证
 
 判断是否为合法 URL。
 
@@ -352,7 +352,7 @@ isURL('not-a-url');           // false
 ```
 :::
 
-## isHttp HTTP协议判断
+## 9. isHttp HTTP协议判断
 
 判断是否为 http 链接（忽略大小写）。
 
@@ -395,7 +395,7 @@ isHttp('');                    // false
 ```
 :::
 
-## isHttps HTTPS协议判断
+## 10. isHttps HTTPS协议判断
 
 判断是否为 https 链接（忽略大小写）。
 
@@ -438,7 +438,7 @@ isHttps('');                     // false
 ```
 :::
 
-## isIdCard 身份证验证
+## 11. isIdCard 身份证验证
 
 判断是否为有效的中国大陆身份证号码（支持 15 位和 18 位）。
 
@@ -478,7 +478,7 @@ isIdCard('123456789012345678'); // false
 ```
 :::
 
-## isPhoneNumber 手机号验证
+## 12. isPhoneNumber 手机号验证
 
 判断是否为有效的中国大陆手机号码。
 
@@ -515,7 +515,7 @@ isPhoneNumber('1380013800');  // false
 ```
 :::
 
-## isEqual 深度比较
+## 13. isEqual 深度比较
 
 深度比较两个值是否相等（支持对象、数组、NaN 比较）。
 
@@ -578,7 +578,7 @@ isEqual(null, null); // true
 `isEqual(null, {})` 或 `isEqual({}, null)` 等 null 与非 null 对象的比较会返回 `false`，而不会抛出异常。
 :::
 
-## validateParams 参数校验
+## 14. validateParams 参数校验
 
 校验参数对象中必填字段是否都存在且非空。
 

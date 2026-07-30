@@ -30,9 +30,9 @@ const {
 ```
 :::
 
-## 滚动操作
+## 1. 滚动操作
 
-### scrollTop 滚动到顶部
+### 1.1 scrollTop 滚动到顶部
 
 平滑滚动到页面顶部。
 
@@ -60,7 +60,7 @@ scrollTop();
 ```
 :::
 
-### scrollToBottom 滚动到底部
+### 1.2 scrollToBottom 滚动到底部
 
 滚动到页面底部。
 
@@ -88,7 +88,7 @@ scrollToBottom();
 ```
 :::
 
-### getScrollPosition 获取滚动位置
+### 1.3 getScrollPosition 获取滚动位置
 
 获取当前页面滚动位置。
 
@@ -119,7 +119,7 @@ console.log(pos.x, pos.y); // 0, 100
 ```
 :::
 
-### setScrollPosition 设置滚动位置
+### 1.4 setScrollPosition 设置滚动位置
 
 设置页面滚动位置。
 
@@ -157,9 +157,9 @@ setScrollPosition({ y: 500 }, true);   // 平滑滚动
 ```
 :::
 
-## 全屏操作
+## 2. 全屏操作
 
-### launchFullscreen 进入全屏
+### 2.1 launchFullscreen 进入全屏
 
 进入全屏模式。
 
@@ -205,7 +205,7 @@ if (success) {
 ```
 :::
 
-### exitFullscreen 退出全屏
+### 2.2 exitFullscreen 退出全屏
 
 退出全屏模式。
 
@@ -233,9 +233,9 @@ await exitFullscreen();
 ```
 :::
 
-## 剪贴板操作
+## 3. 剪贴板操作
 
-### copyToClipboard 复制到剪贴板
+### 3.1 copyToClipboard 复制到剪贴板
 
 复制文本到剪贴板。
 
@@ -269,9 +269,9 @@ await copyToClipboard('要复制的文本');
 ```
 :::
 
-## Cookie 操作
+## 4. Cookie 操作
 
-### CookieOptions
+### 4.1 CookieOptions
 
 Cookie 配置选项接口：
 
@@ -290,7 +290,7 @@ interface CookieOptions {
 `httpOnly` 选项在客户端设置 Cookie 时无效。`httpOnly` Cookie 只能由服务端通过 `Set-Cookie` 响应头设置。客户端传入此选项只会输出 `console.warn` 警告。
 :::
 
-### setCookie 设置Cookie
+### 4.2 setCookie 设置Cookie
 
 设置 Cookie。
 
@@ -329,7 +329,7 @@ setCookie('user', 'john', { expires: 7, path: '/' });
 ```
 :::
 
-### getCookie 获取Cookie
+### 4.3 getCookie 获取Cookie
 
 获取 Cookie 值。
 
@@ -366,7 +366,7 @@ getCookie('notexist'); // null
 ```
 :::
 
-### removeCookie 删除Cookie
+### 4.4 removeCookie 删除Cookie
 
 删除 Cookie。
 
@@ -404,7 +404,7 @@ removeCookie('user', { path: '/', domain: '.example.com' });
 ```
 :::
 
-### hasCookie 检查Cookie
+### 4.5 hasCookie 检查Cookie
 
 检查 Cookie 是否存在。
 
@@ -438,7 +438,7 @@ hasCookie('token'); // true | false
 ```
 :::
 
-### getAllCookies 获取全部Cookie
+### 4.6 getAllCookies 获取全部Cookie
 
 获取所有 Cookie。
 

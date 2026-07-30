@@ -18,7 +18,7 @@ const { REGEXP } = require('l-js-fn/regex');
 ```
 :::
 
-## 常量列表
+## 1. 常量列表
 
 | 常量 | 正则表达式 | 说明 | 示例 |
 |------|-----------|------|------|
@@ -38,9 +38,9 @@ const { REGEXP } = require('l-js-fn/regex');
 | `NO_SPECIAL` | `/^[\u4e00-\u9fa5A-Za-z0-9]+$/` | 无特殊字符（中英文数字） | `'中文abc123'` |
 | `MONEY` | `/^(0\|[1-9]\d*)(\.\d{1,2})?$/` | 金额（最多两位小数） | `'123.45'` |
 
-## 使用示例
+## 2. 使用示例
 
-### 基础验证
+### 2.1 基础验证
 
 ::: code-group
 ```ts [TypeScript]
@@ -92,7 +92,7 @@ REGEXP.ID_CARD.test('123456789012345678'); // false
 ```
 :::
 
-### 表单验证
+### 2.2 表单验证
 
 ::: code-group
 ```ts [TypeScript]
@@ -162,7 +162,7 @@ function validateForm(data: { phone?: string; email?: string; password?: string 
 ```
 :::
 
-### 输入限制
+### 2.3 输入限制
 
 ::: code-group
 ```ts [TypeScript]

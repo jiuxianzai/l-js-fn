@@ -2,7 +2,7 @@
 
 字符串处理工具集，提供脱敏、去除空格、UUID 生成、序号生成等功能。
 
-## desensitization 字符串脱敏
+## 1. desensitization 字符串脱敏
 
 对字符串进行脱敏处理，将指定位置的字符替换为 `*`。
 
@@ -46,7 +46,7 @@ desensitization('', 0);                // ''
 ```
 :::
 
-## trim 去除空格
+## 2. trim 去除空格
 
 去除字符串中的空格。
 
@@ -90,7 +90,7 @@ trim('  hello  ', 'all');  // 'hello'
 ```
 :::
 
-## getMobile 随机生成手机号
+## 3. getMobile 随机生成手机号
 
 随机生成中国大陆手机号码。
 
@@ -118,7 +118,7 @@ getMobile(); // '13800138000'（随机）
 ```
 :::
 
-## getUuid 生成UUID
+## 4. getUuid 生成UUID
 
 生成 UUID（v4 风格）。
 
@@ -146,7 +146,7 @@ getUuid(); // 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
 ```
 :::
 
-## indexToLabel 索引转序号
+## 5. indexToLabel 索引转序号
 
 根据数组索引生成序号标识，支持大写、小写、数字、中文四种格式。
 
@@ -202,7 +202,7 @@ indexToLabel(10, 'chinese');// '十一'
 ```
 :::
 
-## searchTextColor 匹配文字变色
+## 6. searchTextColor 匹配文字变色
 
 匹配文字并添加 HTML 颜色高亮标签（用于搜索场景）。
 
@@ -254,7 +254,7 @@ searchTextColor('hello', 'hello world', 'blue');
 `searchTextColor` 直接生成 HTML 字符串，仅适用于通过 `v-html`/`innerHTML` 渲染的场景。请确保 `text` 参数来自可信来源，避免 XSS 风险。搜索关键词中的正则特殊字符（如 `.`、`*`、`+` 等）会被自动转义。
 :::
 
-## filterSpace 禁止空格
+## 7. filterSpace 禁止空格
 
 禁止输入空格，去除字符串首尾空格。
 
@@ -291,7 +291,7 @@ filterSpace(' hello world '); // 'hello world'
 ```
 :::
 
-## toPascalCase 转帕斯卡命名
+## 8. toPascalCase 转帕斯卡命名
 
 将字符串转换为帕斯卡命名法（PascalCase）。
 
@@ -334,7 +334,7 @@ toPascalCase('helloWorld');   // 'HelloWorld'
 ```
 :::
 
-## toCamelCase 转驼峰命名
+## 9. toCamelCase 转驼峰命名
 
 短横线/下划线/空格命名 → 驼峰命名。
 
@@ -364,7 +364,7 @@ toCamelCase('Hello World');  // 'helloWorld'
 ```
 :::
 
-## toKebabCase 转短横线命名
+## 10. toKebabCase 转短横线命名
 
 驼峰/帕斯卡/下划线 → 短横线命名。
 
@@ -394,7 +394,7 @@ toKebabCase('hello_world');  // 'hello-world'
 ```
 :::
 
-## capitalize 首字母大写
+## 11. capitalize 首字母大写
 
 首字母大写。
 

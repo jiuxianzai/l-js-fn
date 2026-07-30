@@ -14,11 +14,11 @@ import { EventBus, eventBus } from 'l-js-fn/event-bus';
 ```
 :::
 
-## EventBus 事件总线类
+## 1. EventBus 事件总线类
 
 创建独立的事件总线实例，用于组件间或模块间的通信。
 
-### 构造函数
+### 1.1 构造函数
 
 ::: code-group
 ```typescript [TypeScript]
@@ -32,7 +32,7 @@ new EventBus()
 
 泛型 `Events` 用于定义类型安全的事件 map（TS 专属）。
 
-### 方法
+### 1.2 方法
 
 | 方法 | 说明 |
 |------|------|
@@ -43,7 +43,7 @@ new EventBus()
 | `clear()` | 清除所有事件监听 |
 | `listenerCount(event?)` | 获取监听数量，不传 event 则返回总数 |
 
-### 基础用法
+### 1.3 基础用法
 
 ::: code-group
 ```typescript [TypeScript]
@@ -103,7 +103,7 @@ bus.clear();
 ```
 :::
 
-### 类型安全用法
+### 1.4 类型安全用法
 
 ::: code-group
 ```typescript [TypeScript]
@@ -152,7 +152,7 @@ bus.emit('score', 'Alice', 100);
 ```
 :::
 
-## eventBus 全局单例
+## 2. eventBus 全局单例
 
 项目中全局共享的事件总线实例，适合跨模块通信。
 
@@ -183,7 +183,7 @@ eventBus.emit('userChanged', { name: 'Alice', role: 'admin' });
 ```
 :::
 
-## 多参数事件
+## 3. 多参数事件
 
 ::: code-group
 ```typescript [TypeScript]
@@ -213,7 +213,7 @@ socketBus.emit('message', 'Alice', 'Hello!', Date.now());
 ```
 :::
 
-## 解耦组件通信
+## 4. 解耦组件通信
 
 在 Vue / React 等框架中，用 EventBus 实现非父子组件间的解耦通信。
 
@@ -235,7 +235,7 @@ export const componentBus = new EventBus();
 ```
 :::
 
-### Header 组件（触发）
+### 4.1 Header 组件（触发）
 
 ::: code-group
 ```typescript [TypeScript]
@@ -257,7 +257,7 @@ function toggleTheme(theme) {
 ```
 :::
 
-### Sidebar 组件（订阅）
+### 4.2 Sidebar 组件（订阅）
 
 ::: code-group
 ```typescript [TypeScript]
@@ -297,7 +297,7 @@ onUnmounted(() => {
 ```
 :::
 
-## 全局事件总线场景
+## 5. 全局事件总线场景
 
 ### 1. 跨页面状态同步
 
@@ -412,7 +412,7 @@ pluginBus.on('requestError', (url, err) => {
 ```
 :::
 
-## 一次性事件监听
+## 6. 一次性事件监听
 
 适用于只需要响应一次的初始化、加载完成等场景。
 
@@ -449,7 +449,7 @@ bus.emit('appReady', { version: '2.0' });
 ```
 :::
 
-## 事件编排与链式操作
+## 7. 事件编排与链式操作
 
 将多个事件组合成业务流程。
 
@@ -512,7 +512,7 @@ workflow.emit('step1Done', 'raw-data');
 ```
 :::
 
-## 调试与监控
+## 8. 调试与监控
 
 利用 `listenerCount` 检查订阅状态，防止内存泄漏。
 

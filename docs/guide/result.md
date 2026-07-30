@@ -2,11 +2,11 @@
 
 标准化的结果封装类，用于统一处理操作成功/失败的状态。
 
-## 概述
+## 1. 概述
 
 `Result` 是一个泛型类，用于封装操作结果，**构造函数为私有，必须通过静态方法 `Result.ok()` 和 `Result.fail()` 创建实例**。
 
-## Result 结果类
+## 2. Result 结果类
 
 `Result` 是一个泛型类，用于封装操作结果，**构造函数为私有，必须通过静态方法 `Result.ok()` 和 `Result.fail()` 创建实例**。
 
@@ -16,7 +16,7 @@
 | message | `string` | 结果消息 |
 | data | `T` | 附加数据（可选） |
 
-## Result.ok 成功结果
+## 3. Result.ok 成功结果
 
 创建成功结果。
 
@@ -81,7 +81,7 @@ const ok3 = Result.ok({ id: 1 }, '创建成功');
 ```
 :::
 
-## Result.fail 失败结果
+## 4. Result.fail 失败结果
 
 创建失败结果。
 
@@ -152,9 +152,9 @@ const fail3 = Result.fail('参数错误', { field: 'email' });
 两个方法的参数顺序不同。
 :::
 
-## 实际应用场景
+## 5. 实际应用场景
 
-### API 响应封装
+### 5.1 API 响应封装
 
 ::: code-group
 ```ts [TypeScript]
@@ -230,7 +230,7 @@ if (result.success) {
 ```
 :::
 
-### 数组操作结果
+### 5.2 数组操作结果
 
 ::: code-group
 ```ts [TypeScript]

@@ -18,7 +18,7 @@ const { DATE_FORMAT, HTTP_STATUS } = require('l-js-fn/config');
 ```
 :::
 
-## DATE_FORMAT 日期格式常量
+## 1. DATE_FORMAT 日期格式常量
 
 常见日期格式常量。
 
@@ -30,7 +30,7 @@ const { DATE_FORMAT, HTTP_STATUS } = require('l-js-fn/config');
 | `SHORT` | `'MM-dd'` | 月日 |
 | `YEAR_MONTH` | `'yyyy-MM'` | 年月 |
 
-### 使用示例
+### 1.1 使用示例
 
 ::: code-group
 ```ts [TypeScript]
@@ -70,7 +70,7 @@ dateFormat(new Date(), DATE_FORMAT.YEAR_MONTH);// '2024-01'
 ```
 :::
 
-## HTTP_STATUS HTTP状态码
+## 2. HTTP_STATUS HTTP状态码
 
 常用 HTTP 状态码常量。
 
@@ -83,7 +83,7 @@ dateFormat(new Date(), DATE_FORMAT.YEAR_MONTH);// '2024-01'
 | `SERVER_ERROR` | `500` | 服务器内部错误 |
 | `SERVER_UNAVAILABLE` | `503` | 服务不可用 |
 
-### 使用示例
+### 2.1 使用示例
 
 ::: code-group
 ```ts [TypeScript]

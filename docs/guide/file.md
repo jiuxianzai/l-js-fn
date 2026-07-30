@@ -30,7 +30,7 @@ const {
 ```
 :::
 
-## FileSizeUnit
+## 1. FileSizeUnit
 
 文件大小单位枚举：
 
@@ -44,7 +44,7 @@ enum FileSizeUnit {
 }
 ```
 
-## FileSizeInfo
+## 2. FileSizeInfo
 
 文件大小信息接口：
 
@@ -56,7 +56,7 @@ interface FileSizeInfo {
 }
 ```
 
-## formatFileSize 格式化文件大小
+## 3. formatFileSize 格式化文件大小
 
 格式化文件大小。
 
@@ -125,7 +125,7 @@ formatFileSize(1000, { base: 1000 });
 ```
 :::
 
-## getExtension 获取文件后缀
+## 4. getExtension 获取文件后缀
 
 获取文件扩展名（包含点号）。
 
@@ -168,7 +168,7 @@ getExtension('.gitignore');         // '.gitignore'
 ```
 :::
 
-## getFileName 获取文件名
+## 5. getFileName 获取文件名
 
 获取文件名（不含路径和扩展名）。
 
@@ -205,7 +205,7 @@ getFileName('document.pdf');        // 'document'
 ```
 :::
 
-## downloadFile 下载文件
+## 6. downloadFile 下载文件
 
 触发浏览器下载文件。
 
@@ -261,7 +261,7 @@ downloadFile(jsonBlob, 'data.json');
 ```
 :::
 
-## readAsText 读取为文本
+## 7. readAsText 读取为文本
 
 读取文本文件内容。
 
@@ -311,7 +311,7 @@ input.addEventListener('change', async (e) => {
 ```
 :::
 
-## readAsDataURL 读取为DataURL
+## 8. readAsDataURL 读取为DataURL
 
 读取文件为 Data URL（Base64）。
 
@@ -360,7 +360,7 @@ input.addEventListener('change', async (e) => {
 ```
 :::
 
-## readAsArrayBuffer 读取为ArrayBuffer
+## 9. readAsArrayBuffer 读取为ArrayBuffer
 
 读取文件为 ArrayBuffer。
 
@@ -409,9 +409,9 @@ input.addEventListener('change', async (e) => {
 ```
 :::
 
-## 文件类型判断
+## 10. 文件类型判断
 
-### isImage 判断图片文件
+### 10.1 isImage 判断图片文件
 
 判断是否为图片文件。
 
@@ -453,7 +453,7 @@ isImage('document.pdf'); // false
 ```
 :::
 
-### isVideo 判断视频文件
+### 10.2 isVideo 判断视频文件
 
 判断是否为视频文件。
 
@@ -495,7 +495,7 @@ isVideo('audio.mp3');   // false
 ```
 :::
 
-### isAudio 判断音频文件
+### 10.3 isAudio 判断音频文件
 
 判断是否为音频文件。
 
@@ -537,7 +537,7 @@ isVideo('video.mp4');   // false
 ```
 :::
 
-### isPDF 判断PDF文件
+### 10.4 isPDF 判断PDF文件
 
 判断是否为 PDF 文件。
 
