@@ -201,7 +201,7 @@ isArray({});             // false
 
 ## 5. isInArray 地址数组检查
 
-检查指定地址是否存在于地址数组中，比较时自动忽略 `?` 后的查询参数。
+检查指定地址是否存在于地址数组中。对于 URL 格式的字符串（含 `http(s)://`、`//`、`/` 前缀），会自动忽略 `?` 后的查询参数对比；普通字符串则进行精确匹配。
 
 **参数说明：**
 
@@ -218,27 +218,48 @@ isArray({});             // false
 ```ts [TypeScript]
 import { isInArray } from 'l-js-fn';
 
-isInArray(['https://example.com', 'https://test.com'], 'https://example.com'); // true
-isInArray(['https://example.com'], 'https://example.com?foo=bar'); // true（忽略查询参数）
-isInArray(['https://example.com'], 'https://other.com'); // false
+// URL 类型：自动忽略 ? 查询参数
+isInArray(['https://example.com'], 'https://example.com?foo=bar'); // true
+isInArray(['https://example.com?a=1'], 'https://example.com?b=2'); // true
+isInArray(['/page/a'], '/page/a?foo=bar'); // true
+
+// 普通字符串：精确匹配
+isInArray(['a', 'b', 'c'], 'a'); // true
+isInArray(['a', 'b', 'c'], 'd'); // false
+
+// 边界
 isInArray([], 'https://example.com'); // false
 ```
 
 ```js [JavaScript (ESM)]
 import { isInArray } from 'l-js-fn';
 
-isInArray(['https://example.com', 'https://test.com'], 'https://example.com'); // true
+// URL 类型：自动忽略 ? 查询参数
 isInArray(['https://example.com'], 'https://example.com?foo=bar'); // true
-isInArray(['https://example.com'], 'https://other.com'); // false
+isInArray(['https://example.com?a=1'], 'https://example.com?b=2'); // true
+isInArray(['/page/a'], '/page/a?foo=bar'); // true
+
+// 普通字符串：精确匹配
+isInArray(['a', 'b', 'c'], 'a'); // true
+isInArray(['a', 'b', 'c'], 'd'); // false
+
+// 边界
 isInArray([], 'https://example.com'); // false
 ```
 
 ```js [JavaScript (CJS)]
 const { isInArray } = require('l-js-fn');
 
-isInArray(['https://example.com', 'https://test.com'], 'https://example.com'); // true
+// URL 类型：自动忽略 ? 查询参数
 isInArray(['https://example.com'], 'https://example.com?foo=bar'); // true
-isInArray(['https://example.com'], 'https://other.com'); // false
+isInArray(['https://example.com?a=1'], 'https://example.com?b=2'); // true
+isInArray(['/page/a'], '/page/a?foo=bar'); // true
+
+// 普通字符串：精确匹配
+isInArray(['a', 'b', 'c'], 'a'); // true
+isInArray(['a', 'b', 'c'], 'd'); // false
+
+// 边界
 isInArray([], 'https://example.com'); // false
 ```
 :::

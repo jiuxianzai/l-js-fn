@@ -30,35 +30,61 @@ npm run publish:major  # major
 npm run publish:pre    # prerelease (beta)
 ```
 
-## 新增模块/函数的规范
+## 新增函数的标准工作流
 
-1. **源码位置**:
-   - 通用工具 → `src/libs/<kit>.ts`
-   - 独立子模块（如 bom, ws, storage）→ `src/<module>/index.ts`
-   - 类型定义 → `src/types/index.ts`
+### 1. 源码编写
 
-2. **导出要求**:
-   - 主包统一在 `src/index.ts` 中 `export * from '@/libs/xxx.ts'`
-   - 子模块需同时在 `tsup.config.ts` 的 `modules` 数组中注册入口
-   - 并在 `package.json` 的 `exports` 字段中添加对应路径映射
+- 通用工具 → `src/libs/<kit>.ts`（如 `is-kit.ts`、`array-kit.ts`）
+- 独立子模块（如 bom, ws, storage）→ `src/<module>/index.ts`
+- 类型定义 → `src/types/index.ts`
+- 函数必须包含完整的 TypeScript 类型声明
+- JSDoc 注释使用中文，包含 `@param`、`@returns`、`@example`
+- 优先复用项目中已有的函数
 
-3. **测试要求**:
-   - 测试文件放在 `__tests__/` 下，路径与源码对应
-   - 覆盖率阈值：**80%**（分支/函数/行/语句）
-   - 使用 `@/` 别名导入被测模块
+### 2. 导出配置
+
+- 主包函数通过 `src/index.ts` 的 `export *` 自动导出，无需额外配置
+- 子模块需在 `tsup.config.ts` 的 `modules` 数组中注册入口，并在 `package.json` 的 `exports` 字段中添加路径映射
+
+### 3. 测试编写
+
+- 测试文件放在 `__tests__/` 下，路径与源码对应
+- 覆盖率阈值：**80%**（分支/函数/行/语句）
+- 使用 `@/` 别名导入被测模块
+- 覆盖正常场景、边界情况、异常输入
+
+### 4. 文档更新
+
+- **VitePress 文档**: 在 `docs/guide/<module>.md` 中按序号添加函数说明
+  - 包含参数表格、返回值说明、TypeScript/ESM/CJS 三栏代码示例
+- **README.md**: 在对应模块的导入语句和示例中补充新函数
+
+### 5. 验证与部署
+
+- 运行 `npm run test` 确认全部测试通过
+- 运行 `npx tsc --noEmit` 确认类型检查通过
+- 运行 `npm run build` 确认构建成功
+- 运行 `npm run docs:deploy` 部署文档到 GitHub Pages
+
+### 6. Git 提交
+
+- 使用 conventional commits 前缀（`feat:` `fix:` `docs:` 等）
+- **提交信息使用中文撰写**
+- Commit message 需通过 commitlint 校验（husky hook）
+
+## 代码与文档风格
+
+- Prettier: `tabWidth: 2`, `useTabs: true`, `singleQuote: true`, `printWidth: 150`
+- TypeScript: 严格模式（`strict: true`）
+- **文档和注释一律使用中文**，包括 JSDoc 注释、README、VitePress 文档
+- **Git 提交信息使用中文**（保留 conventional commit 前缀）
 
 ## 构建配置要点
 
 - **tsup** (`tsup.config.ts`): 生成 ESM + CJS 双格式，自动 `minify` 和 `treeshake`
 - **构建时自动移除** `console` 和 `debugger`（`esbuildOptions.drop`）
 - **类型声明** 只生成在 ESM 配置中，CJS 配置关闭 `dts` 避免重复
-- `package.json` 中 `"type": "module"`，但测试用 Jest + ts-jest 处理
-
-## 代码风格
-
-- Prettier: `tabWidth: 2`, `useTabs: true`, `singleQuote: true`, `printWidth: 150`
-- Commit message: 使用 conventional commits，需通过 commitlint 校验（husky hook）
-- 类型: 严格模式（`strict: true`）
+- `package.json` 中 `"type": "module"`，测试用 Jest + ts-jest 处理
 
 ## 子模块列表
 
@@ -74,3 +100,5 @@ npm run publish:pre    # prerelease (beta)
 | config | `l-js-fn/config` | DATE_FORMAT, HTTP_STATUS |
 | encode | `l-js-fn/encode` | Base64, HTML 转义, URL 编码 |
 | file | `l-js-fn/file` | 文件大小格式化、类型判断、下载 |
+| event-bus | `l-js-fn/event-bus` | EventBus 事件总线 |
+| crypto | `l-js-fn/crypto` | 国密 SM4、SM3、SM2 等 |
