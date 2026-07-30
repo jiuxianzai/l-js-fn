@@ -44,7 +44,7 @@ const {
 
 ---
 
-## md5 — MD5 哈希
+## 1. md5 — MD5 哈希
 
 计算字符串的 MD5 哈希值，支持加盐。
 
@@ -58,7 +58,7 @@ const {
 
 **返回值：** `string` — 32 位十六进制哈希字符串
 
-### 基础哈希
+### 1.1 基础哈希
 
 ::: code-group
 ```ts [TypeScript]
@@ -92,7 +92,7 @@ md5('Hello World');
 ```
 :::
 
-### 加盐哈希
+### 1.2 加盐哈希
 
 加盐可防止彩虹表攻击，即使输入相同，不同盐值也会产生不同的哈希。
 
@@ -127,7 +127,7 @@ const hash = md5('password', { salt: 'my-salt' });
 ```
 :::
 
-### 实际场景：密码存储校验
+### 1.3 实际场景：密码存储校验
 
 ::: code-group
 ```ts [TypeScript]
@@ -172,7 +172,7 @@ function hashPassword(password) {
 ```
 :::
 
-### 实际场景：请求签名
+### 1.4 实际场景：请求签名
 
 ::: code-group
 ```ts [TypeScript]
@@ -210,11 +210,11 @@ function generateApiSign(params, secretKey) {
 
 ---
 
-## AES — 对称加密
+## 2. AES — 对称加密
 
 AES-128 对称加密/解密算法，支持 CBC 和 ECB 模式，支持 PBKDF2 密钥派生。
 
-### AesOptions
+### 2.1 AesOptions
 
 ```ts
 interface AesOptions {
@@ -227,7 +227,7 @@ interface AesOptions {
 }
 ```
 
-### 基础加密解密
+### 2.2 基础加密解密
 
 ::: code-group
 ```ts [TypeScript]
@@ -253,7 +253,7 @@ const decrypted = aesDecrypt(encrypted, { key: 'my-secret-key' });
 ```
 :::
 
-### 自定义 IV
+### 2.3 自定义 IV
 
 ::: code-group
 ```ts [TypeScript]
@@ -284,7 +284,7 @@ const dec = aesDecrypt(enc, { key: 'my-key', iv: IV });
 ```
 :::
 
-### PBKDF2 密钥派生（加盐）
+### 2.4 PBKDF2 密钥派生（加盐）
 
 ::: code-group
 ```ts [TypeScript]
@@ -322,7 +322,7 @@ const dec = aesDecrypt(enc, { key: 'password', salt: 'salt', iterations: 10000 }
 ```
 :::
 
-### ECB 模式
+### 2.5 ECB 模式
 
 ::: code-group
 ```ts [TypeScript]
@@ -353,7 +353,7 @@ const dec = aesDecrypt(enc, { key: 'my-key', mode: 'ecb' });
 ```
 :::
 
-### 输出编码格式
+### 2.6 输出编码格式
 
 ::: code-group
 ```ts [TypeScript]
@@ -383,7 +383,7 @@ const hex = aesEncrypt('data', { key: 'secret', outputEncoding: 'hex' });
 ```
 :::
 
-### 实际场景：本地敏感数据存储
+### 2.7 实际场景：本地敏感数据存储
 
 ::: code-group
 ```ts [TypeScript]
@@ -436,11 +436,11 @@ function saveSecrets(key, value) {
 
 ---
 
-## RSA — 非对称加密
+## 3. RSA — 非对称加密
 
 RSA 非对称加密算法，支持密钥对生成、公钥加密、私钥解密。
 
-### 相关类型
+### 3.1 相关类型
 
 ```ts
 interface RsaKeyPair {
@@ -459,7 +459,7 @@ interface RsaDecryptOptions {
 }
 ```
 
-### 生成密钥对
+### 3.2 生成密钥对
 
 ::: code-group
 ```ts [TypeScript]
@@ -493,7 +493,7 @@ const { publicKey, privateKey } = rsaGenerateKeyPair();
 ```
 :::
 
-### 公钥加密 / 私钥解密
+### 3.3 公钥加密 / 私钥解密
 
 ::: code-group
 ```ts [TypeScript]
@@ -528,7 +528,7 @@ const decrypted = rsaDecrypt(encrypted, { privateKey });
 ```
 :::
 
-### 实际场景：前端加密敏感数据
+### 3.4 实际场景：前端加密敏感数据
 
 ::: code-group
 ```ts [TypeScript]
@@ -568,7 +568,7 @@ const original = rsaDecrypt(encrypted, { privateKey });
 ```
 :::
 
-### 实际场景：JSON 数据加密
+### 3.5 实际场景：JSON 数据加密
 
 ::: code-group
 ```ts [TypeScript]
@@ -601,13 +601,13 @@ const parsed = JSON.parse(rsaDecrypt(rsaEncrypt(data, { publicKey }), { privateK
 
 ---
 
-## SM2 — 国密非对称加密
+## 4. SM2 — 国密非对称加密
 
 SM2 椭圆曲线公钥密码算法，所有方法均为异步，按需依赖 `sm-crypto`。
 
 > **依赖安装**：`npm install sm-crypto`
 
-### 相关类型
+### 4.1 相关类型
 
 ```ts
 interface Sm2KeyPair {
@@ -625,7 +625,7 @@ interface Sm2DecryptOptions {
 }
 ```
 
-### 生成密钥对
+### 4.2 生成密钥对
 
 ::: code-group
 ```ts [TypeScript]
@@ -657,7 +657,7 @@ const { sm2GenerateKeyPair } = require('l-js-fn/crypto');
 ```
 :::
 
-### 公钥加密 / 私钥解密
+### 4.3 公钥加密 / 私钥解密
 
 ::: code-group
 ```ts [TypeScript]
@@ -702,7 +702,7 @@ const { sm2GenerateKeyPair, sm2Encrypt, sm2Decrypt } = require('l-js-fn/crypto')
 ```
 :::
 
-### 实际场景：国密通信加密
+### 4.4 实际场景：国密通信加密
 
 ::: code-group
 ```ts [TypeScript]
@@ -752,13 +752,13 @@ const { sm2GenerateKeyPair, sm2Encrypt, sm2Decrypt } = require('l-js-fn/crypto')
 
 ---
 
-## SM4 — 国密对称加密
+## 5. SM4 — 国密对称加密
 
 SM4 分组密码算法，所有方法均为异步，按需依赖 `sm-crypto`。CBC 模式未指定 IV 时会自动生成随机 IV。
 
 > **依赖安装**：`npm install sm-crypto`
 
-### Sm4Options
+### 5.1 Sm4Options
 
 ```ts
 interface Sm4Options {
@@ -769,7 +769,7 @@ interface Sm4Options {
 }
 ```
 
-### 基础加密解密
+### 5.2 基础加密解密
 
 ::: code-group
 ```ts [TypeScript]
@@ -804,7 +804,7 @@ const KEY = '0123456789abcdeffedcba9876543210';
 ```
 :::
 
-### 自定义 IV
+### 5.3 自定义 IV
 
 ::: code-group
 ```ts [TypeScript]
@@ -838,7 +838,7 @@ const dec = await sm4Decrypt(enc, { key: KEY, iv: IV });
 ```
 :::
 
-### ECB 模式与输出编码
+### 5.4 ECB 模式与输出编码
 
 ::: code-group
 ```ts [TypeScript]
@@ -880,7 +880,7 @@ const KEY = '0123456789abcdeffedcba9876543210';
 ```
 :::
 
-### 实际场景：国密业务数据加密
+### 5.5 实际场景：国密业务数据加密
 
 ::: code-group
 ```ts [TypeScript]
