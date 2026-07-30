@@ -17,6 +17,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src", "__tests__", "types", "tsup.config.ts"],
+	"include": ["src", "__tests__", "tsup.config.ts"],
   "exclude": ["node_modules", "dist"]
 }
