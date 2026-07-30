@@ -498,10 +498,36 @@ describe('is-kit - 类型判断工具', () => {
 			expect(validateParams(required, params)).toBe(null);
 		});
 
-		it('应该处理空的参数对象', () => {
-			const params = {};
-			const required = ['name', 'age'];
-			expect(validateParams(required, params)).toBe('name');
-		});
+	it('应该处理空的参数对象', () => {
+		const params = {};
+		const required = ['name', 'age'];
+		expect(validateParams(required, params)).toBe('name');
 	});
+});
+
+describe('isImage - 无扩展名文件名', () => {
+	it('应该拒绝没有扩展名的文件名', () => {
+		expect(isImage('file')).toBe(false);
+		expect(isImage('readme')).toBe(false);
+	});
+});
+
+describe('isEqual - 补充测试', () => {
+	it('应该处理不同引用但相同内容的对象', () => {
+		expect(isEqual({ a: 1 }, { a: 1 })).toBe(true);
+	});
+
+	it('应该处理一个数组和一个对象的比较', () => {
+		expect(isEqual([1, 2], { 0: 1, 1: 2 })).toBe(false);
+	});
+
+	it('应该处理相同引用', () => {
+		const obj = { a: 1 };
+		expect(isEqual(obj, obj)).toBe(true);
+	});
+
+	it('应该处理不同 NaN 值', () => {
+		expect(isEqual(NaN, NaN)).toBe(true);
+	});
+});
 });

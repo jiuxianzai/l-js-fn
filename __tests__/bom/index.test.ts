@@ -420,6 +420,10 @@ describe('bom - 浏览器对象模型方法', () => {
 	// ==================== Cookie 测试 ====================
 	describe('Cookie 操作', () => {
 		beforeEach(() => {
+			// 确保 document 是一个对象
+			if (!global.document || typeof global.document !== 'object') {
+				global.document = {} as any;
+			}
 			// Mock document.cookie
 			let cookieStorage: Record<string, string> = {};
 
@@ -518,6 +522,60 @@ describe('bom - 浏览器对象模型方法', () => {
 			expect(getCookie('test')).toBe(null);
 			expect(removeCookie('test')).toBe(false);
 			expect(getAllCookies()).toEqual({});
+		});
+
+		it('应该支持 domain 参数', () => {
+			const result = setCookie('test', 'value', { domain: '.example.com' });
+			expect(result).toBe(true);
+		});
+
+		it('应该支持 secure 参数', () => {
+			const result = setCookie('test', 'value', { secure: true });
+			expect(result).toBe(true);
+		});
+
+		it('应该支持 httpOnly 参数并发出警告', () => {
+			const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+			const result = setCookie('test', 'value', { httpOnly: true });
+			expect(result).toBe(true);
+			expect(warnSpy).toHaveBeenCalled();
+			warnSpy.mockRestore();
+		});
+
+		it('应该支持 sameSite 参数', () => {
+			const result = setCookie('test', 'value', { sameSite: 'strict' });
+			expect(result).toBe(true);
+		});
+
+		it('应该支持 expires 参数', () => {
+			const result = setCookie('test', 'value', { expires: 1 });
+			expect(result).toBe(true);
+		});
+
+		it('应该处理 Cookie 值前面带空格的情况', () => {
+			let cookieStorage: Record<string, string> = {};
+			Object.defineProperty(global.document, 'cookie', {
+				get: () => ' test=value',
+				set: (value: string) => {
+					const [cookiePair] = value.split(';');
+					const [key, val] = cookiePair.split('=');
+					if (val && val !== 'Thu, 01 Jan 1970 00:00:00 GMT') {
+						cookieStorage[key] = val;
+					} else {
+						delete cookieStorage[key];
+					}
+				},
+				configurable: true,
+			});
+
+			const result = getCookie('test');
+			expect(result).toBe('value');
+		});
+
+		it('应该支持带 domain 删除 Cookie', () => {
+			setCookie('test', 'value', { domain: '.example.com' });
+			const result = removeCookie('test', { domain: '.example.com' });
+			expect(result).toBe(true);
 		});
 	});
 });

@@ -15,6 +15,9 @@ import {
 	retry,
 	once,
 	memoize,
+	loadScript,
+	removeScript,
+	imageToBase64,
 } from '@/libs/common';
 
 describe('common - 通用工具方法', () => {
@@ -559,6 +562,275 @@ describe('common - 通用工具方法', () => {
 			expect(fn(2)).toBe(4);
 			expect(fn(1)).toBe(2);
 			expect(count).toBe(2);
+		});
+	});
+
+	// ==================== getType 补充测试 ====================
+	describe('getType - 自定义类实例', () => {
+		it('应该返回自定义类的构造函数名', () => {
+			class MyClass {}
+			const instance = new MyClass();
+			expect(getType(instance)).toBe('myclass');
+		});
+
+		it('应该处理没有 name 属性的构造函数', () => {
+			const obj = Object.create(null);
+			// 设置 constructor 为一个没有 name 属性的函数
+			obj.constructor = function () {};
+			Object.defineProperty(obj.constructor, 'name', { value: '' });
+			expect(getType(obj)).toBe('');
+		});
+	});
+
+	// ==================== deepClone 补充测试 ====================
+	describe('deepClone - cloneFunctions 选项', () => {
+		it('cloneFunctions=true 时应该克隆函数', () => {
+			const fn = () => 'hello';
+			const obj = { a: fn };
+			const cloned = deepClone(obj, { cloneFunctions: true }) as any;
+
+			expect(cloned.a).not.toBe(fn);
+			expect(cloned.a()).toBe('hello');
+		});
+
+		it('cloneFunctions=false（默认）时不应该克隆函数', () => {
+			const fn = () => 'hello';
+			const obj = { a: fn };
+			const cloned = deepClone(obj) as any;
+
+			expect(cloned.a).toBe(fn);
+		});
+	});
+
+	// ==================== loadScript 测试 ====================
+	describe('loadScript - 动态加载脚本', () => {
+		beforeEach(() => {
+			global.document = {
+				querySelector: jest.fn(() => null),
+				createElement: jest.fn((tag: string) => {
+					const script: any = {
+						src: '',
+						async: true,
+						onload: null as any,
+						onerror: null as any,
+					};
+					setTimeout(() => {
+						if (script.onload) script.onload({});
+					}, 0);
+					return script;
+				}),
+				head: {
+					appendChild: jest.fn(),
+				},
+			} as any;
+		});
+
+		afterEach(() => {
+			jest.clearAllMocks();
+		});
+
+		it('应该拒绝空 src', async () => {
+			await expect(loadScript(null)).rejects.toThrow('src 不能为空');
+			await expect(loadScript('')).rejects.toThrow('src 不能为空');
+		});
+
+		it('应该返回已存在的 script 元素', async () => {
+			const existingScript = { src: 'test.js' } as HTMLScriptElement;
+			(global.document.querySelector as jest.Mock).mockReturnValue(existingScript);
+
+			const result = await loadScript('test.js');
+			expect(result).toBe(existingScript);
+		});
+
+		it('应该创建并加载新的 script 元素', async () => {
+			const result = await loadScript('https://example.com/script.js');
+			expect(global.document.createElement).toHaveBeenCalledWith('script');
+			expect(global.document.head.appendChild).toHaveBeenCalled();
+		});
+
+		it('应该在加载失败时 reject', async () => {
+			(global.document.createElement as jest.Mock).mockReturnValue({
+				src: '',
+				async: true,
+				onload: null,
+				onerror: null,
+			});
+			const mockScript = {
+				src: '',
+				async: true,
+				onload: null as any,
+				onerror: null as any,
+			};
+			(global.document.createElement as jest.Mock).mockReturnValue(mockScript);
+
+			const loadPromise = loadScript('fail.js');
+			mockScript.onerror('LoadError');
+
+			await expect(loadPromise).rejects.toBe('LoadError');
+		});
+	});
+
+	// ==================== removeScript 测试 ====================
+	describe('removeScript - 移除已加载的脚本', () => {
+		beforeEach(() => {
+			global.document = {
+				querySelector: jest.fn(() => null),
+			} as any;
+		});
+
+		afterEach(() => {
+			jest.clearAllMocks();
+		});
+
+		it('应该移除存在的 script 元素', () => {
+			const mockScript = { parentNode: { removeChild: jest.fn() } };
+			(global.document.querySelector as jest.Mock).mockReturnValue(mockScript);
+
+			removeScript('test.js');
+
+			expect(mockScript.parentNode.removeChild).toHaveBeenCalledWith(mockScript);
+		});
+
+		it('应该在 script 不存在时不报错', () => {
+			(global.document.querySelector as jest.Mock).mockReturnValue(null);
+
+			expect(() => removeScript('nonexistent.js')).not.toThrow();
+		});
+
+		it('应该在 script 无父节点时不报错', () => {
+			(global.document.querySelector as jest.Mock).mockReturnValue({ parentNode: null });
+
+			expect(() => removeScript('orphan.js')).not.toThrow();
+		});
+	});
+
+	// ==================== imageToBase64 补充测试 ====================
+	describe('imageToBase64 - 图片转 Base64', () => {
+		afterEach(() => {
+			jest.restoreAllMocks();
+		});
+
+		it('应该在输入为空时返回失败结果', async () => {
+			const result = await imageToBase64(null);
+			expect(result.success).toBe(false);
+			expect(result.message).toBe('输入不能为空');
+		});
+
+		it('应该处理 File 输入', async () => {
+			const mockFile = new Blob(['test'], { type: 'text/plain' });
+			Object.defineProperty(mockFile, 'name', { value: 'test.txt' });
+
+			const mockFileReader = {
+				onload: null as any,
+				onerror: null as any,
+				result: 'data:text/plain;base64,dGVzdA==',
+				readAsDataURL: jest.fn(function (this: any) {
+					setTimeout(() => {
+						if (this.onload) this.onload({});
+					}, 0);
+				}),
+			};
+
+			const origFileReader = (global as any).FileReader;
+			(global as any).FileReader = jest.fn(() => mockFileReader);
+
+			const result = await imageToBase64(mockFile);
+			expect(result.success).toBe(true);
+
+			(global as any).FileReader = origFileReader;
+		});
+
+		it('应该处理 FileReader 读取失败', async () => {
+			const mockFile = new Blob(['test'], { type: 'text/plain' });
+
+			const mockFileReader = {
+				onload: null as any,
+				onerror: null as any,
+				result: '',
+				readAsDataURL: jest.fn(function (this: any) {
+					setTimeout(() => {
+						if (this.onerror) this.onerror(new Error('read error'));
+					}, 0);
+				}),
+			};
+
+			const origFileReader = (global as any).FileReader;
+			(global as any).FileReader = jest.fn(() => mockFileReader);
+
+			await expect(imageToBase64(mockFile)).rejects.toHaveProperty('message', '读取文件失败');
+
+			(global as any).FileReader = origFileReader;
+		});
+
+		it('应该处理 URL 路径的图片加载（URL string 输入）', async () => {
+			let onloadCallback: any;
+			const mockImage = {
+				crossOrigin: '',
+				src: '',
+				width: 100,
+				height: 100,
+				set onload(cb: any) {
+					onloadCallback = cb;
+				},
+				get onload() {
+					return onloadCallback;
+				},
+				onerror: null as any,
+			};
+
+			const origImage = (global as any).Image;
+			(global as any).Image = jest.fn(() => mockImage);
+
+			const mockCanvas = {
+				width: 0,
+				height: 0,
+				getContext: jest.fn(() => ({
+					drawImage: jest.fn(),
+				})),
+				toDataURL: jest.fn(() => 'data:image/png;base64,test'),
+			};
+			const origCreateElement = global.document?.createElement;
+			(global as any).document = (global as any).document || {};
+			(global.document as any).createElement = jest.fn((tag: string) => {
+				if (tag === 'canvas') return mockCanvas;
+				return {};
+			});
+
+			const promise = imageToBase64('https://example.com/image.png');
+			mockImage.onload();
+
+			const result = await promise;
+			expect(result.success).toBe(true);
+
+			(global as any).Image = origImage;
+			if (origCreateElement) {
+				(global.document as any).createElement = origCreateElement;
+			}
+		});
+
+		it('应该处理 URL 图片加载失败', async () => {
+			let onerrorCallback: any;
+			const mockImage = {
+				crossOrigin: '',
+				src: '',
+				set onerror(cb: any) {
+					onerrorCallback = cb;
+				},
+				get onerror() {
+					return onerrorCallback;
+				},
+				onload: null as any,
+			};
+
+			const origImage = (global as any).Image;
+			(global as any).Image = jest.fn(() => mockImage);
+
+			const promise = imageToBase64('https://example.com/broken.png');
+			mockImage.onerror(new Error('load error'));
+
+			await expect(promise).rejects.toHaveProperty('message', '图片加载失败');
+
+			(global as any).Image = origImage;
 		});
 	});
 });

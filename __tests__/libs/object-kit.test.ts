@@ -394,9 +394,35 @@ describe('object-kit - 对象操作工具', () => {
 			expect(result).toEqual({ a: 2 });
 		});
 
-		it('应该处理空对象', () => {
-			const result = deepMerge({ a: 1 }, {}, { b: 2 });
-			expect(result).toEqual({ a: 1, b: 2 });
-		});
+	it('应该处理空对象', () => {
+		const result = deepMerge({ a: 1 }, {}, { b: 2 });
+		expect(result).toEqual({ a: 1, b: 2 });
 	});
+
+	it('应该跳过 null 源', () => {
+		const result = deepMerge({ a: 1 }, null as any, { b: 2 });
+		expect(result).toEqual({ a: 1, b: 2 });
+	});
+
+	it('应该跳过非对象源（如字符串）', () => {
+		const result = deepMerge({ a: 1 }, 'invalid' as any, { b: 2 });
+		expect(result).toEqual({ a: 1, b: 2 });
+	});
+});
+
+describe('objMerge - 嵌套对象合并', () => {
+	it('应该递归合并嵌套对象', () => {
+		const target = { a: { b: 1, c: 2 } };
+		const source = { a: { b: 3, d: 4 } };
+		const result = objMerge(target, source);
+		expect(result).toEqual({ a: { b: 3, c: 2, d: 4 } });
+	});
+});
+
+describe('get - 路径中间为 null', () => {
+	it('应该在路径中间为 null 时返回默认值', () => {
+		const obj = { a: { b: null } };
+		expect(get(obj, 'a.b.c', 'default')).toBe('default');
+	});
+});
 });

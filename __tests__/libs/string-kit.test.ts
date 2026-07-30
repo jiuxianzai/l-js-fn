@@ -114,6 +114,10 @@ describe('string-kit - 字符串处理工具', () => {
 			expect(trim(12345 as any)).toBe('12345');
 			expect(trim(true as any)).toBe('true');
 		});
+
+		it('应该在无效的 pos 参数时返回原字符串', () => {
+			expect(trim('  hello  ', 'invalid' as any)).toBe('  hello  ');
+		});
 	});
 
 	// ==================== getMobile 测试 ====================
@@ -259,6 +263,11 @@ describe('string-kit - 字符串处理工具', () => {
 				expect(indexToLabel(0)).toBe('A');
 				expect(indexToLabel(25)).toBe('Z');
 			});
+
+			it('应该在无效的 type 参数时返回数字字符串', () => {
+				expect(indexToLabel(0, 'invalid' as any)).toBe('1');
+				expect(indexToLabel(5, 'invalid' as any)).toBe('6');
+			});
 		});
 	});
 
@@ -343,6 +352,37 @@ describe('string-kit - 字符串处理工具', () => {
 
 		it('应该处理中间有空格的字符串', () => {
 			expect(filterSpace('hello world test')).toBe('hello world test');
+		});
+	});
+
+	// ==================== toPascalCase 测试 ====================
+	describe('toPascalCase - 转帕斯卡命名', () => {
+		it('应该转换短横线命名', () => {
+			expect(toPascalCase('hello-world')).toBe('HelloWorld');
+		});
+
+		it('应该转换下划线命名', () => {
+			expect(toPascalCase('hello_world')).toBe('HelloWorld');
+		});
+
+		it('应该转换空格命名', () => {
+			expect(toPascalCase('hello world')).toBe('HelloWorld');
+		});
+
+		it('应该正确处理已大写的首字母', () => {
+			expect(toPascalCase('Hello-World')).toBe('HelloWorld');
+		});
+
+		it('应该处理空字符串', () => {
+			expect(toPascalCase('')).toBe('');
+		});
+
+		it('应该处理单字符输入', () => {
+			expect(toPascalCase('a')).toBe('A');
+		});
+
+		it('应该处理混合分隔符', () => {
+			expect(toPascalCase('hello_world-foo bar')).toBe('HelloWorldFooBar');
 		});
 	});
 

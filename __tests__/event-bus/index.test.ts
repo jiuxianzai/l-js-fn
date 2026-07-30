@@ -338,4 +338,14 @@ describe('EventBus - 事件总线', () => {
 			expect(handler).toHaveBeenCalledWith(null);
 		});
 	});
+
+	describe('off - 取消不存在事件的监听器', () => {
+		it('off 不存在的 handler 不应该报错', () => {
+			const bus = new EventBus();
+			const handler = jest.fn();
+			// 先注册一个事件，再用不存在的 handler 取消
+			bus.on('test', () => {});
+			expect(() => bus.off('test', handler)).not.toThrow();
+		});
+	});
 });

@@ -470,4 +470,92 @@ describe('file 模块 - 非浏览器环境', () => {
 			await expect(readAsArrayBuffer(file)).rejects.toThrow('当前环境不支持');
 		});
 	});
+
+	describe('getExtension - 点号在路径分隔符前', () => {
+		it('应该在点号在路径分隔符前时返回空字符串', () => {
+			expect(getExtension('/path.to/file')).toBe('');
+			expect(getExtension('/path.to/file.tar.gz')).toBe('.gz');
+		});
+	});
+
+	describe('readAsText - 读取失败', () => {
+		it('应该在 FileReader 读取失败时 reject', async () => {
+			global.window = {} as any;
+			const origFile = (global as any).File;
+			(global as any).File = class File {};
+			const MyFile = (global as any).File;
+			const file = new MyFile(['content'], 'test.txt');
+
+			const mockReader = {
+				onload: null as any,
+				onerror: null as any,
+				readAsText: jest.fn(function (this: any) {
+					setTimeout(() => {
+						if (this.onerror) this.onerror(new Error('read error'));
+					}, 0);
+				}),
+			};
+			const origFileReader = (global as any).FileReader;
+			(global as any).FileReader = jest.fn(() => mockReader);
+
+			await expect(readAsText(file)).rejects.toThrow('readAsText: 文件读取失败');
+
+			(global as any).FileReader = origFileReader;
+			(global as any).File = origFile;
+		});
+	});
+
+	describe('readAsDataURL - 读取失败', () => {
+		it('应该在 FileReader 读取失败时 reject', async () => {
+			global.window = {} as any;
+			const origFile = (global as any).File;
+			(global as any).File = class File {};
+			const MyFile = (global as any).File;
+			const file = new MyFile(['content'], 'test.txt');
+
+			const mockReader = {
+				onload: null as any,
+				onerror: null as any,
+				readAsDataURL: jest.fn(function (this: any) {
+					setTimeout(() => {
+						if (this.onerror) this.onerror(new Error('read error'));
+					}, 0);
+				}),
+			};
+			const origFileReader = (global as any).FileReader;
+			(global as any).FileReader = jest.fn(() => mockReader);
+
+			await expect(readAsDataURL(file)).rejects.toThrow('readAsDataURL: 文件读取失败');
+
+			(global as any).FileReader = origFileReader;
+			(global as any).File = origFile;
+		});
+	});
+
+	describe('readAsArrayBuffer - 读取失败', () => {
+		it('应该在 FileReader 读取失败时 reject', async () => {
+			global.window = {} as any;
+			const origFile = (global as any).File;
+			(global as any).File = class File {};
+			const MyFile = (global as any).File;
+			const file = new MyFile(['content'], 'test.txt');
+
+			const mockReader = {
+				onload: null as any,
+				onerror: null as any,
+				readAsArrayBuffer: jest.fn(function (this: any) {
+					setTimeout(() => {
+						if (this.onerror) this.onerror(new Error('read error'));
+					}, 0);
+				}),
+			};
+			const origFileReader = (global as any).FileReader;
+			(global as any).FileReader = jest.fn(() => mockReader);
+
+			await expect(readAsArrayBuffer(file)).rejects.toThrow('readAsArrayBuffer: 文件读取失败');
+
+			(global as any).FileReader = origFileReader;
+			(global as any).File = origFile;
+		});
+	});
 });

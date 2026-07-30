@@ -320,8 +320,23 @@ describe('number-kit - 数字处理工具', () => {
 			expect(round(-3.6)).toBe(-4);
 		});
 
-		it('应该处理整数', () => {
-			expect(round(3, 2)).toBe(3);
-		});
+	it('应该处理整数', () => {
+		expect(round(3, 2)).toBe(3);
 	});
+});
+
+describe('toPercent - 截断模式（无小数点）', () => {
+	it('应该在截断模式下处理没有小数点的整数', () => {
+		expect(toPercent(1, 2, false)).toBe('100.00%');
+		expect(toPercent(2, 2, false)).toBe('200.00%');
+	});
+});
+
+describe('toPercent - 截断模式（小数部分超长）', () => {
+	it('应该在截断模式下处理', () => {
+		const result = toPercent(0.12, 2, false);
+		expect(typeof result).toBe('string');
+		expect(result.endsWith('%')).toBe(true);
+	});
+});
 });

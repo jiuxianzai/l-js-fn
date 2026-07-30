@@ -5,10 +5,10 @@
 ![npm version](https://badge.fury.io/js/l-js-fn.svg)
 ![downloads](https://img.shields.io/npm/dm/l-js-fn)
 ![license](https://img.shields.io/npm/l/l-js-fn)
-![test pass](https://img.shields.io/badge/tests-1068%2F1068%20passed-brightgreen)
-![coverage](https://img.shields.io/badge/coverage-88%25-brightgreen)
-![functions](https://img.shields.io/badge/functions-90%25-brightgreen)
-![branches](https://img.shields.io/badge/branches-86%25-yellowgreen)
+![test pass](https://img.shields.io/badge/tests-1402%2F1402%20passed-brightgreen)
+![coverage](https://img.shields.io/badge/coverage-99%25-brightgreen)
+![functions](https://img.shields.io/badge/functions-100%25-brightgreen)
+![branches](https://img.shields.io/badge/branches-94%25-brightgreen)
 [![docs](https://img.shields.io/badge/docs-GitHub%20Pages-42b883)](https://jiuxianzai.github.io/l-js-fn/)
 
 ## ✨ 特性
@@ -388,7 +388,7 @@ getFileInfoToUrl('https://example.com/file.txt');
 #### 通用工具 (common)
 
 ```typescript
-import { sleep, debounce, throttle, getType, deepClone, getDevice, imageToBase64, retry, once, memoize } from 'l-js-fn';
+import { sleep, debounce, throttle, getType, deepClone, getDevice, imageToBase64, retry, once, memoize, loadScript, removeScript } from 'l-js-fn';
 
 // 睡眠函数
 await sleep(1000); // 延迟 1 秒
@@ -898,47 +898,50 @@ const { escapeHTML } = require('l-js-fn/encode');
 
 ### 测试统计
 
-| 指标       | 数值                   |
-| ---------- | ---------------------- |
-| 测试套件   | 21 passed              |
-| 测试用例 | 1068 passed / 1068 total |
-| 通过率     | 100%                   |
-| 行覆盖率   | 88.94%                 |
-| 分支覆盖率 | 86.79%                 |
-| 函数覆盖率 | 90.69%                 |
-| 语句覆盖率 | 88.96%                 |
+| 指标       | 数值                    |
+| ---------- | ----------------------- |
+| 测试套件   | 27 passed               |
+| 测试用例   | 1402 passed / 1402 total |
+| 通过率     | 100%                    |
+| 语句覆盖率 | 99.1%                   |
+| 分支覆盖率 | 94.14%                  |
+| 函数覆盖率 | 100%                    |
+| 行覆盖率   | 99.66%                  |
 
 #### 核心工具模块
 
 | 模块                    | 用例数 | 通过 | 失败 | 通过率 |
 | ----------------------- | ------ | ---- | ---- | ------ |
-| is-kit (类型判断)       | 63     | 63   | 0    | 100%   |
-| array-kit (数组操作)    | 124    | 124  | 0    | 100%   |
-| string-kit (字符串处理) | 68     | 68   | 0    | 100%   |
-| object-kit (对象操作)   | 53     | 53   | 0    | 100%   |
-| common (通用工具)       | 59     | 59   | 0    | 100%   |
-| date-kit (日期处理)     | 61     | 61   | 0    | 100%   |
-| number-kit (数字处理)   | 53     | 53   | 0    | 100%   |
-| url-kit (URL 处理)      | 49     | 49   | 0    | 100%   |
+| color (颜色处理)        | 31     | 31   | 0    | 100%   |
+| is-kit (类型判断)       | 75     | 75   | 0    | 100%   |
+| array-kit (数组操作)    | 134    | 134  | 0    | 100%   |
+| string-kit (字符串处理) | 77     | 77   | 0    | 100%   |
+| object-kit (对象操作)   | 62     | 62   | 0    | 100%   |
+| common (通用工具)       | 75     | 75   | 0    | 100%   |
+| date-kit (日期处理)     | 62     | 62   | 0    | 100%   |
+| number-kit (数字处理)   | 55     | 55   | 0    | 100%   |
+| url-kit (URL 处理)      | 81     | 81   | 0    | 100%   |
 | bugfixes (兼容修复)     | 17     | 17   | 0    | 100%   |
 
 #### 子模块
 
-| 模块               | 用例数 | 通过 | 失败 | 通过率 |
-| ------------------ | ------ | ---- | ---- | ------ |
-| bom (浏览器 BOM)   | 39     | 39   | 0    | 100%   |
-| ws (WebSocket)     | 24     | 24   | 0    | 100%   |
-| storage (本地存储) | 18     | 18   | 0    | 100%   |
-| polling (轮询)     | 16     | 16   | 0    | 100%   |
-| ipc (IPC 通信)     | 38     | 38   | 0    | 100%   |
-| regex (正则表达式) | 173    | 173  | 0    | 100%   |
-| config (配置常量)  | 21     | 21   | 0    | 100%   |
-| encode (编码/解码) | 54     | 54   | 0    | 100%   |
-| file (文件处理)    | 58     | 58   | 0    | 100%   |
-| event-bus (事件总线)| 22     | 22   | 0    | 100%   |
+| 模块                 | 用例数 | 通过 | 失败 | 通过率 |
+| -------------------- | ------ | ---- | ---- | ------ |
+| bom (浏览器 BOM)     | 46     | 46   | 0    | 100%   |
+| ws (WebSocket)       | 24     | 24   | 0    | 100%   |
+| storage (本地存储)   | 32     | 32   | 0    | 100%   |
+| polling (轮询)       | 16     | 16   | 0    | 100%   |
+| ipc (IPC 通信)       | 41     | 41   | 0    | 100%   |
+| regex (正则表达式)   | 173    | 173  | 0    | 100%   |
+| config (配置常量)    | 21     | 21   | 0    | 100%   |
+| encode (编码/解码)   | 56     | 56   | 0    | 100%   |
+| file (文件处理)      | 62     | 62   | 0    | 100%   |
+| event-bus (事件总线) | 31     | 31   | 0    | 100%   |
+| crypto (加密模块)    | 132    | 132  | 0    | 100%   |
 
 #### 其他
 
 | 模块              | 用例数 | 通过 | 失败 | 通过率 |
 | ----------------- | ------ | ---- | ---- | ------ |
 | Result (结果封装) | 15     | 15   | 0    | 100%   |
+| dist (构建产物)   | 84     | 84   | 0    | 100%   |

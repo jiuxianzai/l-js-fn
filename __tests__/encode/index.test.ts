@@ -295,5 +295,19 @@ describe('encode 模块', () => {
 		it('应该处理特殊字符', () => {
 			expect(parseQueryString('a=b+c')).toEqual({ a: 'b c' });
 		});
+
+		it('应该处理空的 key（&=value 格式）', () => {
+			expect(parseQueryString('=value')).toEqual({});
+		});
+	});
+
+	describe('querystringify - 原型链上有属性', () => {
+		it('应该跳过继承的属性', () => {
+			const proto = { inherited: 'value' };
+			const obj = Object.create(proto);
+			obj.ownProp = 'own';
+			const result = querystringify(obj);
+			expect(result).toBe('ownProp=own');
+		});
 	});
 });

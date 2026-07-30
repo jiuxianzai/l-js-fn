@@ -21,6 +21,8 @@ export default {
 		'src/**/*.ts',
 		'!src/**/*.d.ts',
 		'!src/types/**',
+		'!src/index.ts',
+		'!src/ipc/index.ts',
 	],
 
 	// 覆盖率阈值

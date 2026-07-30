@@ -892,7 +892,35 @@ describe('crypto - 加密模块', () => {
 				outputEncoding: 'base64',
 			});
 
-			expect(decrypted).toBe(originalData);
-		});
+		expect(decrypted).toBe(originalData);
 	});
+});
+
+describe('AES - 无效 IV 长度', () => {
+	it('应该在 IV 长度不正确时抛出错误', () => {
+		const data = 'test';
+		expect(() => aesEncrypt(data, { key: '1234567890123456', iv: '00' })).toThrow(TypeError);
+	});
+});
+
+describe('Crypto Utils - hexToBytes', () => {
+	it('应该在遇到非 hex 字符时抛出错误', () => {
+		const { hexToBytes } = require('@/crypto/utils');
+		expect(() => hexToBytes('ZZ')).toThrow(TypeError);
+	});
+});
+
+describe('Crypto Utils - bytesToBase64 browser fallback', () => {
+	it('应该在无 Buffer 时回退到 btoa', () => {
+		const { bytesToBase64 } = require('@/crypto/utils');
+		const origBuffer = (global as any).Buffer;
+		delete (global as any).Buffer;
+
+		const bytes = new Uint8Array([72, 101, 108, 108, 111]); // "Hello"
+		const result = bytesToBase64(bytes);
+		expect(result).toBe('SGVsbG8=');
+
+		(global as any).Buffer = origBuffer;
+	});
+});
 });

@@ -190,6 +190,90 @@ describe('storage - 存储操作方法', () => {
 			expect(hasStorage('test')).toBe(false);
 			expect(getStorageKeys()).toEqual([]);
 			expect(getStorageLength()).toBe(0);
+			expect(clearExpiredStorage()).toBe(0);
+		});
+
+		it('应该在 setItem 抛异常时返回 false', () => {
+			global.localStorage.setItem = jest.fn(() => {
+				throw new Error('QuotaExceededError');
+			});
+
+			expect(setStorage('test', 'value')).toBe(false);
+		});
+
+		it('应该在 getItem 抛异常时返回 null', () => {
+			global.localStorage.getItem = jest.fn(() => {
+				throw new Error('SecurityError');
+			});
+
+			expect(getStorage('test')).toBe(null);
+		});
+
+		it('应该在 JSON.parse 失败时返回 null', () => {
+			localStorage.setItem('test', 'not-valid-json');
+
+			expect(getStorage('test')).toBe(null);
+		});
+
+		it('应该在 removeItem 抛异常时返回 false', () => {
+			global.localStorage.removeItem = jest.fn(() => {
+				throw new Error('SecurityError');
+			});
+
+			expect(removeStorage('test')).toBe(false);
+		});
+
+		it('应该在 clear 抛异常时返回 false', () => {
+			global.localStorage.clear = jest.fn(() => {
+				throw new Error('SecurityError');
+			});
+
+			expect(clearStorage()).toBe(false);
+		});
+
+		it('应该在 Object.keys 抛异常时返回空数组', () => {
+			const originalKeys = Object.keys;
+			jest.spyOn(Object, 'keys').mockImplementation((obj: any) => {
+				if (obj === global.localStorage) {
+					throw new Error('SecurityError');
+				}
+				return originalKeys(obj);
+			});
+
+			expect(getStorageKeys()).toEqual([]);
+			jest.restoreAllMocks();
+		});
+
+		it('应该在 length 访问抛异常时返回 0（getStorageLength 的 catch 分支）', () => {
+			// 删除 length getter 让访问抛错
+			const localMock = global.localStorage;
+			delete (localMock as any).length;
+			Object.defineProperty(localMock, 'length', {
+				get: () => { throw new Error('SecurityError'); },
+				configurable: true,
+			});
+
+			expect(getStorageLength()).toBe(0);
+		});
+
+		it('应该在 clearExpiredStorage 中解析无效 JSON 时清理该项', () => {
+			localStorage.setItem('bad_json', 'not-valid-json-{broken}');
+			localStorage.setItem('valid_key', JSON.stringify({ value: 'ok', expire: -1 }));
+
+			const originalKeys = Object.keys;
+			jest.spyOn(Object, 'keys').mockImplementation((obj: any) => {
+				if (obj === global.localStorage) {
+					return ['bad_json', 'valid_key'];
+				}
+				return originalKeys(obj);
+			});
+
+			const clearedCount = clearExpiredStorage();
+
+			expect(clearedCount).toBe(1);
+			expect(hasStorage('valid_key')).toBe(true);
+
+			jest.restoreAllMocks();
 		});
 	});
 
@@ -306,6 +390,57 @@ describe('storage - 存储操作方法', () => {
 			expect(clearSession()).toBe(false);
 			expect(hasSession('test')).toBe(false);
 			expect(getSessionKeys()).toEqual([]);
+		});
+
+		it('应该在 setItem 抛异常时返回 false', () => {
+			global.sessionStorage.setItem = jest.fn(() => {
+				throw new Error('QuotaExceededError');
+			});
+
+			expect(setSession('test', 'value')).toBe(false);
+		});
+
+		it('应该在 getItem 抛异常时返回 null', () => {
+			global.sessionStorage.getItem = jest.fn(() => {
+				throw new Error('SecurityError');
+			});
+
+			expect(getSession('test')).toBe(null);
+		});
+
+		it('应该在 JSON.parse 失败时返回 null', () => {
+			sessionStorage.setItem('test', 'not-valid-json');
+
+			expect(getSession('test')).toBe(null);
+		});
+
+		it('应该在 removeItem 抛异常时返回 false', () => {
+			global.sessionStorage.removeItem = jest.fn(() => {
+				throw new Error('SecurityError');
+			});
+
+			expect(removeSession('test')).toBe(false);
+		});
+
+		it('应该在 clear 抛异常时返回 false', () => {
+			global.sessionStorage.clear = jest.fn(() => {
+				throw new Error('SecurityError');
+			});
+
+			expect(clearSession()).toBe(false);
+		});
+
+		it('应该在 Object.keys 抛异常时返回空数组', () => {
+			const originalKeys = Object.keys;
+			jest.spyOn(Object, 'keys').mockImplementation((obj: any) => {
+				if (obj === global.sessionStorage) {
+					throw new Error('SecurityError');
+				}
+				return originalKeys(obj);
+			});
+
+			expect(getSessionKeys()).toEqual([]);
+			jest.restoreAllMocks();
 		});
 	});
 });

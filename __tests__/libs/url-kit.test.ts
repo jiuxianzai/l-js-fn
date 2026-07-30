@@ -453,9 +453,23 @@ describe('url-kit - URL 处理工具', () => {
 			expect(result.fileName).toBe('not-a-valid-url');
 		});
 
-		it('应该处理空字符串', () => {
-			const result = getFileInfoToUrl('');
-			expect(result.fileName).toBe('unknown');
-		});
+	it('应该处理空字符串', () => {
+		const result = getFileInfoToUrl('');
+		expect(result.fileName).toBe('unknown');
 	});
+});
+
+describe('appendUrlParam - 异常处理', () => {
+	it('应该在编码特殊字符失败时返回 null', () => {
+		const result = appendUrlParam('https://example.com', 'test', '\uD800' as any);
+		expect(result).toBeNull();
+	});
+});
+
+describe('appendUrlParams - 异常处理', () => {
+	it('应该在编码特殊字符失败时返回 null', () => {
+		const result = appendUrlParams('https://example.com', { test: '\uD800' } as any);
+		expect(result).toBeNull();
+	});
+});
 });

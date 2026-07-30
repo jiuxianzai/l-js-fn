@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-REPO="https://github.com/jiuxianzai/l-js-fn.git"
+REPO="git@github.com:jiuxianzai/l-js-fn.git"
 DIST_DIR="docs/.vitepress/dist"
 BRANCH="gh-pages"
 

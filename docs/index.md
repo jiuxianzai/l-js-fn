@@ -31,6 +31,18 @@ features:
     details: 涵盖数组、对象、字符串、日期、URL、正则等常用操作。
 ---
 
+<div style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px;margin:32px auto 24px;max-width:960px;">
+  <a href="https://www.npmjs.com/package/l-js-fn"><img src="https://img.shields.io/npm/v/l-js-fn?color=cb3837&logo=npm" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/l-js-fn"><img src="https://img.shields.io/npm/dm/l-js-fn?color=blue" alt="downloads"></a>
+  <a href="https://github.com/jiuxianzai/l-js-fn/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/l-js-fn?color=green" alt="license"></a>
+  <img src="https://img.shields.io/badge/tests-1402%2F1402__passed-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/coverage-99.1%25-brightgreen" alt="coverage">
+  <img src="https://img.shields.io/badge/functions-100%25-brightgreen" alt="functions">
+  <img src="https://img.shields.io/badge/branches-94.1%25-brightgreen" alt="branches">
+  <img src="https://img.shields.io/badge/lines-99.7%25-brightgreen" alt="lines">
+  <a href="https://jiuxianzai.github.io/l-js-fn/"><img src="https://img.shields.io/badge/docs-GitHub__Pages-42b883?logo=github" alt="docs"></a>
+</div>
+
 ## 安装
 
 ```bash
@@ -84,6 +96,51 @@ import { Polling } from 'l-js-fn/polling';
 | [config](/guide/config) | 配置常量（日期格式、HTTP 状态码） |
 | [encode](/guide/encode) | 编码解码（Base64、HTML 转义、URL 编码等） |
 | [file](/guide/file) | 文件处理（大小格式化、类型判断、下载、读取等） |
+
+## 单元测试
+
+本项目使用 [Jest](https://jestjs.io/) 进行单元测试，覆盖率达 **90%+**。
+
+### 总览
+
+| 指标 | 数值 |
+|------|------|
+| 测试套件 | 27 passed |
+| 测试用例 | 1402 passed / 1402 total |
+| 语句覆盖率 | 99.1% |
+| 分支覆盖率 | 94.14% |
+| 函数覆盖率 | 100% |
+| 行覆盖率 | 99.66% |
+
+### 核心工具模块
+
+| 模块 | 用例数 | 通过率 |
+|------|--------|--------|
+| color (颜色处理) | 31 | 100% |
+| is-kit (类型判断) | 75 | 100% |
+| array-kit (数组操作) | 134 | 100% |
+| string-kit (字符串处理) | 77 | 100% |
+| object-kit (对象操作) | 62 | 100% |
+| common (通用工具) | 75 | 100% |
+| date-kit (日期处理) | 62 | 100% |
+| number-kit (数字处理) | 55 | 100% |
+| url-kit (URL 处理) | 81 | 100% |
+
+### 子模块
+
+| 模块 | 用例数 | 通过率 |
+|------|--------|--------|
+| bom (浏览器 BOM) | 46 | 100% |
+| ws (WebSocket) | 24 | 100% |
+| storage (本地存储) | 32 | 100% |
+| polling (轮询) | 16 | 100% |
+| ipc (IPC 通信) | 41 | 100% |
+| regex (正则表达式) | 173 | 100% |
+| config (配置常量) | 21 | 100% |
+| encode (编码/解码) | 56 | 100% |
+| file (文件处理) | 62 | 100% |
+| event-bus (事件总线) | 31 | 100% |
+| crypto (加密模块) | 132 | 100% |
 
 ## 常见问题
 

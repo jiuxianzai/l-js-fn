@@ -298,5 +298,18 @@ describe('H5Bridge - H5 与 iframe 通信桥接', () => {
 
 			expect(callback).not.toHaveBeenCalled();
 		});
+
+		it('默认的 IPC_TYPE 不应该报错', () => {
+			const onMessageHandler = (window.addEventListener as jest.Mock).mock.calls.find(
+				(call) => call[0] === 'message'
+			)[1];
+
+			expect(() =>
+				onMessageHandler({
+					source: mockContentWindow,
+					data: { type: 'UNKNOWN_TYPE' as any, eventName: 'test' },
+				})
+			).not.toThrow();
+		});
 	});
 });

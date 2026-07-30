@@ -390,10 +390,17 @@ describe('date-kit - 日期处理工具', () => {
 			expect(getWeekDay(new Date('2024-01-07'))).toBe('星期日');
 		});
 
-		it('应该支持默认参数（今天）', () => {
-			const result = getWeekDay();
-			const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-			expect(days).toContain(result);
-		});
+	it('应该支持默认参数（今天）', () => {
+		const result = getWeekDay();
+		const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+		expect(days).toContain(result);
 	});
+});
+
+describe('dateFormat - 非法输入类型', () => {
+	it('应该对非 Date/字符串/数字输入返回空字符串', () => {
+		expect(dateFormat(true as any)).toBe('');
+		expect(dateFormat({} as any)).toBe('');
+	});
+});
 });

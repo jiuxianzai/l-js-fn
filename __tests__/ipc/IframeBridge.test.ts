@@ -306,6 +306,41 @@ describe('IframeBridge - iframe 与父窗口通信桥接', () => {
 			expect(callback).not.toHaveBeenCalled();
 			expect(mockParentWindow.postMessage).not.toHaveBeenCalled();
 		});
+
+		it('应该处理 EMIT 类型的消息并调用注册的事件处理函数', () => {
+			const callback = jest.fn();
+			iframeBridge.on('testEvent', callback);
+
+			const mockMessageEvent = {
+				data: {
+					type: IPC_TYPE.EMIT,
+					eventName: 'testEvent',
+					params: { data: 'test' },
+				},
+			};
+
+			const onMessageHandler = (window.addEventListener as jest.Mock).mock.calls.find(
+				(call) => call[0] === 'message'
+			)[1];
+			onMessageHandler(mockMessageEvent);
+
+			expect(callback).toHaveBeenCalledWith({ data: 'test' });
+		});
+
+		it('EMIT 类型未注册的事件不应该报错', () => {
+			const mockMessageEvent = {
+				data: {
+					type: IPC_TYPE.EMIT,
+					eventName: 'nonExistentEvent',
+					params: {},
+				},
+			};
+
+			const onMessageHandler = (window.addEventListener as jest.Mock).mock.calls.find(
+				(call) => call[0] === 'message'
+			)[1];
+			expect(() => onMessageHandler(mockMessageEvent)).not.toThrow();
+		});
 	});
 
 	// ==================== 异步处理测试 ====================
