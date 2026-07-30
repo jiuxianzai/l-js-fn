@@ -94,6 +94,7 @@ export default defineConfig({
 
 		outline: {
 			label: '页面导航',
+			level: [2, 3],
 		},
 
 		returnToTopLabel: '回到顶部',
