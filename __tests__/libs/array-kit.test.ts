@@ -898,6 +898,12 @@ describe('array-kit - 数组操作工具', () => {
 		];
 		expect(arrayPluck(arr, 'value' as any)).toEqual([1, 2, 3]);
 	});
+
+	it('应该处理循环引用', () => {
+		const obj: any = { name: 'a', child: null };
+		obj.child = obj; // 循环引用
+		expect(arrayPluck([obj], 'name')).toEqual(['a']);
+	});
 });
 
 describe('findIndex - 无原生 findIndex 回退', () => {

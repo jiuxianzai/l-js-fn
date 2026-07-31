@@ -461,6 +461,7 @@ export function last<T>(arr: T[]): T | undefined {
 export function arrayPluck<T extends Record<string, any>>(arr: T[], key: keyof T): T[keyof T][] {
 	if (!isArray(arr)) return [];
 	const result: T[keyof T][] = [];
+	const seen = new WeakSet<object>();
 
 	const collect = (obj: unknown): void => {
 		if (obj === null || obj === undefined) return;
@@ -471,6 +472,9 @@ export function arrayPluck<T extends Record<string, any>>(arr: T[], key: keyof T
 			return;
 		}
 		if (typeof obj === 'object') {
+			if (seen.has(obj as object)) return;
+			seen.add(obj as object);
+
 			const record = obj as Record<string, any>;
 			if (key in record) {
 				const val = record[key as string];

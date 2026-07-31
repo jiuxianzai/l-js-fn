@@ -233,7 +233,7 @@ export function isEqual<T>(value: T, other: T): boolean {
  */
 export function validateParams(required: string[], params: Record<string, unknown>): string | null {
   for (const key of required) {
-    if (!params[key]) {
+    if (!(key in params) || params[key] === null || params[key] === undefined) {
       return key;
     }
   }

@@ -566,6 +566,36 @@ describe('common - 通用工具方法', () => {
 			expect(fn(1)).toBe(2);
 			expect(count).toBe(2);
 		});
+
+		it('应该支持自定义 maxSize', () => {
+			let count = 0;
+			const fn = memoize((a: number) => {
+				count++;
+				return a * 2;
+			}, 2);
+
+			fn(1);
+			fn(2);
+			fn(3); // 淘汰最旧的 key
+			fn(1); // 已从缓存淘汰，需要重新计算
+			expect(count).toBe(4);
+		});
+
+		it('应该在参数含循环引用时回退到直接调用', () => {
+			let count = 0;
+			const fn = memoize((a: any) => {
+				count++;
+				return a.x;
+			});
+
+			const obj: any = { x: 42 };
+			obj.self = obj; // 循环引用
+
+			expect(fn(obj)).toBe(42);
+			expect(fn(obj)).toBe(42);
+			// JSON.stringify 失败时直接执行原函数，每次都会调用
+			expect(count).toBe(2);
+		});
 	});
 
 	// ==================== getType 补充测试 ====================

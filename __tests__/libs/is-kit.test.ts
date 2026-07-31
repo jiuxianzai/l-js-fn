@@ -491,7 +491,8 @@ describe('is-kit - 类型判断工具', () => {
 		it('应该正确处理空值参数', () => {
 			const params = { name: '', age: 0 };
 			const required = ['name', 'age'];
-			expect(validateParams(required, params)).toBe('name'); // 空字符串被视为空
+			// 空字符串和 0 都是有意义的值，不应被视为缺失
+			expect(validateParams(required, params)).toBe(null);
 		});
 
 		it('应该处理 null 和 undefined', () => {
@@ -503,9 +504,8 @@ describe('is-kit - 类型判断工具', () => {
 		it('应该正确处理假值但有效的参数', () => {
 			const params = { active: false, count: 0 };
 			const required = ['active', 'count'];
-			// 注意：空字符串、null、undefined 会被认为是空值
-			// 但 false 和 0 不会
-			expect(validateParams(required, params)).toBe('active'); // false 在 isEmpty 中被视为非空
+			// false 和 0 都是有意义的值，不应被视为缺失
+			expect(validateParams(required, params)).toBe(null);
 		});
 
 		it('应该处理空的必填参数列表', () => {

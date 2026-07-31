@@ -6,6 +6,7 @@ export class WebSocketManager {
   private onErrorCallback: ErrorCallback | null;
   private webSocket: WebSocket | null;
   private timer: ReturnType<typeof setInterval> | null;
+  private reconnectTimer: ReturnType<typeof setTimeout> | null;
 
   constructor(url: string, onMessageCallback?: MessageCallback, onErrorCallback?: ErrorCallback) {
     this.url = url;
@@ -13,6 +14,7 @@ export class WebSocketManager {
     this.onErrorCallback = onErrorCallback || null;
     this.webSocket = null;
     this.timer = null;
+    this.reconnectTimer = null;
 
     this.connect(); // 初始化连接
   }
@@ -66,7 +68,12 @@ export class WebSocketManager {
       return;
     }
 
-    setTimeout(() => {
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+    }
+
+    this.reconnectTimer = setTimeout(() => {
+      this.reconnectTimer = null;
       this.close();
       this.connect();
     }, delay);
@@ -116,11 +123,19 @@ export class WebSocketManager {
 
   /** 关闭连接 */
   public close() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
     if (this.webSocket) {
-      if (this.timer) {
-        clearInterval(this.timer);
-        this.timer = null;
-      }
+      this.webSocket.onopen = null;
+      this.webSocket.onmessage = null;
+      this.webSocket.onerror = null;
+      this.webSocket.onclose = null;
       this.webSocket.close();
       this.webSocket = null;
     }

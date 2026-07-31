@@ -80,7 +80,19 @@ import { escapeHTML, base64Encode } from 'l-js-fn/encode';
 import { formatFileSize, isImage } from 'l-js-fn/file';
 
 // 加密模块
-import { md5, aesEncrypt, aesDecrypt, rsaEncrypt, rsaDecrypt, rsaGenerateKeyPair, sm2Encrypt, sm2Decrypt, sm2GenerateKeyPair, sm4Encrypt, sm4Decrypt } from 'l-js-fn/crypto';
+import {
+	md5,
+	aesEncrypt,
+	aesDecrypt,
+	rsaEncrypt,
+	rsaDecrypt,
+	rsaGenerateKeyPair,
+	sm2Encrypt,
+	sm2Decrypt,
+	sm2GenerateKeyPair,
+	sm4Encrypt,
+	sm4Decrypt,
+} from 'l-js-fn/crypto';
 
 // 事件总线
 import { EventBus, eventBus } from 'l-js-fn/event-bus';
@@ -96,7 +108,20 @@ import { md5, aesEncrypt, rsaEncrypt } from 'l-js-fn/crypto';
 #### 类型判断 (is-kit)
 
 ```typescript
-import { isEmpty, isNotEmpty, isObject, isArray, isInArray, isString, isEmail, isURL, isIdCard, isPhoneNumber, isEqual, validateParams } from 'l-js-fn';
+import {
+	isEmpty,
+	isNotEmpty,
+	isObject,
+	isArray,
+	isInArray,
+	isString,
+	isEmail,
+	isURL,
+	isIdCard,
+	isPhoneNumber,
+	isEqual,
+	validateParams,
+} from 'l-js-fn';
 
 // 空值检查
 isEmpty(''); // true
@@ -108,8 +133,8 @@ isEmail('test@example.com'); // true
 
 // URL 验证（含绝对路径、协议相对路径）
 isURL('https://example.com'); // true
-isURL('/path/to/page');       // true
-isURL('//cdn.example.com');   // true
+isURL('/path/to/page'); // true
+isURL('//cdn.example.com'); // true
 
 // 手机号验证（中国大陆）
 isPhoneNumber('13800138000'); // true
@@ -207,7 +232,7 @@ range(5, 0, -1); // [5, 4, 3, 2, 1, 0]
 shuffle([1, 2, 3, 4, 5]); // [3, 1, 5, 2, 4]（随机）
 
 // 按对象字段去重
-uniqueBy([{id:1},{id:2},{id:1}], 'id'); // [{id:1},{id:2}]
+uniqueBy([{ id: 1 }, { id: 2 }, { id: 1 }], 'id'); // [{id:1},{id:2}]
 
 // 过滤 falsy 值
 compact([0, 1, false, 2, '', 3]); // [1, 2, 3]
@@ -222,12 +247,12 @@ last([1, 2, 3]); // 3
 arrayPluck([{ name: 'zz' }, { name: 'yy' }], 'name'); // ['zz', 'yy']
 
 // 按字段排序
-sortBy([{ id: 2 }, { id: 1 }], 'id');           // [{ id: 1 }, { id: 2 }]
+sortBy([{ id: 2 }, { id: 1 }], 'id'); // [{ id: 1 }, { id: 2 }]
 sortBy([{ age: 20 }, { age: 30 }], 'age', 'desc'); // [{ age: 30 }, { age: 20 }]
 
 // 基础类型数组去重
-uniq([1, 2, 2, 3]);       // [1, 2, 3]
-uniq(['a', 'b', 'a']);    // ['a', 'b']
+uniq([1, 2, 2, 3]); // [1, 2, 3]
+uniq(['a', 'b', 'a']); // ['a', 'b']
 
 // 按字段求和
 sumBy([{ price: 10 }, { price: 20 }], 'price'); // 30
@@ -236,16 +261,27 @@ sumBy([{ price: 10 }, { price: 20 }], 'price'); // 30
 #### 字符串处理 (string-kit)
 
 ```typescript
-import { desensitization, desensitizeName, trim, getMobile, getUuid, indexToLabel, toPascalCase, toCamelCase, toKebabCase, capitalize } from 'l-js-fn';
+import {
+	desensitization,
+	desensitizeName,
+	trim,
+	getMobile,
+	getUuid,
+	indexToLabel,
+	toPascalCase,
+	toCamelCase,
+	toKebabCase,
+	capitalize,
+} from 'l-js-fn';
 
 // 字符串脱敏
 desensitization('13800138000', 3, 4); // "138****8000"
 
 // 姓名脱敏
-desensitizeName('张三丰');       // "张*丰"
-desensitizeName('欧阳飞飞');     // "欧**飞"
+desensitizeName('张三丰'); // "张*丰"
+desensitizeName('欧阳飞飞'); // "欧**飞"
 desensitizeName('张三', 'surname'); // "*三"
-desensitizeName('张三丰', 'last');  // "**丰"
+desensitizeName('张三丰', 'last'); // "**丰"
 
 // 去除空格
 trim('  hello  '); // "hello"
@@ -361,16 +397,16 @@ getWeekDay(new Date('2024-01-01')); // '星期一'
 import { formatNumber, toPercent, random, getUniqueRandomIndexes, clamp, round } from 'l-js-fn';
 
 // 数字格式化
-formatNumber(1234567);       // "1,234,567"
+formatNumber(1234567); // "1,234,567"
 formatNumber(1234567, true); // "123.47万"
 
 // 控制小数位
-formatNumber(1234, { decimals: 2 });           // "1,234.00"
+formatNumber(1234, { decimals: 2 }); // "1,234.00"
 formatNumber(1234567, { type: 'number', decimals: 2 }); // "1234567.00"
 
 // 中文大写金额
-formatNumber(123.45, { type: 'chinese' });    // "壹佰贰拾叁元肆角伍分"
-formatNumber(0.5, { type: 'chinese' });       // "伍角"
+formatNumber(123.45, { type: 'chinese' }); // "壹佰贰拾叁元肆角伍分"
+formatNumber(0.5, { type: 'chinese' }); // "伍角"
 
 // 转百分比
 toPercent(0.5332); // "53.32%"
@@ -776,9 +812,9 @@ bus.clear();
 
 // 类型安全用法
 type Events = {
-  login: [user: string];
-  logout: [];
-  score: [name: string, points: number];
+	login: [user: string];
+	logout: [];
+	score: [name: string, points: number];
 };
 const typedBus = new EventBus<Events>();
 typedBus.on('login', (user) => console.log(user)); // user 自动推断为 string
@@ -934,19 +970,19 @@ const { escapeHTML } = require('l-js-fn/encode');
 
 ## ✅ 测试
 
-本项目使用 [Jest](https://jestjs.io/) 进行单元测试，覆盖率阈值 80%。
+本项目使用 [Jest](https://jestjs.io/) 进行单元测试，覆盖率阈值 90%+。
 
 ### 测试统计
 
-| 指标       | 数值                    |
-| ---------- | ----------------------- |
-| 测试套件   | 27 passed               |
+| 指标       | 数值                     |
+| ---------- | ------------------------ |
+| 测试套件   | 27 passed                |
 | 测试用例   | 1446 passed / 1446 total |
-| 通过率     | 100%                    |
-| 语句覆盖率 | 98.73%                  |
-| 分支覆盖率 | 93.49%                  |
-| 函数覆盖率 | 100%                    |
-| 行覆盖率   | 99.37%                  |
+| 通过率     | 100%                     |
+| 语句覆盖率 | 98.73%                   |
+| 分支覆盖率 | 93.49%                   |
+| 函数覆盖率 | 100%                     |
+| 行覆盖率   | 99.37%                   |
 
 #### 核心工具模块
 

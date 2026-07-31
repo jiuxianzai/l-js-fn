@@ -388,20 +388,36 @@ export function once<T extends (...args: any[]) => any>(fn: T): (...args: Parame
 /**
  * 缓存函数计算结果，相同参数只计算一次（基于 Map 缓存）
  * @param fn - 需要缓存结果的函数
+ * @param maxSize - 最大缓存条目数，默认 200，设为 0 则不限制
  * @returns 包装后的缓存函数
  * @example
  * const add = memoize((a: number, b: number) => { console.log('calling'); return a + b })
  * add(1, 2) // 输出 calling → 3
  * add(1, 2) // 直接返回 3（无输出）
  */
-export function memoize<T extends (...args: any[]) => any>(fn: T): (...args: Parameters<T>) => ReturnType<T> {
+export function memoize<T extends (...args: any[]) => any>(fn: T, maxSize: number = 200): (...args: Parameters<T>) => ReturnType<T> {
 	const cache = new Map<string, ReturnType<T>>();
+	const keys: string[] = [];
 
 	return function (this: unknown, ...args: Parameters<T>): ReturnType<T> {
-		const key = JSON.stringify(args);
+		let key: string;
+		try {
+			key = JSON.stringify(args);
+		} catch {
+			return fn.apply(this, args);
+		}
+
 		if (cache.has(key)) return cache.get(key)!;
+
 		const result = fn.apply(this, args);
 		cache.set(key, result);
+		keys.push(key);
+
+		if (maxSize > 0 && keys.length > maxSize) {
+			const oldest = keys.shift()!;
+			cache.delete(oldest);
+		}
+
 		return result;
 	};
 }

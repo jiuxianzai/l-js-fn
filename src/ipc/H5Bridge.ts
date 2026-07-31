@@ -23,6 +23,10 @@ export class H5Bridge {
 		window.addEventListener('message', this._onMessage);
 		if (this.iframe) {
 			this.iframe.addEventListener('load', this._onIframeLoad);
+			// 如果 iframe 已经加载完毕，直接设置为就绪
+			if (this.iframe.contentDocument?.readyState === 'complete') {
+				this._onIframeLoad();
+			}
 		}
 	}
 
@@ -73,10 +77,13 @@ export class H5Bridge {
 		switch (type) {
 			// 获取响应结果
 			case IPC_TYPE.RESPONSE:
-				if (error) {
-					this.pending[id as string].reject(error);
-				} else {
-					this.pending[id as string].resolve(result);
+				if (this.pending[id as string]) {
+					if (error) {
+						this.pending[id as string].reject(error);
+					} else {
+						this.pending[id as string].resolve(result);
+					}
+					delete this.pending[id as string];
 				}
 				break;
 			case IPC_TYPE.EMIT:
