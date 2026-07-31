@@ -25,6 +25,9 @@ import {
 	sum,
 	last,
 	arrayPluck,
+	sortBy,
+	uniq,
+	sumBy,
 } from '@/libs/array-kit';
 
 describe('array-kit - 数组操作工具', () => {
@@ -918,6 +921,95 @@ describe('findIndex - 无原生 findIndex 回退', () => {
 		expect(result).toBe(-1);
 
 		(Array.prototype as any).findIndex = originalFindIndex;
+	});
+});
+
+// ==================== sortBy 测试 ====================
+describe('sortBy - 按字段排序', () => {
+	it('应该按数字字段升序排序（默认）', () => {
+		const result = sortBy([{ id: 3 }, { id: 1 }, { id: 2 }], 'id');
+		expect(result).toEqual([{ id: 1 }, { id: 2 }, { id: 3 }]);
+	});
+
+	it('应该按数字字段降序排序', () => {
+		const result = sortBy([{ id: 1 }, { id: 3 }, { id: 2 }], 'id', 'desc');
+		expect(result).toEqual([{ id: 3 }, { id: 2 }, { id: 1 }]);
+	});
+
+	it('应该按字符串字段排序', () => {
+		const result = sortBy([{ name: 'c' }, { name: 'a' }, { name: 'b' }], 'name');
+		expect(result).toEqual([{ name: 'a' }, { name: 'b' }, { name: 'c' }]);
+	});
+
+	it('应该按字符串字段降序排序', () => {
+		const result = sortBy([{ name: 'a' }, { name: 'c' }, { name: 'b' }], 'name', 'desc');
+		expect(result).toEqual([{ name: 'c' }, { name: 'b' }, { name: 'a' }]);
+	});
+
+	it('原数组不应被修改', () => {
+		const arr = [{ id: 2 }, { id: 1 }];
+		sortBy(arr, 'id');
+		expect(arr).toEqual([{ id: 2 }, { id: 1 }]);
+	});
+
+	it('非数组输入返回空数组', () => {
+		expect(sortBy(null as any, 'id')).toEqual([]);
+	});
+
+	it('空数组返回空数组', () => {
+		expect(sortBy([], 'id')).toEqual([]);
+	});
+});
+
+// ==================== uniq 测试 ====================
+describe('uniq - 基础类型数组去重', () => {
+	it('应该去除重复数字', () => {
+		expect(uniq([1, 2, 2, 3, 1])).toEqual([1, 2, 3]);
+	});
+
+	it('应该去除重复字符串', () => {
+		expect(uniq(['a', 'b', 'a', 'c'])).toEqual(['a', 'b', 'c']);
+	});
+
+	it('应该保留无重复的数组', () => {
+		expect(uniq([1, 2, 3])).toEqual([1, 2, 3]);
+	});
+
+	it('空数组返回空数组', () => {
+		expect(uniq([])).toEqual([]);
+	});
+
+	it('非数组输入返回空数组', () => {
+		expect(uniq(null as any)).toEqual([]);
+	});
+
+	it('单元素数组返回原值', () => {
+		expect(uniq([42])).toEqual([42]);
+	});
+});
+
+// ==================== sumBy 测试 ====================
+describe('sumBy - 按字段求和', () => {
+	it('应该计算对象数组指定字段的和', () => {
+		const items = [{ price: 10 }, { price: 20 }, { price: 30 }];
+		expect(sumBy(items, 'price')).toBe(60);
+	});
+
+	it('空数组返回 0', () => {
+		expect(sumBy([], 'price')).toBe(0);
+	});
+
+	it('非数组输入返回 0', () => {
+		expect(sumBy(null as any, 'price')).toBe(0);
+	});
+
+	it('应该忽略非数字值（当作 0）', () => {
+		const items = [{ price: 10 }, { price: 'abc' as any }];
+		expect(sumBy(items, 'price')).toBe(10);
+	});
+
+	it('单元素数组返回该元素值', () => {
+		expect(sumBy([{ val: 5 }], 'val')).toBe(5);
 	});
 });
 });

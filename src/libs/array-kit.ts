@@ -489,3 +489,56 @@ export function arrayPluck<T extends Record<string, any>>(arr: T[], key: keyof T
 	}
 	return result;
 }
+
+/**
+ * 根据指定字段对对象数组排序
+ * @param arr - 对象数组
+ * @param key - 排序字段
+ * @param order - 排序方向，默认 'asc'
+ * @returns 排序后的新数组
+ * @example
+ * sortBy([{ id: 2 }, { id: 1 }], 'id')          // [{ id: 1 }, { id: 2 }]
+ * sortBy([{ age: 20 }, { age: 30 }], 'age', 'desc') // [{ age: 30 }, { age: 20 }]
+ */
+export function sortBy<T extends Record<string, any>>(arr: T[], key: keyof T, order: 'asc' | 'desc' = 'asc'): T[] {
+	if (!isArray(arr)) return [];
+	const copy = [...arr];
+	const factor = order === 'desc' ? -1 : 1;
+	return copy.sort((a, b) => {
+		const va = a[key];
+		const vb = b[key];
+		if (typeof va === 'string' && typeof vb === 'string') return factor * va.localeCompare(vb);
+		return factor * (Number(va) - Number(vb));
+	});
+}
+
+/**
+ * 对基础类型数组去重（使用 Set 实现）
+ * @param arr - 基础类型数组
+ * @returns 去重后的新数组
+ * @example
+ * uniq([1, 2, 2, 3])        // [1, 2, 3]
+ * uniq(['a', 'b', 'a'])      // ['a', 'b']
+ */
+export function uniq<T>(arr: T[]): T[] {
+	if (!isArray(arr)) return [];
+	return [...new Set(arr)];
+}
+
+/**
+ * 计算对象数组中指定字段数值的总和
+ * @param arr - 对象数组
+ * @param key - 需要求和的数字字段名
+ * @returns 总和，空数组返回 0
+ * @example
+ * const items = [{ name: 'a', price: 10 }, { name: 'b', price: 20 }]
+ * sumBy(items, 'price') // 30
+ */
+export function sumBy<T extends Record<string, any>>(arr: T[], key: keyof T): number {
+	if (!isArray(arr) || arr.length === 0) return 0;
+	let total = 0;
+	for (let i = 0; i < arr.length; i++) {
+		total += Number(arr[i][key]) || 0;
+	}
+	return total;
+}

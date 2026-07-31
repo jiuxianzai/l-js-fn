@@ -907,3 +907,114 @@ arrayPluck(
 arrayPluck([], 'name'); // []
 ```
 :::
+
+## 22. sortBy 按字段排序
+
+根据指定字段对对象数组排序（不修改原数组）。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| arr | `T[]` | 是 | 对象数组 |
+| key | `keyof T` | 是 | 排序字段 |
+| order | `'asc' \| 'desc'` | 否 | 排序方向，默认 `'asc'` |
+
+**返回值：** `T[]` — 排序后的新数组
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { sortBy } from 'l-js-fn';
+
+sortBy([{ id: 2 }, { id: 1 }], 'id');                     // [{ id: 1 }, { id: 2 }]
+sortBy([{ age: 20 }, { age: 30 }], 'age', 'desc');        // [{ age: 30 }, { age: 20 }]
+sortBy([{ name: 'c' }, { name: 'a' }], 'name');           // [{ name: 'a' }, { name: 'c' }]
+```
+
+```js [JavaScript (ESM)]
+import { sortBy } from 'l-js-fn';
+
+sortBy([{ id: 2 }, { id: 1 }], 'id');                     // [{ id: 1 }, { id: 2 }]
+```
+
+```js [JavaScript (CJS)]
+const { sortBy } = require('l-js-fn');
+
+sortBy([{ id: 2 }, { id: 1 }], 'id');                     // [{ id: 1 }, { id: 2 }]
+```
+:::
+
+## 23. uniq 基础类型去重
+
+对基础类型数组去重（使用 Set 实现）。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| arr | `T[]` | 是 | 基础类型数组 |
+
+**返回值：** `T[]` — 去重后的新数组
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { uniq } from 'l-js-fn';
+
+uniq([1, 2, 2, 3]);        // [1, 2, 3]
+uniq(['a', 'b', 'a']);      // ['a', 'b']
+```
+
+```js [JavaScript (ESM)]
+import { uniq } from 'l-js-fn';
+
+uniq([1, 2, 2, 3]);        // [1, 2, 3]
+```
+
+```js [JavaScript (CJS)]
+const { uniq } = require('l-js-fn');
+
+uniq([1, 2, 2, 3]);        // [1, 2, 3]
+```
+:::
+
+## 24. sumBy 按字段求和
+
+计算对象数组中指定字段数值的总和。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| arr | `T[]` | 是 | 对象数组 |
+| key | `keyof T` | 是 | 需要求和的数字字段名 |
+
+**返回值：** `number` — 总和，空数组返回 `0`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { sumBy } from 'l-js-fn';
+
+const items = [{ name: 'a', price: 10 }, { name: 'b', price: 20 }];
+sumBy(items, 'price'); // 30
+```
+
+```js [JavaScript (ESM)]
+import { sumBy } from 'l-js-fn';
+
+const items = [{ name: 'a', price: 10 }, { name: 'b', price: 20 }];
+sumBy(items, 'price'); // 30
+```
+
+```js [JavaScript (CJS)]
+const { sumBy } = require('l-js-fn');
+
+const items = [{ name: 'a', price: 10 }, { name: 'b', price: 20 }];
+sumBy(items, 'price'); // 30
+```
+:::

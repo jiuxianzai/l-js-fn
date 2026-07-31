@@ -149,8 +149,11 @@ import {
 	uniqueBy,
 	compact,
 	sum,
+	sumBy,
 	last,
 	arrayPluck,
+	sortBy,
+	uniq,
 } from 'l-js-fn';
 
 // 删除元素
@@ -217,6 +220,17 @@ last([1, 2, 3]); // 3
 
 // 提取对象数组指定字段为扁平数组（递归深层嵌套，过滤 null/undefined）
 arrayPluck([{ name: 'zz' }, { name: 'yy' }], 'name'); // ['zz', 'yy']
+
+// 按字段排序
+sortBy([{ id: 2 }, { id: 1 }], 'id');           // [{ id: 1 }, { id: 2 }]
+sortBy([{ age: 20 }, { age: 30 }], 'age', 'desc'); // [{ age: 30 }, { age: 20 }]
+
+// 基础类型数组去重
+uniq([1, 2, 2, 3]);       // [1, 2, 3]
+uniq(['a', 'b', 'a']);    // ['a', 'b']
+
+// 按字段求和
+sumBy([{ price: 10 }, { price: 20 }], 'price'); // 30
 ```
 
 #### 字符串处理 (string-kit)
@@ -264,7 +278,7 @@ capitalize('hello'); // "Hello"
 #### 对象操作 (object-kit)
 
 ```typescript
-import { objMerge, objFilterProp, objFilterNull, jsonToFormData, formDataToObject, pick, get, deepMerge } from 'l-js-fn';
+import { objMerge, objFilterProp, objFilterNull, jsonToFormData, formDataToObject, pick, omit, get, deepMerge } from 'l-js-fn';
 
 // 对象合并
 objMerge({ a: 1 }, { b: 2 }); // { a: 1, b: 2 }
@@ -289,6 +303,9 @@ formDataToObject(formData); // { name: 'John', age: 20 }
 
 // 选取属性
 pick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
+
+// 排除属性（pick 的反操作）
+omit({ a: 1, b: 2, c: 3 }, ['b']); // { a: 1, c: 3 }
 
 // 安全深层取值
 get({ a: { b: { c: 1 } } }, 'a.b.c'); // 1

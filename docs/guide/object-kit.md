@@ -353,7 +353,43 @@ pick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
 ```
 :::
 
-## 8. get 安全深层取值
+## 8. omit 排除指定属性
+
+排除对象中指定 key 的属性，返回一个新对象（pick 的反操作）。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| obj | `T` | 是 | 源对象 |
+| keys | `Array<keyof T>` | 是 | 需要排除的键名数组 |
+
+**返回值：** `Omit<T, K>` — 排除后的新对象
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { omit } from 'l-js-fn';
+
+omit({ a: 1, b: 2, c: 3 }, ['b']);    // { a: 1, c: 3 }
+omit({ a: 1, b: 2 }, []);              // { a: 1, b: 2 }
+```
+
+```js [JavaScript (ESM)]
+import { omit } from 'l-js-fn';
+
+omit({ a: 1, b: 2, c: 3 }, ['b']);    // { a: 1, c: 3 }
+```
+
+```js [JavaScript (CJS)]
+const { omit } = require('l-js-fn');
+
+omit({ a: 1, b: 2, c: 3 }, ['b']);    // { a: 1, c: 3 }
+```
+:::
+
+## 9. get 安全深层取值
 
 安全获取对象深层属性值。
 
@@ -386,7 +422,7 @@ get({ list: [1, 2, 3] }, 'list[1]'); // 2
 ```
 :::
 
-## 9. deepMerge 深度合并对象
+## 10. deepMerge 深度合并对象
 
 深度合并多个对象。
 

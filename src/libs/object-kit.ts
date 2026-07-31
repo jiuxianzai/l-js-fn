@@ -158,6 +158,28 @@ export function pick<T extends Record<string, any>, K extends keyof T>(obj: T, k
 }
 
 /**
+ * 排除对象中指定 key 的属性，返回一个新对象
+ * @param obj - 源对象
+ * @param keys - 需要排除的键名数组
+ * @returns 排除指定属性后的新对象
+ * @example
+ * omit({ a: 1, b: 2, c: 3 }, ['b']) // { a: 1, c: 3 }
+ * omit({ a: 1, b: 2 }, [])           // { a: 1, b: 2 }
+ */
+export function omit<T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
+	const keySet = new Set(keys as string[]);
+	const result = {} as Record<string, any>;
+	const ownKeys = Object.keys(obj);
+	for (let i = 0; i < ownKeys.length; i++) {
+		const key = ownKeys[i];
+		if (!keySet.has(key)) {
+			result[key] = obj[key];
+		}
+	}
+	return result as Omit<T, K>;
+}
+
+/**
  * 从对象中安全获取深层属性值
  * @param obj - 目标对象
  * @param path - 属性路径，如 'a.b.c' 或 'a[0].b'

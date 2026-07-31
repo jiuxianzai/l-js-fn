@@ -11,6 +11,7 @@ import {
 	jsonToFormData,
 	formDataToObject,
 	pick,
+	omit,
 	get,
 	deepMerge,
 } from '@/libs/object-kit';
@@ -353,11 +354,35 @@ describe('object-kit - 对象操作工具', () => {
 
 		it('应该处理空 keys', () => {
 			expect(pick({ a: 1 }, [])).toEqual({});
-		});
+	});
+});
+
+// ==================== omit 测试 ====================
+describe('omit - 排除对象属性', () => {
+	it('应该排除指定属性', () => {
+		expect(omit({ a: 1, b: 2, c: 3 }, ['b'])).toEqual({ a: 1, c: 3 });
 	});
 
-	// ==================== get 测试 ====================
-	describe('get - 安全深层取值', () => {
+	it('应该排除多个属性', () => {
+		expect(omit({ a: 1, b: 2, c: 3 }, ['a', 'c'])).toEqual({ b: 2 });
+	});
+
+	it('空 keys 返回原对象副本', () => {
+		expect(omit({ a: 1, b: 2 }, [])).toEqual({ a: 1, b: 2 });
+	});
+
+	it('应该排除不存在的 key 而不报错', () => {
+		expect(omit({ a: 1 }, ['b'] as any)).toEqual({ a: 1 });
+	});
+
+	it('应该保留值类型', () => {
+		const obj = { a: 1, b: 'hello', c: true, d: null };
+		expect(omit(obj, ['b'])).toEqual({ a: 1, c: true, d: null });
+	});
+});
+
+// ==================== get 测试 ====================
+describe('get - 安全深层取值', () => {
 		const obj = { a: { b: { c: 1 } } };
 
 		it('应该获取深层值', () => {
