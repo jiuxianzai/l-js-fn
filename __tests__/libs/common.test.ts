@@ -23,6 +23,9 @@ import {
 describe('common - 通用工具方法', () => {
 	// ==================== sleep 测试 ====================
 	describe('sleep - 睡眠函数', () => {
+		// 其他测试套件（ws/polling 等）可能残留 fake timers，强制切回真实计时器
+		beforeAll(() => jest.useRealTimers());
+		beforeEach(() => jest.useRealTimers());
 		it('应该在指定时间后 resolve', async () => {
 			const start = Date.now();
 			await sleep(100);
