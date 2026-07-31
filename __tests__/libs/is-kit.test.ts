@@ -266,6 +266,22 @@ describe('is-kit - 类型判断工具', () => {
 			expect(isURL(undefined as any)).toBe(false);
 			expect(isURL(123 as any)).toBe(false);
 		});
+
+		it('应该识别绝对路径', () => {
+			expect(isURL('/path/to/page')).toBe(true);
+			expect(isURL('/api/v1/users')).toBe(true);
+			expect(isURL('/')).toBe(true);
+		});
+
+		it('应该识别协议相对路径', () => {
+			expect(isURL('//cdn.example.com/lib.js')).toBe(true);
+			expect(isURL('//example.com/path')).toBe(true);
+		});
+
+		it('应该拒绝非 URL 格式的字符串', () => {
+			expect(isURL('plain text')).toBe(false);
+			expect(isURL('abc')).toBe(false);
+		});
 	});
 
 	// ==================== isHttp 测试 ====================

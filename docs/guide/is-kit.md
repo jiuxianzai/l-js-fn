@@ -382,7 +382,7 @@ isEmail('invalid-email');     // false
 
 ## 9. isURL URL验证
 
-判断是否为合法 URL。
+判断是否为合法 URL（支持协议地址、绝对路径和协议相对路径）。
 
 **参数说明：**
 
@@ -398,22 +398,28 @@ isEmail('invalid-email');     // false
 ```ts [TypeScript]
 import { isURL } from 'l-js-fn';
 
-isURL('https://example.com'); // true
-isURL('not-a-url');           // false
+isURL('https://example.com');  // true (完整 URL)
+isURL('/path/to/page');        // true (绝对路径)
+isURL('//cdn.example.com');    // true (协议相对路径)
+isURL('not-a-url');            // false
 ```
 
 ```js [JavaScript (ESM)]
 import { isURL } from 'l-js-fn';
 
-isURL('https://example.com'); // true
-isURL('not-a-url');           // false
+isURL('https://example.com');  // true (完整 URL)
+isURL('/path/to/page');        // true (绝对路径)
+isURL('//cdn.example.com');    // true (协议相对路径)
+isURL('not-a-url');            // false
 ```
 
 ```js [JavaScript (CJS)]
 const { isURL } = require('l-js-fn');
 
-isURL('https://example.com'); // true
-isURL('not-a-url');           // false
+isURL('https://example.com');  // true (完整 URL)
+isURL('/path/to/page');        // true (绝对路径)
+isURL('//cdn.example.com');    // true (协议相对路径)
+isURL('not-a-url');            // false
 ```
 :::
 

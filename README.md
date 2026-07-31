@@ -5,10 +5,10 @@
 ![npm version](https://badge.fury.io/js/l-js-fn.svg)
 ![downloads](https://img.shields.io/npm/dm/l-js-fn)
 ![license](https://img.shields.io/npm/l/l-js-fn)
-![test pass](https://img.shields.io/badge/tests-1402%2F1402%20passed-brightgreen)
+![test pass](https://img.shields.io/badge/tests-1446%2F1446%20passed-brightgreen)
 ![coverage](https://img.shields.io/badge/coverage-99%25-brightgreen)
 ![functions](https://img.shields.io/badge/functions-100%25-brightgreen)
-![branches](https://img.shields.io/badge/branches-94%25-brightgreen)
+![branches](https://img.shields.io/badge/branches-93%25-brightgreen)
 [![docs](https://img.shields.io/badge/docs-GitHub%20Pages-42b883)](https://jiuxianzai.github.io/l-js-fn/)
 
 ## ✨ 特性
@@ -105,6 +105,11 @@ isEmpty({}); // true
 
 // 邮箱验证
 isEmail('test@example.com'); // true
+
+// URL 验证（含绝对路径、协议相对路径）
+isURL('https://example.com'); // true
+isURL('/path/to/page');       // true
+isURL('//cdn.example.com');   // true
 
 // 手机号验证（中国大陆）
 isPhoneNumber('13800138000'); // true
@@ -919,12 +924,12 @@ const { escapeHTML } = require('l-js-fn/encode');
 | 指标       | 数值                    |
 | ---------- | ----------------------- |
 | 测试套件   | 27 passed               |
-| 测试用例   | 1402 passed / 1402 total |
+| 测试用例   | 1446 passed / 1446 total |
 | 通过率     | 100%                    |
-| 语句覆盖率 | 99.1%                   |
-| 分支覆盖率 | 94.14%                  |
+| 语句覆盖率 | 98.73%                  |
+| 分支覆盖率 | 93.49%                  |
 | 函数覆盖率 | 100%                    |
-| 行覆盖率   | 99.66%                  |
+| 行覆盖率   | 99.37%                  |
 
 #### 核心工具模块
 
@@ -933,11 +938,11 @@ const { escapeHTML } = require('l-js-fn/encode');
 | color (颜色处理)        | 31     | 31   | 0    | 100%   |
 | is-kit (类型判断)       | 75     | 75   | 0    | 100%   |
 | array-kit (数组操作)    | 134    | 134  | 0    | 100%   |
-| string-kit (字符串处理) | 77     | 77   | 0    | 100%   |
+| string-kit (字符串处理) | 94     | 94   | 0    | 100%   |
 | object-kit (对象操作)   | 62     | 62   | 0    | 100%   |
 | common (通用工具)       | 75     | 75   | 0    | 100%   |
-| date-kit (日期处理)     | 62     | 62   | 0    | 100%   |
-| number-kit (数字处理)   | 55     | 55   | 0    | 100%   |
+| date-kit (日期处理)     | 72     | 72   | 0    | 100%   |
+| number-kit (数字处理)   | 72     | 72   | 0    | 100%   |
 | url-kit (URL 处理)      | 81     | 81   | 0    | 100%   |
 | bugfixes (兼容修复)     | 17     | 17   | 0    | 100%   |
 

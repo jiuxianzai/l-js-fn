@@ -53,13 +53,6 @@ function stripQueryParam(str: string): string {
 }
 
 /**
- * 判断字符串是否为 URL 格式（含协议或绝对路径）
- */
-function isUrlLike(str: string): boolean {
-	return isURL(str) || /^(\/\/|\/)/.test(str);
-}
-
-/**
  * 检查指定地址是否存在于地址数组中（忽略 ? 后的查询参数）
  * @param arr - 地址数组
  * @param value - 需要检查的地址字符串
@@ -72,7 +65,7 @@ function isUrlLike(str: string): boolean {
 export function isInArray(arr: string[], value: string): boolean {
 	if (!isArray(arr)) return false;
 
-	const isUrl = isUrlLike(value) || arr.some((item) => isUrlLike(String(item)));
+	const isUrl = isURL(value) || arr.some((item) => isURL(String(item)));
 	if (isUrl) {
 		const strippedValue = stripQueryParam(value);
 		return arr.some((item) => stripQueryParam(String(item)) === strippedValue);
@@ -104,7 +97,7 @@ export function isEmail(value: string): boolean {
 }
 
 /**
- * 是否为合法 URL
+ * 是否为合法 URL（含协议地址或绝对路径如 /path、//example.com）
  */
 export function isURL(value: string): boolean {
   if (!value) return false;
@@ -112,7 +105,8 @@ export function isURL(value: string): boolean {
     new URL(value);
     return true;
   } catch {
-    return false;
+    // new URL 失败时，再匹配绝对路径（/xxx）或协议相对路径（//xxx）
+    return /^(\/\/|\/)/.test(value);
   }
 }
 
