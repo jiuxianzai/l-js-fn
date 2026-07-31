@@ -21,9 +21,8 @@ export function arrayDelEl<T>(
     if (key) {
       return arr.filter((item) => item[key] !== target[key]);
     } else {
-      return arr.filter(
-        (item) => JSON.stringify(item) !== JSON.stringify(target)
-      );
+      const targetStr = JSON.stringify(target);
+      return arr.filter((item) => JSON.stringify(item) !== targetStr);
     }
   }
 }

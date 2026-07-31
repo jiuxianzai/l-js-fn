@@ -135,8 +135,8 @@ describe('url-kit - URL 处理工具', () => {
 
 		it('应该处理空字符串参数值', () => {
 			const result = appendUrlParam('https://example.com', 'name', '');
-			// 空字符串被编码为 ''，实现会省略 = 号
-			expect(result).toBe('https://example.com?name');
+			// 空字符串保留 = 号，符合标准查询字符串语义
+			expect(result).toBe('https://example.com?name=');
 		});
 
 		it('应该处理 undefined 参数值', () => {

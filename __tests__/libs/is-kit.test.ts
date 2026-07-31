@@ -560,5 +560,32 @@ describe('isEqual - 补充测试', () => {
 		const b = { items: [child, child] };
 		expect(isEqual(a, b)).toBe(true);
 	});
+
+	it('应该正确比较 Date 对象', () => {
+		expect(isEqual(new Date('2024-01-01'), new Date('2024-01-01'))).toBe(true);
+		expect(isEqual(new Date('2024-01-01'), new Date('2024-01-02'))).toBe(false);
+	});
+
+	it('应该正确比较 RegExp 对象', () => {
+		expect(isEqual(/abc/gi, /abc/gi)).toBe(true);
+		expect(isEqual(/abc/, /ab/)).toBe(false);
+	});
+
+	it('应该正确比较 Map', () => {
+		const a = new Map<any, any>([['key', 'value'], ['k2', { a: 1 }]]);
+		const b = new Map<any, any>([['key', 'value'], ['k2', { a: 1 }]]);
+		expect(isEqual(a, b)).toBe(true);
+		expect(isEqual(a, new Map([['key', 'other']]))).toBe(false);
+	});
+
+	it('应该正确比较 Set', () => {
+		expect(isEqual(new Set([1, 2, 3]), new Set([3, 2, 1]))).toBe(true);
+		expect(isEqual(new Set([1, 2]), new Set([1, 3]))).toBe(false);
+	});
+
+	it('应该比较 Symbol 键', () => {
+		const sym = Symbol('test');
+		expect(isEqual({ [sym]: 'value' }, { [sym]: 'value' })).toBe(true);
+	});
 });
 });

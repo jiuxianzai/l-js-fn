@@ -181,6 +181,7 @@ export const formatPassTime = (startTime?: string | number | Date): string => {
  */
 export const monthDays = (time: Date | string | number): number => {
 	const date = new Date(time);
+	if (isNaN(date.getTime())) throw new Error(`Invalid date: ${time}`);
 	const year = date.getFullYear();
 	const month = date.getMonth() + 1; // 下一个月
 	return new Date(year, month, 0).getDate();
@@ -265,6 +266,7 @@ export function diffTime(
  */
 export function addDays(date: Date | string | number, days: number): Date {
 	const d = new Date(date);
+	if (isNaN(d.getTime())) throw new Error(`Invalid date: ${date}`);
 	d.setDate(d.getDate() + days);
 	return d;
 }
@@ -290,6 +292,7 @@ export function isLeapYear(year: number): boolean {
  */
 export function getWeekDay(date: Date | string | number = new Date()): string {
 	const d = new Date(date);
+	if (isNaN(d.getTime())) throw new Error(`Invalid date: ${date}`);
 	const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
 	return days[d.getDay()];
 }

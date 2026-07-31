@@ -191,8 +191,10 @@ export function indexToLabel(index: number, type: 'upper' | 'lower' | 'number' |
 export function searchTextColor(val: string, text = '', color = 'red'): string {
 	// 转义正则特殊字符，防止正则注入
 	const escaped = val.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	// 转义 color 参数，防止 HTML 属性注入
+	const safeColor = color.replace(/['"\\<>]/g, '');
 	// 返回内容，添加颜色
-	let v = text.replace(new RegExp(escaped, 'gi'), `<span style='color: ${color}'>${val}</span>`);
+	let v = text.replace(new RegExp(escaped, 'gi'), `<span style='color: ${safeColor}'>${val}</span>`);
 	// 返回结果
 	return v;
 }

@@ -97,7 +97,7 @@ export function appendUrlParam<T = unknown>(url: string, paramName: string, para
 
 	try {
 		const encodedValue = paramValue !== undefined ? encodeURIComponent(String(paramValue)) : '';
-		const paramString = encodedValue ? `${paramName}=${encodedValue}` : paramName;
+		const paramString = paramValue !== undefined ? `${paramName}=${encodedValue}` : paramName;
 		const position = options?.position || 'after';
 
 		return appendQueryString(url, paramString, position);

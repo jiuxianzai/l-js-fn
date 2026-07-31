@@ -172,7 +172,7 @@ export function isPhoneNumber(phone: string): boolean {
 }
 
 /**
- * 深度比较两个值是否相等（支持循环引用检测）
+ * 深度比较两个值是否相等（支持循环引用检测、Date/RegExp/Map/Set/Symbol）
  */
 export function isEqual<T>(value: T, other: T): boolean {
 	const compared = new WeakMap<object, Set<object>>();
@@ -186,18 +186,48 @@ export function isEqual<T>(value: T, other: T): boolean {
 		if (a === null && b === null) return true;
 		if (a === null || b === null) return false;
 		if (typeof a !== typeof b) return false;
+
+		// Date
+		if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime();
+		if (a instanceof Date || b instanceof Date) return false;
+
+		// RegExp
+		if (a instanceof RegExp && b instanceof RegExp) return a.toString() === b.toString();
+		if (a instanceof RegExp || b instanceof RegExp) return false;
+
 		if (a === b) return true;
 
-		// 循环引用检测：当 a 和 b 都是对象时，记录已比较对
-		if (a !== null && b !== null) {
-			let aSet = compared.get(a as object);
-			if (!aSet) {
-				aSet = new Set();
-				compared.set(a as object, aSet);
-			}
-			if (aSet.has(b as object)) return true;
-			aSet.add(b as object);
+		// 循环引用检测
+		let aSet = compared.get(a as object);
+		if (!aSet) {
+			aSet = new Set();
+			compared.set(a as object, aSet);
 		}
+		if (aSet.has(b as object)) return true;
+		aSet.add(b as object);
+
+		// Map
+		if (a instanceof Map && b instanceof Map) {
+			if (a.size !== b.size) return false;
+			for (const [key, val] of a) {
+				if (!b.has(key) || !deepEqual(val, b.get(key))) return false;
+			}
+			return true;
+		}
+		if (a instanceof Map || b instanceof Map) return false;
+
+		// Set
+		if (a instanceof Set && b instanceof Set) {
+			if (a.size !== b.size) return false;
+			const bArr = [...b];
+			for (const val of a) {
+				const found = bArr.findIndex((item) => deepEqual(val, item));
+				if (found === -1) return false;
+				bArr.splice(found, 1);
+			}
+			return true;
+		}
+		if (a instanceof Set || b instanceof Set) return false;
 
 		if (Array.isArray(a) && Array.isArray(b)) {
 			if (a.length !== b.length) return false;
@@ -209,14 +239,15 @@ export function isEqual<T>(value: T, other: T): boolean {
 
 		if (Array.isArray(a) || Array.isArray(b)) return false;
 
-	const aKeys = Object.keys(a as object);
-	const bKeys = Object.keys(b as object);
+		// 使用 Reflect.ownKeys 捕获 Symbol 键
+		const aKeys = Reflect.ownKeys(a as object);
+		const bKeys = Reflect.ownKeys(b as object);
 		if (aKeys.length !== bKeys.length) return false;
 
 		for (let i = 0; i < aKeys.length; i++) {
 			const key = aKeys[i];
-			if (!(key in (b as object))) return false;
-			if (!deepEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key])) return false;
+			if (!Reflect.has(b as object, key)) return false;
+			if (!deepEqual((a as Record<string, unknown>)[key as string], (b as Record<string, unknown>)[key as string])) return false;
 		}
 
 		return true;
