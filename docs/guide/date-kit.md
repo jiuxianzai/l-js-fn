@@ -195,6 +195,8 @@ formatPassTime(Date.now() - 60000);     // '1分钟前'
 
 **返回值：** `number` — 当月天数
 
+**异常：** 无效日期输入时抛出 `Error('Invalid date')`
+
 **示例：**
 
 ::: code-group
@@ -317,6 +319,8 @@ diffTime('2024-01-01', '2024-01-01 01:02:03');
 
 日期加减天数，返回新 Date 对象。
 
+**异常：** 无效日期输入时抛出 `Error('Invalid date')`
+
 ::: code-group
 ```ts [TypeScript]
 import { addDays } from 'l-js-fn';
@@ -370,6 +374,8 @@ isLeapYear(2023); // false
 ## 10. getWeekDay 获取中文星期
 
 获取中文星期几。
+
+**异常：** 无效日期输入时抛出 `Error('Invalid date')`
 
 ::: code-group
 ```ts [TypeScript]

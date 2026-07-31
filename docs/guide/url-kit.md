@@ -110,7 +110,7 @@ getUrlParam('https://example.com?id=1', 'name');  // null
 | paramValue | `T` | 否 | 参数值 |
 | options | `AppendUrlOptions` | 否 | 配置项，`position` 控制参数追加位置 |
 
-**返回值：** `string | null` — 新的 URL，参数无效返回 `null`
+**返回值：** `string | null` — 新的 URL，参数无效返回 `null`；`paramValue` 为 `undefined` 时仅追加参数名；为空字符串时追加 `?key=`
 
 **示例：**
 

@@ -588,7 +588,7 @@ isPhoneNumber('1380013800');  // false
 
 ## 14. isEqual 深度比较
 
-深度比较两个值是否相等（支持对象、数组、NaN 比较）。
+深度比较两个值是否相等（支持对象、数组、Date、RegExp、Map、Set、Symbol 键、NaN、循环引用）。
 
 **参数说明：**
 
@@ -605,11 +605,13 @@ isPhoneNumber('1380013800');  // false
 ```ts [TypeScript]
 import { isEqual } from 'l-js-fn';
 
-isEqual({ a: 1 }, { a: 1 });     // true
-isEqual([1, 2], [1, 2]);         // true
-isEqual(NaN, NaN);               // true
-isEqual({ a: { b: 1 } }, { a: { b: 1 } }); // true
-isEqual({ a: 1 }, { a: 2 });     // false
+isEqual({ a: 1 }, { a: 1 });                // true
+isEqual([1, 2], [1, 2]);                    // true
+isEqual(NaN, NaN);                          // true
+isEqual(new Date('2024-01-01'), new Date('2024-01-01')); // true
+isEqual(new Map([['k', 1]]), new Map([['k', 1]]));      // true
+isEqual(new Set([1, 2]), new Set([2, 1]));             // true
+isEqual({ a: 1 }, { a: 2 });                // false
 
 // null 与对象比较
 isEqual(null, {}); // false
@@ -651,7 +653,7 @@ isEqual(null, null); // true
 
 ## 15. validateParams 参数校验
 
-校验参数对象中必填字段是否都存在且非空。
+校验参数对象中必填字段是否都存在且不为 `null` 或 `undefined`（`0`、`false`、`''` 视为有效值）。
 
 **参数说明：**
 
@@ -669,7 +671,10 @@ isEqual(null, null); // true
 import { validateParams } from 'l-js-fn';
 
 validateParams(['name', 'age'], { name: 'John', age: 20 }); // null
-validateParams(['name'], { age: 20 }); // 'name'
+validateParams(['name'], { age: 20 });    // 'name' (字段不存在)
+validateParams(['age'], { age: null });   // 'age' (null 视为缺失)
+validateParams(['count'], { count: 0 });  // null (0 是有效值)
+validateParams(['active'], { active: false }); // null (false 是有效值)
 ```
 
 ```js [JavaScript (ESM)]
