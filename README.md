@@ -217,10 +217,16 @@ arrayPluck([{ name: 'zz' }, { name: 'yy' }], 'name'); // ['zz', 'yy']
 #### 字符串处理 (string-kit)
 
 ```typescript
-import { desensitization, trim, getMobile, getUuid, indexToLabel, toPascalCase, toCamelCase, toKebabCase, capitalize } from 'l-js-fn';
+import { desensitization, desensitizeName, trim, getMobile, getUuid, indexToLabel, toPascalCase, toCamelCase, toKebabCase, capitalize } from 'l-js-fn';
 
 // 字符串脱敏
 desensitization('13800138000', 3, 4); // "138****8000"
+
+// 姓名脱敏
+desensitizeName('张三丰');       // "张*丰"
+desensitizeName('欧阳飞飞');     // "欧**飞"
+desensitizeName('张三', 'surname'); // "*三"
+desensitizeName('张三丰', 'last');  // "**丰"
 
 // 去除空格
 trim('  hello  '); // "hello"
@@ -291,7 +297,7 @@ deepMerge({ a: { b: 1 } }, { a: { c: 2 } });
 #### 日期处理 (date-kit)
 
 ```typescript
-import { dateFormat, dateSecond, diffDays, formatPassTime, monthDays, getTimeDiff, addDays, isLeapYear, getWeekDay } from 'l-js-fn';
+import { dateFormat, dateSecond, diffDays, diffTime, formatPassTime, monthDays, getTimeDiff, addDays, isLeapYear, getWeekDay } from 'l-js-fn';
 
 // 日期格式化
 dateFormat(new Date()); // "2024-01-01 12:00:00"
@@ -302,6 +308,10 @@ dateSecond(3661); // "01:01:01"
 
 // 计算天数差
 diffDays('2024-01-01', '2024-01-03'); // 2
+
+// 计算时间差值（日/时/分/秒）
+diffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45');
+// { days: 1, hours: 2, minutes: 30, seconds: 45 }
 
 // 格式化过去时间
 formatPassTime('2024-01-01 12:00:00'); // "3天前"
@@ -329,8 +339,16 @@ getWeekDay(new Date('2024-01-01')); // '星期一'
 import { formatNumber, toPercent, random, getUniqueRandomIndexes, clamp, round } from 'l-js-fn';
 
 // 数字格式化
-formatNumber(1234567); // "1,234,567"
-formatNumber(1234567, true); // "123万"
+formatNumber(1234567);       // "1,234,567"
+formatNumber(1234567, true); // "123.47万"
+
+// 控制小数位
+formatNumber(1234, { decimals: 2 });           // "1,234.00"
+formatNumber(1234567, { type: 'number', decimals: 2 }); // "1234567.00"
+
+// 中文大写金额
+formatNumber(123.45, { type: 'chinese' });    // "壹佰贰拾叁元肆角伍分"
+formatNumber(0.5, { type: 'chinese' });       // "伍角"
 
 // 转百分比
 toPercent(0.5332); // "53.32%"

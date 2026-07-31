@@ -240,6 +240,42 @@ export function getTimeDiff(start: Date | string | number, end: Date | string | 
 }
 
 /**
+ * 计算两个时间的差值，返回日/时/分/秒的分解结果
+ * @param date1 - 第一个日期，可以是 Date、时间戳或日期字符串
+ * @param date2 - 第二个日期，可以是 Date、时间戳或日期字符串
+ * @returns 包含 days / hours / minutes / seconds 的对象，各分量均为非负数
+ * @example
+ * diffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45')
+ * // { days: 1, hours: 2, minutes: 30, seconds: 45 }
+ * diffTime(new Date('2024-01-01'), new Date('2024-01-01 01:02:03'))
+ * // { days: 0, hours: 1, minutes: 2, seconds: 3 }
+ */
+export function diffTime(
+	date1: Date | string | number,
+	date2: Date | string | number
+): { days: number; hours: number; minutes: number; seconds: number } {
+	const toTimestamp = (d: Date | string | number): number => {
+		if (d instanceof Date) return d.getTime();
+		if (typeof d === 'number') return d;
+		const t = Date.parse(d);
+		if (isNaN(t)) throw new Error(`Invalid date string: ${d}`);
+		return t;
+	};
+
+	const t1 = toTimestamp(date1);
+	const t2 = toTimestamp(date2);
+
+	const diffMs = Math.abs(t2 - t1);
+
+	const seconds = Math.floor(diffMs / 1000) % 60;
+	const minutes = Math.floor(diffMs / (1000 * 60)) % 60;
+	const hours = Math.floor(diffMs / (1000 * 60 * 60)) % 24;
+	const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+	return { days, hours, minutes, seconds };
+}
+
+/**
  * 在当前日期基础上增加或减少天数，返回新日期
  * @param date - 基准日期
  * @param days - 要添加的天数（负数表示减少）

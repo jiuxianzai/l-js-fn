@@ -1,42 +1,210 @@
+/** 格式化选项 */
+interface FormatNumberOptions {
+	/** 输出类型：'comma' 千分位逗号分隔（默认），'number' 纯数字，'chinese' 中文大写金额 */
+	type?: 'comma' | 'number' | 'chinese';
+	/** 保留小数位数（仅 type 为 'comma'/'number' 时生效，默认保留原始小数位；chinese 模式固定为金额角分格式） */
+	decimals?: number;
+	/** 是否使用中文单位（万/亿），仅 type 为 'comma'/'number' 时生效 */
+	useUnit?: boolean;
+}
+
+/** 中文大写数字映射 */
+const CHINESE_DIGITS = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
+const CHINESE_UNITS = ['', '拾', '佰', '仟'];
+const CHINESE_BIG_UNITS = ['', '万', '亿'];
+
+/**
+ * 将整数部分转为中文大写（四位一组）
+ */
+function sectionToChinese(section: string): string {
+	if (section === '0000') return '';
+	const len = section.length;
+	let result = '';
+	let hasZero = false;
+	for (let i = 0; i < len; i++) {
+		const digit = parseInt(section[i]);
+		const pos = len - i - 1; // 从右往左 0=个位, 1=拾, 2=佰, 3=仟
+		if (digit === 0) {
+			hasZero = true;
+		} else {
+			if (hasZero && result !== '') {
+				result += '零';
+			}
+			result += CHINESE_DIGITS[digit] + CHINESE_UNITS[pos];
+			hasZero = false;
+		}
+	}
+	return result;
+}
+
+/**
+ * 将数字的整数部分按四位一组分别拆分，每组转为中文大写
+ * @param originalSections 原始分组的字符串数组（高位在前）
+ * @returns 中文大写字符串
+ */
+function integerToChinese(sections: string[]): string {
+	const len = sections.length;
+	let result = '';
+	let needZero = false;
+
+	for (let i = 0; i < len; i++) {
+		const sectionStr = sectionToChinese(sections[i].padStart(4, '0'));
+
+		if (sectionStr === '') {
+			if (result !== '') needZero = true;
+			if (i === len - 1 && result === '') return CHINESE_DIGITS[0];
+			continue;
+		}
+
+		if (needZero) {
+			result += CHINESE_DIGITS[0];
+			needZero = false;
+		}
+
+		// 当前段非首个段且该段值 < 1000，说明高位有缺，补零
+		if (i > 0 && parseInt(sections[i]) < 1000) {
+			// 避免重复补零：上一位已补过不再补
+			const prevResultLen = result.length;
+			if (!result.endsWith(CHINESE_DIGITS[0])) {
+				result += CHINESE_DIGITS[0];
+			}
+		}
+
+		const bigUnitIndex = len - i - 1;
+		result += sectionStr + CHINESE_BIG_UNITS[bigUnitIndex];
+	}
+
+	return result;
+}
+
 /**
  * 数字格式化
  * @param value - 数字或数字字符串
- * @param useUnit - 是否使用中文单位（万/亿）
+ * @param options - 可选，布尔值时等同于 useUnit 参数（兼容旧版），对象时可配置 type/decimals/useUnit
  * @returns 格式化后的字符串
  * @example
- * console.log(formatNumber(1234567));       // "1,234,567"
- * console.log(formatNumber("1234567"));     // "1,234,567"
- * console.log(formatNumber(1234567, true)); // "123万"
- * console.log(formatNumber("abc"));         // "abc" (非数字原样返回)
+ * // 基本用法（兼容旧版）
+ * formatNumber(1234567)                          // "1,234,567"
+ * formatNumber(1234567, true)                    // "123.47万"
+ *
+ * // 控制小数位
+ * formatNumber(1234567, { decimals: 2 })         // "1,234,567.00"
+ * formatNumber(1234.5, { decimals: 2 })          // "1,234.50"
+ *
+ * // 纯数字模式
+ * formatNumber(1234567, { type: 'number', decimals: 2 }) // "1234567.00"
+ *
+ * // 中文大写金额
+ * formatNumber(123.45, { type: 'chinese' })      // "壹佰贰拾叁元肆角伍分"
+ * formatNumber(100.00, { type: 'chinese' })      // "壹佰元整"
+ * formatNumber(1000000, { type: 'chinese' })     // "壹佰万元整"
+ *
+ * // 中文单位 + 小数
+ * formatNumber(12345, { useUnit: true, decimals: 2 })  // "1.23万"
  */
-export const formatNumber = (value: string | number, useUnit: boolean = false): string => {
+export const formatNumber = (value: string | number, options: boolean | FormatNumberOptions = false): string => {
+	// 兼容旧版 boolean 参数
+	if (typeof options === 'boolean') {
+		const useUnit = options;
+		if (!isFinite(value as number)) {
+			if (value === Infinity || value === -Infinity) return String(value);
+			return String(value);
+		}
+		const num = typeof value === 'string' ? parseFloat(value) : value;
+		if (isNaN(num)) return String(value);
+		if (useUnit) {
+			const absNum = Math.abs(num);
+			const sign = num < 0 ? '-' : '';
+			if (absNum >= 1e8) {
+				const raw = Math.round((absNum * 100) / 1e8) / 100;
+				return `${sign}${raw.toFixed(2).replace(/\.00$/, '')}亿`;
+			}
+			if (absNum >= 1e4) {
+				const raw = Math.round((absNum * 100) / 1e4) / 100;
+				return `${sign}${raw.toFixed(2).replace(/\.00$/, '')}万`;
+			}
+			return String(num);
+		}
+		return num.toLocaleString('en-US');
+	}
+
+	const { type = 'comma', decimals, useUnit } = options;
+
 	// 检查是否为有限数字
 	if (!isFinite(value as number)) {
-		// 处理 Infinity 和 -Infinity
 		if (value === Infinity || value === -Infinity) return String(value);
-		// 非数字字符串原样返回
 		return String(value);
 	}
 
 	let num = typeof value === 'string' ? parseFloat(value) : value;
-
 	if (isNaN(num)) return String(value);
 
+	// 中文大写金额模式
+	if (type === 'chinese') {
+		const absNum = Math.abs(num);
+		const sign = num < 0 ? '负' : '';
+
+		const intPart = Math.floor(absNum);
+		const decPart = Math.round((absNum - intPart) * 100);
+
+		const jiao = Math.floor(decPart / 10);
+		const fen = decPart % 10;
+
+		// 整数部分
+		let result = sign;
+		if (intPart === 0) {
+			if (jiao === 0 && fen === 0) {
+				return result + CHINESE_DIGITS[0] + '元整';
+			}
+		} else {
+			const str = String(Math.floor(intPart));
+			const sections: string[] = [];
+			for (let i = str.length; i > 0; i -= 4) {
+				sections.unshift(str.substring(Math.max(0, i - 4), i));
+			}
+			result += integerToChinese(sections) + '元';
+		}
+
+		if (jiao === 0 && fen === 0) {
+			result += '整';
+		} else {
+			if (jiao > 0) result += CHINESE_DIGITS[jiao] + '角';
+			if (fen > 0) result += CHINESE_DIGITS[fen] + '分';
+		}
+
+		return result;
+	}
+
+	// 中文单位模式（万/亿）
 	if (useUnit) {
-		// 中文单位
 		const absNum = Math.abs(num);
 		const sign = num < 0 ? '-' : '';
+		const d = decimals !== undefined ? decimals : 2;
+		const factor = Math.pow(10, d);
 		if (absNum >= 1e8) {
-			return `${sign}${(absNum / 1e8).toFixed(2).replace(/\.00$/, '')}亿`;
+			const raw = Math.round((absNum * factor) / 1e8) / factor;
+			return `${sign}${raw.toFixed(d).replace(new RegExp(`\\.${'0'.repeat(d)}$`), '')}亿`;
 		}
 		if (absNum >= 1e4) {
-			return `${sign}${(absNum / 1e4).toFixed(2).replace(/\.00$/, '')}万`;
+			const raw = Math.round((absNum * factor) / 1e4) / factor;
+			return `${sign}${raw.toFixed(d).replace(new RegExp(`\\.${'0'.repeat(d)}$`), '')}万`;
 		}
-		return String(num);
-	} else {
-		// 千分位分割
-		return num.toLocaleString('en-US');
 	}
+
+	// number / comma 模式
+	let formatted: string;
+	if (decimals !== undefined) {
+		formatted = num.toFixed(decimals);
+	} else {
+		formatted = String(num);
+	}
+
+	if (type === 'number') return formatted;
+
+	// comma 千分位
+	const parts = formatted.split('.');
+	parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	return parts.join('.');
 };
 
 /**

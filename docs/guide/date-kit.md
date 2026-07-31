@@ -263,7 +263,57 @@ getTimeDiff(new Date('2024-01-01'), new Date('2024-01-02')); // 86400000
 ```
 :::
 
-## 7. addDays 日期加减天数
+## 7. diffTime 计算时间差值
+
+计算两个时间之间的差值，返回包含天/时/分/秒的结构化结果。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| date1 | `Date \| string \| number` | 是 | 第一个日期 |
+| date2 | `Date \| string \| number` | 是 | 第二个日期 |
+
+**返回值：** `{ days: number; hours: number; minutes: number; seconds: number }` — 各分量均为非负数
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { diffTime } from 'l-js-fn';
+
+diffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45');
+// { days: 1, hours: 2, minutes: 30, seconds: 45 }
+
+diffTime('2024-01-01', '2024-01-01 01:02:03');
+// { days: 0, hours: 1, minutes: 2, seconds: 3 }
+
+diffTime('2024-01-01 23:30:00', '2024-01-02 01:15:30');
+// { days: 0, hours: 1, minutes: 45, seconds: 30 }
+```
+
+```js [JavaScript (ESM)]
+import { diffTime } from 'l-js-fn';
+
+diffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45');
+// { days: 1, hours: 2, minutes: 30, seconds: 45 }
+
+diffTime('2024-01-01', '2024-01-01 01:02:03');
+// { days: 0, hours: 1, minutes: 2, seconds: 3 }
+```
+
+```js [JavaScript (CJS)]
+const { diffTime } = require('l-js-fn');
+
+diffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45');
+// { days: 1, hours: 2, minutes: 30, seconds: 45 }
+
+diffTime('2024-01-01', '2024-01-01 01:02:03');
+// { days: 0, hours: 1, minutes: 2, seconds: 3 }
+```
+:::
+
+## 8. addDays 日期加减天数
 
 日期加减天数，返回新 Date 对象。
 
@@ -290,7 +340,7 @@ addDays(new Date('2024-01-01'), -1); // 2023-12-31
 ```
 :::
 
-## 8. isLeapYear 闰年判断
+## 9. isLeapYear 闰年判断
 
 判断指定年份是否为闰年。
 
@@ -317,7 +367,7 @@ isLeapYear(2023); // false
 ```
 :::
 
-## 9. getWeekDay 获取中文星期
+## 10. getWeekDay 获取中文星期
 
 获取中文星期几。
 

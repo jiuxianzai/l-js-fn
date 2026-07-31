@@ -24,6 +24,42 @@ export function desensitization(str: string, start: number, count = 3): string {
 }
 
 /**
+ * 对姓名进行脱敏处理，支持中间脱敏、姓氏脱敏和末位脱敏三种模式
+ * @param name - 姓名
+ * @param mode - 脱敏模式，`'middle'` 中间脱敏（默认），`'surname'` 姓氏脱敏，`'last'` 仅保留最后一个字
+ * @returns 脱敏后的姓名
+ * @example
+ * desensitizeName('张')        // '*'
+ * desensitizeName('张三')       // '张*'
+ * desensitizeName('张三丰')     // '张*丰'
+ * desensitizeName('欧阳飞飞')   // '欧**飞'
+ * desensitizeName('张三', 'surname') // '*三'
+ * desensitizeName('张三丰', 'last')  // '**丰'
+ */
+export function desensitizeName(name: string, mode: 'middle' | 'surname' | 'last' = 'middle'): string {
+	if (!name || name.length === 0) return '';
+
+	const len = name.length;
+
+	if (mode === 'surname') {
+		if (len === 1) return '*';
+		return '*' + name.slice(1);
+	}
+
+	if (mode === 'last') {
+		if (len === 1) return '*';
+		return '*'.repeat(len - 1) + name[len - 1];
+	}
+
+	// middle 模式
+	if (len === 1) return '*';
+	if (len === 2) return name[0] + '*';
+
+	const middleLen = len - 2;
+	return name[0] + '*'.repeat(middleLen) + name[len - 1];
+}
+
+/**
  * 去除空格
  * @param str - 需要去除的字符串
  * @param pos - 去除的空格类型，默认 'both'

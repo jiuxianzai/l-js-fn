@@ -7,6 +7,7 @@ import {
 	dateFormat,
 	dateSecond,
 	diffDays,
+	diffTime,
 	formatPassTime,
 	monthDays,
 	getTimeDiff,
@@ -344,6 +345,58 @@ describe('date-kit - 日期处理工具', () => {
 			const start = new Date('2024-01-15 10:00:00.000');
 			const end = new Date('2024-01-15 10:00:00.500');
 			expect(getTimeDiff(start, end)).toBe(500);
+		});
+	});
+
+	// ==================== diffTime 测试 ====================
+	describe('diffTime - 计算两个时间差值（日/时/分/秒）', () => {
+		it('应该分别返回日/时/分/秒', () => {
+			const result = diffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45');
+			expect(result).toEqual({ days: 1, hours: 2, minutes: 30, seconds: 45 });
+		});
+
+		it('应该处理 Date 对象', () => {
+			const date1 = new Date('2024-01-01 00:00:00');
+			const date2 = new Date('2024-01-01 01:02:03');
+			expect(diffTime(date1, date2)).toEqual({ days: 0, hours: 1, minutes: 2, seconds: 3 });
+		});
+
+		it('应该处理时间戳', () => {
+			const t1 = new Date('2024-01-01 00:00:00').getTime();
+			const t2 = t1 + 90061 * 1000; // 25小时1分1秒
+			expect(diffTime(t1, t2)).toEqual({ days: 1, hours: 1, minutes: 1, seconds: 1 });
+		});
+
+		it('应该返回全零如果是相同时间', () => {
+			const date = new Date('2024-01-01 12:00:00');
+			expect(diffTime(date, date)).toEqual({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+		});
+
+		it('应该顺序无关（返回绝对值）', () => {
+			const date1 = new Date('2024-01-02');
+			const date2 = new Date('2024-01-01');
+			expect(diffTime(date1, date2)).toEqual({ days: 1, hours: 0, minutes: 0, seconds: 0 });
+			expect(diffTime(date2, date1)).toEqual({ days: 1, hours: 0, minutes: 0, seconds: 0 });
+		});
+
+		it('应该处理仅秒级差异', () => {
+			expect(diffTime('2024-01-01 00:00:00', '2024-01-01 00:00:05')).toEqual({ days: 0, hours: 0, minutes: 0, seconds: 5 });
+		});
+
+		it('应该处理仅分钟级差异', () => {
+			expect(diffTime('2024-01-01 00:00:00', '2024-01-01 00:05:00')).toEqual({ days: 0, hours: 0, minutes: 5, seconds: 0 });
+		});
+
+		it('应该处理仅小时级差异', () => {
+			expect(diffTime('2024-01-01 00:00:00', '2024-01-01 03:00:00')).toEqual({ days: 0, hours: 3, minutes: 0, seconds: 0 });
+		});
+
+		it('应该处理跨天的时间差', () => {
+			expect(diffTime('2024-01-01 23:30:00', '2024-01-02 01:15:30')).toEqual({ days: 0, hours: 1, minutes: 45, seconds: 30 });
+		});
+
+		it('应该抛出错误如果日期字符串无效', () => {
+			expect(() => diffTime('invalid', '2024-01-15')).toThrow('Invalid date string');
 		});
 	});
 

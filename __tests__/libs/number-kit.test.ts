@@ -89,6 +89,95 @@ describe('number-kit - 数字处理工具', () => {
 				expect(formatNumber(-12345, true)).toBe('-1.23万');
 			});
 		});
+
+		describe('选项对象模式（新版）', () => {
+			describe('decimals 小数位控制', () => {
+				it('应该补齐小数位到指定位数', () => {
+					expect(formatNumber(1234, { decimals: 2 })).toBe('1,234.00');
+					expect(formatNumber(1234567, { decimals: 2 })).toBe('1,234,567.00');
+				});
+
+				it('应该保留小数并补齐', () => {
+					expect(formatNumber(1234.5, { decimals: 2 })).toBe('1,234.50');
+					expect(formatNumber(1234.567, { decimals: 2 })).toBe('1,234.57');
+				});
+
+				it('应该支持不同小数位数', () => {
+					expect(formatNumber(1234.5678, { decimals: 0 })).toBe('1,235');
+					expect(formatNumber(1234.5678, { decimals: 3 })).toBe('1,234.568');
+				});
+			});
+
+			describe('type: number（纯数字）', () => {
+				it('应该输出不带逗号的纯数字', () => {
+					expect(formatNumber(1234567, { type: 'number' })).toBe('1234567');
+				});
+
+				it('应该配合 decimals 输出', () => {
+					expect(formatNumber(1234567, { type: 'number', decimals: 2 })).toBe('1234567.00');
+					expect(formatNumber(1234.5, { type: 'number', decimals: 2 })).toBe('1234.50');
+				});
+			});
+
+			describe('type: chinese（中文大写金额）', () => {
+				it('应该转换整数金额', () => {
+					expect(formatNumber(123, { type: 'chinese' })).toBe('壹佰贰拾叁元整');
+					expect(formatNumber(100, { type: 'chinese' })).toBe('壹佰元整');
+				});
+
+				it('应该转换带角分的金额', () => {
+					expect(formatNumber(123.45, { type: 'chinese' })).toBe('壹佰贰拾叁元肆角伍分');
+					expect(formatNumber(0.5, { type: 'chinese' })).toBe('伍角');
+					expect(formatNumber(0.05, { type: 'chinese' })).toBe('伍分');
+				});
+
+				it('应该处理零元', () => {
+					expect(formatNumber(0, { type: 'chinese' })).toBe('零元整');
+				});
+
+				it('应该处理只有角没有分', () => {
+					expect(formatNumber(0.3, { type: 'chinese' })).toBe('叁角');
+				});
+
+				it('应该处理只有分没有角', () => {
+					expect(formatNumber(0.02, { type: 'chinese' })).toBe('贰分');
+				});
+
+				it('应该处理万和亿级别', () => {
+					expect(formatNumber(10000, { type: 'chinese' })).toBe('壹万元整');
+					expect(formatNumber(1234567, { type: 'chinese' })).toBe('壹佰贰拾叁万肆仟伍佰陆拾柒元整');
+				});
+
+				it('应该处理亿级别', () => {
+					expect(formatNumber(100000000, { type: 'chinese' })).toBe('壹亿元整');
+				});
+
+				it('应该处理零在中间的情况', () => {
+					expect(formatNumber(101, { type: 'chinese' })).toBe('壹佰零壹元整');
+					expect(formatNumber(10001, { type: 'chinese' })).toBe('壹万零壹元整');
+				});
+
+				it('应该处理十/佰/仟带零', () => {
+					expect(formatNumber(10, { type: 'chinese' })).toBe('壹拾元整');
+					expect(formatNumber(110, { type: 'chinese' })).toBe('壹佰壹拾元整');
+				});
+
+				it('应该处理负数', () => {
+					expect(formatNumber(-123, { type: 'chinese' })).toBe('负壹佰贰拾叁元整');
+				});
+			});
+
+			describe('useUnit 中文单位模式', () => {
+				it('应该使用指定小数位', () => {
+					expect(formatNumber(12345, { useUnit: true, decimals: 2 })).toBe('1.23万');
+					expect(formatNumber(12345, { useUnit: true, decimals: 3 })).toBe('1.235万');
+				});
+
+				it('应该兼容 type: number + useUnit', () => {
+					expect(formatNumber(12345, { type: 'number', useUnit: true })).toBe('1.23万');
+				});
+			});
+		});
 	});
 
 	// ==================== toPercent 测试 ====================

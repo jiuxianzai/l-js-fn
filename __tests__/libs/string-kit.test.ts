@@ -5,6 +5,7 @@
 
 import {
 	desensitization,
+	desensitizeName,
 	trim,
 	getMobile,
 	getUuid,
@@ -63,6 +64,85 @@ describe('string-kit - 字符串处理工具', () => {
 
 		it('应该处理中文脱敏', () => {
 			expect(desensitization('张三李四', 1, 2)).toBe('张**四');
+		});
+	});
+
+	// ==================== desensitizeName 测试 ====================
+	describe('desensitizeName - 姓名脱敏', () => {
+		describe('middle 模式（中间脱敏）', () => {
+			it('单字姓名：返回 *', () => {
+				expect(desensitizeName('张')).toBe('*');
+			});
+
+			it('两字姓名：x*', () => {
+				expect(desensitizeName('张三')).toBe('张*');
+			});
+
+			it('三字姓名：x*x', () => {
+				expect(desensitizeName('张三丰')).toBe('张*丰');
+			});
+
+			it('四字姓名：x**x', () => {
+				expect(desensitizeName('欧阳飞飞')).toBe('欧**飞');
+			});
+
+			it('五字姓名：x***x', () => {
+				expect(desensitizeName('阿不都拉木')).toBe('阿***木');
+			});
+
+			it('六字姓名：x****x', () => {
+				expect(desensitizeName('很长很长名字')).toBe('很****字');
+			});
+
+			it('应该默认使用 middle 模式', () => {
+				expect(desensitizeName('张三')).toBe('张*');
+			});
+		});
+
+		describe('surname 模式（姓氏脱敏）', () => {
+			it('单字姓名：返回 *', () => {
+				expect(desensitizeName('李', 'surname')).toBe('*');
+			});
+
+			it('两字姓名：*x', () => {
+				expect(desensitizeName('张三', 'surname')).toBe('*三');
+			});
+
+			it('三字姓名：*xx', () => {
+				expect(desensitizeName('张三四', 'surname')).toBe('*三四');
+			});
+
+			it('四字姓名：*xxx', () => {
+				expect(desensitizeName('欧阳飞飞', 'surname')).toBe('*阳飞飞');
+			});
+		});
+
+		describe('last 模式（仅保留最后一个字）', () => {
+			it('单字姓名：返回 *', () => {
+				expect(desensitizeName('王', 'last')).toBe('*');
+			});
+
+			it('两字姓名：*x', () => {
+				expect(desensitizeName('张三', 'last')).toBe('*三');
+			});
+
+			it('三字姓名：**x', () => {
+				expect(desensitizeName('张三丰', 'last')).toBe('**丰');
+			});
+
+			it('四字姓名：***x', () => {
+				expect(desensitizeName('欧阳飞飞', 'last')).toBe('***飞');
+			});
+		});
+
+		describe('边界情况', () => {
+			it('空字符串返回空字符串', () => {
+				expect(desensitizeName('')).toBe('');
+			});
+
+			it('空字符串 surname 模式返回空字符串', () => {
+				expect(desensitizeName('', 'surname')).toBe('');
+			});
 		});
 	});
 
