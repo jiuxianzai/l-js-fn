@@ -172,31 +172,57 @@ export function isPhoneNumber(phone: string): boolean {
 }
 
 /**
- * 深度比较两个值是否相等
+ * 深度比较两个值是否相等（支持循环引用检测）
  */
 export function isEqual<T>(value: T, other: T): boolean {
-  if (typeof value !== 'object' && typeof other !== 'object') {
-    if (Number.isNaN(value) && Number.isNaN(other)) return true;
-    return value === other;
-  }
+	const compared = new WeakMap<object, Set<object>>();
 
-  if (value === null && other === null) return true;
-  if (value === null || other === null) return false;
-  if (typeof value !== typeof other) return false;
-  if (value === other) return true;
+	function deepEqual(a: unknown, b: unknown): boolean {
+		if (typeof a !== 'object' && typeof b !== 'object') {
+			if (Number.isNaN(a) && Number.isNaN(b)) return true;
+			return a === b;
+		}
 
-  if (Array.isArray(value) && Array.isArray(other)) {
-    if (value.length !== other.length) return false;
-    return value.every((v, i) => isEqual(v, (other as unknown[])[i]));
-  }
+		if (a === null && b === null) return true;
+		if (a === null || b === null) return false;
+		if (typeof a !== typeof b) return false;
+		if (a === b) return true;
 
-  if (Array.isArray(value) || Array.isArray(other)) return false;
+		// 循环引用检测：当 a 和 b 都是对象时，记录已比较对
+		if (a !== null && b !== null) {
+			let aSet = compared.get(a as object);
+			if (!aSet) {
+				aSet = new Set();
+				compared.set(a as object, aSet);
+			}
+			if (aSet.has(b as object)) return true;
+			aSet.add(b as object);
+		}
 
-  const valueKeys = Object.keys(value as object);
-  const otherKeys = Object.keys(other as object);
-  if (valueKeys.length !== otherKeys.length) return false;
+		if (Array.isArray(a) && Array.isArray(b)) {
+			if (a.length !== b.length) return false;
+			for (let i = 0; i < a.length; i++) {
+				if (!deepEqual(a[i], b[i])) return false;
+			}
+			return true;
+		}
 
-  return valueKeys.every((key) => key in (other as object) && isEqual((value as Record<string, unknown>)[key], (other as Record<string, unknown>)[key]));
+		if (Array.isArray(a) || Array.isArray(b)) return false;
+
+	const aKeys = Object.keys(a as object);
+	const bKeys = Object.keys(b as object);
+		if (aKeys.length !== bKeys.length) return false;
+
+		for (let i = 0; i < aKeys.length; i++) {
+			const key = aKeys[i];
+			if (!(key in (b as object))) return false;
+			if (!deepEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key])) return false;
+		}
+
+		return true;
+	}
+
+	return deepEqual(value, other);
 }
 
 /**

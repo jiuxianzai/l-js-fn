@@ -545,5 +545,20 @@ describe('isEqual - 补充测试', () => {
 	it('应该处理不同 NaN 值', () => {
 		expect(isEqual(NaN, NaN)).toBe(true);
 	});
+
+	it('应该处理循环引用对象', () => {
+		const a: any = { name: 'a' };
+		const b: any = { name: 'a' };
+		a.self = a;
+		b.self = b;
+		expect(isEqual(a, b)).toBe(true);
+	});
+
+	it('应该处理共享引用', () => {
+		const child = { id: 1 };
+		const a = { items: [child, child] };
+		const b = { items: [child, child] };
+		expect(isEqual(a, b)).toBe(true);
+	});
 });
 });

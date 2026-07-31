@@ -119,8 +119,10 @@ export function deepClone<T>(obj: T, options?: { cloneFunctions?: boolean; clone
 		visited.set(value, result);
 
 		const keys = Reflect.ownKeys(value);
-		for (const key of keys) {
-			(result as Record<string, unknown>)[key as string] = cloneHelper((value as Record<string, unknown>)[key as string]);
+		for (let i = 0; i < keys.length; i++) {
+			const key = keys[i] as string;
+			const val = (value as Record<string, unknown>)[key];
+			(result as Record<string, unknown>)[key] = cloneHelper(val);
 		}
 
 		return result;
