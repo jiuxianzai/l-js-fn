@@ -4,7 +4,7 @@ layout: home
 hero:
   name: "l-js-fn"
   text: "轻量级 JavaScript 工具函数库"
-  tagline: 零依赖 · 模块化 · TypeScript · Tree-shaking
+  tagline: 160+ 方法 · 零依赖 · 模块化 · TypeScript · Tree-shaking
   image:
     src: /logo.svg
     alt: l-js-fn
@@ -17,6 +17,8 @@ hero:
       link: https://github.com/jiuxianzai/l-js-fn
 
 features:
+  - title: 🧰 160+ 工具函数
+    details: 覆盖类型判断、数组、对象、字符串、日期、数字、URL、颜色、编码、加密等场景。
   - title: 轻量级
     details: 零依赖，打包体积小，按需引入。
   - title: 模块化
@@ -27,20 +29,18 @@ features:
     details: 同时支持 ESM 和 CJS，兼容各种构建工具。
   - title: Tree-shaking
     details: 完整支持 Tree-shaking，只打包用到的代码。
-  - title: 工具齐全
-    details: 涵盖数组、对象、字符串、日期、URL、正则等常用操作。
 ---
 
 <div style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px;margin:32px auto 24px;max-width:960px;">
   <a href="https://www.npmjs.com/package/l-js-fn"><img src="https://img.shields.io/npm/v/l-js-fn?color=cb3837&logo=npm" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/l-js-fn"><img src="https://img.shields.io/npm/dm/l-js-fn?color=blue" alt="downloads"></a>
   <a href="https://github.com/jiuxianzai/l-js-fn/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/l-js-fn?color=green" alt="license"></a>
-  <img src="https://img.shields.io/badge/tests-1402%2F1402__passed-brightgreen" alt="tests">
-  <img src="https://img.shields.io/badge/coverage-99.1%25-brightgreen" alt="coverage">
-  <img src="https://img.shields.io/badge/functions-100%25-brightgreen" alt="functions">
-  <img src="https://img.shields.io/badge/branches-94.1%25-brightgreen" alt="branches">
-  <img src="https://img.shields.io/badge/lines-99.7%25-brightgreen" alt="lines">
-  <a href="https://jiuxianzai.github.io/l-js-fn/"><img src="https://img.shields.io/badge/docs-GitHub__Pages-42b883?logo=github" alt="docs"></a>
+  <img src="https://img.shields.io/badge/functions-160+-blueviolet" alt="functions">
+  <img src="https://img.shields.io/badge/tests-1446%2F1446_passed-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/stmts-98.7%25-brightgreen" alt="statements">
+  <img src="https://img.shields.io/badge/branches-93.5%25-brightgreen" alt="branches">
+  <img src="https://img.shields.io/badge/lines-99.4%25-brightgreen" alt="lines">
+  <a href="https://jiuxianzai.github.io/l-js-fn/"><img src="https://img.shields.io/badge/docs-GitHub_Pages-42b883?logo=github" alt="docs"></a>
 </div>
 
 ## 安装
@@ -96,6 +96,8 @@ import { Polling } from 'l-js-fn/polling';
 | [config](/guide/config) | 配置常量（日期格式、HTTP 状态码） |
 | [encode](/guide/encode) | 编码解码（Base64、HTML 转义、URL 编码等） |
 | [file](/guide/file) | 文件处理（大小格式化、类型判断、下载、读取等） |
+| [event-bus](/guide/event-bus) | 事件总线（子消息发布订阅、类型安全事件） |
+| [crypto](/guide/crypto) | 加密模块（MD5、AES、RSA、SM2、SM4 等） |
 
 ## 单元测试
 
@@ -106,24 +108,24 @@ import { Polling } from 'l-js-fn/polling';
 | 指标 | 数值 |
 |------|------|
 | 测试套件 | 27 passed |
-| 测试用例 | 1402 passed / 1402 total |
-| 语句覆盖率 | 99.1% |
-| 分支覆盖率 | 94.14% |
+| 测试用例 | 1446 passed / 1446 total |
+| 语句覆盖率 | 98.73% |
+| 分支覆盖率 | 93.49% |
 | 函数覆盖率 | 100% |
-| 行覆盖率 | 99.66% |
+| 行覆盖率 | 99.37% |
 
 ### 核心工具模块
 
 | 模块 | 用例数 | 通过率 |
 |------|--------|--------|
 | color (颜色处理) | 31 | 100% |
-| is-kit (类型判断) | 75 | 100% |
-| array-kit (数组操作) | 134 | 100% |
-| string-kit (字符串处理) | 77 | 100% |
-| object-kit (对象操作) | 62 | 100% |
+| is-kit (类型判断) | 78 | 100% |
+| array-kit (数组操作) | 151 | 100% |
+| string-kit (字符串处理) | 94 | 100% |
+| object-kit (对象操作) | 67 | 100% |
 | common (通用工具) | 75 | 100% |
-| date-kit (日期处理) | 62 | 100% |
-| number-kit (数字处理) | 55 | 100% |
+| date-kit (日期处理) | 72 | 100% |
+| number-kit (数字处理) | 72 | 100% |
 | url-kit (URL 处理) | 81 | 100% |
 
 ### 子模块
