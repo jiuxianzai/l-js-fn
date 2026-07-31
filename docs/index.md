@@ -17,7 +17,7 @@ hero:
       link: https://github.com/jiuxianzai/l-js-fn
 
 features:
-  - title: 🧰 160+ 工具函数
+  - title: 160+ 工具函数
     details: 覆盖类型判断、数组、对象、字符串、日期、数字、URL、颜色、编码、加密等场景。
   - title: 轻量级
     details: 零依赖，打包体积小，按需引入。
