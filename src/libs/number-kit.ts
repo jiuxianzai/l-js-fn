@@ -103,6 +103,12 @@ function integerToChinese(sections: string[]): string {
  * formatNumber(12345, { useUnit: true, decimals: 2 })  // "1.23万"
  */
 export const formatNumber = (value: string | number, options: boolean | FormatNumberOptions = false): string => {
+	/** 提取符号和绝对值 */
+	const signAndAbs = (num: number, negSign: string = '-') => ({
+		sign: num < 0 ? negSign : '',
+		abs: Math.abs(num),
+	});
+
 	// 兼容旧版 boolean 参数
 	if (typeof options === 'boolean') {
 		const useUnit = options;
@@ -113,14 +119,13 @@ export const formatNumber = (value: string | number, options: boolean | FormatNu
 		const num = typeof value === 'string' ? parseFloat(value) : value;
 		if (isNaN(num)) return String(value);
 		if (useUnit) {
-			const absNum = Math.abs(num);
-			const sign = num < 0 ? '-' : '';
-			if (absNum >= 1e8) {
-				const raw = Math.round((absNum * 100) / 1e8) / 100;
+			const { abs, sign } = signAndAbs(num);
+			if (abs >= 1e8) {
+				const raw = Math.round((abs * 100) / 1e8) / 100;
 				return `${sign}${raw.toFixed(2).replace(/\.00$/, '')}亿`;
 			}
-			if (absNum >= 1e4) {
-				const raw = Math.round((absNum * 100) / 1e4) / 100;
+			if (abs >= 1e4) {
+				const raw = Math.round((abs * 100) / 1e4) / 100;
 				return `${sign}${raw.toFixed(2).replace(/\.00$/, '')}万`;
 			}
 			return String(num);
@@ -141,11 +146,10 @@ export const formatNumber = (value: string | number, options: boolean | FormatNu
 
 	// 中文大写金额模式
 	if (type === 'chinese') {
-		const absNum = Math.abs(num);
-		const sign = num < 0 ? '负' : '';
+		const { abs, sign } = signAndAbs(num, '负');
 
-		const intPart = Math.floor(absNum);
-		const decPart = Math.round((absNum - intPart) * 100);
+		const intPart = Math.floor(abs);
+		const decPart = Math.round((abs - intPart) * 100);
 
 		const jiao = Math.floor(decPart / 10);
 		const fen = decPart % 10;
@@ -177,16 +181,15 @@ export const formatNumber = (value: string | number, options: boolean | FormatNu
 
 	// 中文单位模式（万/亿）
 	if (useUnit) {
-		const absNum = Math.abs(num);
-		const sign = num < 0 ? '-' : '';
+		const { abs, sign } = signAndAbs(num);
 		const d = decimals !== undefined ? decimals : 2;
 		const factor = Math.pow(10, d);
-		if (absNum >= 1e8) {
-			const raw = Math.round((absNum * factor) / 1e8) / factor;
+		if (abs >= 1e8) {
+			const raw = Math.round((abs * factor) / 1e8) / factor;
 			return `${sign}${raw.toFixed(d).replace(new RegExp(`\\.${'0'.repeat(d)}$`), '')}亿`;
 		}
-		if (absNum >= 1e4) {
-			const raw = Math.round((absNum * factor) / 1e4) / factor;
+		if (abs >= 1e4) {
+			const raw = Math.round((abs * factor) / 1e4) / factor;
 			return `${sign}${raw.toFixed(d).replace(new RegExp(`\\.${'0'.repeat(d)}$`), '')}万`;
 		}
 	}

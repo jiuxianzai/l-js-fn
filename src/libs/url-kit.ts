@@ -58,6 +58,33 @@ export function getUrlParam<T = unknown>(url: string | undefined, key: string): 
 }
 
 /**
+ * 向 URL 追加查询字符串（处理 hash 拆分拼接逻辑）
+ */
+function appendQueryString(url: string, paramString: string, position: string): string {
+	if (position === 'after') {
+		const hashIndex = url.indexOf('#');
+		if (hashIndex === -1) {
+			const hasParams = url.includes('?');
+			const separator = hasParams ? '&' : '?';
+			return `${url}${separator}${paramString}`;
+		}
+
+		const baseUrl = url.substring(0, hashIndex);
+		const hashFragment = url.substring(hashIndex);
+		const hashQueryIndex = hashFragment.indexOf('?');
+		const newHashFragment = hashQueryIndex !== -1 ? `${hashFragment}&${paramString}` : `${hashFragment}?${paramString}`;
+		return `${baseUrl}${newHashFragment}`;
+	}
+
+	const hashIndex = url.indexOf('#');
+	const baseWithoutHash = hashIndex !== -1 ? url.substring(0, hashIndex) : url;
+	const hash = hashIndex !== -1 ? url.substring(hashIndex) : '';
+	const hasParams = baseWithoutHash.includes('?');
+	const separator = hasParams ? '&' : '?';
+	return `${baseWithoutHash}${separator}${paramString}${hash}`;
+}
+
+/**
  * 向 URL 添加参数
  * @param url - URL 地址
  * @param paramName - 参数名
@@ -73,32 +100,7 @@ export function appendUrlParam<T = unknown>(url: string, paramName: string, para
 		const paramString = encodedValue ? `${paramName}=${encodedValue}` : paramName;
 		const position = options?.position || 'after';
 
-		if (position === 'after') {
-			const hashIndex = url.indexOf('#');
-			if (hashIndex === -1) {
-				const hasParams = url.includes('?');
-				const separator = hasParams ? '&' : '?';
-				return `${url}${separator}${paramString}`;
-			}
-
-			const baseUrl = url.substring(0, hashIndex);
-			const hashFragment = url.substring(hashIndex);
-			const hashQueryIndex = hashFragment.indexOf('?');
-			const newHashFragment = hashQueryIndex !== -1 ? `${hashFragment}&${paramString}` : `${hashFragment}?${paramString}`;
-			return `${baseUrl}${newHashFragment}`;
-		}
-
-		const hasParams = url.includes('?');
-		const separator = hasParams ? '&' : '?';
-		const hashIndex = url.indexOf('#');
-		if (hashIndex !== -1) {
-			const baseWithoutHash = url.substring(0, hashIndex);
-			const hash = url.substring(hashIndex);
-			const baseHasParams = baseWithoutHash.includes('?');
-			const baseSeparator = baseHasParams ? '&' : '?';
-			return `${baseWithoutHash}${baseSeparator}${paramString}${hash}`;
-		}
-		return `${url}${separator}${paramString}`;
+		return appendQueryString(url, paramString, position);
 	} catch {
 		return null;
 	}
@@ -136,31 +138,7 @@ export function appendUrlParams<T extends Record<string, any>>(url: string, para
 
 		if (!paramString) return url;
 
-		const position = options?.position || 'after';
-
-		if (position === 'after') {
-			const hashIndex = url.indexOf('#');
-			if (hashIndex === -1) {
-				const hasParams = url.includes('?');
-				const separator = hasParams ? '&' : '?';
-				return `${url}${separator}${paramString}`;
-			}
-
-			const baseUrl = url.substring(0, hashIndex);
-			const hashFragment = url.substring(hashIndex);
-			const hashQueryIndex = hashFragment.indexOf('?');
-			const newHashFragment = hashQueryIndex !== -1 ? `${hashFragment}&${paramString}` : `${hashFragment}?${paramString}`;
-			return `${baseUrl}${newHashFragment}`;
-		}
-
-		const hashIndex = url.indexOf('#');
-		const baseWithoutHash = hashIndex !== -1 ? url.substring(0, hashIndex) : url;
-		const hash = hashIndex !== -1 ? url.substring(hashIndex) : '';
-
-		const hasParams = baseWithoutHash.includes('?');
-		const separator = hasParams ? '&' : '?';
-
-		return `${baseWithoutHash}${separator}${paramString}${hash}`;
+		return appendQueryString(url, paramString, options?.position || 'after');
 	} catch {
 		return null;
 	}

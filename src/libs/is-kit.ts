@@ -137,7 +137,11 @@ export function isIdCard(idCard: string): boolean {
  */
 export function isHttp(value: string): boolean {
 	if (!value) return false;
-	return String(value).toLowerCase().startsWith('http://');
+	try {
+		return new URL(value).protocol === 'http:';
+	} catch {
+		return false;
+	}
 }
 
 /**
@@ -145,7 +149,11 @@ export function isHttp(value: string): boolean {
  */
 export function isHttps(value: string): boolean {
 	if (!value) return false;
-	return String(value).toLowerCase().startsWith('https://');
+	try {
+		return new URL(value).protocol === 'https:';
+	} catch {
+		return false;
+	}
 }
 
 /**

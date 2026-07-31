@@ -37,7 +37,7 @@ export function arrayDelEl<T>(
  * arrayDelToIndex([1, 2, 3], 1) // [1, 3]
  */
 export function arrayDelToIndex<T>(arr: T[], index: number): T[] {
-  if (!Array.isArray(arr)) return arr;
+  if (!isArray(arr)) return arr;
   if (typeof index !== "number" || index < 0 || index >= arr.length) return arr;
   return arr.slice(0, index).concat(arr.slice(index + 1));
 }
@@ -51,7 +51,7 @@ export function arrayDelToIndex<T>(arr: T[], index: number): T[] {
  * arrayDelToEl([1, 2, 3, 2], 2) // [1, 3]
  */
 export function arrayDelToEl<T extends Primitive>(arr: T[], el: T): T[] {
-  if (!Array.isArray(arr)) return arr;
+  if (!isArray(arr)) return arr;
   if (!arr.includes(el)) return arr;
   return arr.filter((item) => item !== el);
 }
@@ -71,7 +71,7 @@ export function arrayDelToKey<T extends Record<string, any>>(
   key: keyof T,
   value: T[keyof T]
 ): T[] {
-  if (!Array.isArray(arr)) return arr;
+  if (!isArray(arr)) return arr;
   const filtered = arr.filter((item) => item[key] !== value);
   return filtered.length === arr.length ? arr : filtered;
 }
@@ -84,7 +84,7 @@ export function arrayDelToKey<T extends Record<string, any>>(
  * @returns 新数组
  */
 export function arrayFill<T>(originArr: T[], num: number, obj: T): T[] {
-  if (!Array.isArray(originArr)) throw new Error("originArr 必须是数组");
+  if (!isArray(originArr)) throw new Error("originArr 必须是数组");
   if (!Number.isInteger(num) || num < 0) throw new Error("num 必须是非负整数");
 
   if (originArr.length >= num) return [...originArr];
@@ -109,7 +109,7 @@ export function arrayUnique<T>(arr: T[]): T[] {
  * @returns 当前页数据
  */
 export function arrayPaginate<T>(arr: T[], page: number, size: number): T[] {
-  if (!Array.isArray(arr) || page < 1 || size < 1) return [];
+  if (!isArray(arr) || page < 1 || size < 1) return [];
 
   const totalPages = Math.ceil(arr.length / size);
   if (page > totalPages) return [];
@@ -129,7 +129,7 @@ export function arraySplitToGroups<T>(
   array: T[],
   groupSize: number = 10
 ): Record<number, T[]> {
-  if (!Array.isArray(array)) {
+  if (!isArray(array)) {
     throw new Error("参数必须是数组");
   }
 
@@ -260,7 +260,7 @@ export function groupBy<T extends Record<string, any>>(
   array: T[],
   key: string
 ): Record<string, T[]> {
-  if (!Array.isArray(array)) {
+  if (!isArray(array)) {
     throw new Error("groupBy: 参数必须是数组");
   }
 
@@ -289,7 +289,7 @@ export function groupBy<T extends Record<string, any>>(
  * sample(colors) // 'blue' (随机)
  */
 export function sample<T>(array: T[]): T | undefined {
-  if (!Array.isArray(array) || array.length === 0) {
+  if (!isArray(array) || array.length === 0) {
     return undefined;
   }
 
@@ -308,18 +308,12 @@ export function sample<T>(array: T[]): T | undefined {
  * sampleSize(numbers, 10) // [2, 5, 1, 4, 3] (返回全部乱序)
  */
 export function sampleSize<T>(array: T[], n: number = 1): T[] {
-  if (!Array.isArray(array) || array.length === 0) {
+  if (!isArray(array) || array.length === 0) {
     return [];
   }
 
   if (n >= array.length) {
-    // Fisher-Yates 洗牌算法
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
+    return shuffle(array);
   }
 
   const result: T[] = [];
@@ -347,7 +341,7 @@ export function sampleSize<T>(array: T[], n: number = 1): T[] {
  * flatten([1, [2, [3, 4]], 5], 1) // [1, 2, [3, 4], 5]
  */
 export function flatten<T>(arr: readonly unknown[], depth: number = Infinity): T[] {
-	if (!Array.isArray(arr)) return [];
+	if (!isArray(arr)) return [];
 	return arr.flat(depth) as T[];
 }
 
@@ -390,7 +384,7 @@ export function range(start: number, end: number, step: number = 1): number[] {
  * shuffle([1, 2, 3, 4, 5]) // [3, 1, 5, 2, 4]（随机）
  */
 export function shuffle<T>(arr: T[]): T[] {
-	if (!Array.isArray(arr)) return [];
+	if (!isArray(arr)) return [];
 	const result = [...arr];
 	for (let i = result.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
@@ -409,7 +403,7 @@ export function shuffle<T>(arr: T[]): T[] {
  * uniqueBy(arr, 'id') // [{ id: 1, name: 'a' }, { id: 2, name: 'b' }]
  */
 export function uniqueBy<T extends Record<string, any>>(arr: T[], key: keyof T): T[] {
-	if (!Array.isArray(arr)) return [];
+	if (!isArray(arr)) return [];
 	const seen = new Set();
 	return arr.filter((item) => {
 		const val = item[key];
@@ -427,7 +421,7 @@ export function uniqueBy<T extends Record<string, any>>(arr: T[], key: keyof T):
  * compact([0, 1, false, 2, '', 3, null, undefined, NaN]) // [1, 2, 3]
  */
 export function compact<T>(arr: T[]): T[] {
-	if (!Array.isArray(arr)) return [];
+	if (!isArray(arr)) return [];
 	return arr.filter(Boolean);
 }
 
@@ -439,7 +433,7 @@ export function compact<T>(arr: T[]): T[] {
  * sum([1, 2, 3, 4, 5]) // 15
  */
 export function sum(arr: number[]): number {
-	if (!Array.isArray(arr)) return 0;
+	if (!isArray(arr)) return 0;
 	return arr.reduce((acc, val) => acc + (typeof val === 'number' ? val : 0), 0);
 }
 
@@ -451,7 +445,7 @@ export function sum(arr: number[]): number {
  * last([1, 2, 3]) // 3
  */
 export function last<T>(arr: T[]): T | undefined {
-	if (!Array.isArray(arr) || arr.length === 0) return undefined;
+	if (!isArray(arr) || arr.length === 0) return undefined;
 	return arr[arr.length - 1];
 }
 
@@ -465,12 +459,12 @@ export function last<T>(arr: T[]): T | undefined {
  * arrayPluck([{ name: 'zz', children: [{ name: 'yy' }, { name: null }] }], 'name') // ['zz', 'yy']
  */
 export function arrayPluck<T extends Record<string, any>>(arr: T[], key: keyof T): T[keyof T][] {
-	if (!Array.isArray(arr)) return [];
+	if (!isArray(arr)) return [];
 	const result: T[keyof T][] = [];
 
 	const collect = (obj: unknown): void => {
 		if (obj === null || obj === undefined) return;
-		if (Array.isArray(obj)) {
+		if (isArray(obj)) {
 			for (const item of obj) {
 				collect(item);
 			}

@@ -1,5 +1,17 @@
 import { DATE_FORMAT } from '@/config'
+import { getType } from './common';
 type DateFormatType = (typeof DATE_FORMAT)[keyof typeof DATE_FORMAT];
+
+/**
+ * 将 Date / 时间戳字符串 / 数字时间戳统一转为毫秒时间戳
+ */
+function toTimestamp(d: Date | string | number): number {
+	if (d instanceof Date) return d.getTime();
+	if (typeof d === 'number') return d;
+	const t = Date.parse(d);
+	if (isNaN(t)) throw new Error(`Invalid date string: ${d}`);
+	return t;
+}
 
 /**
  * 将日期或时间戳格式化为指定格式的字符串
@@ -61,36 +73,24 @@ export function dateSecond(value: number): string {
 	let secondTime = Math.floor(Math.abs(value)); // 秒，取绝对值处理负数
 	let minuteTime = 0; // 分
 	let hourTime = 0; // 小时
-	let dayTime = 0; // 天
-	let result = '';
 
 	if (secondTime < 60) {
-		const secStr = secondTime >= 10 ? secondTime : '0' + secondTime;
-		result = `00:00:${secStr}`;
-	} else {
-		minuteTime = Math.floor(secondTime / 60);
-		secondTime = secondTime % 60;
-
-		if (minuteTime >= 60) {
-			hourTime = Math.floor(minuteTime / 60);
-			minuteTime = minuteTime % 60;
-
-			if (hourTime >= 24) {
-				dayTime = Math.floor(hourTime / 24);
-				hourTime = hourTime % 24;
-			}
-		}
-
-		const secStr = secondTime >= 10 ? secondTime : '0' + secondTime;
-		const minStr = minuteTime >= 10 ? minuteTime : '0' + minuteTime;
-		const hourStr = hourTime >= 10 ? hourTime : '0' + hourTime;
-
-		result = `${hourStr}:${minStr}:${secStr}`;
-		// 如果想显示天数，可以加上：
-		// if (dayTime > 0) result = `${dayTime}天 ${result}`;
+		return `00:00:${String(secondTime).padStart(2, '0')}`;
 	}
 
-	return result;
+	minuteTime = Math.floor(secondTime / 60);
+	secondTime = secondTime % 60;
+
+	if (minuteTime >= 60) {
+		hourTime = Math.floor(minuteTime / 60);
+		minuteTime = minuteTime % 60;
+
+		if (hourTime >= 24) {
+			hourTime = hourTime % 24;
+		}
+	}
+
+	return `${String(hourTime).padStart(2, '0')}:${String(minuteTime).padStart(2, '0')}:${String(secondTime).padStart(2, '0')}`;
 }
 
 /**
@@ -100,18 +100,8 @@ export function dateSecond(value: number): string {
  * @returns 相差的天数，始终为非负数
  */
 export const diffDays = (date1: Date | string | number, date2: Date | string | number): number => {
-	const parseDate = (d: Date | string | number): number => {
-		if (d instanceof Date) return d.getTime();
-		if (typeof d === 'number') return d;
-
-		// 此时剩下的一定是 string
-		const t = Date.parse(d);
-		if (isNaN(t)) throw new Error(`Invalid date string: ${d}`);
-		return t;
-	};
-
-	let time1 = parseDate(date1);
-	let time2 = parseDate(date2);
+	let time1 = toTimestamp(date1);
+	let time2 = toTimestamp(date2);
 
 	// 忽略时分秒，只保留日期
 	const d1 = new Date(time1);
@@ -203,27 +193,25 @@ export const monthDays = (time: Date | string | number): number => {
  * @returns {number} 两个时间的间隔（毫秒）
  */
 export function getTimeDiff(start: Date | string | number, end: Date | string | number): number {
-	// 判断类型
-	const typeOfStart = Object.prototype.toString.call(start);
-	const typeOfEnd = Object.prototype.toString.call(end);
+	const typeOfStart = getType(start);
+	const typeOfEnd = getType(end);
 
 	// 类型不一致时报错
 	if (typeOfStart !== typeOfEnd) {
 		throw new Error('开始时间和结束时间的类型不一致！请确保两者都为 Date、字符串或数字。');
 	}
 
-	// 显式声明类型为 number
 	let startTime: number = 0;
 	let endTime: number = 0;
 
-	if (typeOfStart === '[object Date]') {
+	if (typeOfStart === 'date') {
 		startTime = (start as Date).getTime();
 		endTime = (end as Date).getTime();
-	} else if (typeOfStart === '[object String]') {
+	} else if (typeOfStart === 'string') {
 		// 统一替换格式以避免 Safari 无法识别 'YYYY-MM-DD HH:mm:ss' 的问题
 		startTime = new Date((start as string).replace(/-/g, '/')).getTime();
 		endTime = new Date((end as string).replace(/-/g, '/')).getTime();
-	} else if (typeOfStart === '[object Number]') {
+	} else if (typeOfStart === 'number') {
 		startTime = start as number;
 		endTime = end as number;
 	} else {
@@ -235,7 +223,6 @@ export function getTimeDiff(start: Date | string | number, end: Date | string | 
 		throw new Error('无效的时间值，请检查输入格式。');
 	}
 
-	// 明确返回 number 类型
 	return endTime - startTime;
 }
 
@@ -254,14 +241,6 @@ export function diffTime(
 	date1: Date | string | number,
 	date2: Date | string | number
 ): { days: number; hours: number; minutes: number; seconds: number } {
-	const toTimestamp = (d: Date | string | number): number => {
-		if (d instanceof Date) return d.getTime();
-		if (typeof d === 'number') return d;
-		const t = Date.parse(d);
-		if (isNaN(t)) throw new Error(`Invalid date string: ${d}`);
-		return t;
-	};
-
 	const t1 = toTimestamp(date1);
 	const t2 = toTimestamp(date2);
 

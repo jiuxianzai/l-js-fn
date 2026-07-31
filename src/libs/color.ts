@@ -1,5 +1,7 @@
 /** 颜色处理工具 - 老王统一封装 */
 
+import { REGEXP } from '@/regex';
+
 /** HSL颜色结构定义 */
 export type HSLColor = { h: number; s: number; l: number };
 
@@ -8,8 +10,8 @@ export type ColorMode = 'dark' | 'light';
 
 /** 判断是否为合法的hex颜色值 */
 export function isValidHexColor(color: string): boolean {
-  if (typeof color !== 'string') return false; // 先校验类型避免 TS2322
-  return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
+  if (typeof color !== 'string') return false;
+  return REGEXP.HEX_COLOR.test(color);
 }
 
 /** hex转HSL */
