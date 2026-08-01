@@ -311,17 +311,16 @@ export function imageToBase64(
 		img.crossOrigin = 'anonymous';
 		img.src = input;
 		img.onload = () => {
-			try {
-				const canvas = document.createElement('canvas');
-				canvas.width = img.width;
-				canvas.height = img.height;
-				const ctx = canvas.getContext('2d');
-				if (!ctx) throw new Error('Canvas 不可用');
-				ctx.drawImage(img, 0, 0);
-				resolve(Result.ok(canvas.toDataURL(type, quality)));
-			} catch (err) {
-				reject(err);
+			const canvas = document.createElement('canvas');
+			canvas.width = img.width;
+			canvas.height = img.height;
+			const ctx = canvas.getContext('2d');
+			if (!ctx) {
+				reject(Result.fail('Canvas 不可用'));
+				return;
 			}
+			ctx.drawImage(img, 0, 0);
+			resolve(Result.ok(canvas.toDataURL(type, quality)));
 		};
 		img.onerror = () => reject(Result.fail('图片加载失败'));
 		return;
