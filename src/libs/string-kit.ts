@@ -94,9 +94,10 @@ export function getMobile(): string {
 
 /**
  * 随机生成 UUID
+ * @param {number} [length=36] - 指定返回的 UUID 长度，默认为完整长度 36 位（含连字符）
  * @returns 生成的 UUID 字符串
  */
-export function getUuid(): string {
+export function getUuid(length = 36): string {
 	let d = new Date().getTime();
 	let d2 = (typeof performance !== 'undefined' && performance.now && performance.now() * 1000) || 0;
 	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -109,7 +110,7 @@ export function getUuid(): string {
 			d2 = Math.floor(d2 / 16);
 		}
 		return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
-	});
+	}).slice(0, length);
 }
 
 /**

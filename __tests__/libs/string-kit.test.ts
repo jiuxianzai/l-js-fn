@@ -268,6 +268,21 @@ describe('string-kit - 字符串处理工具', () => {
 			const uuid = getUuid();
 			expect(uuid[14]).toBe('4');
 		});
+
+		it('应该支持指定长度参数', () => {
+			const uuid = getUuid(16);
+			expect(uuid).toHaveLength(16);
+		});
+
+		it('指定长度为0时应该返回空字符串', () => {
+			const uuid = getUuid(0);
+			expect(uuid).toBe('');
+		});
+
+		it('指定长度为8时，不含连字符的部分应该是有效的hex字符', () => {
+			const uuid = getUuid(8);
+			expect(/^[0-9a-f-]+$/.test(uuid)).toBe(true);
+		});
 	});
 
 	// ==================== indexToLabel 测试 ====================

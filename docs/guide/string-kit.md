@@ -192,6 +192,12 @@ getMobile(); // '13800138000'（随机）
 
 生成 UUID（v4 风格）。
 
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 默认值 | 描述 |
+|------|------|------|--------|------|
+| `length` | `number` | 否 | `36` | 返回 UUID 的长度 |
+
 **返回值：** `string` — UUID 字符串
 
 **示例：**
@@ -200,19 +206,25 @@ getMobile(); // '13800138000'（随机）
 ```ts [TypeScript]
 import { getUuid } from 'l-js-fn';
 
-getUuid(); // 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+getUuid();    // 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+getUuid(8);   // 'XXXXXXXX'（前 8 位）
+getUuid(16);  // 'xxxxxxxx-xxxx-4x'（前 16 位）
 ```
 
 ```js [JavaScript (ESM)]
 import { getUuid } from 'l-js-fn';
 
-getUuid(); // 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+getUuid();    // 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+getUuid(8);   // 'XXXXXXXX'（前 8 位）
+getUuid(16);  // 'xxxxxxxx-xxxx-4x'（前 16 位）
 ```
 
 ```js [JavaScript (CJS)]
 const { getUuid } = require('l-js-fn');
 
-getUuid(); // 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+getUuid();    // 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+getUuid(8);   // 'XXXXXXXX'（前 8 位）
+getUuid(16);  // 'xxxxxxxx-xxxx-4x'（前 16 位）
 ```
 :::
 

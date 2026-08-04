@@ -291,7 +291,8 @@ trim('  hello  ', 'all'); // "hello"
 getMobile(); // "13800138000"
 
 // 生成 UUID
-getUuid(); // "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
+getUuid();     // "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"（完整 36 位）
+getUuid(8);    // "XXXXXXXX"（前 8 位）
 
 // 索引转标签
 indexToLabel(0, 'upper'); // "A"
