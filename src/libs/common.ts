@@ -1,4 +1,5 @@
 import { Result } from '@/utils/Result.ts';
+import { escapeHTML } from '@/encode/index.ts';
 
 /**
  * 睡眠函数
@@ -156,7 +157,7 @@ export function syntaxHighlight<T>(obj: T, indent: number = 0): string {
 		html += '{<br>';
 		const keys = Object.keys(obj) as (keyof T)[];
 		keys.forEach((key, index) => {
-			const keyHtml = `<span style="color: #b58900">"${String(key)}"</span>`;
+			const keyHtml = `<span style="color: #b58900">"${escapeHTML(String(key))}"</span>`;
 			const valueHtml = syntaxHighlight((obj as Record<string, unknown>)[key as string], indent + 1);
 			html += `${nextIndentStr}${keyHtml}: ${valueHtml}`;
 			if (index < keys.length - 1) html += ',';
@@ -164,7 +165,7 @@ export function syntaxHighlight<T>(obj: T, indent: number = 0): string {
 		});
 		html += indentStr + '}';
 	} else if (typeof obj === 'string') {
-		html += `<span style="color: #2aa198">"${obj}"</span>`;
+		html += `<span style="color: #2aa198">"${escapeHTML(obj)}"</span>`;
 	} else if (typeof obj === 'number') {
 		html += `<span style="color: #6c71c4">${obj}</span>`;
 	} else if (typeof obj === 'boolean') {
@@ -318,8 +319,12 @@ export function imageToBase64(
 				reject(Result.fail('Canvas 不可用'));
 				return;
 			}
-			ctx.drawImage(img, 0, 0);
-			resolve(Result.ok(canvas.toDataURL(type, quality)));
+			try {
+				ctx.drawImage(img, 0, 0);
+				resolve(Result.ok(canvas.toDataURL(type, quality)));
+			} catch (err) {
+				reject(Result.fail('图片跨域或被污染，无法导出 Base64'));
+			}
 		};
 		img.onerror = () => reject(Result.fail('图片加载失败'));
 		return;

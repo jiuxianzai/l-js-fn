@@ -1,3 +1,5 @@
+import { isObject } from './is-kit.ts';
+
 /**
  * 合并两个对象，后一个对象的属性优先。递归合并嵌套对象，数组会直接复制。
  * 如果属性不是对象，则源对象的值会覆盖目标对象的值。
@@ -10,26 +12,28 @@
 export function objMerge<T extends Record<string, any>, S extends Record<string, any>>(
 	target: T,
 	source: S,
-	mergeType: 'hard' | 'soft' = 'hard'
+	mergeType: 'hard' | 'soft' = 'hard',
+	_visited: WeakSet<object> = new WeakSet()
 ): T & S {
 	if (typeof target !== 'object' || target === null) {
 		target = {} as T;
 	}
 	if (Array.isArray(source)) {
-		// 如果 source 是数组，直接返回副本
 		return source.slice() as any;
 	}
+
+	if (_visited.has(source)) return target as T & S;
+	_visited.add(source);
 
 	Object.keys(source).forEach((property) => {
 		const sourceProperty = source[property];
 
-		// 软合并模式下，若 target 不包含此属性，则跳过
-		if (mergeType === 'soft' && !target.hasOwnProperty(property)) {
+		if (mergeType === 'soft' && !Object.prototype.hasOwnProperty.call(target, property)) {
 			return;
 		}
 
-		if (typeof sourceProperty === 'object' && sourceProperty !== null && !Array.isArray(sourceProperty)) {
-			(target as Record<string, any>)[property] = objMerge((target as Record<string, any>)[property] || {}, sourceProperty, mergeType);
+		if (isObject(sourceProperty)) {
+			(target as Record<string, any>)[property] = objMerge((target as Record<string, any>)[property] ?? {} as any, sourceProperty, mergeType, _visited);
 		} else {
 			(target as T & S)[property as keyof (T & S)] = sourceProperty as any;
 		}

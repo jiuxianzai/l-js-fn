@@ -1,5 +1,13 @@
 import type { AppendUrlOptions, FileInfo } from '@/types/index.ts';
 
+function decodeSafe(str: string): string {
+	try {
+		return decodeURIComponent(str);
+	} catch {
+		return str;
+	}
+}
+
 /**
  * 解析 URL 查询参数，支持数组参数和嵌套对象参数
  * @param url - 要解析的 URL，如果不提供则使用当前页面的 URL（仅在浏览器环境下有效）
@@ -18,10 +26,13 @@ export function getUrlParams<T = Record<string, any>>(url?: string): T {
 	if (!queryString) return params as T;
 
 	queryString.split('&').forEach((param) => {
-		const [rawKey, value] = param.split('=').map((part) => decodeURIComponent(part.replace(/\+/g, ' ')));
+		const eqIdx = param.indexOf('=');
+		const rawKey = eqIdx === -1 ? param : param.slice(0, eqIdx);
+		const rawValueStr = eqIdx === -1 ? '' : param.slice(eqIdx + 1).replace(/\+/g, ' ');
 		if (!rawKey) return;
 
-		const keys = rawKey.split(/[\[\]]/).filter((k) => k);
+		const keys = rawKey.split(/[\[\]]/).filter((k) => k).map(decodeSafe);
+		const value = decodeSafe(rawValueStr);
 		let current: Record<string, any> = params;
 
 		keys.forEach((key, index) => {

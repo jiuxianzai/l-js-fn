@@ -134,16 +134,20 @@ export async function exitFullscreen(): Promise<boolean> {
 export async function copyToClipboard(text: string): Promise<boolean> {
 	if (!text) return false;
 	if (navigator.clipboard) {
-		await navigator.clipboard.writeText(text);
-		return true;
+		try {
+			await navigator.clipboard.writeText(text);
+			return true;
+		} catch {
+			return false;
+		}
 	} else {
 		const input = document.createElement('textarea');
 		input.value = text;
 		document.body.appendChild(input);
 		input.select();
-		document.execCommand('copy');
+		const success = document.execCommand('copy');
 		document.body.removeChild(input);
-		return true;
+		return success;
 	}
 }
 

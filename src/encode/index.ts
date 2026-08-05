@@ -165,8 +165,8 @@ export function urlDecode(
 		return decodeURIComponent(str);
 	}
 
-	// 默认使用 decodeURI（与 encodeURI 对称，保留 : / ? # [ ] @ 等字符）
-	return decodeURI(str);
+	// 默认使用 decodeURIComponent（与 urlEncode 默认行为对称）
+	return decodeURIComponent(str);
 }
 
 /**
@@ -228,7 +228,9 @@ export function parseQueryString(str: string): Record<string, string | string[]>
 	}
 
 	queryString.split('&').forEach((pair) => {
-		const [rawKey, rawValue] = pair.split('=');
+		const eqIdx = pair.indexOf('=');
+		const rawKey = eqIdx === -1 ? pair : pair.slice(0, eqIdx);
+		const rawValue = eqIdx === -1 ? undefined : pair.slice(eqIdx + 1);
 
 		if (!rawKey) return;
 

@@ -1,3 +1,5 @@
+import { escapeHTML } from '@/encode/index.ts';
+
 /**
  * 对字符串脱敏处理
  * @param str - 要处理的字符串
@@ -195,7 +197,7 @@ export function searchTextColor(val: string, text = '', color = 'red'): string {
 	// 转义 color 参数，防止 HTML 属性注入
 	const safeColor = color.replace(/['"\\<>]/g, '');
 	// 返回内容，添加颜色
-	let v = text.replace(new RegExp(escaped, 'gi'), `<span style='color: ${safeColor}'>${val}</span>`);
+	let v = text.replace(new RegExp(escaped, 'gi'), `<span style='color: ${safeColor}'>${escapeHTML(val)}</span>`);
 	// 返回结果
 	return v;
 }

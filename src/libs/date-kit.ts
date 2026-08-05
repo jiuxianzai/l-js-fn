@@ -7,7 +7,7 @@ type DateFormatType = (typeof DATE_FORMAT)[keyof typeof DATE_FORMAT];
  */
 function toTimestamp(d: Date | string | number): number {
 	if (d instanceof Date) return d.getTime();
-	if (typeof d === 'number') return d;
+	if (typeof d === 'number') return d < 1e11 ? d * 1000 : d;
 	const t = Date.parse(d);
 	if (isNaN(t)) throw new Error(`Invalid date string: ${d}`);
 	return t;
@@ -84,10 +84,6 @@ export function dateSecond(value: number): string {
 	if (minuteTime >= 60) {
 		hourTime = Math.floor(minuteTime / 60);
 		minuteTime = minuteTime % 60;
-
-		if (hourTime >= 24) {
-			hourTime = hourTime % 24;
-		}
 	}
 
 	return `${String(hourTime).padStart(2, '0')}:${String(minuteTime).padStart(2, '0')}:${String(secondTime).padStart(2, '0')}`;
@@ -103,13 +99,11 @@ export const diffDays = (date1: Date | string | number, date2: Date | string | n
 	let time1 = toTimestamp(date1);
 	let time2 = toTimestamp(date2);
 
-	// 忽略时分秒，只保留日期
 	const d1 = new Date(time1);
 	const d2 = new Date(time2);
-	d1.setHours(0, 0, 0, 0);
-	d2.setHours(0, 0, 0, 0);
-	time1 = d1.getTime();
-	time2 = d2.getTime();
+	// 使用 UTC 归一化避免夏令时（DST）跨天误差
+	time1 = Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate());
+	time2 = Date.UTC(d2.getFullYear(), d2.getMonth(), d2.getDate());
 
 	const diffMs = Math.abs(time1 - time2);
 	return Math.floor(diffMs / (1000 * 60 * 60 * 24));

@@ -119,8 +119,8 @@ describe('date-kit - 日期处理工具', () => {
 		});
 
 		it('应该处理超过24小时的情况', () => {
-			expect(dateSecond(86400)).toBe('00:00:00'); // 24小时重置
-			expect(dateSecond(90061)).toBe('01:01:01'); // 25小时1分1秒
+			expect(dateSecond(86400)).toBe('24:00:00'); // 24小时
+			expect(dateSecond(90061)).toBe('25:01:01'); // 25小时1分1秒
 		});
 
 		it('应该处理小数（向下取整）', () => {
