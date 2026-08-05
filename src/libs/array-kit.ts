@@ -1,6 +1,6 @@
 import { MoveAction, Primitive } from "@/types";
 import { Result } from "@/utils/Result";
-import { isArray, isEmpty } from "./is-kit";
+import { isArray, isEmpty, isEqual } from "./is-kit";
 /**
  * 从数组中移除指定的元素，返回一个新的数组。
  * @param arr - 需要操作的数组
@@ -18,12 +18,11 @@ export function arrayDelEl<T>(
   if (isPrimitive(target)) {
     return arr.filter((item) => item !== target);
   } else {
-    if (key) {
-      return arr.filter((item) => item[key] !== target[key]);
-    } else {
-      const targetStr = JSON.stringify(target);
-      return arr.filter((item) => JSON.stringify(item) !== targetStr);
-    }
+		if (key) {
+			return arr.filter((item) => item[key] !== target[key]);
+		} else {
+			return arr.filter((item) => !isEqual(item, target));
+		}
   }
 }
 
@@ -307,27 +306,15 @@ export function sample<T>(array: T[]): T | undefined {
  * sampleSize(numbers, 10) // [2, 5, 1, 4, 3] (返回全部乱序)
  */
 export function sampleSize<T>(array: T[], n: number = 1): T[] {
-  if (!isArray(array) || array.length === 0) {
-    return [];
-  }
+	if (!isArray(array) || array.length === 0) {
+		return [];
+	}
 
-  if (n >= array.length) {
-    return shuffle(array);
-  }
+	if (n >= array.length) {
+		return shuffle(array);
+	}
 
-  const result: T[] = [];
-  const copy = [...array];
-  const used = new Set<number>();
-
-  while (result.length < n && used.size < copy.length) {
-    const randomIndex = Math.floor(Math.random() * copy.length);
-    if (!used.has(randomIndex)) {
-      used.add(randomIndex);
-      result.push(copy[randomIndex]);
-    }
-  }
-
-  return result;
+	return shuffle([...array]).slice(0, n);
 }
 
 /**

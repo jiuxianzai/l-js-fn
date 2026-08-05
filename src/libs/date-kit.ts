@@ -1,5 +1,4 @@
 import { DATE_FORMAT } from '@/config'
-import { getType } from './common';
 type DateFormatType = (typeof DATE_FORMAT)[keyof typeof DATE_FORMAT];
 
 /**
@@ -8,7 +7,9 @@ type DateFormatType = (typeof DATE_FORMAT)[keyof typeof DATE_FORMAT];
 function toTimestamp(d: Date | string | number): number {
 	if (d instanceof Date) return d.getTime();
 	if (typeof d === 'number') return d < 1e11 ? d * 1000 : d;
-	const t = Date.parse(d);
+	if (typeof d !== 'string') throw new Error(`Invalid date: ${d}`);
+	// iOS/Safari 兼容：- 转 /，去 Z，替 T
+	const t = Date.parse(d.replace(/-/g, '/').replace('T', ' ').replace(/Z$/, ''));
 	if (isNaN(t)) throw new Error(`Invalid date string: ${d}`);
 	return t;
 }
@@ -188,32 +189,9 @@ export const monthDays = (time: Date | string | number): number => {
  * @returns {number} 两个时间的间隔（毫秒）
  */
 export function getTimeDiff(start: Date | string | number, end: Date | string | number): number {
-	const typeOfStart = getType(start);
-	const typeOfEnd = getType(end);
+	const startTime = toTimestamp(start);
+	const endTime = toTimestamp(end);
 
-	// 类型不一致时报错
-	if (typeOfStart !== typeOfEnd) {
-		throw new Error('开始时间和结束时间的类型不一致！请确保两者都为 Date、字符串或数字。');
-	}
-
-	let startTime: number = 0;
-	let endTime: number = 0;
-
-	if (typeOfStart === 'date') {
-		startTime = (start as Date).getTime();
-		endTime = (end as Date).getTime();
-	} else if (typeOfStart === 'string') {
-		// 统一替换格式以避免 Safari 无法识别 'YYYY-MM-DD HH:mm:ss' 的问题
-		startTime = new Date((start as string).replace(/-/g, '/')).getTime();
-		endTime = new Date((end as string).replace(/-/g, '/')).getTime();
-	} else if (typeOfStart === 'number') {
-		startTime = start as number;
-		endTime = end as number;
-	} else {
-		throw new Error('不支持的时间格式，请使用 Date、字符串或数字类型。');
-	}
-
-	// 检查是否为有效时间
 	if (isNaN(startTime) || isNaN(endTime)) {
 		throw new Error('无效的时间值，请检查输入格式。');
 	}

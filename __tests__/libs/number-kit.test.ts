@@ -200,7 +200,7 @@ describe('number-kit - 数字处理工具', () => {
 		});
 
 		it('应该向下取整如果 round=false', () => {
-			expect(toPercent(0.5559, 2, false)).toBe('55.55%');
+			expect(toPercent(0.5559, 2, false)).toBe('55.59%');
 			expect(toPercent(0.9999, 2, false)).toBe('99.99%');
 		});
 

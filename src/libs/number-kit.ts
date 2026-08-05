@@ -220,43 +220,15 @@ export const formatNumber = (value: string | number, options: boolean | FormatNu
 export function toPercent(value: string | number | null | undefined, decimals: number = 2, round: boolean = true): string {
 	if (value === null || value === undefined || isNaN(value as unknown as number)) return '0%';
 
+	const num = Number(value) * 100;
+
 	if (round) {
-		const num = Number(value) * 100;
 		return `${num.toFixed(decimals)}%`;
-	} else {
-		// 向下取整（截断）：先截断原值，再转百分比
-		const valueStr = value.toString();
-		const dotIndex = valueStr.indexOf('.');
-
-		if (dotIndex === -1) {
-			// 没有小数点，如 123 -> "12300.00%"
-			return `${valueStr}00.${'0'.repeat(decimals)}%`;
-		}
-
-		// 有小数点，先截断到指定小数位，再转百分比
-		const integerPart = valueStr.substring(0, dotIndex); // "0"
-		let decimalPart = valueStr.substring(dotIndex + 1); // "5559"
-
-		// 截断到足够的小数位（百分比需要两位小数，所以原值需要 2 + decimals 位）
-		const requiredDecimals = 2 + decimals;
-		if (decimalPart.length > requiredDecimals) {
-			decimalPart = decimalPart.substring(0, requiredDecimals);
-		} else {
-			// 补零
-			decimalPart = decimalPart.padEnd(requiredDecimals, '0');
-		}
-
-		// 移动小数点两位："0" + "5559" = "05559"
-		// 整数部分：取到倒数第2位前（小数点前所有数字）
-		// 小数部分：从倒数第(decimals+2)位到倒数第2位（截断，不四舍五入）
-		const shiftedStr = integerPart + decimalPart;
-		const shiftedInteger = shiftedStr.substring(0, shiftedStr.length - 2); // "055" -> "55"
-		const shiftedDecimal = shiftedStr.substring(shiftedStr.length - decimals - 2, shiftedStr.length - 2); // "55" (截断)
-
-		// 去掉前导零并返回
-		const result = `${String(Number(shiftedInteger))}.${shiftedDecimal}%`;
-		return result;
 	}
+	// 不四舍五入：算术截断
+	const factor = 10 ** decimals;
+	const truncated = Math.trunc(num * factor) / factor;
+	return `${truncated.toFixed(decimals)}%`;
 }
 
 /**

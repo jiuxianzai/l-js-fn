@@ -180,7 +180,11 @@ export function downloadFile(blob: Blob | File, filename: string): void {
 
 	// 清理
 	document.body.removeChild(link);
-	URL.revokeObjectURL(url);
+	setTimeout(() => {
+		if (typeof URL !== 'undefined') {
+			URL.revokeObjectURL(url);
+		}
+	}, 0);
 }
 
 /**

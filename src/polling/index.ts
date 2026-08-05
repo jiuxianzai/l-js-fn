@@ -4,6 +4,7 @@
 export class Polling {
 	private timer: ReturnType<typeof setTimeout> | null = null;
 	private isPolling = false;
+	private pendingResolve: (() => void) | null = null;
 
 	/** 启动轮询 */
 	public start(
@@ -19,7 +20,6 @@ export class Polling {
 		this.isPolling = true;
 
 		if (immediate) {
-			// 不阻塞调用方
 			void this.loop(asyncMethod, interval);
 		} else {
 			this.timer = setTimeout(() => {
@@ -40,11 +40,10 @@ export class Polling {
 				console.error('Error during polling:', error);
 			}
 
-			// stop 可能发生在 await 期间
 			if (!this.isPolling) break;
 
-			// interval = 0 也安全
 			await new Promise<void>(resolve => {
+				this.pendingResolve = resolve;
 				this.timer = setTimeout(resolve, interval);
 			});
 		}
@@ -69,6 +68,10 @@ export class Polling {
 		if (this.timer) {
 			clearTimeout(this.timer);
 			this.timer = null;
+		}
+		if (this.pendingResolve) {
+			this.pendingResolve();
+			this.pendingResolve = null;
 		}
 	}
 

@@ -97,10 +97,14 @@ export class WebSocketManager {
     this.handleError('connection_error', error);
   }
 
-  /** 连接关闭 */
-  private onWebSocketClose(event: CloseEvent) {
-    this.handleError('connection_close', event);
-  }
+	/** 连接关闭 */
+	private onWebSocketClose(event: CloseEvent) {
+		if (this.timer) {
+			clearInterval(this.timer);
+			this.timer = null;
+		}
+		this.handleError('connection_close', event);
+	}
 
   /** 发送消息 */
   /** 发送消息

@@ -86,7 +86,7 @@ export function deepClone<T>(obj: T, options?: { cloneFunctions?: boolean; clone
 	const cloneHelper = (value: unknown): unknown => {
 		if (value === null || typeof value !== 'object') {
 			if (typeof value === 'function' && cloneFunctions) {
-				return (value as Function).bind({});
+				return value;
 			}
 			return value;
 		}

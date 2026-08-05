@@ -321,18 +321,18 @@ describe('date-kit - 日期处理工具', () => {
 			expect(getTimeDiff(start, end)).toBe(-2 * 60 * 60 * 1000);
 		});
 
-		it('应该抛出错误如果类型不一致', () => {
+		it('应该支持混合类型（Date+字符串）', () => {
 			const start = new Date('2024-01-15 10:00:00');
 			const end = '2024-01-15 12:00:00' as any;
-			expect(() => getTimeDiff(start, end)).toThrow('开始时间和结束时间的类型不一致');
+			expect(getTimeDiff(start, end)).toBe(2 * 60 * 60 * 1000);
 		});
 
 		it('应该抛出错误如果日期字符串无效', () => {
-			expect(() => getTimeDiff('invalid', 'invalid')).toThrow('无效的时间值');
+			expect(() => getTimeDiff('invalid', 'invalid')).toThrow('Invalid date string');
 		});
 
 		it('应该抛出错误如果不支持的格式', () => {
-			expect(() => getTimeDiff(true as any, false as any)).toThrow('不支持的时间格式');
+			expect(() => getTimeDiff(true as any, false as any)).toThrow('Invalid date');
 		});
 
 		it('应该兼容不同格式的日期字符串（- 和 /）', () => {

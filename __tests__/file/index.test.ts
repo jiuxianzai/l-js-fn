@@ -338,7 +338,7 @@ describe('file 模块 - 浏览器环境函数', () => {
 	});
 
 	describe('downloadFile', () => {
-		it('应该创建下载链接并触发下载', () => {
+		it('应该创建下载链接并触发下载', (done) => {
 			const blob = new Blob(['Hello World'], { type: 'text/plain' });
 			const mockLink = {
 				href: '',
@@ -359,7 +359,11 @@ describe('file 模块 - 浏览器环境函数', () => {
 			expect(mockLink.click).toHaveBeenCalled();
 			expect(document.body.appendChild).toHaveBeenCalledWith(mockLink);
 			expect(document.body.removeChild).toHaveBeenCalledWith(mockLink);
-			expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:test-url');
+
+			setTimeout(() => {
+				expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:test-url');
+				done();
+			}, 1);
 		});
 
 		it('应该对非 Blob/File 参数抛出 TypeError', () => {

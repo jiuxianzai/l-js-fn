@@ -27,7 +27,7 @@ export interface StorageOptions {
  * setStorage('token', 'abc123', { expire: 3600 }) // 1小时后过期
  */
 export function setStorage<T>(key: string, value: T, options: StorageOptions = {}): boolean {
-	if (typeof window === 'undefined') {
+	if (typeof localStorage === 'undefined') {
 		console.warn('setStorage: 当前环境不支持 localStorage');
 		return false;
 	}
@@ -56,7 +56,7 @@ export function setStorage<T>(key: string, value: T, options: StorageOptions = {
  * getStorage('notexist') // null（不存在）
  */
 export function getStorage<T>(key: string): T | null {
-	if (typeof window === 'undefined') {
+	if (typeof localStorage === 'undefined') {
 		console.warn('getStorage: 当前环境不支持 localStorage');
 		return null;
 	}
@@ -88,7 +88,7 @@ export function getStorage<T>(key: string): T | null {
  * removeStorage('user')
  */
 export function removeStorage(key: string): boolean {
-	if (typeof window === 'undefined') {
+	if (typeof localStorage === 'undefined') {
 		console.warn('removeStorage: 当前环境不支持 localStorage');
 		return false;
 	}
@@ -109,7 +109,7 @@ export function removeStorage(key: string): boolean {
  * clearStorage()
  */
 export function clearStorage(): boolean {
-	if (typeof window === 'undefined') {
+	if (typeof localStorage === 'undefined') {
 		console.warn('clearStorage: 当前环境不支持 localStorage');
 		return false;
 	}
@@ -142,7 +142,7 @@ export function hasStorage(key: string): boolean {
  * getStorageKeys() // ['user', 'token', 'settings']
  */
 export function getStorageKeys(): string[] {
-	if (typeof window === 'undefined') {
+	if (typeof localStorage === 'undefined') {
 		console.warn('getStorageKeys: 当前环境不支持 localStorage');
 		return [];
 	}
@@ -162,7 +162,7 @@ export function getStorageKeys(): string[] {
  * getStorageLength() // 3
  */
 export function getStorageLength(): number {
-	if (typeof window === 'undefined') {
+	if (typeof localStorage === 'undefined') {
 		console.warn('getStorageLength: 当前环境不支持 localStorage');
 		return 0;
 	}
@@ -182,7 +182,7 @@ export function getStorageLength(): number {
  * clearExpiredStorage() // 2（清理了2个过期项）
  */
 export function clearExpiredStorage(): number {
-	if (typeof window === 'undefined') {
+	if (typeof localStorage === 'undefined') {
 		console.warn('clearExpiredStorage: 当前环境不支持 localStorage');
 		return 0;
 	}
@@ -221,7 +221,7 @@ export function clearExpiredStorage(): number {
  * setSession('tabData', { id: 1, name: 'test' })
  */
 export function setSession<T>(key: string, value: T): boolean {
-	if (typeof window === 'undefined') {
+	if (typeof sessionStorage === 'undefined') {
 		console.warn('setSession: 当前环境不支持 sessionStorage');
 		return false;
 	}
@@ -243,7 +243,7 @@ export function setSession<T>(key: string, value: T): boolean {
  * getSession('tabData') // { id: 1, name: 'test' }
  */
 export function getSession<T>(key: string): T | null {
-	if (typeof window === 'undefined') {
+	if (typeof sessionStorage === 'undefined') {
 		console.warn('getSession: 当前环境不支持 sessionStorage');
 		return null;
 	}
@@ -266,7 +266,7 @@ export function getSession<T>(key: string): T | null {
  * removeSession('tabData')
  */
 export function removeSession(key: string): boolean {
-	if (typeof window === 'undefined') {
+	if (typeof sessionStorage === 'undefined') {
 		console.warn('removeSession: 当前环境不支持 sessionStorage');
 		return false;
 	}
@@ -287,7 +287,7 @@ export function removeSession(key: string): boolean {
  * clearSession()
  */
 export function clearSession(): boolean {
-	if (typeof window === 'undefined') {
+	if (typeof sessionStorage === 'undefined') {
 		console.warn('clearSession: 当前环境不支持 sessionStorage');
 		return false;
 	}
@@ -319,7 +319,7 @@ export function hasSession(key: string): boolean {
  * getSessionKeys() // ['tabData', 'formState']
  */
 export function getSessionKeys(): string[] {
-	if (typeof window === 'undefined') {
+	if (typeof sessionStorage === 'undefined') {
 		console.warn('getSessionKeys: 当前环境不支持 sessionStorage');
 		return [];
 	}

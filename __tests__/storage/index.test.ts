@@ -182,6 +182,7 @@ describe('storage - 存储操作方法', () => {
 
 		it('应该在服务端环境下返回 false', () => {
 			global.window = undefined as any;
+			global.localStorage = undefined as any;
 
 			expect(setStorage('test', 'value')).toBe(false);
 			expect(getStorage('test')).toBe(null);
@@ -383,6 +384,7 @@ describe('storage - 存储操作方法', () => {
 
 		it('应该在服务端环境下返回 false', () => {
 			global.window = undefined as any;
+			global.sessionStorage = undefined as any;
 
 			expect(setSession('test', 'value')).toBe(false);
 			expect(getSession('test')).toBe(null);
