@@ -1,3 +1,5 @@
+export { isImage } from '@/libs/is-kit.ts';
+
 /**
  * 文件大小单位枚举
  */
@@ -187,6 +189,25 @@ export function downloadFile(blob: Blob | File, filename: string): void {
 	}, 0);
 }
 
+function readFile<T>(file: File, read: (reader: FileReader) => void, onResult: (reader: FileReader) => T | PromiseLike<T>, fnName: string): Promise<T> {
+	return new Promise((resolve, reject) => {
+		if (typeof window === 'undefined') {
+			reject(new Error(`${fnName}: 当前环境不支持`));
+			return;
+		}
+
+		if (!(file instanceof File)) {
+			reject(new TypeError(`${fnName}: 参数必须是 File 对象`));
+			return;
+		}
+
+		const reader = new FileReader();
+		reader.onload = () => resolve(onResult(reader));
+		reader.onerror = () => reject(new Error(`${fnName}: 文件读取失败`));
+		read(reader);
+	});
+}
+
 /**
  * 读取文本文件内容
  * @param file - File 对象
@@ -201,29 +222,12 @@ export function downloadFile(blob: Blob | File, filename: string): void {
  * })
  */
 export function readAsText(file: File, encoding: string = 'utf-8'): Promise<string> {
-	return new Promise((resolve, reject) => {
-		if (typeof window === 'undefined') {
-			reject(new Error('readAsText: 当前环境不支持'));
-			return;
-		}
-
-		if (!(file instanceof File)) {
-			reject(new TypeError('readAsText: 参数必须是 File 对象'));
-			return;
-		}
-
-		const reader = new FileReader();
-
-		reader.onload = () => {
-			resolve(typeof reader.result === 'string' ? reader.result : '');
-		};
-
-		reader.onerror = () => {
-			reject(new Error('readAsText: 文件读取失败'));
-		};
-
-		reader.readAsText(file, encoding);
-	});
+	return readFile(
+		file,
+		(reader) => reader.readAsText(file, encoding),
+		(reader) => typeof reader.result === 'string' ? reader.result : '',
+		'readAsText'
+	);
 }
 
 /**
@@ -239,29 +243,12 @@ export function readAsText(file: File, encoding: string = 'utf-8'): Promise<stri
  * })
  */
 export function readAsDataURL(file: File): Promise<string> {
-	return new Promise((resolve, reject) => {
-		if (typeof window === 'undefined') {
-			reject(new Error('readAsDataURL: 当前环境不支持'));
-			return;
-		}
-
-		if (!(file instanceof File)) {
-			reject(new TypeError('readAsDataURL: 参数必须是 File 对象'));
-			return;
-		}
-
-		const reader = new FileReader();
-
-		reader.onload = () => {
-			resolve(typeof reader.result === 'string' ? reader.result : '');
-		};
-
-		reader.onerror = () => {
-			reject(new Error('readAsDataURL: 文件读取失败'));
-		};
-
-		reader.readAsDataURL(file);
-	});
+	return readFile(
+		file,
+		(reader) => reader.readAsDataURL(file),
+		(reader) => typeof reader.result === 'string' ? reader.result : '',
+		'readAsDataURL'
+	);
 }
 
 /**
@@ -277,63 +264,12 @@ export function readAsDataURL(file: File): Promise<string> {
  * })
  */
 export function readAsArrayBuffer(file: File): Promise<ArrayBuffer> {
-	return new Promise((resolve, reject) => {
-		if (typeof window === 'undefined') {
-			reject(new Error('readAsArrayBuffer: 当前环境不支持'));
-			return;
-		}
-
-		if (!(file instanceof File)) {
-			reject(new TypeError('readAsArrayBuffer: 参数必须是 File 对象'));
-			return;
-		}
-
-		const reader = new FileReader();
-
-		reader.onload = () => {
-			resolve(reader.result instanceof ArrayBuffer ? reader.result : new ArrayBuffer(0));
-		};
-
-		reader.onerror = () => {
-			reject(new Error('readAsArrayBuffer: 文件读取失败'));
-		};
-
-		reader.readAsArrayBuffer(file);
-	});
-}
-
-/**
- * 判断是否为图片文件
- * @param filename - 文件名或扩展名
- * @returns 是否为图片文件
- * @example
- * isImage('image.png') // true
- * isImage('photo.jpg') // true
- * isImage('document.pdf') // false
- */
-export function isImage(filename: string): boolean {
-	if (typeof filename !== 'string') {
-		return false;
-	}
-
-	const ext = getExtension(filename).toLowerCase();
-	const imageExtensions = [
-		'.jpg',
-		'.jpeg',
-		'.png',
-		'.gif',
-		'.bmp',
-		'.webp',
-		'.svg',
-		'.ico',
-		'.tiff',
-		'.psd',
-		'.raw',
-		'.heic',
-		'.heif',
-	];
-
-	return imageExtensions.includes(ext);
+	return readFile(
+		file,
+		(reader) => reader.readAsArrayBuffer(file),
+		(reader) => reader.result instanceof ArrayBuffer ? reader.result : new ArrayBuffer(0),
+		'readAsArrayBuffer'
+	);
 }
 
 /**

@@ -94,9 +94,10 @@ export function arrayFill<T>(originArr: T[], num: number, obj: T): T[] {
  * 去重数组
  * @param arr - 数组
  * @returns 去重后的数组
+ * @deprecated 请使用 `uniq` 替代
  */
 export function arrayUnique<T>(arr: T[]): T[] {
-  return Array.from(new Set(arr));
+	return uniq(arr);
 }
 
 /**
@@ -166,19 +167,7 @@ type Fn<T> = (item: T, index: number, array: T[]) => boolean;
  * console.log(index); // 输出 1
  */
 export const findIndex = <T = Recordable>(ary: T[], fn: Fn<T>): number => {
-  if (typeof ary.findIndex === "function") {
-    return ary.findIndex(fn);
-  }
-
-  let index = -1;
-  ary.some((item, i, array) => {
-    if (fn(item, i, array)) {
-      index = i;
-      return true; // some 会停止迭代
-    }
-    return false;
-  });
-  return index;
+	return ary.findIndex(fn);
 };
 
 /**

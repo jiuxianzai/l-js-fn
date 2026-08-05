@@ -49,7 +49,8 @@ export function objMerge<T extends Record<string, any>, S extends Record<string,
  * @returns 新对象
  */
 export function objFilterProp<T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
-	return Object.fromEntries(Object.entries(obj).filter(([key]) => !keys.includes(key as K))) as Omit<T, K>;
+	const keySet = new Set(keys as string[]);
+	return Object.fromEntries(Object.entries(obj).filter(([key]) => !keySet.has(key))) as Omit<T, K>;
 }
 
 /**
@@ -66,16 +67,13 @@ export function objFilterProp<T extends Record<string, any>, K extends keyof T>(
 export function objFilterNull<T extends Record<string, any>>(obj: T, options: { null?: boolean; undefined?: boolean } = {}): Partial<T> {
 	const { null: filterNull = true, undefined: filterUndefined = true } = options;
 
-	return Object.entries(obj)
-		.filter(([_, value]) => {
+	return Object.fromEntries(
+		Object.entries(obj).filter(([_, value]) => {
 			if (filterNull && value === null) return false;
 			if (filterUndefined && value === undefined) return false;
 			return true;
 		})
-		.reduce((acc, [key, value]) => {
-			acc[key as keyof T] = value;
-			return acc;
-		}, {} as Partial<T>);
+	) as Partial<T>;
 }
 
 /**
@@ -154,7 +152,7 @@ export function formDataToObject(formData: FormData): Record<string, string | nu
  */
 export function pick<T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
 	return keys.reduce((acc, key) => {
-		if (key in obj) {
+		if (Object.prototype.hasOwnProperty.call(obj, key)) {
 			acc[key] = obj[key];
 		}
 		return acc;

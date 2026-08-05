@@ -41,7 +41,7 @@ export function isObject<T>(value: T): value is T & Record<string, unknown> {
  * 是否为数组
  */
 export function isArray<T>(value: T): value is T & unknown[] {
-  return Array.isArray(value) || Object.prototype.toString.call(value) === '[object Array]';
+	return Array.isArray(value);
 }
 
 /**
@@ -78,8 +78,10 @@ export function isInArray(arr: string[], value: string): boolean {
  * 是否为图片
  */
 export const isImage = (filename: string): boolean => {
-  const ext = filename.split('.').pop()?.toLowerCase() || '';
-  return ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg', '.ico', '.tiff', '.psd', '.raw', '.heic', '.heif'].includes('.' + ext);
+	if (typeof filename !== 'string') return false;
+	const lastDot = filename.lastIndexOf('.');
+	const ext = lastDot > 0 ? filename.slice(lastDot).toLowerCase() : '';
+	return ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg', '.ico', '.tiff', '.psd', '.raw', '.heic', '.heif'].includes(ext);
 };
 
 /**

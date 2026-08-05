@@ -906,30 +906,6 @@ describe('array-kit - 数组操作工具', () => {
 	});
 });
 
-describe('findIndex - 无原生 findIndex 回退', () => {
-	it('应该在没有原生 findIndex 时使用 some 回退', () => {
-		const originalFindIndex = Array.prototype.findIndex;
-		delete (Array.prototype as any).findIndex;
-
-		const arr = [1, 2, 3, 4, 5];
-		const result = findIndex(arr, (item) => item > 3);
-		expect(result).toBe(3);
-
-		(Array.prototype as any).findIndex = originalFindIndex;
-	});
-
-	it('应该在没有原生 findIndex 且找不到时返回 -1', () => {
-		const originalFindIndex = Array.prototype.findIndex;
-		delete (Array.prototype as any).findIndex;
-
-		const arr = [1, 2, 3];
-		const result = findIndex(arr, (item) => item > 5);
-		expect(result).toBe(-1);
-
-		(Array.prototype as any).findIndex = originalFindIndex;
-	});
-});
-
 // ==================== sortBy 测试 ====================
 describe('sortBy - 按字段排序', () => {
 	it('应该按数字字段升序排序（默认）', () => {

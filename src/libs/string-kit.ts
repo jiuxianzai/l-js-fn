@@ -208,10 +208,7 @@ export function searchTextColor(val: string, text = '', color = 'red'): string {
  * @returns {string} 返回处理后的字符串
  */
 export function filterSpace(val: string): string {
-	// 匹配空格
-	let v = val.replace(/(^\s*)|(\s*$)/g, '');
-	// 返回结果
-	return v;
+	return trim(val, 'both');
 }
 
 /** 将字符串转换为帕斯卡命名法 */
