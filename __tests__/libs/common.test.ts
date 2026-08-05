@@ -408,20 +408,22 @@ describe('common - 通用工具方法', () => {
 
 	// ==================== getDevice 测试 ====================
 	describe('getDevice - 获取设备类型', () => {
-		// 保存原始的 navigator 和 globalThis
+		// 保存原始的 navigator 和全局变量
 		const originalNavigator = global.navigator;
-		const originalGlobalThis = global.globalThis as any;
+		const originalWx = (global as any).wx;
+		const originalMy = (global as any).my;
 
 		beforeEach(() => {
 			// 每次测试前清理全局对象
-			delete (global.globalThis as any).wx;
-			delete (global.globalThis as any).my;
+			delete (global as any).wx;
+			delete (global as any).my;
 		});
 
 		afterEach(() => {
 			// 恢复原始值
 			global.navigator = originalNavigator;
-			(global.globalThis as any) = originalGlobalThis;
+			(global as any).wx = originalWx;
+			(global as any).my = originalMy;
 		});
 
 		it('应该返回 unknown 当没有 userAgent 时', () => {
@@ -479,12 +481,12 @@ describe('common - 通用工具方法', () => {
 		});
 
 		it('应该正确识别微信小程序', () => {
-			(global.globalThis as any).wx = { getSystemInfo: () => {} };
+			(global as any).wx = { getSystemInfo: () => {} };
 			expect(getDevice()).toBe('miniProgram');
 		});
 
 		it('应该正确识别支付宝小程序', () => {
-			(global.globalThis as any).my = { getSystemInfo: () => {} };
+			(global as any).my = { getSystemInfo: () => {} };
 			expect(getDevice()).toBe('alipayMiniProgram');
 		});
 	});

@@ -233,10 +233,9 @@ export function removeScript(src: string): void {
 	}
 }
 
-interface MiniProgramGlobal {
-	wx?: { getSystemInfo?: (...args: unknown[]) => unknown };
-	my?: { getSystemInfo?: (...args: unknown[]) => unknown };
-}
+// 声明小程序全局变量用于 typeof 检测
+declare const wx: { getSystemInfo?: (...args: unknown[]) => unknown } | undefined;
+declare const my: { getSystemInfo?: (...args: unknown[]) => unknown } | undefined;
 
 /**
  * 获取设备类型
@@ -257,11 +256,11 @@ export const getDevice = ():
 	const ua = typeof navigator !== 'undefined' ? navigator.userAgent || '' : '';
 	const lowerUA = ua.toLowerCase();
 
-	// 小程序环境
-	if (typeof (globalThis as MiniProgramGlobal).wx !== 'undefined' && typeof (globalThis as MiniProgramGlobal).wx!.getSystemInfo === 'function') {
+	// 小程序环境 - 使用 typeof 直接检测全局变量，避免 globalThis 为 undefined 的问题
+	if (typeof wx !== 'undefined' && typeof wx!.getSystemInfo === 'function') {
 		return 'miniProgram'; // 微信小程序
 	}
-	if (typeof (globalThis as MiniProgramGlobal).my !== 'undefined' && typeof (globalThis as MiniProgramGlobal).my!.getSystemInfo === 'function') {
+	if (typeof my !== 'undefined' && typeof my!.getSystemInfo === 'function') {
 		return 'alipayMiniProgram'; // 支付宝小程序
 	}
 
