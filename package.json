@@ -76,6 +76,9 @@
 		"test": "NODE_NO_WARNINGS=1 NODE_OPTIONS=--experimental-vm-modules jest && NODE_NO_WARNINGS=1 node scripts/test-dist-esm.mjs",
 		"test:coverage": "NODE_NO_WARNINGS=1 NODE_OPTIONS=--experimental-vm-modules jest --coverage",
 		"test:watch": "NODE_NO_WARNINGS=1 NODE_OPTIONS=--experimental-vm-modules jest --watch",
+		"lint": "eslint src __tests__",
+		"format": "prettier --write src __tests__",
+		"check": "npm run lint && npx tsc --noEmit && npm run test",
 		"docs:dev": "vitepress dev docs",
 		"docs:build": "vitepress build docs",
 		"docs:preview": "vitepress preview docs",
@@ -116,7 +119,7 @@
 	"readme": "",
 	"sideEffects": false,
 	"engines": {
-		"node": ">=14.0.0"
+		"node": ">=18.0.0"
 	},
 	"files": [
 		"dist/"
@@ -133,8 +136,10 @@
 	"devDependencies": {
 		"@commitlint/cli": "^20.0.0",
 		"@commitlint/config-conventional": "^20.0.0",
+		"@eslint/js": "^9.39.5",
 		"@types/jest": "^30.0.0",
 		"@types/node": "^24.6.1",
+		"eslint": "^9.39.5",
 		"husky": "^8.0.3",
 		"jest": "^30.2.0",
 		"rimraf": "^6.0.1",
@@ -142,6 +147,7 @@
 		"ts-jest": "^29.4.6",
 		"tsup": "^8.5.0",
 		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.66.0",
 		"vitepress": "^1.6.4"
 	}
 }

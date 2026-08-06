@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { stringToBytes } from '@/crypto/utils';
 
 /**
  * MD5 哈希算法

@@ -6,6 +6,6 @@ export * from '@/libs/common.ts';
 export * from '@/libs/string-kit.ts';
 export * from '@/libs/date-kit.ts';
 export * from '@/libs/number-kit.ts';
-export * from "@/libs/color.ts"
+export * from '@/libs/color.ts';
 // 类
 export * from '@/utils/Result.ts';

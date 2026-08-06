@@ -39,7 +39,7 @@ export function base64Decode(str: string): string {
 		}
 		const decoder = new TextDecoder();
 		return decoder.decode(bytes);
-	} catch (error) {
+	} catch {
 		throw new Error('base64Decode: 无效的 Base64 字符串');
 	}
 }

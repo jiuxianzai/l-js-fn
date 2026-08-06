@@ -202,7 +202,7 @@ export function clearExpiredStorage(): number {
 				localStorage.removeItem(key);
 				clearedCount++;
 			}
-		} catch (error) {
+		} catch {
 			// 解析失败的项也清理掉
 			localStorage.removeItem(key);
 			clearedCount++;

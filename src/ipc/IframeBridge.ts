@@ -30,9 +30,10 @@ export class IframeBridge {
 		const { type, id, eventName, params } = event.data;
 		switch (type) {
 			case IPC_TYPE.REQUEST:
-				// 进行请求响应
-				try {
-					const result = await this.handles[eventName](params);
+			try {
+				const handler = this.handles[eventName];
+				if (!handler) return;
+				const result = await handler(params);
 					window.parent.postMessage(
 						{
 							type: IPC_TYPE.RESPONSE,
@@ -87,7 +88,7 @@ export class IframeBridge {
 	 */
 	off(eventName: string, callback?: EventHandler): void {
 		if (callback) {
-			this.eventHandlers[eventName] = this.eventHandlers[eventName].filter((item) => item !== callback);
+			this.eventHandlers[eventName] = (this.eventHandlers[eventName] || []).filter((item) => item !== callback);
 		} else {
 			this.eventHandlers[eventName] = [];
 		}

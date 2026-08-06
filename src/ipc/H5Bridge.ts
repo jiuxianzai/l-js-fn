@@ -121,7 +121,7 @@ export class H5Bridge {
 	 */
 	off(eventName: string, callback?: EventHandler): void {
 		if (callback) {
-			this.eventHandlers[eventName] = this.eventHandlers[eventName].filter((item) => item !== callback);
+			this.eventHandlers[eventName] = (this.eventHandlers[eventName] || []).filter((item) => item !== callback);
 		} else {
 			this.eventHandlers[eventName] = [];
 		}

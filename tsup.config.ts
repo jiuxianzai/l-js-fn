@@ -30,7 +30,7 @@ const baseOptions = {
 	splitting: false,
 	cjsInterop: true,
 	esbuildOptions(opts: any) {
-		opts.drop = ["console", "debugger"];
+		opts.drop = ["console.log", "debugger"];
 	},
 };
 

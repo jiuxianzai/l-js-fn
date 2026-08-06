@@ -67,3 +67,35 @@ export interface AppendUrlOptions {
 	/** 参数追加位置：'after' - 在 # 之后（默认），'before' - 在 # 之前 */
 	position?: 'before' | 'after';
 }
+
+/**
+ * 文件大小单位枚举
+ */
+export enum FileSizeUnit {
+	Byte = 'B',
+	KiloByte = 'KB',
+	MegaByte = 'MB',
+	GigaByte = 'GB',
+	TeraByte = 'TB',
+}
+
+/**
+ * 文件大小信息
+ */
+export interface FileSizeInfo {
+	formatted: string;
+	value: number;
+	unit: FileSizeUnit;
+}
+
+/**
+ * Cookie 配置选项
+ */
+export interface CookieOptions {
+	expires?: number;
+	path?: string;
+	domain?: string;
+	secure?: boolean;
+	httpOnly?: boolean;
+	sameSite?: 'strict' | 'lax' | 'none';
+}

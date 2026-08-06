@@ -125,7 +125,7 @@ export const formatPassTime = (startTime?: string | number | Date): string => {
 
 	if (isNaN(start)) return 'Invalid date';
 
-	let diff = now - start;
+	const diff = now - start;
 
 	if (diff < 0) return '刚刚'; // 未来时间也显示刚刚
 

@@ -101,4 +101,4 @@ npm run publish:pre    # prerelease (beta)
 | encode | `l-js-fn/encode` | Base64, HTML 转义, URL 编码 |
 | file | `l-js-fn/file` | 文件大小格式化、类型判断、下载 |
 | event-bus | `l-js-fn/event-bus` | EventBus 事件总线 |
-| crypto | `l-js-fn/crypto` | 国密 SM4、SM3、SM2 等 |
+| crypto | `l-js-fn/crypto` | 国密 SM4、SM2 等 |

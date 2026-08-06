@@ -63,8 +63,6 @@ function integerToChinese(sections: string[]): string {
 
 		// 当前段非首个段且该段值 < 1000，说明高位有缺，补零
 		if (i > 0 && parseInt(sections[i]) < 1000) {
-			// 避免重复补零：上一位已补过不再补
-			const prevResultLen = result.length;
 			if (!result.endsWith(CHINESE_DIGITS[0])) {
 				result += CHINESE_DIGITS[0];
 			}
@@ -141,7 +139,7 @@ export const formatNumber = (value: string | number, options: boolean | FormatNu
 		return String(value);
 	}
 
-	let num = typeof value === 'string' ? parseFloat(value) : value;
+	const num = typeof value === 'string' ? parseFloat(value) : value;
 	if (isNaN(num)) return String(value);
 
 	// 中文大写金额模式
@@ -243,12 +241,9 @@ export function toPercent(value: string | number | null | undefined, decimals: n
  */
 export function random(min: number, max?: number, options: { float?: boolean } = {}): number {
 	if (max === undefined) {
+		if (min <= 0) throw new Error('当只有一个参数时，最大值必须大于 0');
 		max = min;
 		min = 0;
-	}
-
-	if (max <= 0 && arguments.length === 1) {
-		throw new Error('当只有一个参数时，最大值必须大于 0');
 	}
 
 	if (min > max) {

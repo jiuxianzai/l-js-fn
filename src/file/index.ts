@@ -1,27 +1,6 @@
+import { FileSizeUnit, type FileSizeInfo } from '@/types/index.ts';
+export { FileSizeUnit, type FileSizeInfo };
 export { isImage } from '@/libs/is-kit.ts';
-
-/**
- * 文件大小单位枚举
- */
-export enum FileSizeUnit {
-	Byte = 'B',
-	KiloByte = 'KB',
-	MegaByte = 'MB',
-	GigaByte = 'GB',
-	TeraByte = 'TB',
-}
-
-/**
- * 文件大小信息
- */
-export interface FileSizeInfo {
-	/** 格式化后的字符串 */
-	formatted: string;
-	/** 数值 */
-	value: number;
-	/** 单位 */
-	unit: FileSizeUnit;
-}
 
 /**
  * 格式化文件大小

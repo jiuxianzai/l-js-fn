@@ -1,4 +1,4 @@
-import { ScrollPosition } from '@/types';
+import { type ScrollPosition, type CookieOptions } from '@/types';
 
 /**
  * 平滑滚动到顶部
@@ -149,24 +149,6 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 		document.body.removeChild(input);
 		return success;
 	}
-}
-
-/**
- * Cookie 配置选项
- */
-export interface CookieOptions {
-	/** 过期时间（天数），默认 7 天 */
-	expires?: number;
-	/** 路径，默认 '/' */
-	path?: string;
-	/** 域名 */
-	domain?: string;
-	/** 是否仅 HTTPS 传输 */
-	secure?: boolean;
-	/** 是否禁止 JavaScript 访问（防 XSS） */
-	httpOnly?: boolean;
-	/** SameSite 属性：'strict' | 'lax' | 'none' */
-	sameSite?: 'strict' | 'lax' | 'none';
 }
 
 /**

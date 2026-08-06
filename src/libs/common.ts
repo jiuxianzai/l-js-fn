@@ -21,15 +21,14 @@ export function debounce<T extends (...args: any[]) => any>(func: T, wait = 300,
 	let timeout: ReturnType<typeof setTimeout> | null;
 
 	return function (this: unknown, ...args: Parameters<T>) {
-		const context = this;
-		const later = function () {
+		const later = () => {
 			timeout = null;
-			if (!immediate) func.apply(context, args);
+			if (!immediate) func.apply(this, args);
 		};
 		const callNow = immediate && !timeout;
 		if (timeout) clearTimeout(timeout);
 		timeout = setTimeout(later, wait);
-		if (callNow) func.apply(context, args);
+		if (callNow) func.apply(this, args);
 	};
 }
 
@@ -66,8 +65,8 @@ export function getType<T>(value: T): string {
 	if (typeof value === 'string') return 'string';
 	if (typeof value === 'number') return 'number';
 	if (typeof value === 'object') {
-		if (value.constructor === Object) return 'object';
-		return (value.constructor.name || '').toLowerCase();
+		if (value.constructor && value.constructor === Object) return 'object';
+		return ((value.constructor && value.constructor.name) || '').toLowerCase();
 	}
 	return typeof value;
 }
@@ -193,7 +192,7 @@ export function syntaxHtmlToJson(html: string): Record<string, unknown> | unknow
 
 	try {
 		return JSON.parse(jsonString);
-	} catch (_) {
+	} catch {
 		return jsonString;
 	}
 }
@@ -322,7 +321,7 @@ export function imageToBase64(
 			try {
 				ctx.drawImage(img, 0, 0);
 				resolve(Result.ok(canvas.toDataURL(type, quality)));
-			} catch (err) {
+			} catch {
 				reject(Result.fail('图片跨域或被污染，无法导出 Base64'));
 			}
 		};

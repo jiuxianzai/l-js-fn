@@ -166,8 +166,8 @@ type Fn<T> = (item: T, index: number, array: T[]) => boolean;
  * const index = findIndex(users, user => user.name === "Bob");
  * console.log(index); // 输出 1
  */
-export const findIndex = <T = Recordable>(ary: T[], fn: Fn<T>): number => {
-	return ary.findIndex(fn);
+export const findIndex = <T = Recordable>(arr: T[], fn: Fn<T>): number => {
+	return arr.findIndex(fn);
 };
 
 /**
