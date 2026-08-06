@@ -4,6 +4,16 @@
 
 ### 修复
 
+- 回滚 tsup drop 配置为 `["console", "debugger"]`，esbuild 不支持细粒度移除
+
+### 文档
+
+- CHANGELOG 标题改为中文
+
+## [3.12.4]
+
+### 修复
+
 - `syntaxHighlight`/`searchTextColor` 对字符串值做 HTML 转义防止 XSS
 - `imageToBase64` 添加 `try/catch` 防止 tainted canvas 导致 Promise 挂起
 - `urlDecode` 默认改为 `decodeURIComponent` 与 `urlEncode` 对称
