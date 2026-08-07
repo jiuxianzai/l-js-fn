@@ -336,9 +336,10 @@ request.afterResponse((response) => {
 
 ## 9. 扩展新平台
 
-以抖音小程序为例，只需实现 `PlatformAdapter` 接口并注册，**无需修改任何模块源码**：
+以抖音小程序为例，只需实现 `PlatformAdapter` 接口并注册，**无需修改任何模块源码**。以下分别展示 TypeScript、JavaScript (ESM)、JavaScript (CJS) 三种写法。
 
-```ts
+::: code-group
+```ts [TypeScript]
 // douyin-adapter.ts
 import { registerAdapter, type PlatformAdapter } from 'l-js-fn/uniapp';
 
@@ -372,6 +373,77 @@ const douyinAdapter: PlatformAdapter = {
 // App.vue onLaunch
 registerAdapter(douyinAdapter);
 ```
+
+```js [JavaScript (ESM)]
+// douyin-adapter.mjs
+import { registerAdapter } from 'l-js-fn/uniapp';
+
+const douyinAdapter = {
+  name: 'douyin',
+  api: tt, // 抖音全局对象
+
+  // 存储（抖音与微信同为位置参数格式）
+  setStorageSync(key, data) { tt.setStorageSync(key, data); },
+  getStorageSync(key) { return tt.getStorageSync(key); },
+  removeStorageSync(key) { tt.removeStorageSync(key); },
+  clearStorageSync() { tt.clearStorageSync(); },
+
+  // Toast
+  showToast(title, icon, duration, mask, image) {
+    tt.showToast({ title, icon, duration, mask, ...(image ? { image } : {}) });
+  },
+  showLoading(title, mask) { tt.showLoading({ title, mask }); },
+  hideLoading() { tt.hideLoading(); },
+
+  // 权限（按抖音 API 实现）
+  async checkPermission(scope) { /* 抖音实现 */ return true; },
+  async requestPermission(scope) { /* 抖音实现 */ return true; },
+
+  // 环境
+  async getEnvVersion() { /* 抖音实现 */ return { v: 'release', d: '正式版', s: 'douyin' }; },
+  getLaunchOptionsSync() { return tt.getLaunchOptionsSync?.() ?? null; },
+  extractScanUrl(options) { /* 抖音实现 */ return undefined; },
+};
+
+// App.vue onLaunch
+registerAdapter(douyinAdapter);
+```
+
+```js [JavaScript (CJS)]
+// douyin-adapter.cjs
+const { registerAdapter } = require('l-js-fn/uniapp');
+
+const douyinAdapter = {
+  name: 'douyin',
+  api: tt, // 抖音全局对象
+
+  // 存储（抖音与微信同为位置参数格式）
+  setStorageSync(key, data) { tt.setStorageSync(key, data); },
+  getStorageSync(key) { return tt.getStorageSync(key); },
+  removeStorageSync(key) { tt.removeStorageSync(key); },
+  clearStorageSync() { tt.clearStorageSync(); },
+
+  // Toast
+  showToast(title, icon, duration, mask, image) {
+    tt.showToast({ title, icon, duration, mask, ...(image ? { image } : {}) });
+  },
+  showLoading(title, mask) { tt.showLoading({ title, mask }); },
+  hideLoading() { tt.hideLoading(); },
+
+  // 权限（按抖音 API 实现）
+  async checkPermission(scope) { /* 抖音实现 */ return true; },
+  async requestPermission(scope) { /* 抖音实现 */ return true; },
+
+  // 环境
+  async getEnvVersion() { /* 抖音实现 */ return { v: 'release', d: '正式版', s: 'douyin' }; },
+  getLaunchOptionsSync() { return tt.getLaunchOptionsSync?.() ?? null; },
+  extractScanUrl(options) { /* 抖音实现 */ return undefined; },
+};
+
+// App.vue onLaunch
+registerAdapter(douyinAdapter);
+```
+:::
 
 注册后，`env` / `model` / `permission` / `router` / `storage` / `toast` 全部自动切换为抖音实现。
 
