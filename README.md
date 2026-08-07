@@ -97,6 +97,9 @@ import {
 // 事件总线
 import { EventBus, eventBus } from 'l-js-fn/event-bus';
 
+// 小程序工具集
+import { env, router, storage, toast, model, permission, request } from 'l-js-fn/uniapp';
+
 // 加密模块
 import { md5, aesEncrypt, rsaEncrypt } from 'l-js-fn/crypto';
 ```
@@ -826,6 +829,73 @@ eventBus.on('global-event', (msg: string) => console.log(msg));
 eventBus.emit('global-event', 'Hello');
 ```
 
+### uniapp 小程序工具集 (uniapp)
+
+> 封装了平台适配层、环境信息、弹窗、权限授权、路由导航、本地存储、Toast 提示、网络请求等常用功能，**一份代码同时兼容微信和支付宝小程序**。底层采用平台适配器策略，内置 `wechat` / `alipay` / `h5` / `app` 四套适配器，支持 `registerAdapter()` 扩展新平台。
+
+```typescript
+import {
+  getAdapter, autoDetect, registerAdapter,
+  env, model, permission, router, storage, toast, request
+} from 'l-js-fn/uniapp';
+
+// 平台自动检测（默认，无需初始化）——微信包内自动用 wx，支付宝包内自动用 my
+autoDetect(); // 可选，主动触发检测（如 App.vue onLaunch）
+getAdapter().name; // 'wechat' | 'alipay' | 'h5' | 'app'
+
+// 环境信息
+env.platform(); // { isWechat: true, isAlipay: false, ... }
+const { v, d } = await env.version(); // v: 'release', d: '正式版'
+env.launchOptions(); // 启动参数（微信/支付宝返回格式统一）
+
+// 弹窗
+const { confirm } = await model.confirm('确定删除？');
+await model.alert('操作成功');
+
+// 权限授权（统一流程：getSetting → authorize → openSetting）
+await permission.camera();
+await permission.location();
+
+// 路由导航
+await router.push('/pages/detail/index', { query: { id: '1' } });
+await router.replace('/pages/home/index');
+await router.back();
+await router.switchTab('/pages/mine/index');
+
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  next('/pages/login/index');
+});
+
+// 本地存储（支持过期时间、加密，中文/Emoji 加密完整往返）
+storage.set('user', { name: 'John' }, { expire: 3600, encrypt: true });
+storage.get('user');
+storage.remove('user');
+storage.clear();
+
+// Toast 提示（icon 跨平台自动转换，支付宝专属 icon 在微信自动降级）
+toast.success('保存成功');
+toast.error('请求失败');
+toast.loading('加载中...');
+toast.hideLoading();
+
+// 网络请求
+request.setConfig({ baseURL: 'https://api.example.com', timeout: 30000 });
+const user = await request.get('/user', { params: { id: 1 } });
+const result = await request.post('/user', { name: 'John' });
+// 重试 & Loading
+const data = await request.get('/api', { retry: 3, retryDelay: 1000, loading: true });
+```
+
+**扩展新平台：**
+
+```typescript
+import { registerAdapter, type PlatformAdapter } from 'l-js-fn/uniapp';
+
+const myAdapter: PlatformAdapter = { name: 'douyin', api: tt, /* 实现各方法 */ };
+registerAdapter(myAdapter); // 之后所有模块自动切换为抖音实现
+```
+
 ### 加密模块 (crypto)
 
 > **注意**: SM2、SM4 依赖 `sm-crypto` 包，按需安装：`npm install sm-crypto`
@@ -962,11 +1032,13 @@ import { WebSocketManager } from 'l-js-fn/ws';
 import { escapeHTML } from 'l-js-fn/encode';
 import { formatFileSize } from 'l-js-fn/file';
 import { EventBus } from 'l-js-fn/event-bus';
+import { env, router, toast } from 'l-js-fn/uniapp';
 
 // CommonJS 导入
 const { isArray } = require('l-js-fn');
 const { scrollTop } = require('l-js-fn/bom');
 const { escapeHTML } = require('l-js-fn/encode');
+const { env, router } = require('l-js-fn/uniapp');
 ```
 
 ## ✅ 测试
@@ -977,8 +1049,8 @@ const { escapeHTML } = require('l-js-fn/encode');
 
 | 指标       | 数值                     |
 | ---------- | ------------------------ |
-| 测试套件   | 27 passed                |
-| 测试用例   | 1446 passed / 1446 total |
+| 测试套件   | 28 passed                |
+| 测试用例   | 1580 passed / 1580 total |
 | 通过率     | 100%                     |
 | 语句覆盖率 | 98.73%                   |
 | 分支覆盖率 | 93.49%                   |

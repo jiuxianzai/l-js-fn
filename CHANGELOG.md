@@ -6,9 +6,21 @@
 
 - 回滚 tsup drop 配置为 `["console", "debugger"]`，esbuild 不支持细粒度移除
 
+### 重构
+
+- uniapp 模块重构为平台适配器架构，内置 `wechat`/`alipay`/`h5`/`app` 四套适配器，支持 `registerAdapter()` 扩展新平台
+- uniapp 平台检测不再依赖 `resigterUtils` 手动注册，改为 `autoDetect()` 自动检测（检测不到时抛错提示手动注册）
+- `storage` 加密改为固定宽度 XOR 编码，修复中文/Emoji 加密后数据损坏问题
+- uniapp `permission` 增加 `getSetting` 预检与 `openSetting` 引导，修复微信用户曾拒绝后无法再次授权的问题
+- uniapp `toast` 增加 icon 跨平台映射，支付宝专属 `fail`/`exception` 在微信端自动降级
+- uniapp `launchOptions` 返回值统一为 `getLaunchOptionsSync()` 完整对象，微信/支付宝格式一致
+- uniapp `router` 防重复跳转改为「同步标记 + 失败清除」，修复导航失败后无法立即重试的问题
+
 ### 文档
 
 - CHANGELOG 标题改为中文
+- 重写 uniapp 文档，新增平台适配层、扩展新平台章节与平台差异速查表
+- 更新 README uniapp 模块示例与测试统计
 
 ## [3.12.4]
 

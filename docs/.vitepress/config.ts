@@ -67,6 +67,13 @@ export default defineConfig({
 					{ text: '加密模块', link: '/guide/crypto' },
 				],
 			},
+			{
+				text: 'uniapp 小程序工具集',
+				items: [
+					{ text: '基础功能 (API)', link: '/guide/uniapp' },
+					{ text: '网络请求 (Request)', link: '/guide/uniapp-request' },
+				],
+			},
 		],
 
 		editLink: {
