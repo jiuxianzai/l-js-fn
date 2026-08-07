@@ -32,7 +32,6 @@ export default (config) => new Promise((resolve, reject) => {
                 if (typeof response.data === 'string') {
                     response.data = JSON.parse(response.data)
                 }
-                // eslint-disable-next-line no-empty
             } catch (e) {
             }
             settle(resolve, reject, response)

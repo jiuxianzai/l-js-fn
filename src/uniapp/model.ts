@@ -42,6 +42,6 @@ class Model {
 	}
 }
 
-let model = new Model();
+const model = new Model();
 
 export { model };

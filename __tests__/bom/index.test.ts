@@ -553,7 +553,7 @@ describe('bom - 浏览器对象模型方法', () => {
 		});
 
 		it('应该处理 Cookie 值前面带空格的情况', () => {
-			let cookieStorage: Record<string, string> = {};
+			const cookieStorage: Record<string, string> = {};
 			Object.defineProperty(global.document, 'cookie', {
 				get: () => ' test=value',
 				set: (value: string) => {

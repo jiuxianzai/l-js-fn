@@ -110,7 +110,7 @@ describe('is-kit - 类型判断工具', () => {
 		it('应该正确识别数组', () => {
 			expect(isArray([])).toBe(true);
 			expect(isArray([1, 2, 3])).toBe(true);
-			expect(isArray(new Array())).toBe(true);
+			expect(isArray([])).toBe(true);
 		});
 
 		it('应该正确识别非数组类型', () => {

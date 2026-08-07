@@ -188,7 +188,7 @@ describe('common - 通用工具方法', () => {
 		it('应该正确识别数组', () => {
 			expect(getType([])).toBe('array');
 			expect(getType([1, 2, 3])).toBe('array');
-			expect(getType(new Array())).toBe('array');
+			expect(getType([])).toBe('array');
 		});
 
 		it('应该正确识别对象', () => {

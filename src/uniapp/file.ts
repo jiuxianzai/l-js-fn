@@ -105,6 +105,6 @@ class File {
 	}
 }
 
-let file = new File();
+const file = new File();
 
 export { file };

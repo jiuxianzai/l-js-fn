@@ -70,6 +70,6 @@ class Toast {
 	}
 }
 
-let toast = new Toast();
+const toast = new Toast();
 
 export { toast };

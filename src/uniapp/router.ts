@@ -213,6 +213,6 @@ class Router {
 	}
 }
 
-let router = new Router();
+const router = new Router();
 
 export { router };

@@ -87,6 +87,6 @@ class Env {
 	}
 }
 
-let env = new Env();
+const env = new Env();
 
 export { env };

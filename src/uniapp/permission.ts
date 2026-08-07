@@ -86,6 +86,6 @@ class Permission {
 	}
 }
 
-let permission = new Permission();
+const permission = new Permission();
 
 export { permission };

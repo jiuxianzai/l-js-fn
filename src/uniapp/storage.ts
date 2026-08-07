@@ -126,6 +126,6 @@ class Storage {
 	}
 }
 
-let storage = new Storage();
+const storage = new Storage();
 
 export { storage };
