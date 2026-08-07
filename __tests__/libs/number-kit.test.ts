@@ -157,6 +157,18 @@ describe('number-kit - 数字处理工具', () => {
 					expect(formatNumber(10001, { type: 'chinese' })).toBe('壹万零壹元整');
 				});
 
+				it('应该处理中间段小于一千的补零', () => {
+					expect(formatNumber(100010100, { type: 'chinese' })).toBe('壹亿零壹万零壹佰元整');
+				});
+
+				it('应该处理中间段大于等于一千', () => {
+					expect(formatNumber(110000000, { type: 'chinese' })).toBe('壹亿壹仟万元整');
+				});
+
+				it('应该处理空段后跟非空段（needZero 触发）', () => {
+					expect(formatNumber(10000000001, { type: 'chinese' })).toBe('壹佰亿零壹元整');
+				});
+
 				it('应该处理十/佰/仟带零', () => {
 					expect(formatNumber(10, { type: 'chinese' })).toBe('壹拾元整');
 					expect(formatNumber(110, { type: 'chinese' })).toBe('壹佰壹拾元整');
@@ -175,6 +187,18 @@ describe('number-kit - 数字处理工具', () => {
 
 				it('应该兼容 type: number + useUnit', () => {
 					expect(formatNumber(12345, { type: 'number', useUnit: true })).toBe('1.23万');
+				});
+
+				it('useUnit 支持亿单位（对象模式）', () => {
+					expect(formatNumber(123456789, { useUnit: true })).toBe('1.23亿');
+				});
+
+				it('对象模式处理 -Infinity', () => {
+					expect(formatNumber(-Infinity, {})).toBe('-Infinity');
+				});
+
+				it('对象模式处理 NaN', () => {
+					expect(formatNumber(NaN, {})).toBe('NaN');
 				});
 			});
 		});

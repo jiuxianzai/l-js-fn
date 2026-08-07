@@ -476,6 +476,11 @@ describe('uniapp 模块', () => {
 					expect.objectContaining({ url: '/pages/home/index' })
 				);
 			});
+
+			it('switchTab 失败时应 reject', async () => {
+				mockWx.switchTab.mockImplementationOnce((opts: any) => opts.fail?.(new Error('fail')));
+				await expect(router.switchTab('/pages/home/index')).rejects.toThrow('fail');
+			});
 		});
 
 		describe('reLaunch', () => {
@@ -606,6 +611,57 @@ describe('uniapp 模块', () => {
 				r.beforeEach((_to: any, _from: any, next: any) => next());
 				await expect(r.push('/pages/detail/index')).rejects.toThrow('fail');
 			});
+
+			it('守卫多次调用 next 时只生效一次', async () => {
+				let r2: any;
+				await jest.isolateModulesAsync(async () => {
+					const mod = await import('@/uniapp');
+					r2 = mod.router;
+				});
+				r2.beforeEach((_to: any, _from: any, next: any) => {
+					next();
+					next('/pages/redirect/index');
+				});
+				await r2.push('/pages/original/index');
+				expect(mockWx.navigateTo).toHaveBeenCalledWith(
+					expect.objectContaining({ url: '/pages/original/index' })
+				);
+			});
+		});
+	});
+
+	describe('router 边界', () => {
+		let r: any;
+
+		beforeEach(async () => {
+			mockWx.navigateTo.mockImplementation((opts: any) => opts.success?.());
+			await jest.isolateModulesAsync(async () => {
+				const mod = await import('@/uniapp');
+				r = mod.router;
+			});
+		});
+
+		it('传空 query/params 时走 entries.length === 0 分支', async () => {
+			await r.push('/pages/detail/index', { query: {}, params: {} });
+			expect(mockWx.navigateTo).toHaveBeenCalledWith(
+				expect.objectContaining({ url: '/pages/detail/index' })
+			);
+		});
+
+		it('并发导航失败时 clearDuplicate 不误清其他导航标记', async () => {
+			mockWx.navigateTo.mockImplementation((opts: any) => {
+				if (opts.url.includes('/a')) {
+					opts.fail?.(new Error('fail-a'));
+				} else {
+					opts.success?.();
+				}
+			});
+			const p1 = r.push('/pages/a/index');
+			const p2 = r.push('/pages/b/index');
+			await expect(p1).rejects.toThrow('fail-a');
+			await p2;
+			// lastNavUrl 被 /b 覆盖，/a 的清除不生效，/b 标记保留
+			expect((r as any).lastNavUrl).toBe('/pages/b/index');
 		});
 	});
 
@@ -718,6 +774,21 @@ describe('uniapp 模块', () => {
 				const result = env.launchOptions();
 				expect(result).toBeNull();
 			});
+
+			it('getLaunchOptionsSync 抛错时应返回 null', () => {
+				const origWx = (global as any).wx;
+				(global as any).wx = {
+					...origWx,
+					getLaunchOptionsSync: jest.fn(() => {
+						throw new Error('fail');
+					}),
+				};
+				registerAdapter(createWechatAdapter((global as any).wx));
+				const result = env.launchOptions();
+				expect(result).toBeNull();
+				(global as any).wx = origWx;
+				registerAdapter(createWechatAdapter(origWx));
+			});
 		});
 
 		describe('enterOptions', () => {
@@ -759,6 +830,10 @@ describe('uniapp 模块', () => {
 				const cb = jest.fn();
 				env.scanParams({ other: 'data' }, cb);
 				expect(cb).not.toHaveBeenCalled();
+			});
+
+			it('有扫码 URL 但未传回调时不报错', () => {
+				expect(() => env.scanParams({ q: encodeURIComponent('https://example.com') })).not.toThrow();
 			});
 		});
 	});

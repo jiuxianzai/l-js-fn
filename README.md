@@ -5,10 +5,10 @@
 ![npm version](https://badge.fury.io/js/l-js-fn.svg)
 ![downloads](https://img.shields.io/npm/dm/l-js-fn)
 ![license](https://img.shields.io/npm/l/l-js-fn)
-![test pass](https://img.shields.io/badge/tests-1446%2F1446%20passed-brightgreen)
+![test pass](https://img.shields.io/badge/tests-1842%2F1842%20passed-brightgreen)
 ![coverage](https://img.shields.io/badge/coverage-99%25-brightgreen)
 ![functions](https://img.shields.io/badge/functions-100%25-brightgreen)
-![branches](https://img.shields.io/badge/branches-93%25-brightgreen)
+![branches](https://img.shields.io/badge/branches-96%25-brightgreen)
 [![docs](https://img.shields.io/badge/docs-GitHub%20Pages-42b883)](https://jiuxianzai.github.io/l-js-fn/)
 
 ## ✨ 特性
@@ -1140,30 +1140,32 @@ const { env, router } = require('l-js-fn/uniapp');
 
 本项目使用 [Jest](https://jestjs.io/) 进行单元测试，覆盖率阈值 90%+。
 
+> 覆盖率统计仅针对本项目内部代码，已排除内嵌的第三方库 `luch-request`（详见 [jest.config.js](jest.config.js) 的 `collectCoverageFrom` 配置）。
+
 ### 测试统计
 
 | 指标       | 数值                     |
 | ---------- | ------------------------ |
-| 测试套件   | 29 passed                |
-| 测试用例   | 1596 passed / 1596 total |
+| 测试套件   | 33 passed                |
+| 测试用例   | 1842 passed / 1842 total |
 | 通过率     | 100%                     |
-| 语句覆盖率 | 98.73%                   |
-| 分支覆盖率 | 93.49%                   |
+| 语句覆盖率 | 98.81%                   |
+| 分支覆盖率 | 95.67%                   |
 | 函数覆盖率 | 100%                     |
-| 行覆盖率   | 99.37%                   |
+| 行覆盖率   | 99.66%                   |
 
 #### 核心工具模块
 
 | 模块                    | 用例数 | 通过 | 失败 | 通过率 |
 | ----------------------- | ------ | ---- | ---- | ------ |
 | color (颜色处理)        | 31     | 31   | 0    | 100%   |
-| is-kit (类型判断)       | 75     | 75   | 0    | 100%   |
-| array-kit (数组操作)    | 134    | 134  | 0    | 100%   |
-| string-kit (字符串处理) | 94     | 94   | 0    | 100%   |
-| object-kit (对象操作)   | 62     | 62   | 0    | 100%   |
-| common (通用工具)       | 75     | 75   | 0    | 100%   |
-| date-kit (日期处理)     | 72     | 72   | 0    | 100%   |
-| number-kit (数字处理)   | 72     | 72   | 0    | 100%   |
+| is-kit (类型判断)       | 85     | 85   | 0    | 100%   |
+| array-kit (数组操作)    | 151    | 151  | 0    | 100%   |
+| string-kit (字符串处理) | 97     | 97   | 0    | 100%   |
+| object-kit (对象操作)   | 67     | 67   | 0    | 100%   |
+| common (通用工具)       | 77     | 77   | 0    | 100%   |
+| date-kit (日期处理)     | 75     | 75   | 0    | 100%   |
+| number-kit (数字处理)   | 78     | 78   | 0    | 100%   |
 | url-kit (URL 处理)      | 81     | 81   | 0    | 100%   |
 | bugfixes (兼容修复)     | 17     | 17   | 0    | 100%   |
 
@@ -1171,17 +1173,18 @@ const { env, router } = require('l-js-fn/uniapp');
 
 | 模块                 | 用例数 | 通过 | 失败 | 通过率 |
 | -------------------- | ------ | ---- | ---- | ------ |
-| bom (浏览器 BOM)     | 46     | 46   | 0    | 100%   |
-| ws (WebSocket)       | 24     | 24   | 0    | 100%   |
+| bom (浏览器 BOM)     | 53     | 53   | 0    | 100%   |
+| ws (WebSocket)       | 33     | 33   | 0    | 100%   |
 | storage (本地存储)   | 32     | 32   | 0    | 100%   |
 | polling (轮询)       | 16     | 16   | 0    | 100%   |
-| ipc (IPC 通信)       | 41     | 41   | 0    | 100%   |
+| ipc (IPC 通信)       | 49     | 49   | 0    | 100%   |
 | regex (正则表达式)   | 173    | 173  | 0    | 100%   |
 | config (配置常量)    | 21     | 21   | 0    | 100%   |
 | encode (编码/解码)   | 56     | 56   | 0    | 100%   |
 | file (文件处理)      | 62     | 62   | 0    | 100%   |
 | event-bus (事件总线) | 31     | 31   | 0    | 100%   |
 | crypto (加密模块)    | 132    | 132  | 0    | 100%   |
+| uniapp (跨端框架)    | 326    | 326  | 0    | 100%   |
 
 #### 其他
 

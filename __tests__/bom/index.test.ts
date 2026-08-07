@@ -394,7 +394,6 @@ describe('bom - 浏览器对象模型方法', () => {
 			(document.createElement as jest.Mock).mockReturnValue(textarea);
 
 			const result = await copyToClipboard('test text');
-
 			expect(result).toBe(true);
 			expect(textarea.value).toBe('test text');
 			expect(textarea.select).toHaveBeenCalled();
@@ -414,6 +413,18 @@ describe('bom - 浏览器对象模型方法', () => {
 
 			expect(document.body.appendChild).toHaveBeenCalledWith(textarea);
 			expect(document.body.removeChild).toHaveBeenCalledWith(textarea);
+		});
+
+		it('Clipboard API 写入失败时应返回 false', async () => {
+			global.navigator = {
+				clipboard: {
+					writeText: jest.fn(() => Promise.reject(new Error('denied'))),
+				},
+			} as any;
+
+			const result = await copyToClipboard('test text');
+
+			expect(result).toBe(false);
 		});
 	});
 
@@ -576,6 +587,68 @@ describe('bom - 浏览器对象模型方法', () => {
 			setCookie('test', 'value', { domain: '.example.com' });
 			const result = removeCookie('test', { domain: '.example.com' });
 			expect(result).toBe(true);
+		});
+
+		it('setCookie 支持过期时间为 0 时跳过 expires', () => {
+			const result = setCookie('test', 'value', { expires: 0, path: '', sameSite: '' as any });
+			expect(result).toBe(true);
+		});
+
+		it('removeCookie 支持空 path', () => {
+			const result = removeCookie('test', { path: '' });
+			expect(result).toBe(true);
+		});
+
+		it('getAllCookies 忽略空 key 的 cookie 段', () => {
+			const cookieStorage: Record<string, string> = {};
+			Object.defineProperty(global.document, 'cookie', {
+				get: () => '=orphan; token=abc',
+				set: (value: string) => {
+					const [cookiePair] = value.split(';');
+					const [key, val] = cookiePair.split('=');
+					if (val && val !== 'Thu, 01 Jan 1970 00:00:00 GMT') {
+						cookieStorage[key] = val;
+					} else {
+						delete cookieStorage[key];
+					}
+				},
+				configurable: true,
+			});
+			const result = getAllCookies();
+			expect(result).toEqual({ token: 'abc' });
+		});
+	});
+
+	// ==================== getScrollPosition 补充分支 ====================
+	describe('getScrollPosition - 补充分支', () => {
+		beforeEach(() => {
+			global.window = {} as any;
+		});
+
+		it('documentElement 为空时回退到 body.parentNode', () => {
+			global.document = {
+				documentElement: null,
+				body: { parentNode: { scrollLeft: 30, scrollTop: 40 } },
+			} as any;
+			const position = getScrollPosition();
+			expect(position).toEqual({ x: 30, y: 40 });
+		});
+
+		it('documentElement 与 body.parentNode 为空时回退到 body', () => {
+			global.document = {
+				documentElement: null,
+				body: { parentNode: null, scrollLeft: 5, scrollTop: 6 },
+			} as any;
+			const position = getScrollPosition();
+			expect(position).toEqual({ x: 5, y: 6 });
+		});
+
+		it('滚动值为 0 时返回 0', () => {
+			global.document = {
+				documentElement: { scrollLeft: 0, scrollTop: 0 },
+			} as any;
+			const position = getScrollPosition();
+			expect(position).toEqual({ x: 0, y: 0 });
 		});
 	});
 });

@@ -86,6 +86,23 @@ describe('IframeBridge - iframe 与父窗口通信桥接', () => {
 			}, '*');
 		});
 
+		it('收到未注册事件的 REQUEST 消息时应直接返回', async () => {
+			const onMessageHandler = (window.addEventListener as jest.Mock).mock.calls.find(
+				(call) => call[0] === 'message'
+			)[1];
+
+			await onMessageHandler({
+				data: {
+					type: IPC_TYPE.REQUEST,
+					eventName: 'notRegistered',
+					params: {},
+					id: 'test-id',
+				},
+			});
+
+			expect(mockParentWindow.postMessage).not.toHaveBeenCalled();
+		});
+
 		it('应该在处理函数出错时返回错误信息', async () => {
 			const handler = jest.fn().mockRejectedValue(new Error('Test error'));
 			iframeBridge.register('testEvent', handler);
@@ -204,6 +221,12 @@ describe('IframeBridge - iframe 与父窗口通信桥接', () => {
 
 		it('应该处理空监听器列表的情况', () => {
 			expect(() => iframeBridge.off('nonExistentEvent')).not.toThrow();
+		});
+
+		it('off 指定回调且事件不存在时不报错', () => {
+			const callback = jest.fn();
+			iframeBridge.off('nonExistentEvent', callback);
+			expect((iframeBridge as any).eventHandlers['nonExistentEvent']).toHaveLength(0);
 		});
 	});
 

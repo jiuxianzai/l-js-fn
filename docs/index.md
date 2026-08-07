@@ -36,10 +36,10 @@ features:
   <a href="https://www.npmjs.com/package/l-js-fn"><img src="https://img.shields.io/npm/dm/l-js-fn?color=blue" alt="downloads"></a>
   <a href="https://github.com/jiuxianzai/l-js-fn/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/l-js-fn?color=green" alt="license"></a>
   <img src="https://img.shields.io/badge/functions-160+-blueviolet" alt="functions">
-  <img src="https://img.shields.io/badge/tests-1446%2F1446_passed-brightgreen" alt="tests">
-  <img src="https://img.shields.io/badge/stmts-98.7%25-brightgreen" alt="statements">
-  <img src="https://img.shields.io/badge/branches-93.5%25-brightgreen" alt="branches">
-  <img src="https://img.shields.io/badge/lines-99.4%25-brightgreen" alt="lines">
+  <img src="https://img.shields.io/badge/tests-1842%2F1842_passed-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/stmts-98.8%25-brightgreen" alt="statements">
+  <img src="https://img.shields.io/badge/branches-95.7%25-brightgreen" alt="branches">
+  <img src="https://img.shields.io/badge/lines-99.7%25-brightgreen" alt="lines">
   <a href="https://jiuxianzai.github.io/l-js-fn/"><img src="https://img.shields.io/badge/docs-GitHub_Pages-42b883?logo=github" alt="docs"></a>
 </div>
 
@@ -103,46 +103,49 @@ import { Polling } from 'l-js-fn/polling';
 
 本项目使用 [Jest](https://jestjs.io/) 进行单元测试，覆盖率达 **90%+**。
 
+> 覆盖率统计仅针对本项目内部代码，已排除内嵌的第三方库 `luch-request`（见 `jest.config.js` 的 `collectCoverageFrom` 配置）。
+
 ### 总览
 
 | 指标 | 数值 |
 |------|------|
-| 测试套件 | 27 passed |
-| 测试用例 | 1446 passed / 1446 total |
-| 语句覆盖率 | 98.73% |
-| 分支覆盖率 | 93.49% |
+| 测试套件 | 33 passed |
+| 测试用例 | 1842 passed / 1842 total |
+| 语句覆盖率 | 98.81% |
+| 分支覆盖率 | 95.67% |
 | 函数覆盖率 | 100% |
-| 行覆盖率 | 99.37% |
+| 行覆盖率 | 99.66% |
 
 ### 核心工具模块
 
 | 模块 | 用例数 | 通过率 |
 |------|--------|--------|
 | color (颜色处理) | 31 | 100% |
-| is-kit (类型判断) | 78 | 100% |
+| is-kit (类型判断) | 85 | 100% |
 | array-kit (数组操作) | 151 | 100% |
-| string-kit (字符串处理) | 94 | 100% |
+| string-kit (字符串处理) | 97 | 100% |
 | object-kit (对象操作) | 67 | 100% |
-| common (通用工具) | 75 | 100% |
-| date-kit (日期处理) | 72 | 100% |
-| number-kit (数字处理) | 72 | 100% |
+| common (通用工具) | 77 | 100% |
+| date-kit (日期处理) | 75 | 100% |
+| number-kit (数字处理) | 78 | 100% |
 | url-kit (URL 处理) | 81 | 100% |
 
 ### 子模块
 
 | 模块 | 用例数 | 通过率 |
 |------|--------|--------|
-| bom (浏览器 BOM) | 46 | 100% |
-| ws (WebSocket) | 24 | 100% |
+| bom (浏览器 BOM) | 53 | 100% |
+| ws (WebSocket) | 33 | 100% |
 | storage (本地存储) | 32 | 100% |
 | polling (轮询) | 16 | 100% |
-| ipc (IPC 通信) | 41 | 100% |
+| ipc (IPC 通信) | 49 | 100% |
 | regex (正则表达式) | 173 | 100% |
 | config (配置常量) | 21 | 100% |
 | encode (编码/解码) | 56 | 100% |
 | file (文件处理) | 62 | 100% |
 | event-bus (事件总线) | 31 | 100% |
 | crypto (加密模块) | 132 | 100% |
+| uniapp (跨端框架) | 326 | 100% |
 
 ## 常见问题
 

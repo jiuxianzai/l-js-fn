@@ -30,6 +30,11 @@ describe('WebSocketManager - WebSocket 管理类', () => {
 		};
 
 		global.WebSocket = jest.fn(() => mockWebSocket) as any;
+		// 给 mock 补上状态常量（jest.fn 会覆盖上面的对象字面量）
+		(global.WebSocket as any).CONNECTING = 0;
+		(global.WebSocket as any).OPEN = 1;
+		(global.WebSocket as any).CLOSING = 2;
+		(global.WebSocket as any).CLOSED = 3;
 
 		// 模拟 WebSocket 连接成功
 		setTimeout(() => {
@@ -374,6 +379,100 @@ describe('WebSocketManager - WebSocket 管理类', () => {
 				consoleSpy.mockRestore();
 				done();
 			}, 10);
+		});
+	});
+
+	// ==================== 边界分支补充 ====================
+	describe('边界分支', () => {
+		it('WebSocket 构造失败时触发错误回调', () => {
+			global.WebSocket = jest.fn(() => {
+				throw new Error('create fail');
+			}) as any;
+			const onError = jest.fn();
+			wsManager = new WebSocketManager('ws://localhost:8080', undefined, onError);
+			expect(onError).toHaveBeenCalledWith({
+				type: 'connection_create_error',
+				data: new Error('create fail'),
+			});
+		});
+
+		it('reconnect 已有定时器时先清除再重建', () => {
+			jest.useFakeTimers();
+			wsManager = new WebSocketManager('ws://localhost:8080');
+			(wsManager as any)['reconnect'](5000);
+			const first = (wsManager as any).reconnectTimer;
+			expect(first).not.toBeNull();
+			(wsManager as any)['reconnect'](5000);
+			const second = (wsManager as any).reconnectTimer;
+			expect(second).not.toBeNull();
+			expect(second).not.toBe(first);
+			jest.useRealTimers();
+		});
+
+		it('连接关闭且存在定时器时清除 interval', () => {
+			jest.useFakeTimers();
+			const onError = jest.fn();
+			wsManager = new WebSocketManager('ws://localhost:8080', undefined, onError);
+			(wsManager as any)['checkConnection']({ type: 'ping' }, 1000);
+			expect((wsManager as any).timer).not.toBeNull();
+			if (mockWebSocket.onclose) {
+				mockWebSocket.onclose({ type: 'close' });
+			}
+			expect((wsManager as any).timer).toBeNull();
+			expect(onError).toHaveBeenCalledWith({ type: 'connection_close', data: { type: 'close' } });
+			jest.useRealTimers();
+		});
+
+		it('close 时清除重连定时器', () => {
+			jest.useFakeTimers();
+			wsManager = new WebSocketManager('ws://localhost:8080');
+			(wsManager as any)['reconnect'](5000);
+			expect((wsManager as any).reconnectTimer).not.toBeNull();
+			wsManager.close();
+			expect((wsManager as any).reconnectTimer).toBeNull();
+			jest.useRealTimers();
+		});
+
+		it('正在连接（CONNECTING）时再次 connect 不新建连接', () => {
+			mockWebSocket.readyState = (global.WebSocket as any).CONNECTING;
+			wsManager = new WebSocketManager('ws://localhost:8080');
+			(wsManager as any)['connect']();
+			expect((global.WebSocket as any)).toHaveBeenCalledTimes(1);
+		});
+
+		it('checkConnection 使用默认 setTime', () => {
+			jest.useFakeTimers();
+			wsManager = new WebSocketManager('ws://localhost:8080');
+			const sendSpy = jest.spyOn(wsManager as any, 'sendWebSocketMessage');
+			(wsManager as any)['checkConnection']({ type: 'ping' });
+			jest.advanceTimersByTime(10000);
+			expect(sendSpy).toHaveBeenCalledTimes(1);
+			sendSpy.mockRestore();
+			jest.useRealTimers();
+		});
+
+		it('reconnect 使用默认 delay', () => {
+			jest.useFakeTimers();
+			wsManager = new WebSocketManager('ws://localhost:8080');
+			(wsManager as any)['reconnect']();
+			expect((wsManager as any).reconnectTimer).not.toBeNull();
+			jest.useRealTimers();
+		});
+
+		it('连接为 CLOSED 状态时 connect 会重建连接', () => {
+			wsManager = new WebSocketManager('ws://localhost:8080');
+			mockWebSocket.readyState = (global.WebSocket as any).CLOSED;
+			(wsManager as any)['connect']();
+			expect((global.WebSocket as any)).toHaveBeenCalledTimes(2);
+		});
+
+		it('无消息回调时收到消息不报错', () => {
+			wsManager = new WebSocketManager('ws://localhost:8080');
+			expect(() => {
+				if (mockWebSocket.onmessage) {
+					mockWebSocket.onmessage({ data: 'hello' });
+				}
+			}).not.toThrow();
 		});
 	});
 });

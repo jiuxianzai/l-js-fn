@@ -23,6 +23,8 @@ export default {
 		'!src/types/**',
 		'!src/index.ts',
 		'!src/ipc/index.ts',
+		// 内嵌第三方库（luch-request）不计入内部覆盖率
+		'!src/uniapp/request/luch-request/**',
 	],
 
 	// 覆盖率阈值

@@ -55,6 +55,18 @@ describe('H5Bridge - H5 与 iframe 通信桥接', () => {
 		it('应该在 iframe 为 null 时也能创建', () => {
 			expect(() => new H5Bridge(null)).not.toThrow();
 		});
+
+		it('iframe 已加载完毕时立即标记就绪', () => {
+			mockIframe.contentDocument = { readyState: 'complete' };
+			const bridge = new H5Bridge(mockIframe as HTMLIFrameElement);
+			expect((bridge as any).iframeReady).toBe(true);
+		});
+
+		it('iframe 未加载完毕时不立即标记就绪', () => {
+			mockIframe.contentDocument = { readyState: 'loading' };
+			const bridge = new H5Bridge(mockIframe as HTMLIFrameElement);
+			expect((bridge as any).iframeReady).toBe(false);
+		});
 	});
 
 	// ==================== call 测试 ====================
@@ -126,6 +138,17 @@ describe('H5Bridge - H5 与 iframe 通信桥接', () => {
 
 			await expect(promise).rejects.toBe('Test error');
 		});
+
+		it('响应 id 不存在时应忽略', () => {
+			const onMessageHandler = (window.addEventListener as jest.Mock).mock.calls.find(
+				(call) => call[0] === 'message'
+			)[1];
+			onMessageHandler({
+				source: mockContentWindow,
+				data: { type: IPC_TYPE.RESPONSE, id: 'unknown-id', result: 'x' },
+			});
+			expect((h5Bridge as any).pending).toEqual({});
+		});
 	});
 
 	// ==================== iframe 加载处理测试 ====================
@@ -187,6 +210,18 @@ describe('H5Bridge - H5 与 iframe 通信桥接', () => {
 
 			expect(callback).toHaveBeenCalledWith({ data: 'test' });
 		});
+
+		it('收到未注册事件的 EMIT 消息时不应报错', () => {
+			const onMessageHandler = (window.addEventListener as jest.Mock).mock.calls.find(
+				(call) => call[0] === 'message'
+			)[1];
+			expect(() =>
+				onMessageHandler({
+					source: mockContentWindow,
+					data: { type: IPC_TYPE.EMIT, eventName: 'nobody', params: {} },
+				})
+			).not.toThrow();
+		});
 	});
 
 	// ==================== off 测试 ====================
@@ -212,6 +247,12 @@ describe('H5Bridge - H5 与 iframe 通信桥接', () => {
 			h5Bridge.off('testEvent');
 
 			expect((h5Bridge as any).eventHandlers['testEvent']).toHaveLength(0);
+		});
+
+		it('off 对不存在的事件使用空数组', () => {
+			const callback = jest.fn();
+			h5Bridge.off('nonExistent', callback);
+			expect((h5Bridge as any).eventHandlers['nonExistent']).toHaveLength(0);
 		});
 	});
 
@@ -272,6 +313,11 @@ describe('H5Bridge - H5 与 iframe 通信桥接', () => {
 			expect((h5Bridge as any).queue).toEqual([]);
 			expect((h5Bridge as any).eventHandlers).toEqual({});
 			expect((h5Bridge as any).iframeReady).toBe(false);
+		});
+
+		it('iframe 为 null 时 destroy 不报错', () => {
+			const bridge = new H5Bridge(null);
+			expect(() => bridge.destroy()).not.toThrow();
 		});
 	});
 
