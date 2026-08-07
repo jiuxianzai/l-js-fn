@@ -16,6 +16,7 @@ const modules = [
 	{ entry: "src/polling/index.ts", name: "polling/index" },
 	{ entry: "src/regex/index.ts", name: "regex/index" },
 	{ entry: "src/storage/index.ts", name: "storage/index" },
+	{ entry: "src/uniapp/index.ts", name: "uniapp/index" },
 	{ entry: "src/ws/index.ts", name: "ws/index" },
 ] as const;
 
@@ -30,7 +31,7 @@ const baseOptions = {
 	splitting: false,
 	cjsInterop: true,
 	esbuildOptions(opts: any) {
-		opts.drop = ["console", "debugger"];
+		// opts.drop = ["console", "debugger"]; // 测试时注释
 	},
 };
 
