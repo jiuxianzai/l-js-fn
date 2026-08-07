@@ -21,6 +21,13 @@ const mockWx = {
 	authorize: jest.fn(),
 	getLocation: jest.fn(),
 	getEnterOptionsSync: jest.fn().mockReturnValue({}),
+	getFileSystemManager: jest.fn().mockReturnValue({
+		writeFile: jest.fn(),
+		readFile: jest.fn(),
+		access: jest.fn(),
+		unlink: jest.fn(),
+	}),
+	env: { USER_DATA_PATH: 'wxfile://usr' },
 };
 
 (global as any).wx = mockWx;

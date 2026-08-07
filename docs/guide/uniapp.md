@@ -12,21 +12,21 @@ uniapp 小程序工具集，封装了平台适配层、环境信息、弹窗、�
 ```ts [TypeScript]
 import {
   getAdapter, autoDetect, registerAdapter,
-  env, model, permission, router, storage, toast, request
+  env, model, permission, router, storage, toast, file, request
 } from 'l-js-fn/uniapp';
 ```
 
 ```js [JavaScript (ESM)]
 import {
   getAdapter, autoDetect, registerAdapter,
-  env, model, permission, router, storage, toast, request
+  env, model, permission, router, storage, toast, file, request
 } from 'l-js-fn/uniapp';
 ```
 
 ```js [JavaScript (CJS)]
 const {
   getAdapter, autoDetect, registerAdapter,
-  env, model, permission, router, storage, toast, request
+  env, model, permission, router, storage, toast, file, request
 } = require('l-js-fn/uniapp');
 ```
 :::
@@ -277,7 +277,37 @@ storage.clear();
 
 ---
 
-## 7. Toast 提示 (toast)
+## 7. 文件系统 (file)
+
+基于小程序 `FileSystemManager` 的文件持久化封装，支持写入 / 读取 / 检查 / 删除。微信自动走 `getFileSystemManager` + `wx.env.USER_DATA_PATH`，支付宝自动走 `my.getFileSystemManager` + `my.env.USER_DATA_PATH`。
+
+```ts
+import { file } from 'l-js-fn/uniapp';
+
+// 写入文件（对象自动 JSON 序列化）
+await file.write('user.json', { name: 'John', age: 20 });
+await file.write('note.txt', '纯文本内容');
+
+// 读取文件（JSON 内容自动反序列化）
+const user = await file.read('user.json');      // { name: 'John', age: 20 }
+const text = await file.read('note.txt', { json: false }); // 纯文本
+
+// 检查文件是否存在
+const exists = await file.access('user.json');       // true | false
+
+// 删除文件
+await file.remove('user.json');
+
+// 获取完整路径（USER_DATA_PATH/文件名）
+const path = file.getPath('a.json');                // 平台相关路径
+```
+
+> **说明：** `read` 默认 `json: true`，读取时优先尝试 `JSON.parse`，失败自动降级返回原始字符串。`write` 同理，传入对象时自动序列化。H5 / App 端若平台不支持文件系统，相关方法会 reject 并提示。
+
+---
+
+## 8. Toast 提示 (toast)
+
 
 ```ts
 import { toast } from 'l-js-fn/uniapp';
@@ -302,7 +332,7 @@ toast.hideLoading();
 
 ---
 
-## 8. 网络请求 (request)
+## 9. 网络请求 (request)
 
 ```ts
 import { request } from 'l-js-fn/uniapp';
@@ -334,7 +364,7 @@ request.afterResponse((response) => {
 
 ---
 
-## 9. 扩展新平台
+## 10. 扩展新平台
 
 以抖音小程序为例，只需实现 `PlatformAdapter` 接口并注册，**无需修改任何模块源码**。以下分别展示 TypeScript、JavaScript (ESM)、JavaScript (CJS) 三种写法。
 
@@ -451,7 +481,7 @@ registerAdapter(douyinAdapter);
 
 ---
 
-## 10. 平台差异速查表
+## 11. 平台差异速查表
 
 | 能力 | 微信 (wechat) | 支付宝 (alipay) | H5 / App |
 |------|---------------|-----------------|----------|
@@ -462,10 +492,11 @@ registerAdapter(douyinAdapter);
 | 环境版本 | `__wxConfig.envVersion` | `my.getRunScene` | 不支持（reject） |
 | 扫码参数 | `options.q` | `options.query.qrCode` | 无 |
 | 启动参数 | `wx.getLaunchOptionsSync()` | `my.getLaunchOptionsSync()` | `null` |
+| 文件系统 | `wx.getFileSystemManager()` + `wx.env.USER_DATA_PATH` | `my.getFileSystemManager()` + `my.env.USER_DATA_PATH` | 视平台支持 |
 
 ---
 
-## 11. 平台适配器接口参考
+## 12. 平台适配器接口参考
 
 ```ts
 interface PlatformAdapter {
@@ -492,6 +523,14 @@ interface PlatformAdapter {
   getEnvVersion(): Promise<EnvVersion>;
   getLaunchOptionsSync(): Record<string, any> | null;
   extractScanUrl(options: Record<string, any>): string | undefined;
+
+  // 文件系统（可选）
+  getFileSystemManager?(): any;
+  getUserDataPath?(): string;
+  fileWrite?(filePath: string, data: string): Promise<void>;
+  fileRead?(filePath: string): Promise<string>;
+  fileAccess?(filePath: string): Promise<boolean>;
+  fileRemove?(filePath: string): Promise<void>;
 }
 ```
 

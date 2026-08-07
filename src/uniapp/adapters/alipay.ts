@@ -106,5 +106,52 @@ export function createAlipayAdapter(api: Record<string, any>): PlatformAdapter {
 			if (!options) return undefined;
 			return options.query?.qrCode || options.qrCode || undefined;
 		},
+
+		// === 文件系统：支付宝用 my.getFileSystemManager + my.env.USER_DATA_PATH ===
+		getFileSystemManager() {
+			return api.getFileSystemManager?.() ?? null;
+		},
+		getUserDataPath() {
+			return api.env?.USER_DATA_PATH || '';
+		},
+		fileWrite(filePath, data) {
+			return new Promise((resolve, reject) => {
+				api.getFileSystemManager().writeFile({
+					filePath,
+					data,
+					encoding: 'utf8',
+					success: () => resolve(),
+					fail: (err: any) => reject(err),
+				});
+			});
+		},
+		fileRead(filePath) {
+			return new Promise((resolve, reject) => {
+				api.getFileSystemManager().readFile({
+					filePath,
+					encoding: 'utf8',
+					success: (res: any) => resolve(res?.data ?? ''),
+					fail: (err: any) => reject(err),
+				});
+			});
+		},
+		fileAccess(filePath) {
+			return new Promise((resolve) => {
+				api.getFileSystemManager().access({
+					path: filePath,
+					success: () => resolve(true),
+					fail: () => resolve(false),
+				});
+			});
+		},
+		fileRemove(filePath) {
+			return new Promise((resolve, reject) => {
+				api.getFileSystemManager().unlink({
+					filePath,
+					success: () => resolve(),
+					fail: (err: any) => reject(err),
+				});
+			});
+		},
 	};
 }

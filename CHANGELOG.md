@@ -16,11 +16,16 @@
 - uniapp `launchOptions` 返回值统一为 `getLaunchOptionsSync()` 完整对象，微信/支付宝格式一致
 - uniapp `router` 防重复跳转改为「同步标记 + 失败清除」，修复导航失败后无法立即重试的问题
 
+### 新增
+
+- uniapp 新增 `file` 文件系统模块，封装 `write`/`read`/`access`/`remove`/`getPath`，微信/支付宝自动切换 `getFileSystemManager`
+
 ### 文档
 
 - CHANGELOG 标题改为中文
 - 重写 uniapp 文档，新增平台适配层、扩展新平台章节与平台差异速查表
 - 更新 README uniapp 模块示例与测试统计
+- 新增 uniapp file 文件系统文档章节
 
 ## [3.12.4]
 

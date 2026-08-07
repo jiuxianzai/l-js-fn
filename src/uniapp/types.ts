@@ -117,4 +117,24 @@ export interface PlatformAdapter {
 	getLaunchOptionsSync(): Record<string, any> | null;
 	/** 从页面 onLoad options 中提取扫码 URL，不支持返回 undefined */
 	extractScanUrl(options: Record<string, any>): string | undefined;
+
+	// === 文件系统 ===
+	/** 获取文件系统管理器（FileSystemManager），不支持返回 null */
+	getFileSystemManager?(): any;
+	/** 获取用户数据根路径（USER_DATA_PATH），不支持返回空字符串 */
+	getUserDataPath?(): string;
+	/** 写入文件（参数差异已封装：微信 filePath / 支付宝 path） */
+	fileWrite?(filePath: string, data: string): Promise<void>;
+	/** 读取文件，返回内容字符串 */
+	fileRead?(filePath: string): Promise<string>;
+	/** 检查文件是否存在 */
+	fileAccess?(filePath: string): Promise<boolean>;
+	/** 删除文件 */
+	fileRemove?(filePath: string): Promise<void>;
+}
+
+/** 文件读写选项 */
+export interface FileOptions {
+	/** 是否将结果按 JSON 解析（写入时对象自动序列化，读取时自动反序列化），默认 true */
+	json?: boolean;
 }

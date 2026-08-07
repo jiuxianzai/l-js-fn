@@ -98,7 +98,7 @@ import {
 import { EventBus, eventBus } from 'l-js-fn/event-bus';
 
 // 小程序工具集
-import { env, router, storage, toast, model, permission, request } from 'l-js-fn/uniapp';
+import { env, router, storage, toast, model, permission, file, request } from 'l-js-fn/uniapp';
 
 // 加密模块
 import { md5, aesEncrypt, rsaEncrypt } from 'l-js-fn/crypto';
@@ -836,7 +836,7 @@ eventBus.emit('global-event', 'Hello');
 ```typescript
 import {
   getAdapter, autoDetect, registerAdapter,
-  env, model, permission, router, storage, toast, request
+  env, model, permission, router, storage, toast, file, request
 } from 'l-js-fn/uniapp';
 
 // 平台自动检测（默认，无需初始化）——微信包内自动用 wx，支付宝包内自动用 my
@@ -872,6 +872,12 @@ storage.set('user', { name: 'John' }, { expire: 3600, encrypt: true });
 storage.get('user');
 storage.remove('user');
 storage.clear();
+
+// 文件系统（微信/支付宝自动切换 getFileSystemManager）
+await file.write('user.json', { name: 'John', age: 20 }); // 对象自动 JSON 序列化
+const userData = await file.read('user.json');            // 自动反序列化
+const exists = await file.access('user.json');                // 检查存在
+await file.remove('user.json');                           // 删除
 
 // Toast 提示（icon 跨平台自动转换，支付宝专属 icon 在微信自动降级）
 toast.success('保存成功');
@@ -1138,8 +1144,8 @@ const { env, router } = require('l-js-fn/uniapp');
 
 | 指标       | 数值                     |
 | ---------- | ------------------------ |
-| 测试套件   | 28 passed                |
-| 测试用例   | 1580 passed / 1580 total |
+| 测试套件   | 29 passed                |
+| 测试用例   | 1596 passed / 1596 total |
 | 通过率     | 100%                     |
 | 语句覆盖率 | 98.73%                   |
 | 分支覆盖率 | 93.49%                   |

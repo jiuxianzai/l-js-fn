@@ -1,5 +1,6 @@
 export { getAdapter, registerAdapter, autoDetect } from './base';
 export { env } from './env';
+export { file } from './file';
 export { model } from './model';
 export { permission } from './permission';
 export { request } from './request';
