@@ -1,4 +1,8 @@
 /**
+ * polling 模块 —— 轮询工具
+ * @remark 依赖浏览器 setTimeout，通常用于浏览器环境；Node 环境也可运行（全局 setTimeout 存在），Jest/FakeTimers 友好。
+ */
+/**
  * 轮询工具类（Jest / FakeTimers 友好）
  */
 export class Polling {

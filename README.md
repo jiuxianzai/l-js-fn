@@ -1,6 +1,6 @@
 # l-js-fn
 
-> 整理了常用的 JavaScript 方法，轻量级、零依赖、TypeScript 支持
+> 整理了常用的 JavaScript 方法，轻量级、核心零依赖、TypeScript 支持
 
 ![npm version](https://badge.fury.io/js/l-js-fn.svg)
 ![downloads](https://img.shields.io/npm/dm/l-js-fn)
@@ -13,7 +13,7 @@
 
 ## ✨ 特性
 
-- 🚀 **轻量级** - 零依赖，打包体积小
+- 🚀 **轻量级** - 核心零依赖，打包体积小（SM2/SM4 可选依赖 `sm-crypto`，按需安装）
 - 📦 **模块化** - 支持按需导入，减少包体积
 - 🔒 **TypeScript** - 完整的类型定义
 - 🌐 **双模块格式** - 同时支持 ESM 和 CJS

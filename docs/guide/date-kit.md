@@ -39,6 +39,8 @@ dateFormat(new Date(), 'yyyy-MM-dd');          // '2024-01-01'
 dateFormat(1704067200000);                     // '2024-01-01 00:00:00'
 dateFormat('2024-01-01');                      // '2024-01-01 00:00:00'
 dateFormat(null);                              // ''
+dateFormat(new Date(), 'MM/dd');               // '01/01'（支持任意自定义格式组合）
+dateFormat(new Date(), 'yyyy年MM月dd日');       // '2024年01月01日'
 ```
 
 ```js [JavaScript (ESM)]
@@ -49,6 +51,8 @@ dateFormat(new Date(), 'yyyy-MM-dd');          // '2024-01-01'
 dateFormat(1704067200000);                     // '2024-01-01 00:00:00'
 dateFormat('2024-01-01');                      // '2024-01-01 00:00:00'
 dateFormat(null);                              // ''
+dateFormat(new Date(), 'MM/dd');               // '01/01'（支持任意自定义格式组合）
+dateFormat(new Date(), 'yyyy年MM月dd日');       // '2024年01月01日'
 ```
 
 ```js [JavaScript (CJS)]
@@ -59,7 +63,13 @@ dateFormat(new Date(), 'yyyy-MM-dd');          // '2024-01-01'
 dateFormat(1704067200000);                     // '2024-01-01 00:00:00'
 dateFormat('2024-01-01');                      // '2024-01-01 00:00:00'
 dateFormat(null);                              // ''
+dateFormat(new Date(), 'MM/dd');               // '01/01'（支持任意自定义格式组合）
+dateFormat(new Date(), 'yyyy年MM月dd日');       // '2024年01月01日'
 ```
+:::
+
+::: tip 提示
+`format` 参数支持任意 token 组合（`yyyy`/`MM`/`dd`/`HH`/`mm`/`ss`/`SSS`/`q`），不限于 `DATE_FORMAT` 常量。`DATE_FORMAT` 只是常用格式的快捷常量。
 :::
 
 ## 2. dateSecond 秒数转时间

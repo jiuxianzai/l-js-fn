@@ -1,5 +1,4 @@
 import { DATE_FORMAT } from '@/config'
-type DateFormatType = (typeof DATE_FORMAT)[keyof typeof DATE_FORMAT];
 
 /**
  * 将 Date / 时间戳字符串 / 数字时间戳统一转为毫秒时间戳
@@ -17,10 +16,14 @@ function toTimestamp(d: Date | string | number): number {
 /**
  * 将日期或时间戳格式化为指定格式的字符串
  * @param input - 输入,默认当前时间
- * @param format - 输出格式，默认 `'yyyy-MM-dd HH:mm:ss'`
+ * @param format - 输出格式，默认 `'yyyy-MM-dd HH:mm:ss'`。支持任意 token 组合：`yyyy` 年份、`MM` 月、`dd` 日、`HH` 时、`mm` 分、`ss` 秒、`SSS` 毫秒、`q` 季度
  * @returns 格式化后的日期字符串
+ * @example
+ * dateFormat(new Date(), 'yyyy-MM-dd HH:mm:ss') // "2024-01-01 12:00:00"
+ * dateFormat(new Date(), 'MM/dd')              // "01/01"
+ * dateFormat(new Date(), 'yyyy年MM月dd日')       // "2024年01月01日"
  */
-export function dateFormat(input: Date | string | number = new Date(), format: DateFormatType = DATE_FORMAT.FULL): string {
+export function dateFormat(input: Date | string | number = new Date(), format: string = DATE_FORMAT.FULL): string {
 	if (input === null || input === undefined || input === '') return '';
 
 	let d: Date;

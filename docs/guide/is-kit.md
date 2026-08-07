@@ -21,6 +21,10 @@
 - 空对象 → `true`
 - 其他 → `false`
 
+::: warning 注意
+`isEmpty([])` 与 `isEmpty({})` 返回 `true`——它判断的是"是否无内容/无有效值"，**不是**"是否有值"。若想判断数组/对象是否非空（有内容），请使用 `isNotEmpty(value)`，例如 `isNotEmpty([1]) === true`、`isNotEmpty([]) === false`。
+:::
+
 **示例：**
 
 ::: code-group

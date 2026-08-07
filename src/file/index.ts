@@ -1,3 +1,7 @@
+/**
+ * file 模块 —— 文件处理
+ * @remark 部分函数（downloadFile、readAsText/readAsDataURL/readAsArrayBuffer 等）依赖浏览器 Blob/FileReader，仅能在浏览器环境运行；纯格式化函数（formatFileSize、getExtension 等）可跨端使用。
+ */
 import { FileSizeUnit, type FileSizeInfo } from '@/types/index.ts';
 export { FileSizeUnit, type FileSizeInfo };
 export { isImage } from '@/libs/is-kit.ts';

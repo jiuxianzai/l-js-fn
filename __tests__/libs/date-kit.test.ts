@@ -74,6 +74,21 @@ describe('date-kit - 日期处理工具', () => {
 			expect(dateFormat('invalid date')).toBe('');
 		});
 
+		it('应该支持自定义 token 组合（如 MM/dd）', () => {
+			const date = new Date('2024-01-15 08:20:30');
+			expect(dateFormat(date, 'MM/dd')).toBe('01/15');
+		});
+
+		it('应该支持中文自定义格式', () => {
+			const date = new Date('2024-01-15 08:20:30');
+			expect(dateFormat(date, 'yyyy年MM月dd日')).toBe('2024年01月15日');
+		});
+
+		it('应该支持 SSS 毫秒和 q 季度 token', () => {
+			const date = new Date('2024-04-15 08:20:30');
+			expect(dateFormat(date, 'yyyy-MM-dd q')).toBe('2024-04-15 2');
+		});
+
 		it('应该自定义格式', () => {
 			const date = new Date('2024-01-15 08:05:03');
 			expect(dateFormat(date, 'yyyy-MM-dd' as any)).toBe('2024-01-15');

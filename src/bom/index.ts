@@ -1,3 +1,7 @@
+/**
+ * bom 模块 —— 浏览器对象模型
+ * @remark 本模块所有函数仅能在浏览器环境（存在 window/document）中运行，SSR/Node 环境调用会直接返回空值或无效操作。
+ */
 import { type ScrollPosition, type CookieOptions } from '@/types';
 
 /**

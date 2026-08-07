@@ -1,3 +1,7 @@
+/**
+ * ws 模块 —— WebSocket 管理
+ * @remark 依赖浏览器 WebSocket API，仅能在浏览器环境运行，Node.js 服务端不可用。
+ */
 import { ErrorType, MessageCallback, ErrorCallback } from '@/types';
 
 export class WebSocketManager {

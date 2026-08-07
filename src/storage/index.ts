@@ -1,4 +1,8 @@
 /**
+ * storage 模块 —— localStorage/sessionStorage 封装（支持过期时间）
+ * @remark 本模块基于浏览器 localStorage/sessionStorage，仅能在浏览器环境运行，SSR/Node 环境不可用。
+ */
+/**
  * 存储项（带过期时间）
  */
 interface StorageItem<T> {

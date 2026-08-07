@@ -4,7 +4,7 @@ layout: home
 hero:
   name: "l-js-fn"
   text: "轻量级 JavaScript 工具函数库"
-  tagline: 160+ 方法 · 零依赖 · 模块化 · TypeScript · Tree-shaking
+  tagline: 160+ 方法 · 核心零依赖 · 模块化 · TypeScript · Tree-shaking
   image:
     src: /logo.svg
     alt: l-js-fn
@@ -20,7 +20,7 @@ features:
   - title: 160+ 工具函数
     details: 覆盖类型判断、数组、对象、字符串、日期、数字、URL、颜色、编码、加密等场景。
   - title: 轻量级
-    details: 零依赖，打包体积小，按需引入。
+    details: 核心零依赖，打包体积小，按需引入（SM2/SM4 可选依赖 sm-crypto）。
   - title: 模块化
     details: 支持按需导入，减少包体积，主包和子模块分离。
   - title: TypeScript
