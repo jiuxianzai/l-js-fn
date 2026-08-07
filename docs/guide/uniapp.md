@@ -375,6 +375,8 @@ registerAdapter(douyinAdapter);
 
 注册后，`env` / `model` / `permission` / `router` / `storage` / `toast` 全部自动切换为抖音实现。
 
+> **可跳过的方法说明：** `openSetting()` 为可选方法（仅微信支持），不实现时权限引导自动降级为直接返回 `false`。若你的平台没有 `getLaunchOptionsSync` / 扫码能力，对应方法返回 `null` / `undefined` 即可，模块内部已做空值兜底。
+
 ---
 
 ## 10. 平台差异速查表

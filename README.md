@@ -889,12 +889,47 @@ const data = await request.get('/api', { retry: 3, retryDelay: 1000, loading: tr
 
 **扩展新平台：**
 
+只需实现 `PlatformAdapter` 接口并注册，之后 `env` / `model` / `permission` / `router` / `storage` / `toast` 全部自动切换为新平台实现，无需修改任何模块源码。
+
 ```typescript
 import { registerAdapter, type PlatformAdapter } from 'l-js-fn/uniapp';
 
-const myAdapter: PlatformAdapter = { name: 'douyin', api: tt, /* 实现各方法 */ };
-registerAdapter(myAdapter); // 之后所有模块自动切换为抖音实现
+// 以抖音小程序为例（tt 为抖音全局对象）
+const douyinAdapter: PlatformAdapter = {
+  name: 'douyin',            // 平台标识，env.platform().platformName 将返回该值
+  api: tt,                   // 平台原生 API 对象，供平台无关的操作直接调用
+
+  // 存储（抖音与微信同为位置参数格式）
+  setStorageSync(key, data) { tt.setStorageSync(key, data); },
+  getStorageSync(key) { return tt.getStorageSync(key); },
+  removeStorageSync(key) { tt.removeStorageSync(key); },
+  clearStorageSync() { tt.clearStorageSync(); },
+
+  // Toast（抖音用 title/icon 字段）
+  showToast(title, icon, duration, mask, image) {
+    tt.showToast({ title, icon, duration, mask, ...(image ? { image } : {}) });
+  },
+  showLoading(title, mask) { tt.showLoading({ title, mask }); },
+  hideLoading() { tt.hideLoading(); },
+
+  // 权限（按抖音 API 实现）
+  async checkPermission(scope) { /* 查已授权状态 */ return true; },
+  async requestPermission(scope) { /* 弹授权框 */ return true; },
+
+  // 环境
+  async getEnvVersion() {
+    return { v: 'release', d: '正式版', s: 'douyin' };
+  },
+  getLaunchOptionsSync() { return tt.getLaunchOptionsSync?.() ?? null; },
+  extractScanUrl(options) { /* 解析扫码参数 */ return undefined; },
+};
+
+// 在 App.vue 的 onLaunch 中注册
+registerAdapter(douyinAdapter);
 ```
+
+> **可跳过的方法说明：** `openSetting()` 为可选方法（仅微信支持），不实现时权限引导自动降级为直接返回 `false`。若你的平台没有 `getLaunchOptionsSync` / 扫码能力，对应方法返回 `null` / `undefined` 即可，模块内部已做空值兜底。
+
 
 ### 加密模块 (crypto)
 
