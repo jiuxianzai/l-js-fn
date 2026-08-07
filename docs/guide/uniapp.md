@@ -279,30 +279,19 @@ storage.clear();
 
 ## 7. 文件系统 (file)
 
-基于小程序 `FileSystemManager` 的文件持久化封装，支持写入 / 读取 / 检查 / 删除。微信自动走 `getFileSystemManager` + `wx.env.USER_DATA_PATH`，支付宝自动走 `my.getFileSystemManager` + `my.env.USER_DATA_PATH`。
+基于小程序 `FileSystemManager` 的文件持久化封装，支持写入 / 读取 / 检查 / 删除 / 路径拼接。微信自动走 `getFileSystemManager` + `wx.env.USER_DATA_PATH`，支付宝自动走 `my.getFileSystemManager` + `my.env.USER_DATA_PATH`。
 
 ```ts
 import { file } from 'l-js-fn/uniapp';
 
-// 写入文件（对象自动 JSON 序列化）
-await file.write('user.json', { name: 'John', age: 20 });
-await file.write('note.txt', '纯文本内容');
-
-// 读取文件（JSON 内容自动反序列化）
-const user = await file.read('user.json');      // { name: 'John', age: 20 }
-const text = await file.read('note.txt', { json: false }); // 纯文本
-
-// 检查文件是否存在
-const exists = await file.access('user.json');       // true | false
-
-// 删除文件
-await file.remove('user.json');
-
-// 获取完整路径（USER_DATA_PATH/文件名）
-const path = file.getPath('a.json');                // 平台相关路径
+await file.write('user.json', { name: 'John', age: 20 });  // 写入（对象自动序列化）
+const user = await file.read('user.json');                 // 读取（自动反序列化）
+const exists = await file.access('user.json');             // 检查存在
+await file.remove('user.json');                            // 删除
+const path = file.getPath('a.json');                       // 完整路径
 ```
 
-> **说明：** `read` 默认 `json: true`，读取时优先尝试 `JSON.parse`，失败自动降级返回原始字符串。`write` 同理，传入对象时自动序列化。H5 / App 端若平台不支持文件系统，相关方法会 reject 并提示。
+> 完整用法（参数表格、多语言示例）见 [文件系统 (File)](/guide/uniapp-file)。
 
 ---
 

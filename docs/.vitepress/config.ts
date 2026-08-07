@@ -71,6 +71,7 @@ export default defineConfig({
 				text: 'uniapp 小程序工具集',
 				items: [
 					{ text: '基础功能 (API)', link: '/guide/uniapp' },
+					{ text: '文件系统 (File)', link: '/guide/uniapp-file' },
 					{ text: '网络请求 (Request)', link: '/guide/uniapp-request' },
 				],
 			},
