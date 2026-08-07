@@ -1,10 +1,10 @@
 # uniapp — 小程序工具集
 
-uniapp 小程序工具集，封装了平台适配层、环境信息、弹窗、权限授权、路由导航、本地存储、Toast 提示、网络请求等常用功能，**一份代码同时兼容微信和支付宝小程序**。
+uniapp 小程序工具集，封装了平台适配层、环境信息、弹窗、权限授权、路由导航、本地存储、Toast 提示、文件系统、网络请求等常用功能，**一份代码同时兼容微信和支付宝小程序**。
 
 底层采用**策略模式（平台适配器）**，内置 `wechat` / `alipay` / `h5` / `app` 四个平台适配器，并支持通过 `registerAdapter()` 扩展任意新平台（抖音、快手等）。
 
-> 网络请求模块的详细用法请参考 [网络请求 (Request)](/guide/uniapp-request)。
+> 文件系统模块详细用法请参考 [文件系统 (File)](/guide/uniapp-file)，网络请求模块详细用法请参考 [网络请求 (Request)](/guide/uniapp-request)。
 
 **导入方式：**
 
@@ -277,25 +277,7 @@ storage.clear();
 
 ---
 
-## 7. 文件系统 (file)
-
-基于小程序 `FileSystemManager` 的文件持久化封装，支持写入 / 读取 / 检查 / 删除 / 路径拼接。微信自动走 `getFileSystemManager` + `wx.env.USER_DATA_PATH`，支付宝自动走 `my.getFileSystemManager` + `my.env.USER_DATA_PATH`。
-
-```ts
-import { file } from 'l-js-fn/uniapp';
-
-await file.write('user.json', { name: 'John', age: 20 });  // 写入（对象自动序列化）
-const user = await file.read('user.json');                 // 读取（自动反序列化）
-const exists = await file.access('user.json');             // 检查存在
-await file.remove('user.json');                            // 删除
-const path = file.getPath('a.json');                       // 完整路径
-```
-
-> 完整用法（参数表格、多语言示例）见 [文件系统 (File)](/guide/uniapp-file)。
-
----
-
-## 8. Toast 提示 (toast)
+## 7. Toast 提示 (toast)
 
 
 ```ts
@@ -321,39 +303,7 @@ toast.hideLoading();
 
 ---
 
-## 9. 网络请求 (request)
-
-```ts
-import { request } from 'l-js-fn/uniapp';
-
-// 全局配置
-request.setConfig({ baseURL: 'https://api.example.com', timeout: 30000 });
-
-// 请求方法
-const user = await request.get('/user', { params: { id: 1 } });
-const res = await request.post('/user', { name: 'John' });
-await request.put('/user/1', { name: 'Jane' });
-await request.delete('/user/1');
-
-// 重试 & Loading
-const data = await request.get('/api', { retry: 3, retryDelay: 1000, loading: true });
-
-// 拦截器
-request.beforeRequest((config) => {
-  config.header.Authorization = 'Bearer ' + getToken();
-  return config;
-});
-request.afterResponse((response) => {
-  if (response.data.code !== 0) return Promise.reject(response.data);
-  return response;
-});
-```
-
-> 完整用法（上传/下载、拦截器链、Loading 并发控制）见 [网络请求 (Request)](/guide/uniapp-request)。
-
----
-
-## 10. 扩展新平台
+## 8. 扩展新平台
 
 以抖音小程序为例，只需实现 `PlatformAdapter` 接口并注册，**无需修改任何模块源码**。以下分别展示 TypeScript、JavaScript (ESM)、JavaScript (CJS) 三种写法。
 
@@ -470,7 +420,7 @@ registerAdapter(douyinAdapter);
 
 ---
 
-## 11. 平台差异速查表
+## 9. 平台差异速查表
 
 | 能力 | 微信 (wechat) | 支付宝 (alipay) | H5 / App |
 |------|---------------|-----------------|----------|
@@ -485,7 +435,7 @@ registerAdapter(douyinAdapter);
 
 ---
 
-## 12. 平台适配器接口参考
+## 10. 平台适配器接口参考
 
 ```ts
 interface PlatformAdapter {
