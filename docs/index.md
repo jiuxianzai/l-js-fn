@@ -4,7 +4,7 @@ layout: home
 hero:
   name: "l-js-fn"
   text: "轻量级 JavaScript 工具函数库"
-  tagline: 160+ 方法 · 核心零依赖 · 模块化 · TypeScript · Tree-shaking
+  tagline: 170+ 方法 · 核心零依赖 · 模块化 · TypeScript · Tree-shaking
   image:
     src: /logo.svg
     alt: l-js-fn
@@ -17,7 +17,7 @@ hero:
       link: https://github.com/jiuxianzai/l-js-fn
 
 features:
-  - title: 160+ 工具函数
+  - title: 170+ 工具函数
     details: 覆盖类型判断、数组、对象、字符串、日期、数字、URL、颜色、编码、加密等场景。
   - title: 轻量级
     details: 核心零依赖，打包体积小，按需引入（SM2/SM4 可选依赖 sm-crypto）。
@@ -35,7 +35,7 @@ features:
   <a href="https://www.npmjs.com/package/l-js-fn"><img src="https://img.shields.io/npm/v/l-js-fn?color=cb3837&logo=npm" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/l-js-fn"><img src="https://img.shields.io/npm/dm/l-js-fn?color=blue" alt="downloads"></a>
   <a href="https://github.com/jiuxianzai/l-js-fn/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/l-js-fn?color=green" alt="license"></a>
-  <img src="https://img.shields.io/badge/functions-160+-blueviolet" alt="functions">
+  <img src="https://img.shields.io/badge/functions-173-blueviolet" alt="functions">
   <img src="https://img.shields.io/badge/tests-1842%2F1842_passed-brightgreen" alt="tests">
   <img src="https://img.shields.io/badge/stmts-98.8%25-brightgreen" alt="statements">
   <img src="https://img.shields.io/badge/branches-95.7%25-brightgreen" alt="branches">
