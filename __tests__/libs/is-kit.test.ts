@@ -14,6 +14,7 @@ import {
 	isURL,
 	isIdCard,
 	isPhoneNumber,
+	isBankCard,
 	isEqual,
 	isHttp,
 	isHttps,
@@ -418,6 +419,32 @@ describe('is-kit - 类型判断工具', () => {
 			expect(isPhoneNumber(null as any)).toBe(false);
 			expect(isPhoneNumber(undefined as any)).toBe(false);
 			expect(isPhoneNumber(13800138000 as any)).toBe(true); // 数字类型
+		});
+	});
+
+	// ==================== isBankCard 测试 ====================
+	describe('isBankCard - 银行卡号验证', () => {
+		it('应该验证有效银行卡号', () => {
+			expect(isBankCard('6222021234567890')).toBe(true); // 16位
+			expect(isBankCard('6222021234567890123')).toBe(true); // 19位
+			expect(isBankCard('5201401045563583')).toBe(true); // 16位
+			expect(isBankCard('6217003810020650778')).toBe(true); // 19位
+		});
+
+		it('应该拒绝无效银行卡号', () => {
+			expect(isBankCard('622202123456789')).toBe(false); // 15位
+			expect(isBankCard('62220212345678901234')).toBe(false); // 20位
+			expect(isBankCard('06222021234567890')).toBe(false); // 首位为0
+			expect(isBankCard('622202123456789a')).toBe(false); // 包含字母
+			expect(isBankCard('6222 0212 3456 7890')).toBe(false); // 包含空格
+			expect(isBankCard('')).toBe(false); // 空字符串
+		});
+
+		it('应该处理边界输入', () => {
+			expect(isBankCard(null as any)).toBe(false);
+			expect(isBankCard(undefined as any)).toBe(false);
+			expect(isBankCard(6222021234567890 as any)).toBe(true); // 数字类型
+			expect(isBankCard(' 6222021234567890 ')).toBe(true); // 首尾空格
 		});
 	});
 

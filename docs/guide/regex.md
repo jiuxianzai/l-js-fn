@@ -37,6 +37,7 @@ const { REGEXP } = require('l-js-fn/regex');
 | `EN_NUM_UNDER_LINE` | `/^\w+$/` | 英文+数字+下划线 | `'abc_123'` |
 | `NO_SPECIAL` | `/^[\u4e00-\u9fa5A-Za-z0-9]+$/` | 无特殊字符（中英文数字） | `'中文abc123'` |
 | `MONEY` | `/^(0\|[1-9]\d*)(\.\d{1,2})?$/` | 金额（最多两位小数） | `'123.45'` |
+| `BANK_CARD` | `/^[1-9]\d{15,18}$/` | 银行卡号（16-19位，首位非0） | `'6222021234567890'` |
 
 ## 2. 使用示例
 
@@ -57,6 +58,10 @@ REGEXP.EMAIL.test('invalid-email');      // false
 // 身份证验证
 REGEXP.ID_CARD.test('110101199001011234'); // true
 REGEXP.ID_CARD.test('123456789012345678'); // false
+
+// 银行卡号验证
+REGEXP.BANK_CARD.test('6222021234567890'); // true
+REGEXP.BANK_CARD.test('622202123456789');  // false
 ```
 
 ```js [JavaScript (ESM)]
@@ -73,6 +78,10 @@ REGEXP.EMAIL.test('invalid-email');      // false
 // 身份证验证
 REGEXP.ID_CARD.test('110101199001011234'); // true
 REGEXP.ID_CARD.test('123456789012345678'); // false
+
+// 银行卡号验证
+REGEXP.BANK_CARD.test('6222021234567890'); // true
+REGEXP.BANK_CARD.test('622202123456789');  // false
 ```
 
 ```js [JavaScript (CJS)]
@@ -89,6 +98,10 @@ REGEXP.EMAIL.test('invalid-email');      // false
 // 身份证验证
 REGEXP.ID_CARD.test('110101199001011234'); // true
 REGEXP.ID_CARD.test('123456789012345678'); // false
+
+// 银行卡号验证
+REGEXP.BANK_CARD.test('6222021234567890'); // true
+REGEXP.BANK_CARD.test('622202123456789');  // false
 ```
 :::
 

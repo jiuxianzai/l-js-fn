@@ -418,6 +418,33 @@ describe('regex - 正则表达式常量', () => {
 		});
 	});
 
+	// ==================== REGEXP.BANK_CARD 测试 ====================
+	describe('REGEXP.BANK_CARD - 银行卡号正则', () => {
+		const validBankCards = [
+			'6222021234567890', // 16位
+			'6222021234567890123', // 19位
+			'5201401045563583', // 16位
+			'6217003810020650778' // 19位
+		];
+
+		it.each(validBankCards)('应该验证有效银行卡号: %s', (card) => {
+			expect(REGEXP.BANK_CARD.test(card)).toBe(true);
+		});
+
+		const invalidBankCards = [
+			'622202123456789', // 15位
+			'62220212345678901234', // 20位
+			'06222021234567890', // 首位为0
+			'622202123456789a', // 包含字母
+			'6222 0212 3456 7890', // 包含空格
+			'' // 空字符串
+		];
+
+		it.each(invalidBankCards)('应该拒绝无效银行卡号: %s', (card) => {
+			expect(REGEXP.BANK_CARD.test(card)).toBe(false);
+		});
+	});
+
 	// ==================== REGEXP 引用检查 ====================
 	describe('REGEXP - 常量引用检查', () => {
 		it('应该保持可被导出', () => {
@@ -458,6 +485,10 @@ describe('regex - 正则表达式常量', () => {
 
 		it('应该保持 TAX_ID 可用', () => {
 			expect(REGEXP.TAX_ID).toBeDefined();
+		});
+
+		it('应该保持 BANK_CARD 可用', () => {
+			expect(REGEXP.BANK_CARD).toBeDefined();
 		});
 	});
 });

@@ -74,6 +74,7 @@ const { scrollTop } = require('l-js-fn/bom');
 | `isHttps(value)` | 是否 https 链接 | `(value: string) => boolean` |
 | `isIdCard(idCard)` | 是否有效中国大陆身份证 | `(idCard: string) => boolean` |
 | `isPhoneNumber(phone)` | 是否有效手机号 | `(phone: string) => boolean` |
+| `isBankCard(bankCard)` | 是否有效银行卡号（16-19 位） | `(bankCard: string) => boolean` |
 | `isImage(filename)` | 是否图片文件 | `(filename: string) => boolean` |
 | `isEqual(value, other)` | 深度比较（支持 NaN） | `<T>(value: T, other: T) => boolean` |
 | `isInArray(arr, value)` | 地址数组检查（忽略 ? 查询参数） | `(arr: string[], value: string) => boolean` |
@@ -337,7 +338,7 @@ Result.fail(message?, data?); // 创建失败结果（注意：message 是第一
 | ws | `l-js-fn/ws` | WebSocketManager（连接/心跳/重连） |
 | polling | `l-js-fn/polling` | Polling 轮询工具（start/stop/running） |
 | event-bus | `l-js-fn/event-bus` | EventBus（on/once/off/emit/clear/listenerCount）, eventBus（全局单例，支持泛型类型安全） |
-| regex | `l-js-fn/regex` | REGEXP 正则常量（PHONE/EMAIL/URL/ID_CARD/CHINESE/MONEY/IPV4/HEX_COLOR/POSTAL_CODE/PLATE_NUMBER/DECIMAL/DATE/TIME/DOMAIN/TAX_ID） |
+| regex | `l-js-fn/regex` | REGEXP 正则常量（PHONE/EMAIL/URL/ID_CARD/CHINESE/MONEY/IPV4/HEX_COLOR/POSTAL_CODE/PLATE_NUMBER/DECIMAL/DATE/TIME/DOMAIN/TAX_ID/BANK_CARD） |
 | config | `l-js-fn/config` | DATE_FORMAT（FULL/DATE/TIME）, HTTP_STATUS |
 | encode | `l-js-fn/encode` | base64Encode, base64Decode, escapeHTML, unescapeHTML, urlEncode, urlDecode, querystringify, parseQueryString |
 | file | `l-js-fn/file` | formatFileSize, getExtension, getFileName, downloadFile, readAsText, readAsDataURL, readAsArrayBuffer, isImage, isVideo, isAudio, isPDF |
@@ -400,6 +401,7 @@ import { REGEXP } from 'l-js-fn/regex';
 
 REGEXP.PHONE.test('13800138000'); // true
 REGEXP.EMAIL.test('test@example.com'); // true
+REGEXP.BANK_CARD.test('6222021234567890'); // true
 ```
 
 ```typescript

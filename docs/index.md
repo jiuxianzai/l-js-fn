@@ -35,8 +35,8 @@ features:
   <a href="https://www.npmjs.com/package/l-js-fn"><img src="https://img.shields.io/npm/v/l-js-fn?color=cb3837&logo=npm" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/l-js-fn"><img src="https://img.shields.io/npm/dm/l-js-fn?color=blue" alt="downloads"></a>
   <a href="https://github.com/jiuxianzai/l-js-fn/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/l-js-fn?color=green" alt="license"></a>
-  <img src="https://img.shields.io/badge/functions-173-blueviolet" alt="functions">
-  <img src="https://img.shields.io/badge/tests-1842%2F1842_passed-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/functions-174-blueviolet" alt="functions">
+  <img src="https://img.shields.io/badge/tests-1856%2F1856_passed-brightgreen" alt="tests">
   <img src="https://img.shields.io/badge/stmts-98.8%25-brightgreen" alt="statements">
   <img src="https://img.shields.io/badge/branches-95.7%25-brightgreen" alt="branches">
   <img src="https://img.shields.io/badge/lines-99.7%25-brightgreen" alt="lines">
@@ -92,7 +92,7 @@ import { Polling } from 'l-js-fn/polling';
 | [storage](/guide/storage) | 本地存储（localStorage/sessionStorage，支持过期时间） |
 | [polling](/guide/polling) | 轮询工具（异步方法定时执行） |
 | [ipc](/guide/ipc) | IPC 通信（H5 与 Iframe 双向通信） |
-| [regex](/guide/regex) | 正则常量（手机号、邮箱、身份证、URL 等） |
+| [regex](/guide/regex) | 正则常量（手机号、邮箱、身份证、银行卡号、URL 等） |
 | [config](/guide/config) | 配置常量（日期格式、HTTP 状态码） |
 | [encode](/guide/encode) | 编码解码（Base64、HTML 转义、URL 编码等） |
 | [file](/guide/file) | 文件处理（大小格式化、类型判断、下载、读取等） |
@@ -110,7 +110,7 @@ import { Polling } from 'l-js-fn/polling';
 | 指标 | 数值 |
 |------|------|
 | 测试套件 | 33 passed |
-| 测试用例 | 1842 passed / 1842 total |
+| 测试用例 | 1856 passed / 1856 total |
 | 语句覆盖率 | 98.81% |
 | 分支覆盖率 | 95.67% |
 | 函数覆盖率 | 100% |
@@ -121,7 +121,7 @@ import { Polling } from 'l-js-fn/polling';
 | 模块 | 用例数 | 通过率 |
 |------|--------|--------|
 | color (颜色处理) | 31 | 100% |
-| is-kit (类型判断) | 85 | 100% |
+| is-kit (类型判断) | 88 | 100% |
 | array-kit (数组操作) | 151 | 100% |
 | string-kit (字符串处理) | 97 | 100% |
 | object-kit (对象操作) | 67 | 100% |
@@ -139,7 +139,7 @@ import { Polling } from 'l-js-fn/polling';
 | storage (本地存储) | 32 | 100% |
 | polling (轮询) | 16 | 100% |
 | ipc (IPC 通信) | 49 | 100% |
-| regex (正则表达式) | 173 | 100% |
+| regex (正则表达式) | 184 | 100% |
 | config (配置常量) | 21 | 100% |
 | encode (编码/解码) | 56 | 100% |
 | file (文件处理) | 62 | 100% |

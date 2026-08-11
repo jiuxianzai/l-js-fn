@@ -5,7 +5,7 @@
 ![npm version](https://badge.fury.io/js/l-js-fn.svg)
 ![downloads](https://img.shields.io/npm/dm/l-js-fn)
 ![license](https://img.shields.io/npm/l/l-js-fn)
-![test pass](https://img.shields.io/badge/tests-1842%2F1842%20passed-brightgreen)
+![test pass](https://img.shields.io/badge/tests-1856%2F1856%20passed-brightgreen)
 ![coverage](https://img.shields.io/badge/coverage-99%25-brightgreen)
 ![functions](https://img.shields.io/badge/functions-100%25-brightgreen)
 ![branches](https://img.shields.io/badge/branches-96%25-brightgreen)
@@ -122,6 +122,7 @@ import {
 	isURL,
 	isIdCard,
 	isPhoneNumber,
+	isBankCard,
 	isEqual,
 	validateParams,
 } from 'l-js-fn';
@@ -144,6 +145,9 @@ isPhoneNumber('13800138000'); // true
 
 // 身份证验证
 isIdCard('110101199001011234'); // true
+
+// 银行卡号验证
+isBankCard('6222021234567890'); // true
 
 // 深度比较
 isEqual({ a: 1 }, { a: 1 }); // true
@@ -678,8 +682,10 @@ REGEXP.DOMAIN.test('example.com'); // true
 
 // 统一社会信用代码
 REGEXP.TAX_ID.test('91110108551111111A'); // true
-```
 
+// 银行卡号
+REGEXP.BANK_CARD.test('6222021234567890'); // true
+```
 ### 配置常量 (config)
 
 ```typescript
@@ -1147,7 +1153,7 @@ const { env, router } = require('l-js-fn/uniapp');
 | 指标       | 数值                     |
 | ---------- | ------------------------ |
 | 测试套件   | 33 passed                |
-| 测试用例   | 1842 passed / 1842 total |
+| 测试用例   | 1856 passed / 1856 total |
 | 通过率     | 100%                     |
 | 语句覆盖率 | 98.81%                   |
 | 分支覆盖率 | 95.67%                   |
@@ -1159,7 +1165,7 @@ const { env, router } = require('l-js-fn/uniapp');
 | 模块                    | 用例数 | 通过 | 失败 | 通过率 |
 | ----------------------- | ------ | ---- | ---- | ------ |
 | color (颜色处理)        | 31     | 31   | 0    | 100%   |
-| is-kit (类型判断)       | 85     | 85   | 0    | 100%   |
+| is-kit (类型判断)       | 88     | 88   | 0    | 100%   |
 | array-kit (数组操作)    | 151    | 151  | 0    | 100%   |
 | string-kit (字符串处理) | 97     | 97   | 0    | 100%   |
 | object-kit (对象操作)   | 67     | 67   | 0    | 100%   |
@@ -1178,7 +1184,7 @@ const { env, router } = require('l-js-fn/uniapp');
 | storage (本地存储)   | 32     | 32   | 0    | 100%   |
 | polling (轮询)       | 16     | 16   | 0    | 100%   |
 | ipc (IPC 通信)       | 49     | 49   | 0    | 100%   |
-| regex (正则表达式)   | 173    | 173  | 0    | 100%   |
+| regex (正则表达式)   | 184    | 184  | 0    | 100%   |
 | config (配置常量)    | 21     | 21   | 0    | 100%   |
 | encode (编码/解码)   | 56     | 56   | 0    | 100%   |
 | file (文件处理)      | 62     | 62   | 0    | 100%   |

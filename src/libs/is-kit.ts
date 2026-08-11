@@ -174,6 +174,21 @@ export function isPhoneNumber(phone: string): boolean {
 }
 
 /**
+ * 判断是否为合法银行卡号（中国大陆，16-19 位，首位非 0）
+ * @param bankCard - 待校验的银行卡号
+ * @returns {boolean} 是否为合法银行卡号
+ * @example
+ * isBankCard('6222021234567890') // true
+ * isBankCard('12345') // false
+ */
+export function isBankCard(bankCard: string): boolean {
+	if (!bankCard) return false;
+	const str = String(bankCard).trim();
+	if (/\s/.test(str)) return false;
+	return REGEXP.BANK_CARD.test(str);
+}
+
+/**
  * 深度比较两个值是否相等（支持循环引用检测、Date/RegExp/Map/Set/Symbol）
  */
 export function isEqual<T>(value: T, other: T): boolean {

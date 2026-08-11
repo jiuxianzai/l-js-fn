@@ -695,3 +695,45 @@ validateParams(['name', 'age'], { name: 'John', age: 20 }); // null
 validateParams(['name'], { age: 20 }); // 'name'
 ```
 :::
+
+## 16. isBankCard 银行卡号验证
+
+判断是否为合法的中国大陆银行卡号（16-19 位，首位非 0）。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| bankCard | `string` | 是 | 银行卡号 |
+
+**返回值：** `boolean`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isBankCard } from 'l-js-fn';
+
+isBankCard('6222021234567890');      // true（16位）
+isBankCard('6217003810020650778');   // true（19位）
+isBankCard('622202123456789');       // false（15位）
+isBankCard('06222021234567890');     // false（首位为0）
+isBankCard('6222 0212 3456 7890');   // false（含空格）
+```
+
+```js [JavaScript (ESM)]
+import { isBankCard } from 'l-js-fn';
+
+isBankCard('6222021234567890');      // true（16位）
+isBankCard('6217003810020650778');   // true（19位）
+isBankCard('622202123456789');       // false（15位）
+```
+
+```js [JavaScript (CJS)]
+const { isBankCard } = require('l-js-fn');
+
+isBankCard('6222021234567890');      // true（16位）
+isBankCard('6217003810020650778');   // true（19位）
+isBankCard('622202123456789');       // false（15位）
+```
+:::
