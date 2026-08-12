@@ -90,7 +90,6 @@ export class WebSocketManager {
 
   /** 收到消息 */
   private onWebSocketMessage(event: MessageEvent) {
-    console.log('接收消息:', event.data);
     if (this.onMessageCallback) {
       this.onMessageCallback(event.data);
     }

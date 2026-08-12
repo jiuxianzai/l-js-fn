@@ -81,8 +81,9 @@ npm run publish:pre    # prerelease (beta)
 
 ## 构建配置要点
 
-- **tsup** (`tsup.config.ts`): 生成 ESM + CJS 双格式，自动 `minify` 和 `treeshake`
-- **构建时自动移除** `console` 和 `debugger`（`esbuildOptions.drop`）
+- **tsup** (`tsup.config.ts`): 生成 ESM + CJS 双格式，自动 `treeshake`
+- **ESM 产物不 `minify`**：保留 `/* @__PURE__ */` 注解，交由消费方打包器树摇与压缩（lodash-es 同款做法）；CJS 产物 `minify` 单文件压缩
+- **不 `drop` console**：库内有意的 `console.warn`/`console.error` 诊断日志（如 `setCookie` 环境不支持提示）需保留，且部分测试断言了 console 输出；仅避免在源码中写会泄漏业务数据的 `console.log`
 - **类型声明** 只生成在 ESM 配置中，CJS 配置关闭 `dts` 避免重复
 - `package.json` 中 `"type": "module"`，测试用 Jest + ts-jest 处理
 
