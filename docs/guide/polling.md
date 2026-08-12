@@ -42,7 +42,7 @@ const { Polling } = require('l-js-fn/polling');
 
 ::: code-group
 ```ts [TypeScript]
-import { Polling } from 'l-js-fn/polling';
+import { Polling } from 'l-js-fn';
 
 const polling = new Polling();
 
@@ -58,7 +58,7 @@ polling.start(
 ```
 
 ```js [JavaScript (ESM)]
-import { Polling } from 'l-js-fn/polling';
+import { Polling } from 'l-js-fn';
 
 const polling = new Polling();
 
@@ -118,7 +118,7 @@ console.log(polling.running); // true | false
 
 ::: code-group
 ```ts [TypeScript]
-import { Polling } from 'l-js-fn/polling';
+import { Polling } from 'l-js-fn';
 
 const polling = new Polling();
 
@@ -147,7 +147,7 @@ setTimeout(() => {
 ```
 
 ```js [JavaScript (ESM)]
-import { Polling } from 'l-js-fn/polling';
+import { Polling } from 'l-js-fn';
 
 const polling = new Polling();
 

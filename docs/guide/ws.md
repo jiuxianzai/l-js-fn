@@ -38,7 +38,7 @@ WebSocket 管理类。
 
 ::: code-group
 ```ts [TypeScript]
-import { WebSocketManager } from 'l-js-fn/ws';
+import { WebSocketManager } from 'l-js-fn';
 
 const ws = new WebSocketManager(
   'ws://localhost:8080',
@@ -52,7 +52,7 @@ const ws = new WebSocketManager(
 ```
 
 ```js [JavaScript (ESM)]
-import { WebSocketManager } from 'l-js-fn/ws';
+import { WebSocketManager } from 'l-js-fn';
 
 const ws = new WebSocketManager(
   'ws://localhost:8080',
@@ -187,7 +187,7 @@ interface ErrorPayload {
 
 ::: code-group
 ```ts [TypeScript]
-import { WebSocketManager } from 'l-js-fn/ws';
+import { WebSocketManager } from 'l-js-fn';
 
 const ws = new WebSocketManager(
   'wss://api.example.com/ws',
@@ -218,7 +218,7 @@ window.addEventListener('beforeunload', () => ws.close());
 ```
 
 ```js [JavaScript (ESM)]
-import { WebSocketManager } from 'l-js-fn/ws';
+import { WebSocketManager } from 'l-js-fn';
 
 const ws = new WebSocketManager(
   'wss://api.example.com/ws',

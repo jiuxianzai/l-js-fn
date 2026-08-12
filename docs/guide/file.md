@@ -79,7 +79,7 @@ interface FileSizeInfo {
 
 ::: code-group
 ```ts [TypeScript]
-import { formatFileSize } from 'l-js-fn/file';
+import { formatFileSize } from 'l-js-fn';
 
 formatFileSize(1024);
 // { formatted: '1 KB', value: 1, unit: 'KB' }
@@ -95,7 +95,7 @@ formatFileSize(1000, { base: 1000 });
 ```
 
 ```js [JavaScript (ESM)]
-import { formatFileSize } from 'l-js-fn/file';
+import { formatFileSize } from 'l-js-fn';
 
 formatFileSize(1024);
 // { formatted: '1 KB', value: 1, unit: 'KB' }
@@ -143,7 +143,7 @@ formatFileSize(1000, { base: 1000 });
 
 ::: code-group
 ```ts [TypeScript]
-import { getExtension } from 'l-js-fn/file';
+import { getExtension } from 'l-js-fn';
 
 getExtension('image.png');          // '.png'
 getExtension('/path/to/file.txt');  // '.txt'
@@ -152,7 +152,7 @@ getExtension('.gitignore');         // '.gitignore'
 ```
 
 ```js [JavaScript (ESM)]
-import { getExtension } from 'l-js-fn/file';
+import { getExtension } from 'l-js-fn';
 
 getExtension('image.png');          // '.png'
 getExtension('/path/to/file.txt');  // '.txt'
@@ -186,14 +186,14 @@ getExtension('.gitignore');         // '.gitignore'
 
 ::: code-group
 ```ts [TypeScript]
-import { getFileName } from 'l-js-fn/file';
+import { getFileName } from 'l-js-fn';
 
 getFileName('/path/to/image.png');  // 'image'
 getFileName('document.pdf');        // 'document'
 ```
 
 ```js [JavaScript (ESM)]
-import { getFileName } from 'l-js-fn/file';
+import { getFileName } from 'l-js-fn';
 
 getFileName('/path/to/image.png');  // 'image'
 getFileName('document.pdf');        // 'document'
@@ -224,7 +224,7 @@ getFileName('document.pdf');        // 'document'
 
 ::: code-group
 ```ts [TypeScript]
-import { downloadFile } from 'l-js-fn/file';
+import { downloadFile } from 'l-js-fn';
 
 // 下载文本文件
 const blob = new Blob(['Hello World'], { type: 'text/plain' });
@@ -237,7 +237,7 @@ downloadFile(jsonBlob, 'data.json');
 ```
 
 ```js [JavaScript (ESM)]
-import { downloadFile } from 'l-js-fn/file';
+import { downloadFile } from 'l-js-fn';
 
 // 下载文本文件
 const blob = new Blob(['Hello World'], { type: 'text/plain' });
@@ -280,7 +280,7 @@ downloadFile(jsonBlob, 'data.json');
 
 ::: code-group
 ```ts [TypeScript]
-import { readAsText } from 'l-js-fn/file';
+import { readAsText } from 'l-js-fn';
 
 const input = document.querySelector('input[type="file"]');
 input.addEventListener('change', async (e) => {
@@ -291,7 +291,7 @@ input.addEventListener('change', async (e) => {
 ```
 
 ```js [JavaScript (ESM)]
-import { readAsText } from 'l-js-fn/file';
+import { readAsText } from 'l-js-fn';
 
 const input = document.querySelector('input[type="file"]');
 input.addEventListener('change', async (e) => {
@@ -329,7 +329,7 @@ input.addEventListener('change', async (e) => {
 
 ::: code-group
 ```ts [TypeScript]
-import { readAsDataURL } from 'l-js-fn/file';
+import { readAsDataURL } from 'l-js-fn';
 
 const input = document.querySelector('input[type="file"]');
 input.addEventListener('change', async (e) => {
@@ -340,7 +340,7 @@ input.addEventListener('change', async (e) => {
 ```
 
 ```js [JavaScript (ESM)]
-import { readAsDataURL } from 'l-js-fn/file';
+import { readAsDataURL } from 'l-js-fn';
 
 const input = document.querySelector('input[type="file"]');
 input.addEventListener('change', async (e) => {
@@ -378,7 +378,7 @@ input.addEventListener('change', async (e) => {
 
 ::: code-group
 ```ts [TypeScript]
-import { readAsArrayBuffer } from 'l-js-fn/file';
+import { readAsArrayBuffer } from 'l-js-fn';
 
 const input = document.querySelector('input[type="file"]');
 input.addEventListener('change', async (e) => {
@@ -389,7 +389,7 @@ input.addEventListener('change', async (e) => {
 ```
 
 ```js [JavaScript (ESM)]
-import { readAsArrayBuffer } from 'l-js-fn/file';
+import { readAsArrayBuffer } from 'l-js-fn';
 
 const input = document.querySelector('input[type="file"]');
 input.addEventListener('change', async (e) => {
@@ -431,7 +431,7 @@ input.addEventListener('change', async (e) => {
 
 ::: code-group
 ```ts [TypeScript]
-import { isImage } from 'l-js-fn/file';
+import { isImage } from 'l-js-fn';
 
 isImage('photo.jpg');    // true
 isImage('image.png');    // true
@@ -439,7 +439,7 @@ isImage('document.pdf'); // false
 ```
 
 ```js [JavaScript (ESM)]
-import { isImage } from 'l-js-fn/file';
+import { isImage } from 'l-js-fn';
 
 isImage('photo.jpg');    // true
 isImage('image.png');    // true
@@ -473,7 +473,7 @@ isImage('document.pdf'); // false
 
 ::: code-group
 ```ts [TypeScript]
-import { isVideo } from 'l-js-fn/file';
+import { isVideo } from 'l-js-fn';
 
 isVideo('movie.mp4');   // true
 isVideo('clip.avi');    // true
@@ -481,7 +481,7 @@ isVideo('audio.mp3');   // false
 ```
 
 ```js [JavaScript (ESM)]
-import { isVideo } from 'l-js-fn/file';
+import { isVideo } from 'l-js-fn';
 
 isVideo('movie.mp4');   // true
 isVideo('clip.avi');    // true
@@ -515,7 +515,7 @@ isVideo('audio.mp3');   // false
 
 ::: code-group
 ```ts [TypeScript]
-import { isAudio } from 'l-js-fn/file';
+import { isAudio } from 'l-js-fn';
 
 isAudio('music.mp3');   // true
 isAudio('sound.wav');   // true
@@ -523,7 +523,7 @@ isVideo('video.mp4');   // false
 ```
 
 ```js [JavaScript (ESM)]
-import { isAudio } from 'l-js-fn/file';
+import { isAudio } from 'l-js-fn';
 
 isAudio('music.mp3');   // true
 isAudio('sound.wav');   // true
@@ -555,14 +555,14 @@ isVideo('video.mp4');   // false
 
 ::: code-group
 ```ts [TypeScript]
-import { isPDF } from 'l-js-fn/file';
+import { isPDF } from 'l-js-fn';
 
 isPDF('document.pdf');  // true
 isPDF('file.txt');      // false
 ```
 
 ```js [JavaScript (ESM)]
-import { isPDF } from 'l-js-fn/file';
+import { isPDF } from 'l-js-fn';
 
 isPDF('document.pdf');  // true
 isPDF('file.txt');      // false

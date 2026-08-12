@@ -35,7 +35,7 @@ features:
   <a href="https://www.npmjs.com/package/l-js-fn"><img src="https://img.shields.io/npm/v/l-js-fn?color=cb3837&logo=npm" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/l-js-fn"><img src="https://img.shields.io/npm/dm/l-js-fn?color=blue" alt="downloads"></a>
   <a href="https://github.com/jiuxianzai/l-js-fn/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/l-js-fn?color=green" alt="license"></a>
-  <img src="https://img.shields.io/badge/functions-174-blueviolet" alt="functions">
+  <img src="https://img.shields.io/badge/functions-183-blueviolet" alt="functions">
   <img src="https://img.shields.io/badge/tests-1856%2F1856_passed-brightgreen" alt="tests">
   <img src="https://img.shields.io/badge/stmts-98.8%25-brightgreen" alt="statements">
   <img src="https://img.shields.io/badge/branches-95.7%25-brightgreen" alt="branches">
@@ -115,6 +115,7 @@ import { md5, aesEncrypt, sm2Encrypt, sm4Encrypt } from 'l-js-fn/crypto';
 | [file](/guide/file) | 文件处理（大小格式化、类型判断、下载、读取等） |
 | [event-bus](/guide/event-bus) | 事件总线（子消息发布订阅、类型安全事件） |
 | [crypto](/guide/crypto) | 加密模块（MD5、AES、RSA、SM2、SM4 等） |
+| [uniapp](/guide/uniapp) | 小程序工具集（环境、路由、存储、Toast 等，主包中命名带 `uni` 前缀） |
 
 ## 单元测试
 

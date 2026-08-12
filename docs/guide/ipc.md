@@ -61,14 +61,14 @@ enum IPC_TYPE {
 
 ::: code-group
 ```ts [TypeScript]
-import { H5Bridge } from 'l-js-fn/ipc';
+import { H5Bridge } from 'l-js-fn';
 
 const iframe = document.getElementById('myIframe') as HTMLIFrameElement;
 const bridge = new H5Bridge(iframe);
 ```
 
 ```js [JavaScript (ESM)]
-import { H5Bridge } from 'l-js-fn/ipc';
+import { H5Bridge } from 'l-js-fn';
 
 const iframe = document.getElementById('myIframe') as HTMLIFrameElement;
 const bridge = new H5Bridge(iframe);
@@ -178,13 +178,13 @@ bridge.destroy();
 
 ::: code-group
 ```ts [TypeScript]
-import { IframeBridge } from 'l-js-fn/ipc';
+import { IframeBridge } from 'l-js-fn';
 
 const bridge = new IframeBridge();
 ```
 
 ```js [JavaScript (ESM)]
-import { IframeBridge } from 'l-js-fn/ipc';
+import { IframeBridge } from 'l-js-fn';
 
 const bridge = new IframeBridge();
 ```
@@ -290,7 +290,7 @@ bridge.destroy();
 
 ::: code-group
 ```ts [TypeScript]
-import { H5Bridge } from 'l-js-fn/ipc';
+import { H5Bridge } from 'l-js-fn';
 
 const iframe = document.getElementById('child') as HTMLIFrameElement;
 const bridge = new H5Bridge(iframe);
@@ -315,7 +315,7 @@ window.addEventListener('beforeunload', () => bridge.destroy());
 ```
 
 ```js [JavaScript (ESM)]
-import { H5Bridge } from 'l-js-fn/ipc';
+import { H5Bridge } from 'l-js-fn';
 
 const iframe = document.getElementById('child') as HTMLIFrameElement;
 const bridge = new H5Bridge(iframe);
@@ -369,7 +369,7 @@ window.addEventListener('beforeunload', () => bridge.destroy());
 
 ::: code-group
 ```ts [TypeScript]
-import { IframeBridge } from 'l-js-fn/ipc';
+import { IframeBridge } from 'l-js-fn';
 
 const bridge = new IframeBridge();
 
@@ -387,7 +387,7 @@ window.addEventListener('beforeunload', () => bridge.destroy());
 ```
 
 ```js [JavaScript (ESM)]
-import { IframeBridge } from 'l-js-fn/ipc';
+import { IframeBridge } from 'l-js-fn';
 
 const bridge = new IframeBridge();
 

@@ -36,7 +36,7 @@ const { DATE_FORMAT, HTTP_STATUS } = require('l-js-fn/config');
 
 ::: code-group
 ```ts [TypeScript]
-import { DATE_FORMAT } from 'l-js-fn/config';
+import { DATE_FORMAT } from 'l-js-fn';
 import { dateFormat } from 'l-js-fn';
 
 // 使用预定义格式
@@ -48,7 +48,7 @@ dateFormat(new Date(), DATE_FORMAT.YEAR_MONTH);// '2024-01'
 ```
 
 ```js [JavaScript (ESM)]
-import { DATE_FORMAT } from 'l-js-fn/config';
+import { DATE_FORMAT } from 'l-js-fn';
 import { dateFormat } from 'l-js-fn';
 
 // 使用预定义格式
@@ -89,7 +89,7 @@ dateFormat(new Date(), DATE_FORMAT.YEAR_MONTH);// '2024-01'
 
 ::: code-group
 ```ts [TypeScript]
-import { HTTP_STATUS } from 'l-js-fn/config';
+import { HTTP_STATUS } from 'l-js-fn';
 
 // 状态码判断
 function handleResponse(status: number) {
@@ -121,7 +121,7 @@ fetch('/api/data')
 ```
 
 ```js [JavaScript (ESM)]
-import { HTTP_STATUS } from 'l-js-fn/config';
+import { HTTP_STATUS } from 'l-js-fn';
 
 // 状态码判断
 function handleResponse(status: number) {

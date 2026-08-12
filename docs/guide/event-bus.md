@@ -49,7 +49,7 @@ new EventBus()
 
 ::: code-group
 ```typescript [TypeScript]
-import { EventBus } from 'l-js-fn/event-bus';
+import { EventBus } from 'l-js-fn';
 
 const bus = new EventBus();
 
@@ -77,7 +77,7 @@ bus.clear();
 ```
 
 ```javascript [JavaScript]
-import { EventBus } from 'l-js-fn/event-bus';
+import { EventBus } from 'l-js-fn';
 
 const bus = new EventBus();
 
@@ -109,7 +109,7 @@ bus.clear();
 
 ::: code-group
 ```typescript [TypeScript]
-import { EventBus } from 'l-js-fn/event-bus';
+import { EventBus } from 'l-js-fn';
 
 // 定义事件签名
 type AppEvents = {
@@ -136,7 +136,7 @@ bus.emit('score', 'Alice', 100);
 ```
 
 ```javascript [JavaScript]
-import { EventBus } from 'l-js-fn/event-bus';
+import { EventBus } from 'l-js-fn';
 
 // JS 中无需类型定义，直接使用
 const bus = new EventBus();
@@ -160,7 +160,7 @@ bus.emit('score', 'Alice', 100);
 
 ::: code-group
 ```typescript [TypeScript]
-import { eventBus } from 'l-js-fn/event-bus';
+import { eventBus } from 'l-js-fn';
 
 interface User {
   name: string;
@@ -175,7 +175,7 @@ eventBus.emit('userChanged', { name: 'Alice', role: 'admin' });
 ```
 
 ```javascript [JavaScript]
-import { eventBus } from 'l-js-fn/event-bus';
+import { eventBus } from 'l-js-fn';
 
 eventBus.on('userChanged', (user) => {
   updateUI(user);
@@ -305,7 +305,7 @@ onUnmounted(() => {
 
 ::: code-group
 ```typescript [TypeScript]
-import { eventBus } from 'l-js-fn/event-bus';
+import { eventBus } from 'l-js-fn';
 
 interface User {
   name: string;
@@ -325,7 +325,7 @@ eventBus.on('userLoggedIn', (user: User) => {
 ```
 
 ```javascript [JavaScript]
-import { eventBus } from 'l-js-fn/event-bus';
+import { eventBus } from 'l-js-fn';
 
 // A 页面：用户登录后广播
 async function login(username, password) {
@@ -344,7 +344,7 @@ eventBus.on('userLoggedIn', (user) => {
 
 ::: code-group
 ```typescript [TypeScript]
-import { eventBus } from 'l-js-fn/event-bus';
+import { eventBus } from 'l-js-fn';
 
 // 通知中心订阅
 eventBus.on('notification', (message: string) => {
@@ -357,7 +357,7 @@ eventBus.emit('notification', '网络连接异常，请检查');
 ```
 
 ```javascript [JavaScript]
-import { eventBus } from 'l-js-fn/event-bus';
+import { eventBus } from 'l-js-fn';
 
 // 通知中心订阅
 eventBus.on('notification', (message) => {
@@ -374,7 +374,7 @@ eventBus.emit('notification', '网络连接异常，请检查');
 
 ::: code-group
 ```typescript [TypeScript]
-import { EventBus } from 'l-js-fn/event-bus';
+import { EventBus } from 'l-js-fn';
 
 type PluginEvents = {
   beforeRequest: [url: string, options: RequestInit];
@@ -397,7 +397,7 @@ pluginBus.on('requestError', (url, err) => {
 ```
 
 ```javascript [JavaScript]
-import { EventBus } from 'l-js-fn/event-bus';
+import { EventBus } from 'l-js-fn';
 
 const pluginBus = new EventBus();
 
@@ -420,7 +420,7 @@ pluginBus.on('requestError', (url, err) => {
 
 ::: code-group
 ```typescript [TypeScript]
-import { EventBus } from 'l-js-fn/event-bus';
+import { EventBus } from 'l-js-fn';
 
 type AppEvents = { appReady: [config: Record<string, unknown>] };
 const bus = new EventBus<AppEvents>();
@@ -436,7 +436,7 @@ bus.emit('appReady', { version: '2.0' });
 ```
 
 ```javascript [JavaScript]
-import { EventBus } from 'l-js-fn/event-bus';
+import { EventBus } from 'l-js-fn';
 
 const bus = new EventBus();
 
@@ -520,7 +520,7 @@ workflow.emit('step1Done', 'raw-data');
 
 ::: code-group
 ```typescript [TypeScript]
-import { EventBus } from 'l-js-fn/event-bus';
+import { EventBus } from 'l-js-fn';
 
 const bus = new EventBus<{ dataUpdate: [payload: unknown] }>();
 
@@ -540,7 +540,7 @@ console.log(bus.listenerCount()); // 全局总监听数
 ```
 
 ```javascript [JavaScript]
-import { EventBus } from 'l-js-fn/event-bus';
+import { EventBus } from 'l-js-fn';
 
 const bus = new EventBus();
 

@@ -44,13 +44,13 @@ const {
 
 ::: code-group
 ```ts [TypeScript]
-import { scrollTop } from 'l-js-fn/bom';
+import { scrollTop } from 'l-js-fn';
 
 scrollTop();
 ```
 
 ```js [JavaScript (ESM)]
-import { scrollTop } from 'l-js-fn/bom';
+import { scrollTop } from 'l-js-fn';
 
 scrollTop();
 ```
@@ -72,13 +72,13 @@ scrollTop();
 
 ::: code-group
 ```ts [TypeScript]
-import { scrollToBottom } from 'l-js-fn/bom';
+import { scrollToBottom } from 'l-js-fn';
 
 scrollToBottom();
 ```
 
 ```js [JavaScript (ESM)]
-import { scrollToBottom } from 'l-js-fn/bom';
+import { scrollToBottom } from 'l-js-fn';
 
 scrollToBottom();
 ```
@@ -100,14 +100,14 @@ scrollToBottom();
 
 ::: code-group
 ```ts [TypeScript]
-import { getScrollPosition } from 'l-js-fn/bom';
+import { getScrollPosition } from 'l-js-fn';
 
 const pos = getScrollPosition();
 console.log(pos.x, pos.y); // 0, 100
 ```
 
 ```js [JavaScript (ESM)]
-import { getScrollPosition } from 'l-js-fn/bom';
+import { getScrollPosition } from 'l-js-fn';
 
 const pos = getScrollPosition();
 console.log(pos.x, pos.y); // 0, 100
@@ -138,14 +138,14 @@ console.log(pos.x, pos.y); // 0, 100
 
 ::: code-group
 ```ts [TypeScript]
-import { setScrollPosition } from 'l-js-fn/bom';
+import { setScrollPosition } from 'l-js-fn';
 
 setScrollPosition({ y: 500 });         // 直接跳转
 setScrollPosition({ y: 500 }, true);   // 平滑滚动
 ```
 
 ```js [JavaScript (ESM)]
-import { setScrollPosition } from 'l-js-fn/bom';
+import { setScrollPosition } from 'l-js-fn';
 
 setScrollPosition({ y: 500 });         // 直接跳转
 setScrollPosition({ y: 500 }, true);   // 平滑滚动
@@ -177,7 +177,7 @@ setScrollPosition({ y: 500 }, true);   // 平滑滚动
 
 ::: code-group
 ```ts [TypeScript]
-import { launchFullscreen } from 'l-js-fn/bom';
+import { launchFullscreen } from 'l-js-fn';
 
 const video = document.getElementById('video');
 const success = await launchFullscreen(video);
@@ -187,7 +187,7 @@ if (success) {
 ```
 
 ```js [JavaScript (ESM)]
-import { launchFullscreen } from 'l-js-fn/bom';
+import { launchFullscreen } from 'l-js-fn';
 
 const video = document.getElementById('video');
 const success = await launchFullscreen(video);
@@ -217,13 +217,13 @@ if (success) {
 
 ::: code-group
 ```ts [TypeScript]
-import { exitFullscreen } from 'l-js-fn/bom';
+import { exitFullscreen } from 'l-js-fn';
 
 await exitFullscreen();
 ```
 
 ```js [JavaScript (ESM)]
-import { exitFullscreen } from 'l-js-fn/bom';
+import { exitFullscreen } from 'l-js-fn';
 
 await exitFullscreen();
 ```
@@ -253,13 +253,13 @@ await exitFullscreen();
 
 ::: code-group
 ```ts [TypeScript]
-import { copyToClipboard } from 'l-js-fn/bom';
+import { copyToClipboard } from 'l-js-fn';
 
 await copyToClipboard('要复制的文本');
 ```
 
 ```js [JavaScript (ESM)]
-import { copyToClipboard } from 'l-js-fn/bom';
+import { copyToClipboard } from 'l-js-fn';
 
 await copyToClipboard('要复制的文本');
 ```
@@ -310,14 +310,14 @@ interface CookieOptions {
 
 ::: code-group
 ```ts [TypeScript]
-import { setCookie } from 'l-js-fn/bom';
+import { setCookie } from 'l-js-fn';
 
 setCookie('token', 'abc123', { expires: 30, secure: true });
 setCookie('user', 'john', { expires: 7, path: '/' });
 ```
 
 ```js [JavaScript (ESM)]
-import { setCookie } from 'l-js-fn/bom';
+import { setCookie } from 'l-js-fn';
 
 setCookie('token', 'abc123', { expires: 30, secure: true });
 setCookie('user', 'john', { expires: 7, path: '/' });
@@ -347,14 +347,14 @@ setCookie('user', 'john', { expires: 7, path: '/' });
 
 ::: code-group
 ```ts [TypeScript]
-import { getCookie } from 'l-js-fn/bom';
+import { getCookie } from 'l-js-fn';
 
 getCookie('token'); // 'abc123'
 getCookie('notexist'); // null
 ```
 
 ```js [JavaScript (ESM)]
-import { getCookie } from 'l-js-fn/bom';
+import { getCookie } from 'l-js-fn';
 
 getCookie('token'); // 'abc123'
 getCookie('notexist'); // null
@@ -385,14 +385,14 @@ getCookie('notexist'); // null
 
 ::: code-group
 ```ts [TypeScript]
-import { removeCookie } from 'l-js-fn/bom';
+import { removeCookie } from 'l-js-fn';
 
 removeCookie('token');
 removeCookie('user', { path: '/', domain: '.example.com' });
 ```
 
 ```js [JavaScript (ESM)]
-import { removeCookie } from 'l-js-fn/bom';
+import { removeCookie } from 'l-js-fn';
 
 removeCookie('token');
 removeCookie('user', { path: '/', domain: '.example.com' });
@@ -422,13 +422,13 @@ removeCookie('user', { path: '/', domain: '.example.com' });
 
 ::: code-group
 ```ts [TypeScript]
-import { hasCookie } from 'l-js-fn/bom';
+import { hasCookie } from 'l-js-fn';
 
 hasCookie('token'); // true | false
 ```
 
 ```js [JavaScript (ESM)]
-import { hasCookie } from 'l-js-fn/bom';
+import { hasCookie } from 'l-js-fn';
 
 hasCookie('token'); // true | false
 ```
@@ -450,13 +450,13 @@ hasCookie('token'); // true | false
 
 ::: code-group
 ```ts [TypeScript]
-import { getAllCookies } from 'l-js-fn/bom';
+import { getAllCookies } from 'l-js-fn';
 
 getAllCookies(); // { token: 'abc123', user: 'john' }
 ```
 
 ```js [JavaScript (ESM)]
-import { getAllCookies } from 'l-js-fn/bom';
+import { getAllCookies } from 'l-js-fn';
 
 getAllCookies(); // { token: 'abc123', user: 'john' }
 ```

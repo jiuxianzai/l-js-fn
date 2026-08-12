@@ -47,7 +47,7 @@ const { REGEXP } = require('l-js-fn/regex');
 
 ::: code-group
 ```ts [TypeScript]
-import { REGEXP } from 'l-js-fn/regex';
+import { REGEXP } from 'l-js-fn';
 
 // 手机号验证
 REGEXP.PHONE.test('13800138000');        // true
@@ -67,7 +67,7 @@ REGEXP.BANK_CARD.test('622202123456789');  // false
 ```
 
 ```js [JavaScript (ESM)]
-import { REGEXP } from 'l-js-fn/regex';
+import { REGEXP } from 'l-js-fn';
 
 // 手机号验证
 REGEXP.PHONE.test('13800138000');        // true
@@ -111,7 +111,7 @@ REGEXP.BANK_CARD.test('622202123456789');  // false
 
 ::: code-group
 ```ts [TypeScript]
-import { REGEXP } from 'l-js-fn/regex';
+import { REGEXP } from 'l-js-fn';
 
 function validateForm(data: { phone?: string; email?: string; password?: string }) {
   const errors: string[] = [];
@@ -133,7 +133,7 @@ function validateForm(data: { phone?: string; email?: string; password?: string 
 ```
 
 ```js [JavaScript (ESM)]
-import { REGEXP } from 'l-js-fn/regex';
+import { REGEXP } from 'l-js-fn';
 
 function validateForm(data: { phone?: string; email?: string; password?: string }) {
   const errors: string[] = [];
@@ -181,7 +181,7 @@ function validateForm(data: { phone?: string; email?: string; password?: string 
 
 ::: code-group
 ```ts [TypeScript]
-import { REGEXP } from 'l-js-fn/regex';
+import { REGEXP } from 'l-js-fn';
 
 // 只允许输入中文
 function isChinese(input: string): boolean {
@@ -195,7 +195,7 @@ function isValidMoney(amount: string): boolean {
 ```
 
 ```js [JavaScript (ESM)]
-import { REGEXP } from 'l-js-fn/regex';
+import { REGEXP } from 'l-js-fn';
 
 // 只允许输入中文
 function isChinese(input: string): boolean {

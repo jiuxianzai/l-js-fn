@@ -55,14 +55,14 @@ const {
 
 ::: code-group
 ```ts [TypeScript]
-import { base64Encode } from 'l-js-fn/encode';
+import { base64Encode } from 'l-js-fn';
 
 base64Encode('Hello World'); // 'SGVsbG8gV29ybGQ='
 base64Encode('你好');        // '5L2g5aW9'
 ```
 
 ```js [JavaScript (ESM)]
-import { base64Encode } from 'l-js-fn/encode';
+import { base64Encode } from 'l-js-fn';
 
 base64Encode('Hello World'); // 'SGVsbG8gV29ybGQ='
 base64Encode('你好');        // '5L2g5aW9'
@@ -94,14 +94,14 @@ base64Encode('你好');        // '5L2g5aW9'
 
 ::: code-group
 ```ts [TypeScript]
-import { base64Decode } from 'l-js-fn/encode';
+import { base64Decode } from 'l-js-fn';
 
 base64Decode('SGVsbG8gV29ybGQ='); // 'Hello World'
 base64Decode('5L2g5aW9');          // '你好'
 ```
 
 ```js [JavaScript (ESM)]
-import { base64Decode } from 'l-js-fn/encode';
+import { base64Decode } from 'l-js-fn';
 
 base64Decode('SGVsbG8gV29ybGQ='); // 'Hello World'
 base64Decode('5L2g5aW9');          // '你好'
@@ -146,14 +146,14 @@ HTML 转义（防 XSS 攻击）。
 
 ::: code-group
 ```ts [TypeScript]
-import { escapeHTML } from 'l-js-fn/encode';
+import { escapeHTML } from 'l-js-fn';
 
 escapeHTML('<script>alert("XSS")</script>');
 // '&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;'
 ```
 
 ```js [JavaScript (ESM)]
-import { escapeHTML } from 'l-js-fn/encode';
+import { escapeHTML } from 'l-js-fn';
 
 escapeHTML('<script>alert("XSS")</script>');
 // '&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;'
@@ -183,14 +183,14 @@ HTML 反转义。
 
 ::: code-group
 ```ts [TypeScript]
-import { unescapeHTML } from 'l-js-fn/encode';
+import { unescapeHTML } from 'l-js-fn';
 
 unescapeHTML('&lt;div&gt;Hello&lt;/div&gt;');
 // '<div>Hello</div>'
 ```
 
 ```js [JavaScript (ESM)]
-import { unescapeHTML } from 'l-js-fn/encode';
+import { unescapeHTML } from 'l-js-fn';
 
 unescapeHTML('&lt;div&gt;Hello&lt;/div&gt;');
 // '<div>Hello</div>'
@@ -225,7 +225,7 @@ URL 编码。
 
 ::: code-group
 ```ts [TypeScript]
-import { urlEncode } from 'l-js-fn/encode';
+import { urlEncode } from 'l-js-fn';
 
 urlEncode('Hello World!');    // 'Hello%20World%21'
 urlEncode('你好世界');         // '%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C'
@@ -233,7 +233,7 @@ urlEncode('a/b', { uri: true }); // 'a/b'（URI 模式保留 /）
 ```
 
 ```js [JavaScript (ESM)]
-import { urlEncode } from 'l-js-fn/encode';
+import { urlEncode } from 'l-js-fn';
 
 urlEncode('Hello World!');    // 'Hello%20World%21'
 urlEncode('你好世界');         // '%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C'
@@ -267,7 +267,7 @@ URL 解码。
 
 ::: code-group
 ```ts [TypeScript]
-import { urlDecode } from 'l-js-fn/encode';
+import { urlDecode } from 'l-js-fn';
 
 urlDecode('Hello%20World');  // 'Hello World'
 urlDecode('%E4%BD%A0%E5%A5%BD'); // '你好'
@@ -277,7 +277,7 @@ urlDecode('Hello%20World%21', { component: true }); // 'Hello World!'
 ```
 
 ```js [JavaScript (ESM)]
-import { urlDecode } from 'l-js-fn/encode';
+import { urlDecode } from 'l-js-fn';
 
 urlDecode('Hello%20World');  // 'Hello World'
 urlDecode('%E4%BD%A0%E5%A5%BD'); // '你好'
@@ -315,7 +315,7 @@ urlDecode('Hello%20World%21', { component: true }); // 'Hello World!'
 
 ::: code-group
 ```ts [TypeScript]
-import { querystringify } from 'l-js-fn/encode';
+import { querystringify } from 'l-js-fn';
 
 querystringify({ name: 'John', age: 20 });
 // 'name=John&age=20'
@@ -325,7 +325,7 @@ querystringify({ a: [1, 2, 3] });
 ```
 
 ```js [JavaScript (ESM)]
-import { querystringify } from 'l-js-fn/encode';
+import { querystringify } from 'l-js-fn';
 
 querystringify({ name: 'John', age: 20 });
 // 'name=John&age=20'
@@ -361,7 +361,7 @@ querystringify({ a: [1, 2, 3] });
 
 ::: code-group
 ```ts [TypeScript]
-import { parseQueryString } from 'l-js-fn/encode';
+import { parseQueryString } from 'l-js-fn';
 
 parseQueryString('name=John&age=20');
 // { name: 'John', age: '20' }
@@ -371,7 +371,7 @@ parseQueryString('?a=1&a=2');
 ```
 
 ```js [JavaScript (ESM)]
-import { parseQueryString } from 'l-js-fn/encode';
+import { parseQueryString } from 'l-js-fn';
 
 parseQueryString('name=John&age=20');
 // { name: 'John', age: '20' }
