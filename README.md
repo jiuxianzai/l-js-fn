@@ -61,7 +61,7 @@ import { isArray, dateFormat, scrollTop, getStorage, WebSocketManager, Polling, 
 
 > 除 `crypto` 外，所有子模块方法均已平铺到主包（`sideEffects: false` + ESM 具名导出），webpack5 / vite / rollup / esbuild 均会摇树到函数级。
 >
-> **uniapp 命名说明**：uniapp 方法在主包中统一带 `uni` 前缀（如 `uniEnv`、`uniFile`、`uniRequest`、`uniStorage`），以区分通用命名；子路径 `l-js-fn/uniapp` 保留原始命名（`env`、`file`、`request` 等）。
+> **uniapp 命名说明**：uniapp 方法在主包中统一带 `uni` 前缀（如 `uniEnv`、`uniFile`、`uniRequest`、`uniStorage`、`uniClipboard`、`uniDevice`、`uniNetwork`），以区分通用命名；子路径 `l-js-fn/uniapp` 保留原始命名（`env`、`file`、`request` 等）。
 
 ### 子路径导入（兼容旧用法）
 
@@ -837,14 +837,15 @@ eventBus.emit('global-event', 'Hello');
 
 ### uniapp 小程序工具集 (uniapp)
 
-> 封装了平台适配层、环境信息、弹窗、权限授权、路由导航、本地存储、Toast 提示、网络请求等常用功能，**一份代码同时兼容微信和支付宝小程序**。底层采用平台适配器策略，内置 `wechat` / `alipay` / `h5` / `app` 四套适配器，支持 `registerAdapter()` 扩展新平台。
+> 封装了平台适配层、环境信息、弹窗、权限授权、路由导航、本地存储、Toast 提示、剪贴板、设备适配、网络状态、网络请求等常用功能，**一份代码同时兼容微信和支付宝小程序**。底层采用平台适配器策略，内置 `wechat` / `alipay` / `h5` / `app` 四套适配器，支持 `registerAdapter()` 扩展新平台。
 >
-> **导入说明**：以下示例使用子路径 `l-js-fn/uniapp`（保留原始命名）。若从主包导入，则对应为 `uniEnv`、`uniFile`、`uniModel`、`uniPermission`、`uniRequest`、`uniRouter`、`uniStorage`、`uniToast`、`uniGetAdapter`、`uniRegisterAdapter`、`uniAutoDetect`、`uniCreateWechatAdapter` 等。
+> **导入说明**：以下示例使用子路径 `l-js-fn/uniapp`（保留原始命名）。若从主包导入，则对应为 `uniEnv`、`uniFile`、`uniModel`、`uniPermission`、`uniRequest`、`uniRouter`、`uniStorage`、`uniToast`、`uniClipboard`、`uniDevice`、`uniNetwork`、`uniGetAdapter`、`uniRegisterAdapter`、`uniAutoDetect`、`uniCreateWechatAdapter` 等。
 
 ```typescript
 import {
   getAdapter, autoDetect, registerAdapter,
-  env, model, permission, router, storage, toast, file, request
+  env, model, permission, router, storage, toast,
+  clipboard, device, network, file, request
 } from 'l-js-fn/uniapp';
 
 // 平台自动检测（默认，无需初始化）——微信包内自动用 wx，支付宝包内自动用 my
@@ -859,6 +860,7 @@ env.launchOptions(); // 启动参数（微信/支付宝返回格式统一）
 // 弹窗
 const { confirm } = await model.confirm('确定删除？');
 await model.alert('操作成功');
+const index = await model.actionSheet({ itemList: ['编辑', '删除'] });
 
 // 权限授权（统一流程：getSetting → authorize → openSetting）
 await permission.camera();
@@ -878,8 +880,28 @@ router.beforeEach((to, from, next) => {
 // 本地存储（支持过期时间、加密，中文/Emoji 加密完整往返）
 storage.set('user', { name: 'John' }, { expire: 3600, encrypt: true });
 storage.get('user');
+storage.has('user');           // 是否存在
+storage.keys();                // 所有键名
+storage.clearExpired();        // 清理已过期项，返回数量
 storage.remove('user');
 storage.clear();
+
+// 剪贴板（微信 data / 支付宝 text 参数差异已封装）
+const copied = await clipboard.copy('复制内容');
+const text = await clipboard.read();
+
+// 设备/UI 适配（缓存系统信息，支持安全区/胶囊按钮）
+const info = device.info();         // { statusBarHeight, screenWidth, safeAreaInsets, ... }
+device.statusBarHeight();           // 状态栏高度
+device.safeAreaInsets();            // 安全区内边距 { top, right, bottom, left }
+device.capsule();                   // 微信胶囊按钮位置（其他平台 null）
+device.isInSafeArea();              // 是否为 iPhone X 系刘海屏
+
+// 网络状态
+const type = await network.type();  // 'wifi' | '4g' | ... | 'none'
+const online = await network.isOnline();
+network.watch((isConnected, type) => { /* 监听网络变化 */ });
+network.off();
 
 // 文件系统（微信/支付宝自动切换 getFileSystemManager）
 await file.write('user.json', { name: 'John', age: 20 }); // 对象自动 JSON 序列化
@@ -903,7 +925,7 @@ const data = await request.get('/api', { retry: 3, retryDelay: 1000, loading: tr
 
 **扩展新平台：**
 
-只需实现 `PlatformAdapter` 接口并注册，之后 `env` / `model` / `permission` / `router` / `storage` / `toast` 全部自动切换为新平台实现，无需修改任何模块源码。
+只需实现 `PlatformAdapter` 接口并注册，之后 `env` / `model` / `permission` / `router` / `storage` / `toast` / `clipboard` / `device` / `network` 全部自动切换为新平台实现，无需修改任何模块源码。
 
 ::: code-group
 ```typescript [TypeScript]

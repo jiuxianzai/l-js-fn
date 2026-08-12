@@ -70,7 +70,7 @@ import { DATE_FORMAT, REGEXP } from 'l-js-fn';
 
 > 除 `crypto` 外，所有子模块方法均已平铺到主包。主包为 ESM 具名导出且 `sideEffects: false`，现代打包器（webpack5 / vite / rollup / esbuild）会摇树到函数级，只打包实际使用的方法。
 >
-> **uniapp 命名说明**：为与通用命名（`env`、`file`、`request` 等）区分，uniapp 方法在主包中统一带 `uni` 前缀，如 `uniEnv`、`uniFile`、`uniRequest`、`uniStorage`。子路径 `l-js-fn/uniapp` 仍保留原始命名。
+> **uniapp 命名说明**：为与通用命名（`env`、`file`、`request` 等）区分，uniapp 方法在主包中统一带 `uni` 前缀，如 `uniEnv`、`uniFile`、`uniRequest`、`uniStorage`、`uniClipboard`、`uniDevice`、`uniNetwork`。子路径 `l-js-fn/uniapp` 仍保留原始命名。
 
 ### 子路径导入（兼容旧用法）
 
@@ -115,7 +115,7 @@ import { md5, aesEncrypt, sm2Encrypt, sm4Encrypt } from 'l-js-fn/crypto';
 | [file](/guide/file) | 文件处理（大小格式化、类型判断、下载、读取等） |
 | [event-bus](/guide/event-bus) | 事件总线（子消息发布订阅、类型安全事件） |
 | [crypto](/guide/crypto) | 加密模块（MD5、AES、RSA、SM2、SM4 等） |
-| [uniapp](/guide/uniapp) | 小程序工具集（环境、路由、存储、Toast 等，主包中命名带 `uni` 前缀） |
+| [uniapp](/guide/uniapp) | 小程序工具集（环境、弹窗、权限、路由、存储、Toast、剪贴板、设备、网络，主包中命名带 `uni` 前缀） |
 
 ## 单元测试
 

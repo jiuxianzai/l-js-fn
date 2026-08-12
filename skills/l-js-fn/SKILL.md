@@ -344,7 +344,7 @@ Result.fail(message?, data?); // 创建失败结果（注意：message 是第一
 | file | `l-js-fn/file` | formatFileSize, getExtension, getFileName, downloadFile, readAsText, readAsDataURL, readAsArrayBuffer, isImage, isVideo, isAudio, isPDF |
 | ipc | `l-js-fn/ipc` | H5Bridge, IframeBridge（跨窗口通信） |
 | crypto | `l-js-fn/crypto` | md5, aesEncrypt/Decrypt, rsaEncrypt/Decrypt, rsaGenerateKeyPair, sm2Encrypt/Decrypt, sm2GenerateKeyPair, sm4Encrypt/Decrypt（SM2/SM4 需要手动安装 sm-crypto） |
-| uniapp | `l-js-fn/uniapp` | 一套代码兼容微信/支付宝小程序：env, model, permission, router, storage, toast, request, file；支持 registerAdapter() 扩展新平台 |
+| uniapp | `l-js-fn/uniapp` | 一套代码兼容微信/支付宝小程序：env, model, permission, router, storage, toast, clipboard, device, network, request, file；支持 registerAdapter() 扩展新平台 |
 
 #### 子模块示例
 
@@ -451,7 +451,7 @@ rsaDecrypt(rsaEncrypt('Hello', { publicKey }), { privateKey }); // 'Hello'
 
 ```typescript
 // uniapp - 小程序工具集（一份代码兼容微信/支付宝）
-import { env, model, router, storage, toast, request, file } from 'l-js-fn/uniapp';
+import { env, model, router, storage, toast, clipboard, device, network, request, file } from 'l-js-fn/uniapp';
 
 env.platform(); // { isWechat: true, isAlipay: false, ... }
 await model.confirm('确定删除？');

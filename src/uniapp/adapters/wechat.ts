@@ -91,6 +91,56 @@ export function createWechatAdapter(api: Record<string, any>): PlatformAdapter {
 			});
 		},
 
+		// === 弹窗：微信用 itemList 参数、返回 tapIndex ===
+		showActionSheet({ itemList, itemColor, title }) {
+			return new Promise((resolve) => {
+				if (!api.showActionSheet) {
+					resolve(null);
+					return;
+				}
+				const opts: Record<string, any> = { itemList };
+				if (itemColor) opts.itemColor = itemColor;
+				if (title) opts.title = title;
+				api.showActionSheet({
+					...opts,
+					success: (res: any) => resolve(res?.tapIndex ?? null),
+					fail: () => resolve(null),
+				});
+			});
+		},
+
+		// === 剪贴板：微信用 data 参数 ===
+		copyToClipboard(text) {
+			return new Promise((resolve) => {
+				if (!api.setClipboardData) {
+					resolve(false);
+					return;
+				}
+				api.setClipboardData({
+					data: text,
+					success: () => resolve(true),
+					fail: () => resolve(false),
+				});
+			});
+		},
+		readClipboard() {
+			return new Promise((resolve, reject) => {
+				if (!api.getClipboardData) {
+					resolve('');
+					return;
+				}
+				api.getClipboardData({
+					success: (res: any) => resolve(res?.data ?? ''),
+					fail: (err: any) => reject(err),
+				});
+			});
+		},
+
+		// === 设备 ===
+		getMenuButtonInfo() {
+			return api.getMenuButtonBoundingClientRect?.() ?? null;
+		},
+
 		// === 环境 ===
 		async getEnvVersion() {
 			const cfg = typeof __wxConfig !== 'undefined' ? __wxConfig : undefined;

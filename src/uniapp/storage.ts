@@ -111,6 +111,59 @@ class Storage {
 	}
 
 	/**
+	 * 判断键是否存在（含已过期但未清除的项）
+	 * @param key - 键名
+	 * @returns 是否存在
+	 * @example
+	 * storage.has('token')
+	 */
+	has(key: string): boolean {
+		try {
+			return this.keys().includes(key);
+		} catch {
+			return false;
+		}
+	}
+
+	/**
+	 * 获取所有存储键名
+	 * @returns 键名数组，获取失败返回空数组
+	 * @example
+	 * storage.keys()
+	 */
+	keys(): string[] {
+		try {
+			return this.adapter.api.getStorageInfoSync?.().keys || [];
+		} catch {
+			return [];
+		}
+	}
+
+	/**
+	 * 清除所有已过期的存储项
+	 * @returns 清除的条目数量
+	 * @example
+	 * const removed = storage.clearExpired()
+	 */
+	clearExpired(): number {
+		let count = 0;
+		for (const key of this.keys()) {
+			try {
+				const raw = this.adapter.getStorageSync(key);
+				if (typeof raw !== 'string' || raw === '') continue;
+				const item = JSON.parse(raw) as UniStorageItem<unknown>;
+				if (item && typeof item === 'object' && item.expire !== undefined && item.expire !== -1 && Date.now() > item.expire) {
+					this.remove(key);
+					count++;
+				}
+			} catch {
+				// 非本模块格式的数据，跳过
+			}
+		}
+		return count;
+	}
+
+	/**
 	 * 清空所有存储
 	 * @returns 是否清空成功
 	 * @example

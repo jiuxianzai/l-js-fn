@@ -1,7 +1,10 @@
 export { getAdapter, registerAdapter, autoDetect } from './base';
+export { clipboard } from './clipboard';
+export { device } from './device';
 export { env } from './env';
 export { file } from './file';
 export { model } from './model';
+export { network } from './network';
 export { permission } from './permission';
 export { request } from './request';
 export { router } from './router';

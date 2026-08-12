@@ -82,6 +82,54 @@ export function createAlipayAdapter(api: Record<string, any>): PlatformAdapter {
 			});
 		},
 
+		// === 剪贴板：支付宝原生是 my.setClipboard({ text })，返回 res.text ===
+		copyToClipboard(text) {
+			return new Promise((resolve) => {
+				if (!api.setClipboard) {
+					resolve(false);
+					return;
+				}
+				api.setClipboard({
+					text,
+					success: () => resolve(true),
+					fail: () => resolve(false),
+				});
+			});
+		},
+		readClipboard() {
+			return new Promise((resolve, reject) => {
+				if (!api.getClipboard) {
+					resolve('');
+					return;
+				}
+				api.getClipboard({
+					success: (res: any) => resolve(res?.text ?? ''),
+					fail: (err: any) => reject(err),
+				});
+			});
+		},
+
+		// === 弹窗：支付宝用 items 参数、返回 res.index ===
+		showActionSheet({ itemList, title }) {
+			return new Promise((resolve) => {
+				if (!api.showActionSheet) {
+					resolve(null);
+					return;
+				}
+				api.showActionSheet({
+					items: itemList,
+					...(title ? { title } : {}),
+					success: (res: any) => resolve(res?.index ?? null),
+					fail: () => resolve(null),
+				});
+			});
+		},
+
+		// === 设备：支付宝胶囊按钮 my.getMenuButtonBoundingClientRect ===
+		getMenuButtonInfo() {
+			return api.getMenuButtonBoundingClientRect?.() ?? null;
+		},
+
 		// === 环境 ===
 		async getEnvVersion() {
 			if (!api.getRunScene) {

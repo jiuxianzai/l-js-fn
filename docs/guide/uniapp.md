@@ -1,6 +1,6 @@
 # uniapp — 小程序工具集
 
-uniapp 小程序工具集，封装了平台适配层、环境信息、弹窗、权限授权、路由导航、本地存储、Toast 提示、文件系统、网络请求等常用功能，**一份代码同时兼容微信和支付宝小程序**。
+uniapp 小程序工具集，封装了平台适配层、环境信息、弹窗、权限授权、路由导航、本地存储、Toast 提示、剪贴板、设备适配、网络状态、文件系统、网络请求等常用功能，**一份代码同时兼容微信和支付宝小程序**。
 
 底层采用**策略模式（平台适配器）**，内置 `wechat` / `alipay` / `h5` / `app` 四个平台适配器，并支持通过 `registerAdapter()` 扩展任意新平台（抖音、快手等）。
 
@@ -14,21 +14,24 @@ uniapp 小程序工具集，封装了平台适配层、环境信息、弹窗、�
 ```ts [TypeScript]
 import {
   uniGetAdapter, uniAutoDetect, uniRegisterAdapter,
-  uniEnv, uniModel, uniPermission, uniRouter, uniStorage, uniToast, uniFile, uniRequest
+  uniEnv, uniModel, uniPermission, uniRouter, uniStorage, uniToast,
+  uniClipboard, uniDevice, uniNetwork, uniFile, uniRequest
 } from 'l-js-fn';
 ```
 
 ```js [JavaScript (ESM)]
 import {
   uniGetAdapter, uniAutoDetect, uniRegisterAdapter,
-  uniEnv, uniModel, uniPermission, uniRouter, uniStorage, uniToast, uniFile, uniRequest
+  uniEnv, uniModel, uniPermission, uniRouter, uniStorage, uniToast,
+  uniClipboard, uniDevice, uniNetwork, uniFile, uniRequest
 } from 'l-js-fn';
 ```
 
 ```js [JavaScript (CJS)]
 const {
   getAdapter, autoDetect, registerAdapter,
-  env, model, permission, router, storage, toast, file, request
+  env, model, permission, router, storage, toast,
+  clipboard, device, network, file, request
 } = require('l-js-fn/uniapp');
 ```
 :::
@@ -186,6 +189,25 @@ await uniModel.alert('操作成功！', { title: '提示' });
 // 微信/支付宝统一弹出仅含「确认」按钮的对话框
 ```
 
+### 3.3 actionSheet() 操作菜单
+
+从底部弹出选择列表，跨平台行为一致（微信/支付宝均基于 `uni.showActionSheet`）。
+
+```ts
+import { uniModel } from 'l-js-fn';
+
+const index = await uniModel.actionSheet({
+  title: '选择操作',
+  itemList: ['编辑', '删除'],
+  itemColor: '#576b95', // 可选，菜单文字颜色
+});
+if (index !== null) {
+  console.log('选择了第', index, '项');
+} else {
+  console.log('用户取消了'); // 取消/失败返回 null
+}
+```
+
 ---
 
 ## 4. 权限授权 (permission)
@@ -273,6 +295,13 @@ uniStorage.get('secret', { encrypt: true }); // '张三👋'（中文/Emoji 完�
 // 删除 / 清空
 uniStorage.remove('user');
 uniStorage.clear();
+
+// 查询
+uniStorage.has('token');          // 是否存在某个键
+uniStorage.keys();                // 获取所有键名 ['token', 'user', ...]
+
+// 清理过期项
+const removed = uniStorage.clearExpired(); // 清除所有已过期的项，返回清除数量
 ```
 
 > 所有方法在微信（`(key,data)` 位置参数）和支付宝（`{key,data}` 对象参数）上**自动切换存储格式**。
@@ -305,7 +334,113 @@ uniToast.hideLoading();
 
 ---
 
-## 8. 扩展新平台
+## 8. 剪贴板 (clipboard)
+
+### 8.1 copy() 复制文本
+
+微信/支付宝/H5/App 参数差异（微信 `data`、支付宝 `text`）已封装，复制结果统一返回布尔值。
+
+```ts
+import { uniClipboard } from 'l-js-fn';
+
+const ok = await uniClipboard.copy('复制内容');
+if (ok) {
+  uniToast.success('已复制');
+}
+```
+
+### 8.2 read() 读取剪贴板
+
+```ts
+const text = await uniClipboard.read();
+console.log(text); // 剪贴板中的文本
+```
+
+---
+
+## 9. 设备/UI 适配 (device)
+
+针对**状态栏高度、安全区、胶囊按钮**等 UI 适配刚需场景，自动透传系统信息并缓存，无需关心平台差异。
+
+### 9.1 info() 设备信息
+
+首次调用读取并缓存系统信息（横竖屏切换后用 `refresh()` 刷新）。
+
+```ts
+import { uniDevice } from 'l-js-fn';
+
+const info = uniDevice.info();
+console.log(info);
+// {
+//   brand: 'iPhone', model: 'iPhone 15 Pro', system: 'iOS 17.0',
+//   statusBarHeight: 47, screenWidth: 390, screenHeight: 844,
+//   pixelRatio: 3, safeArea: {...}, safeAreaInsets: { top: 47, bottom: 74, ... }
+// }
+```
+
+### 9.2 statusBarHeight() 状态栏高度
+
+```ts
+const bar = uniDevice.statusBarHeight();
+// 自定义导航栏计算占位高度时使用
+```
+
+### 9.3 safeAreaInsets() 安全区内边距
+
+```ts
+const { top, bottom, left, right } = uniDevice.safeAreaInsets();
+// bottom > 0 表示底部有 Home 指示条（iPhone X 系），页面底部按钮需留出该高度
+```
+
+### 9.4 capsule() 胶囊按钮（微信/支付宝）
+
+```ts
+const capsule = uniDevice.capsule(); // 微信/支付宝返回 { left, top, right, bottom, width, height }
+if (capsule) {
+  // 自定义右上角按钮时按胶囊位置对齐
+} else {
+  // 其余平台（H5/App）返回 null
+}
+```
+
+### 9.5 isInSafeArea() 是否处于底部安全区
+
+```ts
+if (uniDevice.isInSafeArea()) {
+  // 底部存在 Home 指示条，操作栏需要增加安全区内边距
+}
+```
+
+---
+
+## 10. 网络状态 (network)
+
+### 10.1 type() / isOnline() 检测网络
+
+```ts
+import { uniNetwork } from 'l-js-fn';
+
+const type = await uniNetwork.type();
+// 'wifi' | '4g' | '3g' | '2g' | 'none' | 'unknown'
+
+const online = await uniNetwork.isOnline(); // true / false
+```
+
+### 10.2 watch() / off() 监听网络变化
+
+```ts
+uniNetwork.watch((isConnected, type) => {
+  console.log(isConnected, type); // true 'wifi'（断网时 false 'none'）
+});
+
+uniNetwork.off(); // 移除监听
+```
+
+> H5 端 `uni.getNetworkType` 不可用时自动降级为 `navigator.onLine`。
+
+---
+
+## 11. 扩展新平台
 
 以抖音小程序为例，只需实现 `PlatformAdapter` 接口并注册，**无需修改任何模块源码**。以下分别展示 TypeScript、JavaScript (ESM)、JavaScript (CJS) 三种写法。
 
@@ -416,13 +551,13 @@ registerAdapter(douyinAdapter);
 ```
 :::
 
-注册后，`env` / `model` / `permission` / `router` / `storage` / `toast` 全部自动切换为抖音实现。
+注册后，`env` / `model` / `permission` / `router` / `storage` / `toast` / `clipboard` / `device` / `network` 全部自动切换为抖音实现。
 
-> **可跳过的方法说明：** `openSetting()` 为可选方法（仅微信支持），不实现时权限引导自动降级为直接返回 `false`。若你的平台没有 `getLaunchOptionsSync` / 扫码能力，对应方法返回 `null` / `undefined` 即可，模块内部已做空值兜底。
+> **可跳过的方法说明：** `openSetting()`、`getMenuButtonInfo()`、`showActionSheet()` 为可选方法，不实现时模块内部自动兜底（权限引导降级为 `false`、胶囊按钮返回 `null`、操作菜单按 uni 统一 API 调用）。若你的平台没有 `getLaunchOptionsSync` / 扫码能力，对应方法返回 `null` / `undefined` 即可，模块内部已做空值兜底。
 
 ---
 
-## 9. 平台差异速查表
+## 12. 平台差异速查表
 
 | 能力 | 微信 (wechat) | 支付宝 (alipay) | H5 / App |
 |------|---------------|-----------------|----------|
@@ -433,11 +568,14 @@ registerAdapter(douyinAdapter);
 | 环境版本 | `__wxConfig.envVersion` | `my.getRunScene` | 不支持（reject） |
 | 扫码参数 | `options.q` | `options.query.qrCode` | 无 |
 | 启动参数 | `wx.getLaunchOptionsSync()` | `my.getLaunchOptionsSync()` | `null` |
+| 胶囊按钮 | `wx.getMenuButtonBoundingClientRect()` | `my.getMenuButtonBoundingClientRect()` | `null` |
+| 操作菜单 | `itemList` / `res.tapIndex` | `items` / `res.index` | `itemList` / `res.tapIndex` |
+| 剪贴板 | `wx.setClipboardData({ data })` | `my.setClipboard({ text })` | `uni.setClipboardData({ data })` |
 | 文件系统 | `wx.getFileSystemManager()` + `wx.env.USER_DATA_PATH` | `my.getFileSystemManager()` + `my.env.USER_DATA_PATH` | 视平台支持 |
 
 ---
 
-## 10. 平台适配器接口参考
+## 13. 平台适配器接口参考
 
 ```ts
 interface UniPlatformAdapter {
@@ -460,10 +598,20 @@ interface UniPlatformAdapter {
   requestPermission(scope: string): Promise<boolean>;
   openSetting?(): Promise<boolean>;
 
+  // 弹窗（可选，缺省时 model.actionSheet 按 uni 统一 API 兜底）
+  showActionSheet?(options: { itemList: string[]; title?: string; itemColor?: string }): Promise<number | null>;
+
   // 环境
   getEnvVersion(): Promise<EnvVersion>;
   getLaunchOptionsSync(): Record<string, any> | null;
   extractScanUrl(options: Record<string, any>): string | undefined;
+
+  // 剪贴板
+  copyToClipboard(text: string): Promise<boolean>;
+  readClipboard(): Promise<string>;
+
+  // 设备（可选）
+  getMenuButtonInfo?(): Record<string, any> | null;
 
   // 文件系统（可选）
   getFileSystemManager?(): any;

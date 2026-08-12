@@ -9,10 +9,12 @@ const mockWx = {
 	getStorageSync: jest.fn(),
 	removeStorageSync: jest.fn(),
 	clearStorageSync: jest.fn(),
+	getStorageInfoSync: jest.fn().mockReturnValue({ keys: ['key1'] }),
 	showModal: jest.fn(),
 	showToast: jest.fn(),
 	showLoading: jest.fn(),
 	hideLoading: jest.fn(),
+	showActionSheet: jest.fn(),
 	navigateTo: jest.fn(),
 	redirectTo: jest.fn(),
 	navigateBack: jest.fn(),
@@ -21,6 +23,7 @@ const mockWx = {
 	authorize: jest.fn(),
 	getLocation: jest.fn(),
 	getEnterOptionsSync: jest.fn().mockReturnValue({}),
+	getSystemInfoSync: jest.fn().mockReturnValue({ platform: 'ios' }),
 	getFileSystemManager: jest.fn().mockReturnValue({
 		writeFile: jest.fn(),
 		readFile: jest.fn(),
@@ -159,6 +162,78 @@ describe('uniapp 模块', () => {
 					expect(result).toBe(false);
 				});
 			});
+
+			describe('has', () => {
+				it('键存在时应返回 true', () => {
+					mockWx.getStorageInfoSync.mockReturnValueOnce({ keys: ['key1', 'key2'] });
+					expect(storage.has('key1')).toBe(true);
+				});
+
+				it('键不存在时应返回 false', () => {
+					mockWx.getStorageInfoSync.mockReturnValueOnce({ keys: ['key1'] });
+					expect(storage.has('other')).toBe(false);
+				});
+
+				it('getStorageInfoSync 异常时应返回 false', () => {
+					mockWx.getStorageInfoSync.mockImplementationOnce(() => {
+						throw new Error('fail');
+					});
+					expect(storage.has('key1')).toBe(false);
+				});
+			});
+
+			describe('keys', () => {
+				it('应返回所有键名', () => {
+					mockWx.getStorageInfoSync.mockReturnValueOnce({ keys: ['a', 'b'] });
+					expect(storage.keys()).toEqual(['a', 'b']);
+				});
+
+				it('异常时应返回空数组', () => {
+					mockWx.getStorageInfoSync.mockImplementationOnce(() => {
+						throw new Error('fail');
+					});
+					expect(storage.keys()).toEqual([]);
+				});
+
+				it('缺 API 时应返回空数组', async () => {
+					let s: any;
+					const api = { setClipboardData: jest.fn(), getClipboardData: jest.fn() };
+					await jest.isolateModulesAsync(async () => {
+						const mod = await import('@/uniapp');
+						mod.registerAdapter(mod.createWechatAdapter(api));
+						s = mod.storage;
+					});
+					expect(s.keys()).toEqual([]);
+				});
+			});
+
+			describe('clearExpired', () => {
+				it('应清除已过期项并返回数量', () => {
+					const expired = JSON.stringify({ value: 'old', expire: Date.now() - 1000 });
+					mockWx.getStorageInfoSync.mockReturnValueOnce({ keys: ['expired', 'valid'] });
+					mockWx.getStorageSync
+						.mockReturnValueOnce(expired)
+						.mockReturnValueOnce(JSON.stringify({ value: 'ok', expire: -1 }));
+					const count = storage.clearExpired();
+					expect(count).toBe(1);
+					expect(mockWx.removeStorageSync).toHaveBeenCalledWith('expired');
+				});
+
+				it('非本模块格式数据应跳过', () => {
+					mockWx.getStorageInfoSync.mockReturnValueOnce({ keys: ['raw', 'invalid'] });
+					mockWx.getStorageSync
+						.mockReturnValueOnce('plain-string')
+						.mockReturnValueOnce('{{{invalid json');
+					const count = storage.clearExpired();
+					expect(count).toBe(0);
+					expect(mockWx.removeStorageSync).not.toHaveBeenCalled();
+				});
+
+				it('空键列表应返回 0', () => {
+					mockWx.getStorageInfoSync.mockReturnValueOnce({ keys: [] });
+					expect(storage.clearExpired()).toBe(0);
+				});
+			});
 		});
 	});
 
@@ -239,6 +314,52 @@ describe('uniapp 模块', () => {
 						showCancel: false,
 					})
 				);
+			});
+		});
+
+		describe('actionSheet', () => {
+			it('应该显示操作菜单并返回选中索引', async () => {
+				mockWx.showActionSheet.mockImplementationOnce((options: any) => {
+					options.success({ tapIndex: 1 });
+				});
+				const result = await model.actionSheet({ itemList: ['编辑', '删除'] });
+				expect(result).toBe(1);
+				expect(mockWx.showActionSheet).toHaveBeenCalledWith(
+					expect.objectContaining({ itemList: ['编辑', '删除'] })
+				);
+			});
+
+			it('应该透传 title 和 itemColor', async () => {
+				mockWx.showActionSheet.mockImplementationOnce((options: any) => {
+					options.success({ tapIndex: 0 });
+				});
+				await model.actionSheet({ itemList: ['a'], title: '选择', itemColor: '#ff0000' });
+				expect(mockWx.showActionSheet).toHaveBeenCalledWith(
+					expect.objectContaining({ itemList: ['a'], title: '选择', itemColor: '#ff0000' })
+				);
+			});
+
+			it('取消时应返回 null', async () => {
+				mockWx.showActionSheet.mockImplementationOnce((options: any) => options.fail?.());
+				await expect(model.actionSheet({ itemList: ['a'] })).resolves.toBeNull();
+			});
+
+			it('空列表时应返回 null 且不调用 API', async () => {
+				await expect(model.actionSheet({ itemList: [] })).resolves.toBeNull();
+				await expect(model.actionSheet({ itemList: undefined as any })).resolves.toBeNull();
+				expect(mockWx.showActionSheet).not.toHaveBeenCalled();
+			});
+
+			it('适配器未实现 showActionSheet 时应走 uni 兜底调用', async () => {
+				const original = getAdapter();
+				const custom: any = { ...original };
+				delete custom.showActionSheet;
+				registerAdapter(custom);
+				mockWx.showActionSheet.mockImplementationOnce((options: any) => options.success({ tapIndex: 1 }));
+				const result = await model.actionSheet({ itemList: ['a', 'b'] });
+				expect(result).toBe(1);
+				expect(mockWx.showActionSheet).toHaveBeenCalledWith(expect.objectContaining({ itemList: ['a', 'b'] }));
+				registerAdapter(original);
 			});
 		});
 	});

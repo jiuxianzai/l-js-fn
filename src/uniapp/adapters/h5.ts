@@ -55,6 +55,51 @@ export function createH5Adapter(api: Record<string, any>): PlatformAdapter {
 			return true;
 		},
 
+		// === 弹窗：H5 用 itemList 参数、返回 tapIndex ===
+		showActionSheet({ itemList, itemColor, title }) {
+			return new Promise((resolve) => {
+				if (!api.showActionSheet) {
+					resolve(null);
+					return;
+				}
+				const opts: Record<string, any> = { itemList };
+				if (itemColor) opts.itemColor = itemColor;
+				if (title) opts.title = title;
+				api.showActionSheet({
+					...opts,
+					success: (res: any) => resolve(res?.tapIndex ?? null),
+					fail: () => resolve(null),
+				});
+			});
+		},
+
+		// === 剪贴板：H5 用 data 参数 ===
+		copyToClipboard(text) {
+			return new Promise((resolve) => {
+				if (!api.setClipboardData) {
+					resolve(false);
+					return;
+				}
+				api.setClipboardData({
+					data: text,
+					success: () => resolve(true),
+					fail: () => resolve(false),
+				});
+			});
+		},
+		readClipboard() {
+			return new Promise((resolve, reject) => {
+				if (!api.getClipboardData) {
+					resolve('');
+					return;
+				}
+				api.getClipboardData({
+					success: (res: any) => resolve(res?.data ?? ''),
+					fail: (err: any) => reject(err),
+				});
+			});
+		},
+
 		// === 环境：H5 不支持环境版本/启动参数/扫码 ===
 		async getEnvVersion() {
 			throw new Error('env.version: H5 环境不支持获取环境版本');

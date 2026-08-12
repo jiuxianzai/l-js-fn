@@ -687,3 +687,208 @@ describe('uniapp 平台适配器', () => {
 		});
 	});
 });
+
+describe('uniapp 平台适配器 - 剪贴板与设备', () => {
+	function clipboardApi(extra: Record<string, any> = {}): { api: any; adapter: any } {
+		const api = createMockApi({
+			setClipboardData: jest.fn((o: any) => o.success?.()),
+			getClipboardData: jest.fn((o: any) => o.success?.({ data: 'clip', text: 'clip' })),
+			...extra,
+		});
+		return { api, adapter: createWechatAdapter(api) as any };
+	}
+
+	describe('createWechatAdapter 剪贴板', () => {
+		let api: any;
+		let adapter: any;
+
+		beforeEach(() => {
+			const ctx = clipboardApi();
+			api = ctx.api;
+			adapter = ctx.adapter;
+		});
+
+		it('copyToClipboard 成功 resolve true', async () => {
+			await expect(adapter.copyToClipboard('hello')).resolves.toBe(true);
+			expect(api.setClipboardData).toHaveBeenCalledWith(expect.objectContaining({ data: 'hello' }));
+		});
+
+		it('copyToClipboard 失败 resolve false', async () => {
+			api.setClipboardData.mockImplementationOnce((o: any) => o.fail?.(new Error('e')));
+			await expect(adapter.copyToClipboard('hello')).resolves.toBe(false);
+		});
+
+		it('copyToClipboard 缺 api 返回 false', async () => {
+			const a: any = createWechatAdapter(createMockApi({ setClipboardData: undefined }));
+			await expect(a.copyToClipboard('hello')).resolves.toBe(false);
+		});
+
+		it('readClipboard 返回 data', async () => {
+			await expect(adapter.readClipboard()).resolves.toBe('clip');
+		});
+
+		it('readClipboard 缺 api 返回空字符串', async () => {
+			const a: any = createWechatAdapter(createMockApi({ getClipboardData: undefined }));
+			await expect(a.readClipboard()).resolves.toBe('');
+		});
+
+		it('readClipboard 失败 reject', async () => {
+			api.getClipboardData.mockImplementationOnce((o: any) => o.fail?.(new Error('r')));
+			await expect(adapter.readClipboard()).rejects.toThrow('r');
+		});
+
+		it('getMenuButtonInfo 返回胶囊位置', () => {
+			const rect = { left: 278, top: 25, width: 87, height: 32 };
+			api.getMenuButtonBoundingClientRect = jest.fn().mockReturnValue(rect);
+			expect(adapter.getMenuButtonInfo()).toEqual(rect);
+		});
+
+		it('getMenuButtonInfo 缺失返回 null', () => {
+			expect(adapter.getMenuButtonInfo()).toBeNull();
+		});
+	});
+
+	describe('createAlipayAdapter 剪贴板', () => {
+		it('copyToClipboard 使用 text 参数并调用 my.setClipboard', async () => {
+			const api = createMockApi({ setClipboard: jest.fn((o: any) => o.success?.()) });
+			const adapter = createAlipayAdapter(api) as any;
+			await expect(adapter.copyToClipboard('hello')).resolves.toBe(true);
+			expect(api.setClipboard).toHaveBeenCalledWith(expect.objectContaining({ text: 'hello' }));
+		});
+
+		it('copyToClipboard 失败 resolve false', async () => {
+			const api = createMockApi({ setClipboard: jest.fn((o: any) => o.fail?.()) });
+			const adapter = createAlipayAdapter(api) as any;
+			await expect(adapter.copyToClipboard('hello')).resolves.toBe(false);
+		});
+
+		it('copyToClipboard 缺 api 返回 false', async () => {
+			const adapter = createAlipayAdapter(createMockApi({ setClipboard: undefined })) as any;
+			await expect(adapter.copyToClipboard('hello')).resolves.toBe(false);
+		});
+
+		it('readClipboard 取 text 字段并调用 my.getClipboard', async () => {
+			const api = createMockApi({ getClipboard: jest.fn((o: any) => o.success?.({ text: 'ali' })) });
+			const adapter = createAlipayAdapter(api) as any;
+			await expect(adapter.readClipboard()).resolves.toBe('ali');
+			expect(api.getClipboard).toHaveBeenCalled();
+		});
+
+		it('readClipboard 缺 api 返回空字符串', async () => {
+			const adapter = createAlipayAdapter(createMockApi({ getClipboard: undefined })) as any;
+			await expect(adapter.readClipboard()).resolves.toBe('');
+		});
+
+		it('readClipboard 失败 reject', async () => {
+			const api = createMockApi({ getClipboard: jest.fn((o: any) => o.fail?.(new Error('r'))) });
+			const adapter = createAlipayAdapter(api) as any;
+			await expect(adapter.readClipboard()).rejects.toThrow('r');
+		});
+	});
+
+	describe('createAlipayAdapter 设备', () => {
+		it('getMenuButtonInfo 返回胶囊位置', () => {
+			const rect = { left: 268, top: 26, width: 90, height: 30 };
+			const api = createMockApi({ getMenuButtonBoundingClientRect: jest.fn().mockReturnValue(rect) });
+			const adapter = createAlipayAdapter(api) as any;
+			expect(adapter.getMenuButtonInfo()).toEqual(rect);
+		});
+
+		it('getMenuButtonInfo 缺失返回 null', () => {
+			const adapter = createAlipayAdapter(createMockApi()) as any;
+			expect(adapter.getMenuButtonInfo()).toBeNull();
+		});
+	});
+
+	describe('createH5Adapter / createAppAdapter 剪贴板', () => {
+		for (const [label, factory] of [
+			['h5', createH5Adapter],
+			['app', createAppAdapter],
+		] as const) {
+			it(`${label} copyToClipboard 成功 resolve true`, async () => {
+				const api = createMockApi({ setClipboardData: jest.fn((o: any) => o.success?.()) });
+				const adapter = factory(api) as any;
+				await expect(adapter.copyToClipboard('hello')).resolves.toBe(true);
+				expect(api.setClipboardData).toHaveBeenCalledWith(expect.objectContaining({ data: 'hello' }));
+			});
+
+			it(`${label} copyToClipboard 缺 api 返回 false`, async () => {
+				const adapter = factory(createMockApi({ setClipboardData: undefined })) as any;
+				await expect(adapter.copyToClipboard('hello')).resolves.toBe(false);
+			});
+
+			it(`${label} readClipboard 返回 data`, async () => {
+				const api = createMockApi({ getClipboardData: jest.fn((o: any) => o.success?.({ data: 'clip' })) });
+				const adapter = factory(api) as any;
+				await expect(adapter.readClipboard()).resolves.toBe('clip');
+			});
+
+			it(`${label} readClipboard 失败 reject`, async () => {
+				const api = createMockApi({ getClipboardData: jest.fn((o: any) => o.fail?.(new Error('r'))) });
+				const adapter = factory(api) as any;
+				await expect(adapter.readClipboard()).rejects.toThrow('r');
+			});
+		}
+	});
+});
+
+describe('uniapp 平台适配器 - showActionSheet 操作菜单', () => {
+	function sheetApi(extra: Record<string, any> = {}): { api: any; adapter: any } {
+		const api = createMockApi({ showActionSheet: jest.fn((o: any) => o.success?.({ tapIndex: 1 })), ...extra });
+		return { api, adapter: createH5Adapter(api) as any };
+	}
+
+	describe('微信 / H5 / App（itemList + tapIndex）', () => {
+		for (const [label, factory] of [
+			['wechat', createWechatAdapter],
+			['h5', createH5Adapter],
+			['app', createAppAdapter],
+		] as const) {
+			let api: any;
+			let adapter: any;
+
+			beforeEach(() => {
+				const ctx = sheetApi();
+				api = ctx.api;
+				adapter = factory(api) as any;
+			});
+
+			it(`${label} 返回 tapIndex 并透传 title/itemColor`, async () => {
+				await expect(adapter.showActionSheet({ itemList: ['a', 'b'], title: '标题', itemColor: '#ff0000' })).resolves.toBe(1);
+				expect(api.showActionSheet).toHaveBeenCalledWith(
+					expect.objectContaining({ itemList: ['a', 'b'], title: '标题', itemColor: '#ff0000' })
+				);
+			});
+
+			it(`${label} 取消返回 null`, async () => {
+				api.showActionSheet.mockImplementationOnce((o: any) => o.fail?.());
+				await expect(adapter.showActionSheet({ itemList: ['a'] })).resolves.toBeNull();
+			});
+
+			it(`${label} 缺 api 返回 null`, async () => {
+				const a: any = factory(createMockApi({ showActionSheet: undefined }));
+				await expect(a.showActionSheet({ itemList: ['a'] })).resolves.toBeNull();
+			});
+		}
+	});
+
+	describe('支付宝（items + index）', () => {
+		it('应使用 items 参数并读取 index', async () => {
+			const api = createMockApi({ showActionSheet: jest.fn((o: any) => o.success?.({ index: 2 })) });
+			const adapter = createAlipayAdapter(api) as any;
+			await expect(adapter.showActionSheet({ itemList: ['a', 'b', 'c'], title: '选择' })).resolves.toBe(2);
+			expect(api.showActionSheet).toHaveBeenCalledWith(expect.objectContaining({ items: ['a', 'b', 'c'], title: '选择' }));
+		});
+
+		it('取消返回 null', async () => {
+			const api = createMockApi({ showActionSheet: jest.fn((o: any) => o.fail?.()) });
+			const adapter = createAlipayAdapter(api) as any;
+			await expect(adapter.showActionSheet({ itemList: ['a'] })).resolves.toBeNull();
+		});
+
+		it('缺 api 返回 null', async () => {
+			const adapter = createAlipayAdapter(createMockApi({ showActionSheet: undefined })) as any;
+			await expect(adapter.showActionSheet({ itemList: ['a'] })).resolves.toBeNull();
+		});
+	});
+});
