@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
-var clone = (function() {
+var clone = /* @__PURE__ */ (function() {
   'use strict';
 
   function _instanceof(obj, type) {

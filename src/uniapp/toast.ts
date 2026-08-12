@@ -70,6 +70,6 @@ class Toast {
 	}
 }
 
-const toast = new Toast();
+const toast = /* @__PURE__ */ new Toast();
 
 export { toast };

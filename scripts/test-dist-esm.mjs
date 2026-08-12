@@ -23,6 +23,60 @@ assert.ok(typeof main.dateFormat === 'function', 'dateFormat');
 assert.ok(typeof main.formatNumber === 'function', 'formatNumber');
 assert.ok(main.Result.ok('data').success === true, 'Result.ok');
 
+// 主包全量平铺 —— 子模块函数也应可直接从主包导入
+const flattened = [
+  ['scrollTop', 'function'],
+  ['getScrollPosition', 'function'],
+  ['setCookie', 'function'],
+  ['getStorage', 'function'],
+  ['setSession', 'function'],
+  ['WebSocketManager', 'function'],
+  ['EventBus', 'function'],
+  ['eventBus', 'object'],
+  ['Polling', 'function'],
+  ['H5Bridge', 'function'],
+  ['IframeBridge', 'function'],
+  ['DATE_FORMAT', 'object'],
+  ['HTTP_STATUS', 'object'],
+  ['REGEXP', 'object'],
+  ['base64Encode', 'function'],
+  ['urlEncode', 'function'],
+  ['formatFileSize', 'function'],
+  ['downloadFile', 'function'],
+  ['isImage', 'function'],
+  // uniapp 模块：主包统一加 uni 前缀
+  ['uniEnv', 'object'],
+  ['uniFile', 'object'],
+  ['uniModel', 'object'],
+  ['uniPermission', 'object'],
+  ['uniRequest', 'object'],
+  ['uniRouter', 'object'],
+  ['uniStorage', 'object'],
+  ['uniToast', 'object'],
+  ['uniGetAdapter', 'function'],
+  ['uniRegisterAdapter', 'function'],
+  ['uniAutoDetect', 'function'],
+  ['uniCreateWechatAdapter', 'function'],
+];
+for (const [name, type] of flattened) {
+  assert.ok(main[name] !== undefined, `主包平铺导出 ${name} 不存在`);
+  assert.strictEqual(typeof main[name], type, `主包平铺导出 ${name} 类型`);
+}
+
+// uniapp 旧命名不应出现在主包（已在主包内改为 uni 前缀）
+const uniOldNames = ['env', 'file', 'model', 'permission', 'request', 'router', 'storage', 'toast', 'getAdapter', 'registerAdapter', 'autoDetect', 'createWechatAdapter'];
+for (const name of uniOldNames) {
+  assert.ok(main[name] === undefined, `主包不应再导出 ${name}（应使用 uni 前缀）`);
+}
+
+// uniapp 子路径保持原始命名
+const uniapp = await import('../dist/uniapp/index.js');
+assert.ok(typeof uniapp.env === 'object', 'uniapp.env');
+assert.ok(typeof uniapp.storage === 'object', 'uniapp.storage');
+assert.ok(typeof uniapp.toast === 'object', 'uniapp.toast');
+assert.ok(typeof uniapp.request === 'object', 'uniapp.request');
+assert.ok(typeof uniapp.getAdapter === 'function', 'uniapp.getAdapter');
+
 // 子模块 ESM
 const bom = await import('../dist/bom/index.js');
 assert.ok(typeof bom.scrollTop === 'function', 'bom.scrollTop');
@@ -69,4 +123,4 @@ const sm2Enc = await crypto.sm2Encrypt('hello', { publicKey: sm2Pair.publicKey }
 const sm2Dec = await crypto.sm2Decrypt(sm2Enc, { privateKey: sm2Pair.privateKey });
 assert.strictEqual(sm2Dec, 'hello', 'crypto.sm2');
 
-console.log(`✅ 全部 ${46} 个 ESM 断言通过`);
+console.log(`✅ 全部 ${111} 个 ESM 断言通过`);

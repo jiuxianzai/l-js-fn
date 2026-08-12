@@ -4,13 +4,15 @@ WebSocket 管理类，提供连接管理、消息发送、心跳检测、自动�
 
 **导入方式：**
 
+> 方法已全量平铺到主包 `l-js-fn`，可直接从主包导入（Tree-shaking 只打包用到的函数）；子路径 `l-js-fn/ws` 仍保留，供 CJS 或需要精确加载的场景使用。
+
 ::: code-group
 ```ts [TypeScript]
-import { WebSocketManager } from 'l-js-fn/ws';
+import { WebSocketManager } from 'l-js-fn';
 ```
 
 ```js [JavaScript (ESM)]
-import { WebSocketManager } from 'l-js-fn/ws';
+import { WebSocketManager } from 'l-js-fn';
 ```
 
 ```js [JavaScript (CJS)]

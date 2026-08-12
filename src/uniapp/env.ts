@@ -87,6 +87,6 @@ class Env {
 	}
 }
 
-const env = new Env();
+const env = /* @__PURE__ */ new Env();
 
 export { env };

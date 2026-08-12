@@ -4,6 +4,8 @@
 
 **导入方式：**
 
+> 方法已全量平铺到主包 `l-js-fn`，可直接从主包导入（Tree-shaking 只打包用到的函数）；子路径 `l-js-fn/encode` 仍保留，供 CJS 或需要精确加载的场景使用。
+
 ::: code-group
 ```ts [TypeScript]
 import {
@@ -11,7 +13,7 @@ import {
   escapeHTML, unescapeHTML,
   urlEncode, urlDecode,
   querystringify, parseQueryString
-} from 'l-js-fn/encode';
+} from 'l-js-fn';
 ```
 
 ```js [JavaScript (ESM)]
@@ -20,7 +22,7 @@ import {
   escapeHTML, unescapeHTML,
   urlEncode, urlDecode,
   querystringify, parseQueryString
-} from 'l-js-fn/encode';
+} from 'l-js-fn';
 ```
 
 ```js [JavaScript (CJS)]

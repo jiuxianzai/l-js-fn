@@ -22,9 +22,12 @@ const modules = [
 
 /**
  * 通用配置选项
+ * 说明：
+ * - ESM 产物关闭 minify：保留 /* @__PURE__ *\/ 注解，交由消费方打包器做树摇与压缩
+ *   （未 minify 的 ESM 是 lodash-es 等库的通用做法，树摇效果最佳）
+ * - CJS 产物开启 minify：CJS 无法树摇，保持单文件压缩
  */
 const baseOptions = {
-	minify: true,
 	treeshake: true,
 	target: "es2020",
 	outDir: "dist",
@@ -63,6 +66,7 @@ export default defineConfig(() => {
 		),
 		format: ["cjs"],
 		dts: false,
+		minify: true,
 		clean: false,
 		outExtension() {
 			return { js: ".cjs" };

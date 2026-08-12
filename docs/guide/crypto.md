@@ -8,6 +8,8 @@
 > npm install sm-crypto
 > ```
 
+> **导入说明**：本模块依赖 Node 内置 `crypto`（MD5/AES/RSA），**仅在 Node 环境可用**，不参与主包平铺，始终通过子路径 `l-js-fn/crypto` 导入。
+
 **导入方式：**
 
 ::: code-group

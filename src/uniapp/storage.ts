@@ -126,6 +126,6 @@ class Storage {
 	}
 }
 
-const storage = new Storage();
+const storage = /* @__PURE__ */ new Storage();
 
 export { storage };

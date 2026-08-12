@@ -105,6 +105,6 @@ class File {
 	}
 }
 
-const file = new File();
+const file = /* @__PURE__ */ new File();
 
 export { file };

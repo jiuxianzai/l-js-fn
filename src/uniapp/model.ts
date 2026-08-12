@@ -42,6 +42,6 @@ class Model {
 	}
 }
 
-const model = new Model();
+const model = /* @__PURE__ */ new Model();
 
 export { model };

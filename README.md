@@ -14,7 +14,7 @@
 ## ✨ 特性
 
 - 🚀 **轻量级** - 核心零依赖，打包体积小（SM2/SM4 可选依赖 `sm-crypto`，按需安装）
-- 📦 **模块化** - 支持按需导入，减少包体积
+- 📦 **模块化** - 主包全量平铺所有方法，按需导入；子路径保留供 CJS 使用
 - 🔒 **TypeScript** - 完整的类型定义
 - 🌐 **双模块格式** - 同时支持 ESM 和 CJS
 - 🎨 **Tree-shaking** - 完整支持 Tree-shaking，只打包用到的代码
@@ -50,9 +50,22 @@ isEmpty(''); // true
 isEmpty(null); // true
 ```
 
-### 按需导入（推荐）
+### 全量平铺（推荐）
 
-只导入你需要的模块，减少打包体积：
+所有模块的方法均可从主包直接导入，配合 Tree-shaking 只打包用到的函数：
+
+```typescript
+// 核心工具 + 子模块方法全部来自主包
+import { isArray, dateFormat, scrollTop, getStorage, WebSocketManager, Polling, EventBus, REGEXP, DATE_FORMAT } from 'l-js-fn';
+```
+
+> 除 `crypto` 外，所有子模块方法均已平铺到主包（`sideEffects: false` + ESM 具名导出），webpack5 / vite / rollup / esbuild 均会摇树到函数级。
+>
+> **uniapp 命名说明**：uniapp 方法在主包中统一带 `uni` 前缀（如 `uniEnv`、`uniFile`、`uniRequest`、`uniStorage`），以区分通用命名；子路径 `l-js-fn/uniapp` 保留原始命名（`env`、`file`、`request` 等）。
+
+### 子路径导入（兼容旧用法）
+
+`l-js-fn/<module>` 子路径仍保留，供 CJS（`require` 无法树摇，用子路径控制体积）或需要精确加载的场景使用：
 
 ```typescript
 // 浏览器对象模型方法
@@ -64,22 +77,18 @@ import { Polling } from 'l-js-fn/polling';
 // WebSocket 管理类
 import { WebSocketManager } from 'l-js-fn/ws';
 
-// 正则表达式常量
-import { REGEXP } from 'l-js-fn/regex';
+// 事件总线
+import { EventBus, eventBus } from 'l-js-fn/event-bus';
 
-// 配置常量
-import { DATE_FORMAT, HTTP_STATUS } from 'l-js-fn/config';
+// 小程序工具集（子路径保留原始命名）
+import { env, router, storage, toast } from 'l-js-fn/uniapp';
+```
 
-// IPC 通信
-import { H5Bridge, IframeBridge } from 'l-js-fn/ipc';
+### crypto 模块（仅子路径）
 
-// 编码/解码
-import { escapeHTML, base64Encode } from 'l-js-fn/encode';
+`crypto` 依赖 Node 内置 `crypto`（MD5/AES/RSA）与可选依赖 `sm-crypto`（SM2/SM4），**仅在 Node 环境可用**，不参与主包平铺：
 
-// 文件处理
-import { formatFileSize, isImage } from 'l-js-fn/file';
-
-// 加密模块
+```typescript
 import {
 	md5,
 	aesEncrypt,
@@ -93,15 +102,6 @@ import {
 	sm4Encrypt,
 	sm4Decrypt,
 } from 'l-js-fn/crypto';
-
-// 事件总线
-import { EventBus, eventBus } from 'l-js-fn/event-bus';
-
-// 小程序工具集
-import { env, router, storage, toast, model, permission, file, request } from 'l-js-fn/uniapp';
-
-// 加密模块
-import { md5, aesEncrypt, rsaEncrypt } from 'l-js-fn/crypto';
 ```
 
 ## 📚 API 文档
@@ -531,7 +531,7 @@ import {
 	removeCookie,
 	hasCookie,
 	getAllCookies,
-} from 'l-js-fn/bom';
+} from 'l-js-fn';
 
 // 平滑滚动到顶部
 scrollTop();
@@ -565,7 +565,7 @@ getAllCookies(); // { token: 'abc123', user: 'john' }
 ### 本地存储 (storage)
 
 ```typescript
-import { setStorage, getStorage, removeStorage, clearStorage, clearExpiredStorage, setSession, getSession, removeSession } from 'l-js-fn/storage';
+import { setStorage, getStorage, removeStorage, clearStorage, clearExpiredStorage, setSession, getSession, removeSession } from 'l-js-fn';
 
 // localStorage 操作（支持过期时间）
 setStorage('user', { name: 'John', age: 20 });
@@ -585,7 +585,7 @@ removeSession('tabData');
 ### WebSocket 管理 (ws)
 
 ```typescript
-import { WebSocketManager } from 'l-js-fn/ws';
+import { WebSocketManager } from 'l-js-fn';
 
 const ws = new WebSocketManager(
 	'ws://localhost:8080',
@@ -609,7 +609,7 @@ ws.close();
 ### 轮询工具 (polling)
 
 ```typescript
-import { Polling } from 'l-js-fn/polling';
+import { Polling } from 'l-js-fn';
 
 const polling = new Polling();
 
@@ -633,7 +633,7 @@ polling.running; // true
 ### 正则表达式 (regex)
 
 ```typescript
-import { REGEXP } from 'l-js-fn/regex';
+import { REGEXP } from 'l-js-fn';
 
 // 手机号验证
 REGEXP.PHONE.test('13800138000'); // true
@@ -689,7 +689,7 @@ REGEXP.BANK_CARD.test('6222021234567890'); // true
 ### 配置常量 (config)
 
 ```typescript
-import { DATE_FORMAT, HTTP_STATUS } from 'l-js-fn/config';
+import { DATE_FORMAT, HTTP_STATUS } from 'l-js-fn';
 
 // 日期格式
 DATE_FORMAT.FULL; // "yyyy-MM-dd HH:mm:ss"
@@ -705,7 +705,7 @@ HTTP_STATUS.NOT_FOUND; // 404
 ### IPC 通信 (ipc)
 
 ```typescript
-import { H5Bridge, IframeBridge } from 'l-js-fn/ipc';
+import { H5Bridge, IframeBridge } from 'l-js-fn';
 
 // H5 与原生通信
 const h5Bridge = new H5Bridge();
@@ -717,7 +717,7 @@ const iframeBridge = new IframeBridge('https://example.com');
 ### 编码/解码 (encode)
 
 ```typescript
-import { base64Encode, base64Decode, escapeHTML, unescapeHTML, urlEncode, urlDecode, querystringify, parseQueryString } from 'l-js-fn/encode';
+import { base64Encode, base64Decode, escapeHTML, unescapeHTML, urlEncode, urlDecode, querystringify, parseQueryString } from 'l-js-fn';
 
 // Base64 编码/解码（支持 Unicode）
 base64Encode('Hello World'); // 'SGVsbG8gV29ybGQ='
@@ -756,7 +756,7 @@ import {
 	isAudio,
 	isPDF,
 	FileSizeUnit,
-} from 'l-js-fn/file';
+} from 'l-js-fn';
 
 // 格式化文件大小
 formatFileSize(1024); // { formatted: '1 KB', value: 1, unit: 'KB' }
@@ -790,7 +790,7 @@ isPDF('document.pdf'); // true
 ### 事件总线 (event-bus)
 
 ```typescript
-import { EventBus, eventBus } from 'l-js-fn/event-bus';
+import { EventBus, eventBus } from 'l-js-fn';
 
 // 创建实例
 const bus = new EventBus();
@@ -838,6 +838,8 @@ eventBus.emit('global-event', 'Hello');
 ### uniapp 小程序工具集 (uniapp)
 
 > 封装了平台适配层、环境信息、弹窗、权限授权、路由导航、本地存储、Toast 提示、网络请求等常用功能，**一份代码同时兼容微信和支付宝小程序**。底层采用平台适配器策略，内置 `wechat` / `alipay` / `h5` / `app` 四套适配器，支持 `registerAdapter()` 扩展新平台。
+>
+> **导入说明**：以下示例使用子路径 `l-js-fn/uniapp`（保留原始命名）。若从主包导入，则对应为 `uniEnv`、`uniFile`、`uniModel`、`uniPermission`、`uniRequest`、`uniRouter`、`uniStorage`、`uniToast`、`uniGetAdapter`、`uniRegisterAdapter`、`uniAutoDetect`、`uniCreateWechatAdapter` 等。
 
 ```typescript
 import {
@@ -1123,23 +1125,24 @@ await sm4Encrypt('data', { key: '0...0', outputEncoding: 'base64' });
 本项目支持多种导入方式：
 
 ```typescript
-// 导入主包
-import { isArray } from 'l-js-fn';
+// 主包全量平铺（推荐）—— 所有方法均可从主包导入，Tree-shaking 只打包用到的函数
+import { isArray, scrollTop, WebSocketManager, EventBus } from 'l-js-fn';
 
-// 按需导入子模块
+// 子路径导入 —— 兼容旧用法，CJS 用户建议用子路径控制加载体积
 import { scrollTop } from 'l-js-fn/bom';
 import { Polling } from 'l-js-fn/polling';
-import { WebSocketManager } from 'l-js-fn/ws';
 import { escapeHTML } from 'l-js-fn/encode';
-import { formatFileSize } from 'l-js-fn/file';
-import { EventBus } from 'l-js-fn/event-bus';
 import { env, router, toast } from 'l-js-fn/uniapp';
 
-// CommonJS 导入
+// crypto 模块仅支持子路径（依赖 Node 内置 crypto）
+import { md5 } from 'l-js-fn/crypto';
+
+// CommonJS 导入（CJS 无法树摇，建议用子路径按需加载）
 const { isArray } = require('l-js-fn');
 const { scrollTop } = require('l-js-fn/bom');
 const { escapeHTML } = require('l-js-fn/encode');
 const { env, router } = require('l-js-fn/uniapp');
+const { md5 } = require('l-js-fn/crypto');
 ```
 
 ## ✅ 测试

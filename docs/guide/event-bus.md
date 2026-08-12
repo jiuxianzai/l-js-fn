@@ -4,13 +4,15 @@
 
 **导入方式：**
 
+> 方法已全量平铺到主包 `l-js-fn`，可直接从主包导入（Tree-shaking 只打包用到的函数）；子路径 `l-js-fn/event-bus` 仍保留，供 CJS 或需要精确加载的场景使用。
+
 ::: code-group
 ```typescript [TypeScript]
-import { EventBus, eventBus } from 'l-js-fn/event-bus';
+import { EventBus, eventBus } from 'l-js-fn';
 ```
 
 ```javascript [JavaScript]
-import { EventBus, eventBus } from 'l-js-fn/event-bus';
+import { EventBus, eventBus } from 'l-js-fn';
 ```
 :::
 

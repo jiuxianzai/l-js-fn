@@ -116,4 +116,4 @@ export class EventBus<Events extends EventMap = EventMap> {
 }
 
 /** 全局共享的事件总线单例 */
-export const eventBus = new EventBus();
+export const eventBus = /* @__PURE__ */ new EventBus();

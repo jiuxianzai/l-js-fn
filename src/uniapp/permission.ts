@@ -86,6 +86,6 @@ class Permission {
 	}
 }
 
-const permission = new Permission();
+const permission = /* @__PURE__ */ new Permission();
 
 export { permission };

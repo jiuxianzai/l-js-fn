@@ -213,6 +213,6 @@ class Router {
 	}
 }
 
-const router = new Router();
+const router = /* @__PURE__ */ new Router();
 
 export { router };

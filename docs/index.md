@@ -22,7 +22,7 @@ features:
   - title: 轻量级
     details: 核心零依赖，打包体积小，按需引入（SM2/SM4 可选依赖 sm-crypto）。
   - title: 模块化
-    details: 支持按需导入，减少包体积，主包和子模块分离。
+    details: 主包全量平铺所有方法，支持按需导入与 Tree-shaking；子路径保留用于向后兼容。除 crypto 外的全部方法均可从主包导入。
   - title: TypeScript
     details: 完整的类型定义，享受类型安全的开发体验。
   - title: 双模块格式
@@ -55,22 +55,39 @@ pnpm add l-js-fn
 
 ## 快速开始
 
-### 导入主包
+### 全量平铺（推荐）
+
+所有模块的方法均可直接从主包导入，配合 Tree-shaking 只打包用到的函数：
 
 ```typescript
+// 类型判断、数组、字符串、日期等核心工具
 import { isArray, dateFormat, isEmpty } from 'l-js-fn';
-
-isArray([1, 2, 3]); // true
-dateFormat(new Date(), 'yyyy-MM-dd HH:mm:ss'); // "2024-01-01 12:00:00"
-isEmpty(''); // true
+// 浏览器 BOM / WebSocket / 存储 / 轮询 / 事件总线等子模块方法
+import { scrollTop, WebSocketManager, getStorage, Polling, EventBus } from 'l-js-fn';
+// 常量与正则
+import { DATE_FORMAT, REGEXP } from 'l-js-fn';
 ```
 
-### 按需导入子模块
+> 除 `crypto` 外，所有子模块方法均已平铺到主包。主包为 ESM 具名导出且 `sideEffects: false`，现代打包器（webpack5 / vite / rollup / esbuild）会摇树到函数级，只打包实际使用的方法。
+>
+> **uniapp 命名说明**：为与通用命名（`env`、`file`、`request` 等）区分，uniapp 方法在主包中统一带 `uni` 前缀，如 `uniEnv`、`uniFile`、`uniRequest`、`uniStorage`。子路径 `l-js-fn/uniapp` 仍保留原始命名。
+
+### 子路径导入（兼容旧用法）
+
+`l-js-fn/<module>` 子路径仍保留，可用于 CJS（`require`）或需要精确控制加载的场景：
 
 ```typescript
 import { scrollTop, copyToClipboard } from 'l-js-fn/bom';
 import { WebSocketManager } from 'l-js-fn/ws';
 import { Polling } from 'l-js-fn/polling';
+```
+
+### crypto 模块（仅子路径）
+
+`crypto` 模块依赖 Node 内置 `crypto`（MD5/AES/RSA）与可选依赖 `sm-crypto`（SM2/SM4），**仅在 Node 环境可用**，因此不参与主包平铺，始终通过子路径导入：
+
+```typescript
+import { md5, aesEncrypt, sm2Encrypt, sm4Encrypt } from 'l-js-fn/crypto';
 ```
 
 ## 文档导航
@@ -163,7 +180,7 @@ import { Polling } from 'l-js-fn/polling';
 
 ### `isImage` 在多个模块中出现，应该用哪个？
 
-`is-kit` 和 `file` 模块中都提供了 `isImage` 函数，功能一致（均支持 13 种常见图片格式）。建议：
+`isImage` 定义于 `is-kit`，`file` 模块对其做了转发导出，功能一致（均支持 13 种常见图片格式）。建议：
 - 主包用户直接使用 `import { isImage } from 'l-js-fn'`
 - 子模块用户使用 `import { isImage } from 'l-js-fn/file'`
 - 两者行为完全相同

@@ -4,13 +4,15 @@ IPC（进程间通信）工具集，提供 H5 与 Iframe 之间的双向通信�
 
 **导入方式：**
 
+> 方法已全量平铺到主包 `l-js-fn`，可直接从主包导入（Tree-shaking 只打包用到的函数）；子路径 `l-js-fn/ipc` 仍保留，供 CJS 或需要精确加载的场景使用。
+
 ::: code-group
 ```ts [TypeScript]
-import { H5Bridge, IframeBridge } from 'l-js-fn/ipc';
+import { H5Bridge, IframeBridge } from 'l-js-fn';
 ```
 
 ```js [JavaScript (ESM)]
-import { H5Bridge, IframeBridge } from 'l-js-fn/ipc';
+import { H5Bridge, IframeBridge } from 'l-js-fn';
 ```
 
 ```js [JavaScript (CJS)]

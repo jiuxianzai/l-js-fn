@@ -110,6 +110,6 @@ class RequestWrapper {
 	}
 }
 
-const request = new RequestWrapper()
+const request = /* @__PURE__ */ new RequestWrapper()
 
 export { request }
