@@ -4,13 +4,15 @@ Request 模块基于 luch-request 封装，支持拦截器链、重试机制、�
 
 **导入方式：**
 
+> 方法已全量平铺到主包 `l-js-fn`，可直接从主包导入（Tree-shaking 只打包用到的函数）；**主包中命名为 `uniRequest`**，子路径 `l-js-fn/uniapp` 保留原始命名 `request`，供 CJS 或需要精确加载的场景使用。
+
 ::: code-group
 ```ts [TypeScript]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 ```
 
 ```js [JavaScript (ESM)]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 ```
 
 ```js [JavaScript (CJS)]
@@ -40,9 +42,9 @@ interface RequestStaticConfig {
 
 ::: code-group
 ```ts [TypeScript]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-request.setConfig({
+uniRequest.setConfig({
   baseURL: 'https://api.example.com',
   timeout: 30000,
   header: { 'Content-Type': 'application/json' }
@@ -50,9 +52,9 @@ request.setConfig({
 ```
 
 ```js [JavaScript (ESM)]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-request.setConfig({
+uniRequest.setConfig({
   baseURL: 'https://api.example.com',
   timeout: 30000,
 });
@@ -85,19 +87,19 @@ request.setConfig({
 
 ::: code-group
 ```ts [TypeScript]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
 interface User { id: number; name: string; }
 
-const user = await request.get<User>('/user', {
+const user = await uniRequest.get<User>('/user', {
   params: { id: 1 }
 });
 ```
 
 ```js [JavaScript (ESM)]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-const user = await request.get('/user', { params: { id: 1 } });
+const user = await uniRequest.get('/user', { params: { id: 1 } });
 ```
 
 ```js [JavaScript (CJS)]
@@ -123,18 +125,18 @@ const user = await request.get('/user', { params: { id: 1 } });
 
 ::: code-group
 ```ts [TypeScript]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-const result = await request.post('/user', {
+const result = await uniRequest.post('/user', {
   name: 'John',
   age: 20
 });
 ```
 
 ```js [JavaScript (ESM)]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-const result = await request.post('/user', { name: 'John' });
+const result = await uniRequest.post('/user', { name: 'John' });
 ```
 
 ```js [JavaScript (CJS)]
@@ -158,15 +160,15 @@ const result = await request.post('/user', { name: 'John' });
 
 ::: code-group
 ```ts [TypeScript]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-await request.put('/user/1', { name: 'Jane' });
+await uniRequest.put('/user/1', { name: 'Jane' });
 ```
 
 ```js [JavaScript (ESM)]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-await request.put('/user/1', { name: 'Jane' });
+await uniRequest.put('/user/1', { name: 'Jane' });
 ```
 
 ```js [JavaScript (CJS)]
@@ -182,15 +184,15 @@ await request.put('/user/1', { name: 'Jane' });
 
 ::: code-group
 ```ts [TypeScript]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-await request.delete('/user/1');
+await uniRequest.delete('/user/1');
 ```
 
 ```js [JavaScript (ESM)]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-await request.delete('/user/1');
+await uniRequest.delete('/user/1');
 ```
 
 ```js [JavaScript (CJS)]
@@ -222,9 +224,9 @@ await request.delete('/user/1');
 
 ::: code-group
 ```ts [TypeScript]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-const res = await request.upload('/upload', {
+const res = await uniRequest.upload('/upload', {
   filePath: '/tmp/avatar.jpg',
   name: 'file',
   formData: { userId: '1' }
@@ -232,9 +234,9 @@ const res = await request.upload('/upload', {
 ```
 
 ```js [JavaScript (ESM)]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-const res = await request.upload('/upload', {
+const res = await uniRequest.upload('/upload', {
   filePath: '/tmp/avatar.jpg',
   name: 'file',
 });
@@ -256,15 +258,15 @@ const res = await request.upload('/upload', {
 
 ::: code-group
 ```ts [TypeScript]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-const res = await request.download('/file/report.pdf');
+const res = await uniRequest.download('/file/report.pdf');
 ```
 
 ```js [JavaScript (ESM)]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-const res = await request.download('/file/report.pdf');
+const res = await uniRequest.download('/file/report.pdf');
 ```
 
 ```js [JavaScript (CJS)]
@@ -295,10 +297,10 @@ const res = await request.download('/file/report.pdf');
 
 ::: code-group
 ```ts [TypeScript]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
 // 注入 Token
-request.beforeRequest((config) => {
+uniRequest.beforeRequest((config) => {
   config.header = {
     ...config.header,
     'Authorization': 'Bearer ' + getToken()
@@ -307,16 +309,16 @@ request.beforeRequest((config) => {
 });
 
 // 添加公共参数
-request.beforeRequest((config) => {
+uniRequest.beforeRequest((config) => {
   config.params = { ...config.params, _t: Date.now() };
   return config;
 });
 ```
 
 ```js [JavaScript (ESM)]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-request.beforeRequest((config) => {
+uniRequest.beforeRequest((config) => {
   config.header['Authorization'] = 'Bearer ' + getToken();
   return config;
 });
@@ -351,10 +353,10 @@ request.beforeRequest((config) => {
 
 ::: code-group
 ```ts [TypeScript]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
 // 统一错误处理
-request.afterResponse((response) => {
+uniRequest.afterResponse((response) => {
   const { data } = response;
   if (data.code !== 0) {
     uni.showToast({ title: data.msg || '请求失败', icon: 'none' });
@@ -364,15 +366,15 @@ request.afterResponse((response) => {
 });
 
 // 提取 data 字段
-request.afterResponse((response) => {
+uniRequest.afterResponse((response) => {
   return response.data.data;
 });
 ```
 
 ```js [JavaScript (ESM)]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-request.afterResponse((response) => {
+uniRequest.afterResponse((response) => {
   if (response.data.code !== 0) {
     return Promise.reject(new Error(response.data.msg));
   }
@@ -407,11 +409,11 @@ request.afterResponse((response) => {
 
 ::: code-group
 ```ts [TypeScript]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
 // 失败时重试 3 次，间隔 1 秒
 try {
-  const res = await request.get('/api/data', {
+  const res = await uniRequest.get('/api/data', {
     retry: 3,
     retryDelay: 1000
   });
@@ -421,9 +423,9 @@ try {
 ```
 
 ```js [JavaScript (ESM)]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-const res = await request.get('/api/data', { retry: 3, retryDelay: 1000 });
+const res = await uniRequest.get('/api/data', { retry: 3, retryDelay: 1000 });
 ```
 
 ```js [JavaScript (CJS)]
@@ -441,16 +443,16 @@ const res = await request.get('/api/data', { retry: 3, retryDelay: 1000 });
 
 ::: code-group
 ```ts [TypeScript]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
 // 显示 loading，请求完成后自动隐藏
-const res = await request.get('/api/data', { loading: true });
+const res = await uniRequest.get('/api/data', { loading: true });
 ```
 
 ```js [JavaScript (ESM)]
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
-const res = await request.get('/api/data', { loading: true });
+const res = await uniRequest.get('/api/data', { loading: true });
 ```
 
 ```js [JavaScript (CJS)]
@@ -467,17 +469,17 @@ const res = await request.get('/api/data', { loading: true });
 ### 项目初始化配置
 
 ```ts
-import { request } from 'l-js-fn/uniapp';
+import { uniRequest } from 'l-js-fn';
 
 // App.vue 的 onLaunch 中初始化
-request.setConfig({
+uniRequest.setConfig({
   baseURL: 'https://api.example.com',
   timeout: 30000,
   header: { 'Content-Type': 'application/json' },
 });
 
 // 请求拦截：注入 Token
-request.beforeRequest((config) => {
+uniRequest.beforeRequest((config) => {
   const token = uni.getStorageSync('token');
   if (token) {
     config.header.Authorization = `Bearer ${token}`;
@@ -486,7 +488,7 @@ request.beforeRequest((config) => {
 });
 
 // 响应拦截：统一错误处理
-request.afterResponse((response) => {
+uniRequest.afterResponse((response) => {
   if (response.data.code === 401) {
     uni.reLaunch({ url: '/pages/login/index' });
     return Promise.reject(new Error('未登录'));
@@ -502,13 +504,13 @@ request.afterResponse((response) => {
 
 ```ts
 // 带 loading 的请求
-const users = await request.get('/users', { loading: true });
+const users = await uniRequest.get('/users', { loading: true });
 
 // 带重试的请求
-const detail = await request.get('/detail/1', { retry: 2 });
+const detail = await uniRequest.get('/detail/1', { retry: 2 });
 
 // 文件上传
-const avatar = await request.upload('/upload/avatar', {
+const avatar = await uniRequest.upload('/upload/avatar', {
   filePath: tempFilePath,
   name: 'file',
   loading: true,

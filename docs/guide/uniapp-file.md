@@ -4,13 +4,15 @@
 
 **导入方式：**
 
+> 方法已全量平铺到主包 `l-js-fn`，可直接从主包导入（Tree-shaking 只打包用到的函数）；**主包中命名为 `uniFile`**，子路径 `l-js-fn/uniapp` 保留原始命名 `file`，供 CJS 或需要精确加载的场景使用。
+
 ::: code-group
 ```ts [TypeScript]
-import { file } from 'l-js-fn/uniapp';
+import { uniFile } from 'l-js-fn';
 ```
 
 ```js [JavaScript (ESM)]
-import { file } from 'l-js-fn/uniapp';
+import { uniFile } from 'l-js-fn';
 ```
 
 ```js [JavaScript (CJS)]
@@ -46,18 +48,18 @@ interface FileOptions {
 
 ::: code-group
 ```ts [TypeScript]
-import { file } from 'l-js-fn/uniapp';
+import { uniFile } from 'l-js-fn';
 
-await file.write('user.json', { name: 'John', age: 20 });
-await file.write('note.txt', '纯文本内容');
-await file.write('raw.json', '{"a":1}', { json: false }); // 原样写入
+await uniFile.write('user.json', { name: 'John', age: 20 });
+await uniFile.write('note.txt', '纯文本内容');
+await uniFile.write('raw.json', '{"a":1}', { json: false }); // 原样写入
 ```
 
 ```js [JavaScript (ESM)]
-import { file } from 'l-js-fn/uniapp';
+import { uniFile } from 'l-js-fn';
 
-await file.write('user.json', { name: 'John', age: 20 });
-await file.write('note.txt', '纯文本内容');
+await uniFile.write('user.json', { name: 'John', age: 20 });
+await uniFile.write('note.txt', '纯文本内容');
 ```
 
 ```js [JavaScript (CJS)]
@@ -88,19 +90,19 @@ file.write('user.json', { name: 'John', age: 20 }).then(() => {
 
 ::: code-group
 ```ts [TypeScript]
-import { file } from 'l-js-fn/uniapp';
+import { uniFile } from 'l-js-fn';
 
 interface User { name: string; age: number; }
 
-const user = await file.read<User>('user.json');      // { name: 'John', age: 20 }
-const text = await file.read('note.txt', { json: false }); // 纯文本
+const user = await uniFile.read<User>('user.json');      // { name: 'John', age: 20 }
+const text = await uniFile.read('note.txt', { json: false }); // 纯文本
 ```
 
 ```js [JavaScript (ESM)]
-import { file } from 'l-js-fn/uniapp';
+import { uniFile } from 'l-js-fn';
 
-const user = await file.read('user.json');
-const text = await file.read('note.txt', { json: false });
+const user = await uniFile.read('user.json');
+const text = await uniFile.read('note.txt', { json: false });
 ```
 
 ```js [JavaScript (CJS)]
@@ -128,16 +130,16 @@ file.read('user.json').then((user) => console.log(user));
 
 ::: code-group
 ```ts [TypeScript]
-import { file } from 'l-js-fn/uniapp';
+import { uniFile } from 'l-js-fn';
 
-const exists = await file.access('user.json');
+const exists = await uniFile.access('user.json');
 console.log(exists); // true | false
 ```
 
 ```js [JavaScript (ESM)]
-import { file } from 'l-js-fn/uniapp';
+import { uniFile } from 'l-js-fn';
 
-const exists = await file.access('user.json');
+const exists = await uniFile.access('user.json');
 ```
 
 ```js [JavaScript (CJS)]
@@ -163,15 +165,15 @@ file.access('user.json').then((exists) => console.log(exists));
 
 ::: code-group
 ```ts [TypeScript]
-import { file } from 'l-js-fn/uniapp';
+import { uniFile } from 'l-js-fn';
 
-await file.remove('user.json');
+await uniFile.remove('user.json');
 ```
 
 ```js [JavaScript (ESM)]
-import { file } from 'l-js-fn/uniapp';
+import { uniFile } from 'l-js-fn';
 
-await file.remove('user.json');
+await uniFile.remove('user.json');
 ```
 
 ```js [JavaScript (CJS)]
@@ -199,18 +201,18 @@ file.remove('user.json').then(() => console.log('删除成功'));
 
 ::: code-group
 ```ts [TypeScript]
-import { file } from 'l-js-fn/uniapp';
+import { uniFile } from 'l-js-fn';
 
-const path = file.getPath('a.json');
+const path = uniFile.getPath('a.json');
 console.log(path);
 // 微信: wxfile://usr/a.json
 // 支付宝: https://usr/a.json
 ```
 
 ```js [JavaScript (ESM)]
-import { file } from 'l-js-fn/uniapp';
+import { uniFile } from 'l-js-fn';
 
-const path = file.getPath('a.json');
+const path = uniFile.getPath('a.json');
 ```
 
 ```js [JavaScript (CJS)]
@@ -225,25 +227,25 @@ const path = file.getPath('a.json');
 ## 6. 完整示例：写入 → 读取 → 检查 → 删除
 
 ```ts
-import { file } from 'l-js-fn/uniapp';
+import { uniFile } from 'l-js-fn';
 
 async function saveUser() {
   // 1. 写入对象
-  await file.write('user.json', { name: 'John', age: 20 });
+  await uniFile.write('user.json', { name: 'John', age: 20 });
 
   // 2. 读取（自动反序列化）
-  const user = await file.read('user.json');
+  const user = await uniFile.read('user.json');
   console.log(user); // { name: 'John', age: 20 }
 
   // 3. 检查存在
-  const exists = await file.access('user.json');
+  const exists = await uniFile.access('user.json');
   console.log(exists); // true
 
   // 4. 删除
-  await file.remove('user.json');
+  await uniFile.remove('user.json');
 
   // 5. 再次检查
-  const gone = await file.access('user.json');
+  const gone = await uniFile.access('user.json');
   console.log(gone); // false
 }
 ```

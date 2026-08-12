@@ -8,19 +8,21 @@ uniapp 小程序工具集，封装了平台适配层、环境信息、弹窗、�
 
 **导入方式：**
 
+> 方法已全量平铺到主包 `l-js-fn`，可直接从主包导入（Tree-shaking 只打包用到的函数）；**主包中 uniapp 命名统一带 `uni` 前缀**（如 `uniModel`），子路径 `l-js-fn/uniapp` 保留原始命名，供 CJS 或需要精确加载的场景使用。
+
 ::: code-group
 ```ts [TypeScript]
 import {
-  getAdapter, autoDetect, registerAdapter,
-  env, model, permission, router, storage, toast, file, request
-} from 'l-js-fn/uniapp';
+  uniGetAdapter, uniAutoDetect, uniRegisterAdapter,
+  uniEnv, uniModel, uniPermission, uniRouter, uniStorage, uniToast, uniFile, uniRequest
+} from 'l-js-fn';
 ```
 
 ```js [JavaScript (ESM)]
 import {
-  getAdapter, autoDetect, registerAdapter,
-  env, model, permission, router, storage, toast, file, request
-} from 'l-js-fn/uniapp';
+  uniGetAdapter, uniAutoDetect, uniRegisterAdapter,
+  uniEnv, uniModel, uniPermission, uniRouter, uniStorage, uniToast, uniFile, uniRequest
+} from 'l-js-fn';
 ```
 
 ```js [JavaScript (CJS)]
@@ -56,10 +58,10 @@ const {
 ```ts
 // 微信包内运行 → 自动使用微信适配器
 // 支付宝包内运行 → 自动使用支付宝适配器
-import { storage, toast } from 'l-js-fn/uniapp';
+import { uniStorage, uniToast } from 'l-js-fn';
 
-storage.set('token', 'abc');   // 微信: wx.setStorageSync，支付宝: my.setStorageSync({key,data})
-toast.success('保存成功');       // 微信: title/icon，支付宝: content/type，自动转换
+uniStorage.set('token', 'abc');   // 微信: wx.setStorageSync，支付宝: my.setStorageSync({key,data})
+uniToast.success('保存成功');       // 微信: title/icon，支付宝: content/type，自动转换
 ```
 
 ### 1.2 autoDetect() 主动检测
@@ -67,17 +69,17 @@ toast.success('保存成功');       // 微信: title/icon，支付宝: content/
 可以主动触发一次检测（例如在 `App.vue` 的 `onLaunch` 中），提前初始化适配器。
 
 ```ts
-import { autoDetect } from 'l-js-fn/uniapp';
+import { uniAutoDetect } from 'l-js-fn';
 
-autoDetect(); // 返回当前平台适配器，检测失败抛错
+uniAutoDetect(); // 返回当前平台适配器，检测失败抛错
 ```
 
 ### 1.3 getAdapter() 获取当前适配器
 
 ```ts
-import { getAdapter } from 'l-js-fn/uniapp';
+import { uniGetAdapter } from 'l-js-fn';
 
-const adapter = getAdapter();
+const adapter = uniGetAdapter();
 adapter.name;  // 'wechat' | 'alipay' | 'h5' | 'app' | 自定义名称
 adapter.api;   // 平台原生 API 对象（wx / my / uni），可直连原生方法
 ```
@@ -89,13 +91,13 @@ adapter.api;   // 平台原生 API 对象（wx / my / uni），可直连原生�
 用于**覆盖自动检测结果**或**接入未内置的平台**。
 
 ```ts
-import { registerAdapter, createWechatAdapter } from 'l-js-fn/uniapp';
+import { uniRegisterAdapter, uniCreateWechatAdapter } from 'l-js-fn';
 
 // 覆盖自动检测，强制使用微信适配器（一般不需要）
-registerAdapter(createWechatAdapter(wx));
+uniRegisterAdapter(uniCreateWechatAdapter(wx));
 
-// 扩展新平台：实现 PlatformAdapter 接口后注册
-registerAdapter(myDouyinAdapter); // 之后所有模块自动切换为抖音实现
+// 扩展新平台：实现 UniPlatformAdapter 接口后注册
+uniRegisterAdapter(myDouyinAdapter); // 之后所有模块自动切换为抖音实现
 ```
 
 ---
@@ -105,9 +107,9 @@ registerAdapter(myDouyinAdapter); // 之后所有模块自动切换为抖音实�
 ### 2.1 platform() 获取平台信息
 
 ```ts
-import { env } from 'l-js-fn/uniapp';
+import { uniEnv } from 'l-js-fn';
 
-const info = env.platform();
+const info = uniEnv.platform();
 console.log(info);
 // 微信运行结果: { isWechat: true, isAlipay: false, isH5: false, isApp: false, platformName: 'wechat' }
 // 支付宝运行结果: { isWechat: false, isAlipay: true, isH5: false, isApp: false, platformName: 'alipay' }
@@ -118,7 +120,7 @@ console.log(info);
 微信读 `__wxConfig.envVersion`，支付宝调 `my.getRunScene`，返回值结构统一。
 
 ```ts
-const { v, d, s } = await env.version();
+const { v, d, s } = await uniEnv.version();
 console.log(v, d, s);
 // 微信开发版: 'develop' '开发版' 'wechat'
 // 支付宝正式版: 'release' '正式版' 'alipay'
@@ -131,7 +133,7 @@ console.log(v, d, s);
 微信 / 支付宝统一返回 `getLaunchOptionsSync()` 的**完整对象**（含 `query` 子属性）。
 
 ```ts
-const opts = env.launchOptions();
+const opts = uniEnv.launchOptions();
 console.log(opts);
 // 微信扫码进入: { scene: 1011, query: { id: '123' }, referrerInfo: {...} }
 // 无参数时: null
@@ -140,7 +142,7 @@ console.log(opts);
 ### 2.4 enterOptions() 获取进入参数
 
 ```ts
-const opts = env.enterOptions();
+const opts = uniEnv.enterOptions();
 console.log(opts);   // { id: '1', ... }，异常时返回 undefined
 ```
 
@@ -150,7 +152,7 @@ console.log(opts);   // { id: '1', ... }，异常时返回 undefined
 
 ```ts
 // 页面 onLoad(options) 里调用
-env.scanParams(options, (url, paramsObj) => {
+uniEnv.scanParams(options, (url, paramsObj) => {
   console.log('扫码 URL:', url);      // 'https://example.com/detail'
   console.log('URL 参数:', paramsObj); // { id: '123', type: 'wx' }
 });
@@ -163,9 +165,9 @@ env.scanParams(options, (url, paramsObj) => {
 ### 3.1 confirm() 确认对话框
 
 ```ts
-import { model } from 'l-js-fn/uniapp';
+import { uniModel } from 'l-js-fn';
 
-const { confirm, cancel } = await model.confirm('确定删除这条记录？', {
+const { confirm, cancel } = await uniModel.confirm('确定删除这条记录？', {
   title: '删除确认',
   confirmText: '确定',
   cancelText: '取消',
@@ -180,7 +182,7 @@ if (confirm) {
 ### 3.2 alert() 提示对话框（仅确认按钮）
 
 ```ts
-await model.alert('操作成功！', { title: '提示' });
+await uniModel.alert('操作成功！', { title: '提示' });
 // 微信/支付宝统一弹出仅含「确认」按钮的对话框
 ```
 
@@ -197,15 +199,15 @@ await model.alert('操作成功！', { title: '提示' });
 ```
 
 ```ts
-import { permission } from 'l-js-fn/uniapp';
+import { uniPermission } from 'l-js-fn';
 
-const ok = await permission.camera();       // 相机权限
-const ok = await permission.album();        // 相册写入权限
-const ok = await permission.location();     // 位置权限
-const ok = await permission.microphone();   // 麦克风权限
+const ok = await uniPermission.camera();       // 相机权限
+const ok = await uniPermission.album();        // 相册写入权限
+const ok = await uniPermission.location();     // 位置权限
+const ok = await uniPermission.microphone();   // 麦克风权限
 
 // 任意 scope
-const ok = await permission.authorize('scope.userLocation');
+const ok = await uniPermission.authorize('scope.userLocation');
 console.log(ok); // true: 已授权; false: 用户拒绝
 ```
 
@@ -218,23 +220,23 @@ console.log(ok); // true: 已授权; false: 用户拒绝
 ### 5.1 基础跳转
 
 ```ts
-import { router } from 'l-js-fn/uniapp';
+import { uniRouter } from 'l-js-fn';
 
-await router.push('/pages/detail/index', {
+await uniRouter.push('/pages/detail/index', {
   query: { id: '1', name: 'test' },      // 拼接到 URL 的 query
   params: { user: { name: 'John' } },    // 对象自动 JSON.stringify
 }); // → '/pages/detail/index?id=1&name=test&user=%7B%22name%22%3A%22John%22%7D'
 
-await router.replace('/pages/home/index'); // 重定向（关闭当前页）
-await router.back(2);                       // 返回两级
-await router.switchTab('/pages/mine/index'); // 切换 tabBar 页（不可带参）
-await router.reLaunch('/pages/index/index'); // 关闭所有页面重新打开
+await uniRouter.replace('/pages/home/index'); // 重定向（关闭当前页）
+await uniRouter.back(2);                       // 返回两级
+await uniRouter.switchTab('/pages/mine/index'); // 切换 tabBar 页（不可带参）
+await uniRouter.reLaunch('/pages/index/index'); // 关闭所有页面重新打开
 ```
 
 ### 5.2 beforeEach() 路由守卫
 
 ```ts
-router.beforeEach((to, from, next) => {
+uniRouter.beforeEach((to, from, next) => {
   if (to.includes('/pages/login') || to.includes('/pages/auth')) {
     next();                        // 放行
   } else if (!isLoggedIn()) {
@@ -254,23 +256,23 @@ router.beforeEach((to, from, next) => {
 支持**过期时间**和**加密存储**（固定宽度 XOR，支持中文 / Emoji 全 Unicode）。
 
 ```ts
-import { storage } from 'l-js-fn/uniapp';
+import { uniStorage } from 'l-js-fn';
 
 // 基本存取
-storage.set('user', { name: 'John', age: 20 });
-storage.get('user');               // { name: 'John', age: 20 }
+uniStorage.set('user', { name: 'John', age: 20 });
+uniStorage.get('user');               // { name: 'John', age: 20 }
 
 // 过期时间（秒）
-storage.set('token', 'abc', { expire: 3600 }); // 1 小时后过期
-storage.get('token');               // 过期后返回 null，并自动清除
+uniStorage.set('token', 'abc', { expire: 3600 }); // 1 小时后过期
+uniStorage.get('token');               // 过期后返回 null，并自动清除
 
 // 加密存储（XOR）
-storage.set('secret', '张三👋', { encrypt: true });
-storage.get('secret', { encrypt: true }); // '张三👋'（中文/Emoji 完整往返）
+uniStorage.set('secret', '张三👋', { encrypt: true });
+uniStorage.get('secret', { encrypt: true }); // '张三👋'（中文/Emoji 完整往返）
 
 // 删除 / 清空
-storage.remove('user');
-storage.clear();
+uniStorage.remove('user');
+uniStorage.clear();
 ```
 
 > 所有方法在微信（`(key,data)` 位置参数）和支付宝（`{key,data}` 对象参数）上**自动切换存储格式**。
@@ -281,14 +283,14 @@ storage.clear();
 
 
 ```ts
-import { toast } from 'l-js-fn/uniapp';
+import { uniToast } from 'l-js-fn';
 
-toast.show('普通提示');                        // icon 默认 none
-toast.show('成功', { icon: 'success', duration: 3000, mask: true });
-toast.success('保存成功');
-toast.error('网络异常');
-toast.loading('加载中...');                    // 默认带遮罩
-toast.hideLoading();
+uniToast.show('普通提示');                        // icon 默认 none
+uniToast.show('成功', { icon: 'success', duration: 3000, mask: true });
+uniToast.success('保存成功');
+uniToast.error('网络异常');
+uniToast.loading('加载中...');                    // 默认带遮罩
+uniToast.hideLoading();
 ```
 
 **icon 平台差异自动处理：**
@@ -310,9 +312,9 @@ toast.hideLoading();
 ::: code-group
 ```ts [TypeScript]
 // douyin-adapter.ts
-import { registerAdapter, type PlatformAdapter } from 'l-js-fn/uniapp';
+import { uniRegisterAdapter, type UniPlatformAdapter } from 'l-js-fn';
 
-const douyinAdapter: PlatformAdapter = {
+const douyinAdapter: UniPlatformAdapter = {
   name: 'douyin',
   api: tt, // 抖音全局对象
 
@@ -340,12 +342,12 @@ const douyinAdapter: PlatformAdapter = {
 };
 
 // App.vue onLaunch
-registerAdapter(douyinAdapter);
+uniRegisterAdapter(douyinAdapter);
 ```
 
 ```js [JavaScript (ESM)]
 // douyin-adapter.mjs
-import { registerAdapter } from 'l-js-fn/uniapp';
+import { uniRegisterAdapter } from 'l-js-fn';
 
 const douyinAdapter = {
   name: 'douyin',
@@ -375,7 +377,7 @@ const douyinAdapter = {
 };
 
 // App.vue onLaunch
-registerAdapter(douyinAdapter);
+uniRegisterAdapter(douyinAdapter);
 ```
 
 ```js [JavaScript (CJS)]
@@ -438,7 +440,7 @@ registerAdapter(douyinAdapter);
 ## 10. 平台适配器接口参考
 
 ```ts
-interface PlatformAdapter {
+interface UniPlatformAdapter {
   name: string;                     // 平台标识
   api: Record<string, any>;         // 平台原生 API 对象（wx / my / uni）
 
