@@ -72,6 +72,9 @@ export default defineConfig({
 				items: [
 					{ text: '基础功能 (API)', link: '/guide/uniapp' },
 					{ text: '文件系统 (File)', link: '/guide/uniapp-file' },
+					{ text: '剪贴板 (Clipboard)', link: '/guide/uniapp-clipboard' },
+					{ text: '设备适配 (Device)', link: '/guide/uniapp-device' },
+					{ text: '网络状态 (Network)', link: '/guide/uniapp-network' },
 					{ text: '网络请求 (Request)', link: '/guide/uniapp-request' },
 				],
 			},

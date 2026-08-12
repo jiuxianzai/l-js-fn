@@ -4,7 +4,7 @@ uniapp 小程序工具集，封装了平台适配层、环境信息、弹窗、�
 
 底层采用**策略模式（平台适配器）**，内置 `wechat` / `alipay` / `h5` / `app` 四个平台适配器，并支持通过 `registerAdapter()` 扩展任意新平台（抖音、快手等）。
 
-> 文件系统模块详细用法请参考 [文件系统 (File)](/guide/uniapp-file)，网络请求模块详细用法请参考 [网络请求 (Request)](/guide/uniapp-request)。
+> 文件系统模块详细用法请参考 [文件系统 (File)](/guide/uniapp-file)，网络请求模块详细用法请参考 [网络请求 (Request)](/guide/uniapp-request)，剪贴板 / 设备适配 / 网络状态请参考 [剪贴板 (Clipboard)](/guide/uniapp-clipboard)、[设备适配 (Device)](/guide/uniapp-device)、[网络状态 (Network)](/guide/uniapp-network)。
 
 **导入方式：**
 
@@ -336,107 +336,51 @@ uniToast.hideLoading();
 
 ## 8. 剪贴板 (clipboard)
 
-### 8.1 copy() 复制文本
-
-微信/支付宝/H5/App 参数差异（微信 `data`、支付宝 `text`）已封装，复制结果统一返回布尔值。
+复制 / 读取系统剪贴板，微信 `data`、支付宝 `text` 参数差异自动处理。
 
 ```ts
 import { uniClipboard } from 'l-js-fn';
 
-const ok = await uniClipboard.copy('复制内容');
-if (ok) {
-  uniToast.success('已复制');
-}
+const ok = await uniClipboard.copy('复制内容'); // true / false
+const text = await uniClipboard.read();          // 剪贴板文本
 ```
 
-### 8.2 read() 读取剪贴板
-
-```ts
-const text = await uniClipboard.read();
-console.log(text); // 剪贴板中的文本
-```
+> 详细用法请参考 [剪贴板 (Clipboard)](/guide/uniapp-clipboard)。
 
 ---
 
 ## 9. 设备/UI 适配 (device)
 
-针对**状态栏高度、安全区、胶囊按钮**等 UI 适配刚需场景，自动透传系统信息并缓存，无需关心平台差异。
-
-### 9.1 info() 设备信息
-
-首次调用读取并缓存系统信息（横竖屏切换后用 `refresh()` 刷新）。
+针对**状态栏高度、安全区、胶囊按钮**等 UI 适配刚需场景，自动透传系统信息并缓存。
 
 ```ts
 import { uniDevice } from 'l-js-fn';
 
-const info = uniDevice.info();
-console.log(info);
-// {
-//   brand: 'iPhone', model: 'iPhone 15 Pro', system: 'iOS 17.0',
-//   statusBarHeight: 47, screenWidth: 390, screenHeight: 844,
-//   pixelRatio: 3, safeArea: {...}, safeAreaInsets: { top: 47, bottom: 74, ... }
-// }
+uniDevice.info();                    // 设备信息（缓存）
+uniDevice.statusBarHeight();         // 状态栏高度
+uniDevice.safeAreaInsets();          // 安全区内边距 { top, right, bottom, left }
+uniDevice.capsule();                 // 胶囊按钮（微信/支付宝，其余平台 null）
+uniDevice.isInSafeArea();            // 是否为 iPhone X 系刘海屏
 ```
 
-### 9.2 statusBarHeight() 状态栏高度
-
-```ts
-const bar = uniDevice.statusBarHeight();
-// 自定义导航栏计算占位高度时使用
-```
-
-### 9.3 safeAreaInsets() 安全区内边距
-
-```ts
-const { top, bottom, left, right } = uniDevice.safeAreaInsets();
-// bottom > 0 表示底部有 Home 指示条（iPhone X 系），页面底部按钮需留出该高度
-```
-
-### 9.4 capsule() 胶囊按钮（微信/支付宝）
-
-```ts
-const capsule = uniDevice.capsule(); // 微信/支付宝返回 { left, top, right, bottom, width, height }
-if (capsule) {
-  // 自定义右上角按钮时按胶囊位置对齐
-} else {
-  // 其余平台（H5/App）返回 null
-}
-```
-
-### 9.5 isInSafeArea() 是否处于底部安全区
-
-```ts
-if (uniDevice.isInSafeArea()) {
-  // 底部存在 Home 指示条，操作栏需要增加安全区内边距
-}
-```
+> 详细用法请参考 [设备适配 (Device)](/guide/uniapp-device)。
 
 ---
 
 ## 10. 网络状态 (network)
 
-### 10.1 type() / isOnline() 检测网络
+网络类型检测、在线判断与变化监听，H5 自动降级 `navigator.onLine`。
 
 ```ts
 import { uniNetwork } from 'l-js-fn';
 
-const type = await uniNetwork.type();
-// 'wifi' | '4g' | '3g' | '2g' | 'none' | 'unknown'
-
+const type = await uniNetwork.type();      // 'wifi' | '4g' | ... | 'none'
 const online = await uniNetwork.isOnline(); // true / false
+uniNetwork.watch((isConnected, type) => {}); // 监听变化
+uniNetwork.off();                            // 移除监听
 ```
 
-### 10.2 watch() / off() 监听网络变化
-
-```ts
-uniNetwork.watch((isConnected, type) => {
-  console.log(isConnected, type); // true 'wifi'（断网时 false 'none'）
-});
-
-uniNetwork.off(); // 移除监听
-```
-
-> H5 端 `uni.getNetworkType` 不可用时自动降级为 `navigator.onLine`。
+> 详细用法请参考 [网络状态 (Network)](/guide/uniapp-network)。
 
 ---
 
