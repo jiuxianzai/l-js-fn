@@ -531,7 +531,7 @@ isHttps('');                     // false
 ```ts [TypeScript]
 import { isIdCard } from 'l-js-fn';
 
-isIdCard('110101199001011234'); // true（18位）
+isIdCard('11010519491231002X'); // true（18位）
 isIdCard('110101900101123');    // true（15位）
 isIdCard('123456789012345678'); // false
 ```
@@ -539,7 +539,7 @@ isIdCard('123456789012345678'); // false
 ```js [JavaScript (ESM)]
 import { isIdCard } from 'l-js-fn';
 
-isIdCard('110101199001011234'); // true（18位）
+isIdCard('11010519491231002X'); // true（18位）
 isIdCard('110101900101123');    // true（15位）
 isIdCard('123456789012345678'); // false
 ```
@@ -547,7 +547,7 @@ isIdCard('123456789012345678'); // false
 ```js [JavaScript (CJS)]
 const { isIdCard } = require('l-js-fn');
 
-isIdCard('110101199001011234'); // true（18位）
+isIdCard('11010519491231002X'); // true（18位）
 isIdCard('110101900101123');    // true（15位）
 isIdCard('123456789012345678'); // false
 ```

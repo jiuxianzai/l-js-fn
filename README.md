@@ -144,7 +144,7 @@ isURL('//cdn.example.com'); // true
 isPhoneNumber('13800138000'); // true
 
 // 身份证验证
-isIdCard('110101199001011234'); // true
+isIdCard('11010519491231002X'); // true
 
 // 银行卡号验证
 isBankCard('6222021234567890'); // true

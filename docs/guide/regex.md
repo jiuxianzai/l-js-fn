@@ -29,7 +29,7 @@ const { REGEXP } = require('l-js-fn/regex');
 | `EMAIL` | `/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/` | 邮箱地址 | `'test@example.com'` |
 | `PASSWORD` | `/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9\s])\S{8,16}$/` | 强密码（8-16位，含大小写、数字、特殊字符） | `'Pass123!'` |
 | `URL` | 复杂正则 | URL 地址 | `'https://example.com'` |
-| `ID_CARD` | `/^(?:\d{15}\|\d{17}[\dXx])$/` | 身份证号（15或18位） | `'110101199001011234'` |
+| `ID_CARD` | `/^(?:\d{15}\|\d{17}[\dXx])$/` | 身份证号（15或18位） | `'11010519491231002X'` |
 | `CHINESE` | `/^[\u4e00-\u9fa5]+$/` | 纯中文 | `'中文'` |
 | `ENGLISH` | `/^[A-Za-z]+$/` | 纯英文 | `'Hello'` |
 | `NUMBER` | `/^\d+$/` | 纯数字 | `'12345'` |
@@ -58,7 +58,7 @@ REGEXP.EMAIL.test('test@example.com');   // true
 REGEXP.EMAIL.test('invalid-email');      // false
 
 // 身份证验证
-REGEXP.ID_CARD.test('110101199001011234'); // true
+REGEXP.ID_CARD.test('11010519491231002X'); // true
 REGEXP.ID_CARD.test('123456789012345678'); // false
 
 // 银行卡号验证
@@ -78,7 +78,7 @@ REGEXP.EMAIL.test('test@example.com');   // true
 REGEXP.EMAIL.test('invalid-email');      // false
 
 // 身份证验证
-REGEXP.ID_CARD.test('110101199001011234'); // true
+REGEXP.ID_CARD.test('11010519491231002X'); // true
 REGEXP.ID_CARD.test('123456789012345678'); // false
 
 // 银行卡号验证
@@ -98,7 +98,7 @@ REGEXP.EMAIL.test('test@example.com');   // true
 REGEXP.EMAIL.test('invalid-email');      // false
 
 // 身份证验证
-REGEXP.ID_CARD.test('110101199001011234'); // true
+REGEXP.ID_CARD.test('11010519491231002X'); // true
 REGEXP.ID_CARD.test('123456789012345678'); // false
 
 // 银行卡号验证
