@@ -109,6 +109,8 @@ const user = await request.get('/user', { params: { id: 1 } });
 ```
 :::
 
+> **params 序列化说明**：GET 参数由 `transUrlParams` 序列化后自动拼接 —— url 已含 `?` 时用 `&` 追加，否则用 `?`；嵌套对象序列化为 `key[sub]=value`，数组为 `key[index]=value`，null / 空字符串 / undefined 会被跳过；url 中携带的 `#` hash 部分会被剥离。
+
 ### 2.2 post() POST 请求
 
 **参数说明：**

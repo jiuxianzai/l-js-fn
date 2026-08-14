@@ -44,21 +44,21 @@ describe('luch-request helpers', () => {
 			expect(buildURL('/api', { a: null, b: undefined, c: 'x' })).toBe('/api?c=x');
 		});
 
-		it('数组参数拼接为 key[]', () => {
-			expect(buildURL('/api', { tag: ['a', 'b'] })).toBe('/api?tag[]=a&tag[]=b');
+		it('数组参数拼接为 key[index]', () => {
+			expect(buildURL('/api', { tag: ['a', 'b'] })).toBe('/api?tag%5B0%5D=a&tag%5B1%5D=b');
 		});
 
 		it('Date 参数转 ISO 字符串', () => {
 			const d = new Date('2024-01-01T00:00:00.000Z');
-			expect(buildURL('/api', { t: d })).toBe('/api?t=2024-01-01T00:00:00.000Z');
+			expect(buildURL('/api', { t: d })).toBe('/api?t=2024-01-01T00%3A00%3A00.000Z');
 		});
 
-		it('对象参数 JSON 序列化', () => {
-			expect(buildURL('/api', { user: { id: 1 } })).toBe('/api?user=%7B%22id%22:1%7D');
+		it('嵌套对象参数拼接为 key[sub]=value', () => {
+			expect(buildURL('/api', { user: { id: 1 } })).toBe('/api?user%5Bid%5D=1');
 		});
 
-		it('特殊字符编码（@:$,+[] 保留）', () => {
-			expect(buildURL('/api', { q: 'a@b:c$d,e' })).toBe('/api?q=a@b:c$d,e');
+		it('特殊字符百分号编码', () => {
+			expect(buildURL('/api', { q: 'a@b:c$d,e' })).toBe('/api?q=a%40b%3Ac%24d%2Ce');
 		});
 
 		it('剥离 hash 部分', () => {

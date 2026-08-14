@@ -1,18 +1,8 @@
 // @ts-nocheck
 'use strict'
 
+import { transUrlParams } from '@/libs/url-kit.ts'
 import * as utils from '../utils.ts'
-
-function encode(val) {
-    return encodeURIComponent(val)
-        .replace(/%40/gi, '@')
-        .replace(/%3A/gi, ':')
-        .replace(/%24/g, '$')
-        .replace(/%2C/gi, ',')
-        .replace(/%20/g, '+')
-        .replace(/%5B/gi, '[')
-        .replace(/%5D/gi, ']')
-}
 
 /**
  * Build a URL by appending params to the end
@@ -31,30 +21,13 @@ export default function buildURL(url, params) {
     if (utils.isURLSearchParams(params)) {
         serializedParams = params.toString()
     } else {
-        const parts = []
-
-        utils.forEach(params, (val, key) => {
-            if (val === null || typeof val === 'undefined') {
-                return
+        // Date 对象无可枚举键，提前转 ISO 字符串避免被 transUrlParams 当作空对象丢弃
+        Object.keys(params).forEach((key) => {
+            if (utils.isDate(params[key])) {
+                params[key] = params[key].toISOString()
             }
-
-            if (utils.isArray(val)) {
-                key = `${key}[]`
-            } else {
-                val = [val]
-            }
-
-            utils.forEach(val, (v) => {
-                if (utils.isDate(v)) {
-                    v = v.toISOString()
-                } else if (utils.isObject(v)) {
-                    v = JSON.stringify(v)
-                }
-                parts.push(`${encode(key)}=${encode(v)}`)
-            })
         })
-
-        serializedParams = parts.join('&')
+        serializedParams = transUrlParams(params)
     }
 
     if (serializedParams) {

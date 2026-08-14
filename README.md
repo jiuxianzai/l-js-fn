@@ -917,7 +917,7 @@ toast.hideLoading();
 
 // 网络请求
 request.setConfig({ baseURL: 'https://api.example.com', timeout: 30000 });
-const user = await request.get('/user', { params: { id: 1 } });
+const user = await request.get('/user', { params: { id: 1 } }); // GET 参数经 transUrlParams 序列化拼接（?/& 自动判断）
 const result = await request.post('/user', { name: 'John' });
 // 重试 & Loading
 const data = await request.get('/api', { retry: 3, retryDelay: 1000, loading: true });
