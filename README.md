@@ -99,6 +99,7 @@ import {
 	sm2Encrypt,
 	sm2Decrypt,
 	sm2GenerateKeyPair,
+	sm3,
 	sm4Encrypt,
 	sm4Decrypt,
 } from 'l-js-fn/crypto';
@@ -1023,7 +1024,8 @@ registerAdapter(douyinAdapter);
 
 ### 加密模块 (crypto)
 
-> **注意**: SM2、SM4 依赖 `sm-crypto` 包，按需安装：`npm install sm-crypto`
+> **注意**: SM2、SM3、SM4 依赖 `sm-crypto` 包，按需安装：`npm install sm-crypto`
+> **小程序等无 Node 环境**请改用子入口 `l-js-fn/crypto/sm`（仅含 SM2/SM3/SM4，不依赖 Node 内置 `crypto`）。
 
 ```typescript
 import {
@@ -1036,6 +1038,7 @@ import {
 	sm2Encrypt,
 	sm2Decrypt,
 	sm2GenerateKeyPair,
+	sm3,
 	sm4Encrypt,
 	sm4Decrypt,
 } from 'l-js-fn/crypto';
@@ -1117,6 +1120,19 @@ const decrypted = await sm2Decrypt(encrypted, { privateKey: keyPair.privateKey }
 await sm2Encrypt('data', { publicKey: keyPair.publicKey, outputEncoding: 'base64' });
 ```
 
+#### SM3 国密哈希
+
+```typescript
+// 基础哈希（64 位 hex 字符串）
+const hash = await sm3('abc');
+// '66c7f0f462eeedd9d1f2d46bdc10e4e24167c4875cf2f7a2297da02b8f4ba8e0'
+
+// 中文 / emoji / 空串
+await sm3('你好，世界');
+await sm3('😀🎉🔥');
+await sm3('');
+```
+
 #### SM4 国密对称加密
 
 ```typescript
@@ -1133,6 +1149,10 @@ await sm4Encrypt('data', { key: '0...0', mode: 'ecb' });
 
 // hex / base64 输出
 await sm4Encrypt('data', { key: '0...0', outputEncoding: 'base64' });
+
+// UTF-8 字符串 key/iv 自动转 hex（key 转 hex 后须为 16 字节，兼容小程序，无需手动 utf8→hex）
+await sm4Encrypt('data', { key: 'mySecretKey12345', keyEncoding: 'utf8' });
+await sm4Decrypt(enc, { key: 'mySecretKey12345', keyEncoding: 'utf8' });
 ```
 
 ## 🌐 浏览器兼容性
@@ -1158,6 +1178,9 @@ import { env, router, toast } from 'l-js-fn/uniapp';
 
 // crypto 模块仅支持子路径（依赖 Node 内置 crypto）
 import { md5 } from 'l-js-fn/crypto';
+
+// 小程序等无 Node 环境：使用 SM 子入口（不依赖 Node 内置 crypto）
+import { sm3, sm4Encrypt } from 'l-js-fn/crypto/sm';
 
 // CommonJS 导入（CJS 无法树摇，建议用子路径按需加载）
 const { isArray } = require('l-js-fn');

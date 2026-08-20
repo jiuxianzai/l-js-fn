@@ -16,7 +16,9 @@ export interface Sm2DecryptOptions {
 
 async function loadSmCrypto(): Promise<any> {
 	try {
-		return await import('sm-crypto');
+		// sm-crypto 是 CJS 包，Node ESM 动态导入返回 { default: {sm2,sm3,sm4}, sm2 }，sm2 出现在命名导出是侥幸，需统一走 default 兜底
+		const mod = await import('sm-crypto');
+		return mod.default ?? mod;
 	} catch {
 		throw new Error('SM2 requires the "sm-crypto" package.\nInstall it: npm install sm-crypto');
 	}

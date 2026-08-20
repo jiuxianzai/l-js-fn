@@ -1,4 +1,4 @@
-import { md5, aesEncrypt, aesDecrypt, rsaEncrypt, rsaDecrypt, rsaGenerateKeyPair, sm2Encrypt, sm2Decrypt, sm2GenerateKeyPair, sm4Encrypt, sm4Decrypt } from '@/crypto/index';
+import { md5, aesEncrypt, aesDecrypt, rsaEncrypt, rsaDecrypt, rsaGenerateKeyPair, sm2Encrypt, sm2Decrypt, sm2GenerateKeyPair, sm3, sm4Encrypt, sm4Decrypt } from '@/crypto/index';
 
 describe('crypto - 加密模块', () => {
 	// ==================== MD5 ====================
@@ -692,6 +692,63 @@ describe('crypto - 加密模块', () => {
 		});
 	});
 
+	// ==================== SM3 ====================
+	describe('SM3 - 国密哈希', () => {
+		describe('已知测试向量', () => {
+			it('正确计算空字符串的 SM3', async () => {
+				await expect(sm3('')).resolves.toBe('1ab21d8355cfa17f8e61194831e81a8f22bec8c728fefb747ed035eb5082aa2b');
+			});
+
+			it('正确计算 "abc" 的 SM3', async () => {
+				await expect(sm3('abc')).resolves.toBe('66c7f0f462eeedd9d1f2d46bdc10e4e24167c4875cf2f7a2297da02b8f4ba8e0');
+			});
+
+			it('正确计算中文的 SM3', async () => {
+				await expect(sm3('你好')).resolves.toBe('78e5c78c5322ca174089e58dc7790acf8ce9d542bee6ae4a5a0797d5e356be61');
+			});
+		});
+
+		describe('散列特性验证', () => {
+			it('相同输入产生相同哈希（确定性）', async () => {
+				expect(await sm3('test')).toBe(await sm3('test'));
+			});
+
+			it('不同输入产生不同哈希（雪崩效应）', async () => {
+				expect(await sm3('test1')).not.toBe(await sm3('test2'));
+			});
+
+			it('输出固定为 64 位十六进制字符串', async () => {
+				const tests = ['', 'a', 'abc', 'hello world', Math.random().toString(), 'x'.repeat(100)];
+				for (const t of tests) {
+					const hash = await sm3(t);
+					expect(hash).toHaveLength(64);
+					expect(/^[a-f0-9]{64}$/.test(hash)).toBe(true);
+				}
+			});
+
+			it('处理 emoji', async () => {
+				const hash = await sm3('😀🎉🔥');
+				expect(hash).toHaveLength(64);
+				expect(/^[a-f0-9]{64}$/.test(hash)).toBe(true);
+			});
+
+			it('处理混合中英文和 emoji', async () => {
+				const hash = await sm3('你好 World 😀');
+				expect(hash).toHaveLength(64);
+			});
+
+			it('处理长文本（10K 字符）', async () => {
+				const hash = await sm3('a'.repeat(10000));
+				expect(hash).toHaveLength(64);
+			});
+
+			it('处理特殊字符', async () => {
+				const hash = await sm3('!@#$%^&*()_+-=[]{}|;:,.<>?/');
+				expect(hash).toHaveLength(64);
+			});
+		});
+	});
+
 	// ==================== SM4 ====================
 	describe('SM4 - 国密对称加密', () => {
 		const testKey = '0123456789abcdeffedcba9876543210';
@@ -835,6 +892,55 @@ describe('crypto - 加密模块', () => {
 
 			it('无效 key 格式抛出异常', async () => {
 				await expect(sm4Encrypt('data', { key: 'not-hex-key!!!' })).rejects.toThrow();
+			});
+		});
+
+		describe('SM4 - keyEncoding utf8（UTF-8 密钥自动转 hex）', () => {
+			const utf8Key = 'mySecretKey12345'; // 16 字节 ascii = 32 hex
+			const utf8Iv = '0123456789abcdef';
+
+			it('CBC + utf8 key/iv 加解密正确（base64 输出）', async () => {
+				const data = 'UTF-8 key SM4';
+				const encrypted = await sm4Encrypt(data, { key: utf8Key, iv: utf8Iv, keyEncoding: 'utf8', outputEncoding: 'base64' });
+				const decrypted = await sm4Decrypt(encrypted, { key: utf8Key, iv: utf8Iv, keyEncoding: 'utf8', outputEncoding: 'base64' });
+				expect(decrypted).toBe(data);
+			});
+
+			it('CBC + utf8 key（不传 iv）自动生成 IV 并可解密', async () => {
+				const data = 'UTF-8 auto iv';
+				const encrypted = await sm4Encrypt(data, { key: utf8Key, keyEncoding: 'utf8' });
+				const decrypted = await sm4Decrypt(encrypted, { key: utf8Key, keyEncoding: 'utf8' });
+				expect(decrypted).toBe(data);
+			});
+
+			it('ECB + utf8 key 加解密正确', async () => {
+				const data = 'ECB UTF-8 key';
+				const encrypted = await sm4Encrypt(data, { key: utf8Key, mode: 'ecb', keyEncoding: 'utf8' });
+				const decrypted = await sm4Decrypt(encrypted, { key: utf8Key, mode: 'ecb', keyEncoding: 'utf8' });
+				expect(decrypted).toBe(data);
+			});
+
+			it('中文 utf8 key（16 字节）加解密正确', async () => {
+				const cnKey = '国密密钥加1'; // 5 个中文字 + 1 个 ascii = 16 字节
+				const data = '中文 key 测试';
+				const encrypted = await sm4Encrypt(data, { key: cnKey, keyEncoding: 'utf8' });
+				const decrypted = await sm4Decrypt(encrypted, { key: cnKey, keyEncoding: 'utf8' });
+				expect(decrypted).toBe(data);
+			});
+
+			it('utf8 key 与手动转 hex 后的结果一致', async () => {
+				const data = 'Equivalence SM4';
+				// mySecretKey12345 → 6d795365637265744b65793132333435
+				const hexKey = '6d795365637265744b65793132333435';
+				const hexIv = '30313233343536373839616263646566';
+				const encUtf8 = await sm4Encrypt(data, { key: utf8Key, iv: utf8Iv, keyEncoding: 'utf8' });
+				const encHex = await sm4Encrypt(data, { key: hexKey, iv: hexIv });
+				expect(encUtf8).toBe(encHex);
+				expect(await sm4Decrypt(encUtf8, { key: utf8Key, iv: utf8Iv, keyEncoding: 'utf8' })).toBe(data);
+			});
+
+			it('非 16 字节 utf8 key 抛出异常', async () => {
+				await expect(sm4Encrypt('data', { key: 'too-short', keyEncoding: 'utf8' })).rejects.toThrow();
 			});
 		});
 	});

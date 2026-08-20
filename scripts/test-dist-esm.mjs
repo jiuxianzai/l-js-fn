@@ -2,7 +2,19 @@
  * dist ESM 验证 — 原生 Node.js ESM 脚本
  * 运行: node --experimental-vm-modules scripts/test-dist-esm.mjs
  */
-import { strict as assert } from 'node:assert';
+import { strict as baseAssert } from 'node:assert';
+
+// 包装 assert 以自动统计断言总数（含循环内执行次数）
+let assertCount = 0;
+const assert = new Proxy(baseAssert, {
+	get(target, prop) {
+		const fn = target[prop];
+		return (...args) => {
+			assertCount++;
+			return fn.apply(target, args);
+		};
+	},
+});
 
 // 主包 ESM
 const main = await import('../dist/index.js');
@@ -123,4 +135,30 @@ const sm2Enc = await crypto.sm2Encrypt('hello', { publicKey: sm2Pair.publicKey }
 const sm2Dec = await crypto.sm2Decrypt(sm2Enc, { privateKey: sm2Pair.privateKey });
 assert.strictEqual(sm2Dec, 'hello', 'crypto.sm2');
 
-console.log(`✅ 全部 ${111} 个 ESM 断言通过`);
+// sm3：已知向量
+assert.strictEqual(
+  await crypto.sm3('abc'),
+  '66c7f0f462eeedd9d1f2d46bdc10e4e24167c4875cf2f7a2297da02b8f4ba8e0',
+  'crypto.sm3 向量',
+);
+assert.strictEqual(
+  await crypto.sm3(''),
+  '1ab21d8355cfa17f8e61194831e81a8f22bec8c728fefb747ed035eb5082aa2b',
+  'crypto.sm3 空串',
+);
+
+// sm4：ECB 往返（真实产物）
+const sm4Enc = await crypto.sm4Encrypt('test', { key: '0123456789abcdeffedcba9876543210', mode: 'ecb' });
+const sm4Dec = await crypto.sm4Decrypt(sm4Enc, { key: '0123456789abcdeffedcba9876543210', mode: 'ecb' });
+assert.strictEqual(sm4Dec, 'test', 'crypto.sm4');
+
+// crypto/sm 子入口（不依赖 node crypto，供小程序使用）
+const sm = await import('../dist/crypto/sm.js');
+assert.strictEqual(typeof sm.sm3, 'function', 'crypto/sm.sm3');
+assert.strictEqual(typeof sm.sm4Encrypt, 'function', 'crypto/sm.sm4Encrypt');
+assert.strictEqual(typeof sm.sm2GenerateKeyPair, 'function', 'crypto/sm.sm2GenerateKeyPair');
+const smSm4Enc = await sm.sm4Encrypt('test', { key: '0123456789abcdeffedcba9876543210', mode: 'ecb' });
+const smSm4Dec = await sm.sm4Decrypt(smSm4Enc, { key: '0123456789abcdeffedcba9876543210', mode: 'ecb' });
+assert.strictEqual(smSm4Dec, 'test', 'crypto/sm.sm4 往返');
+
+console.log(`✅ 全部 ${assertCount} 个 ESM 断言通过`);

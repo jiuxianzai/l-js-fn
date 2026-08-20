@@ -66,6 +66,11 @@
 			"import": "./dist/crypto/index.js",
 			"require": "./dist/crypto/index.cjs"
 		},
+		"./crypto/sm": {
+			"types": "./dist/crypto/sm.d.ts",
+			"import": "./dist/crypto/sm.js",
+			"require": "./dist/crypto/sm.cjs"
+		},
 		"./uniapp": {
 			"types": "./dist/uniapp/index.d.ts",
 			"import": "./dist/uniapp/index.js",

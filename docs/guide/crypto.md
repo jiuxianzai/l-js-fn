@@ -1,14 +1,15 @@
 # crypto — 加密模块
 
-加密模块提供常用的加解密和哈希算法，支持 MD5、AES、RSA、SM2、SM4 等加密方式。
+加密模块提供常用的加解密和哈希算法，支持 MD5、AES、RSA、SM2、SM3、SM4 等加密方式。
 
-> **注意**：SM2、SM4 算法依赖 `sm-crypto` 包，按需安装：
+> **注意**：SM2、SM3、SM4 算法依赖 `sm-crypto` 包，按需安装：
 >
 > ```bash
 > npm install sm-crypto
 > ```
 
-> **导入说明**：本模块依赖 Node 内置 `crypto`（MD5/AES/RSA），**仅在 Node 环境可用**，不参与主包平铺，始终通过子路径 `l-js-fn/crypto` 导入。
+> **导入说明**：`l-js-fn/crypto` 依赖 Node 内置 `crypto`（MD5/AES/RSA），**仅在 Node 环境可用**，不参与主包平铺，始终通过子路径导入。
+> **小程序环境**请改用 `l-js-fn/crypto/sm` 子入口（仅含 SM2/SM3/SM4，不依赖 Node 内置 `crypto`）。
 
 **导入方式：**
 
@@ -19,6 +20,7 @@ import {
   aesEncrypt, aesDecrypt,
   rsaEncrypt, rsaDecrypt, rsaGenerateKeyPair,
   sm2Encrypt, sm2Decrypt, sm2GenerateKeyPair,
+  sm3,
   sm4Encrypt, sm4Decrypt,
 } from 'l-js-fn/crypto';
 ```
@@ -29,6 +31,7 @@ import {
   aesEncrypt, aesDecrypt,
   rsaEncrypt, rsaDecrypt, rsaGenerateKeyPair,
   sm2Encrypt, sm2Decrypt, sm2GenerateKeyPair,
+  sm3,
   sm4Encrypt, sm4Decrypt,
 } from 'l-js-fn/crypto';
 ```
@@ -39,6 +42,7 @@ const {
   aesEncrypt, aesDecrypt,
   rsaEncrypt, rsaDecrypt, rsaGenerateKeyPair,
   sm2Encrypt, sm2Decrypt, sm2GenerateKeyPair,
+  sm3,
   sm4Encrypt, sm4Decrypt,
 } = require('l-js-fn/crypto');
 ```
@@ -754,13 +758,72 @@ const { sm2GenerateKeyPair, sm2Encrypt, sm2Decrypt } = require('l-js-fn/crypto')
 
 ---
 
-## 5. SM4 — 国密对称加密
+## 5. SM3 — 国密哈希
+
+SM3 密码杂凑算法，输出 64 位十六进制字符串，按需依赖 `sm-crypto`。
+
+> **依赖安装**：`npm install sm-crypto`
+
+### 5.1 基础哈希
+
+::: code-group
+```ts [TypeScript]
+import { sm3 } from 'l-js-fn/crypto';
+
+const hash = await sm3('abc');
+// '66c7f0f462eeedd9d1f2d46bdc10e4e24167c4875cf2f7a2297da02b8f4ba8e0'
+```
+
+```js [JavaScript (ESM)]
+import { sm3 } from 'l-js-fn/crypto';
+
+const hash = await sm3('abc');
+```
+
+```js [JavaScript (CJS)]
+const { sm3 } = require('l-js-fn/crypto');
+
+(async () => {
+  const hash = await sm3('abc');
+})();
+```
+:::
+
+### 5.2 中文与特殊字符
+
+::: code-group
+```ts [TypeScript]
+import { sm3 } from 'l-js-fn/crypto';
+
+await sm3('你好，世界');
+await sm3('😀🎉🔥');
+await sm3(''); // 1ab21d8355cfa17f8e61194831e81a8f22bec8c728fefb747ed035eb5082aa2b
+```
+
+```js [JavaScript (ESM)]
+import { sm3 } from 'l-js-fn/crypto';
+
+await sm3('你好，世界');
+```
+
+```js [JavaScript (CJS)]
+const { sm3 } = require('l-js-fn/crypto');
+
+(async () => {
+  await sm3('你好，世界');
+})();
+```
+:::
+
+---
+
+## 6. SM4 — 国密对称加密
 
 SM4 分组密码算法，所有方法均为异步，按需依赖 `sm-crypto`。CBC 模式未指定 IV 时会自动生成随机 IV。
 
 > **依赖安装**：`npm install sm-crypto`
 
-### 5.1 Sm4Options
+### 6.1 Sm4Options
 
 ```ts
 interface Sm4Options {
@@ -768,10 +831,13 @@ interface Sm4Options {
   iv?: string;
   mode?: 'cbc' | 'ecb';
   outputEncoding?: 'hex' | 'base64';
+  keyEncoding?: 'hex' | 'utf8';
 }
 ```
 
-### 5.2 基础加密解密
+> **keyEncoding 说明**：sm-crypto 要求 key/iv 必须是 hex 格式，且 key 需为 **16 字节（32 位 hex）**。默认 `'hex'`；当传入 `'utf8'` 时，库内部自动将 key/iv 按 UTF-8 编码转 hex（不依赖 TextEncoder，兼容小程序），无需手动调用 utf8→hex 转换。注意 UTF-8 转换后的 key 必须恰好为 16 字节。
+
+### 6.2 基础加密解密
 
 ::: code-group
 ```ts [TypeScript]
@@ -806,7 +872,7 @@ const KEY = '0123456789abcdeffedcba9876543210';
 ```
 :::
 
-### 5.3 自定义 IV
+### 6.3 自定义 IV
 
 ::: code-group
 ```ts [TypeScript]
@@ -840,7 +906,7 @@ const dec = await sm4Decrypt(enc, { key: KEY, iv: IV });
 ```
 :::
 
-### 5.4 ECB 模式与输出编码
+### 6.4 ECB 模式与输出编码
 
 ::: code-group
 ```ts [TypeScript]
@@ -882,7 +948,7 @@ const KEY = '0123456789abcdeffedcba9876543210';
 ```
 :::
 
-### 5.5 实际场景：国密业务数据加密
+### 6.5 实际场景：国密业务数据加密
 
 ::: code-group
 ```ts [TypeScript]
@@ -932,6 +998,48 @@ const KEY = '0123456789abcdeffedcba9876543210';
   const data = JSON.stringify({ orderId: '001', amount: '100.00' });
   const enc = await sm4Encrypt(data, { key: KEY, outputEncoding: 'base64' });
   const dec = JSON.parse(await sm4Decrypt(enc, { key: KEY, outputEncoding: 'base64' }));
+})();
+```
+:::
+
+### 6.6 UTF-8 密钥自动转 hex（keyEncoding）
+
+当业务方约定的 key/iv 是普通字符串（如 `'mySecretKey12345'`）而非 hex 时，设置 `keyEncoding: 'utf8'` 即可自动完成转换，无需在项目内自行编写 utf8→hex 方法。
+
+::: code-group
+```ts [TypeScript]
+import { sm4Encrypt, sm4Decrypt } from 'l-js-fn/crypto';
+
+// UTF-8 字符串 key/iv（key 转 hex 后必须为 16 字节）
+const KEY = 'mySecretKey12345';
+const IV = '0123456789abcdef';
+
+// 加密
+const enc = await sm4Encrypt('data', {
+  key: KEY, iv: IV, keyEncoding: 'utf8', outputEncoding: 'base64',
+});
+// 解密（需保持一致）
+const dec = await sm4Decrypt(enc, {
+  key: KEY, iv: IV, keyEncoding: 'utf8', outputEncoding: 'base64',
+});
+// 'data'
+```
+
+```js [JavaScript (ESM)]
+import { sm4Encrypt, sm4Decrypt } from 'l-js-fn/crypto';
+
+(async () => {
+  const enc = await sm4Encrypt('data', { key: 'mySecretKey12345', keyEncoding: 'utf8' });
+  const dec = await sm4Decrypt(enc, { key: 'mySecretKey12345', keyEncoding: 'utf8' });
+})();
+```
+
+```js [JavaScript (CJS)]
+const { sm4Encrypt, sm4Decrypt } = require('l-js-fn/crypto');
+
+(async () => {
+  const enc = await sm4Encrypt('data', { key: 'mySecretKey12345', keyEncoding: 'utf8' });
+  const dec = await sm4Decrypt(enc, { key: 'mySecretKey12345', keyEncoding: 'utf8' });
 })();
 ```
 :::
