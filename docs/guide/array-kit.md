@@ -1018,3 +1018,51 @@ const items = [{ name: 'a', price: 10 }, { name: 'b', price: 20 }];
 sumBy(items, 'price'); // 30
 ```
 :::
+
+## 25. arrayToString 过滤空值后拼接字符串
+
+过滤掉数组中的空值（`null`、`undefined`、空字符串 `''`）后，按顺序拼接为字符串。常用于签名串拼接、多字段值合并等场景。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| arr | `T[]` | 是 | 需要处理的数组 |
+| separator | `string` | 否 | 分隔符，默认为空字符串 `''`，与 `join` 的语义一致 |
+
+**返回值：** `string` — 拼接后的字符串；非数组或空数组返回 `''`
+
+**说明：** 仅过滤 `null`、`undefined`、`''` 三种空值，保留 `0`、`false` 等值
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { arrayToString } from 'l-js-fn';
+
+arrayToString(['a', null, 'b', '', 'c']);            // 'abc'
+arrayToString([1, 0, false, null, '', 2]);           // '10false2'
+arrayToString(['a', 'b', 'c'], '&');                 // 'a&b&c'
+
+// 典型场景：签名串拼接
+const signStr = arrayToString([
+  form.username,
+  form.password,
+  form.phone,
+]);
+```
+
+```js [JavaScript (ESM)]
+import { arrayToString } from 'l-js-fn';
+
+arrayToString(['a', null, 'b', '', 'c']);  // 'abc'
+arrayToString(['a', 'b', 'c'], '&');       // 'a&b&c'
+```
+
+```js [JavaScript (CJS)]
+const { arrayToString } = require('l-js-fn');
+
+arrayToString(['a', null, 'b', '', 'c']);  // 'abc'
+arrayToString(['a', 'b', 'c'], '&');       // 'a&b&c'
+```
+:::

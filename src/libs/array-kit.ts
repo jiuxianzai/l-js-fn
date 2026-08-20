@@ -521,3 +521,20 @@ export function sumBy<T extends Record<string, any>>(arr: T[], key: keyof T): nu
 	}
 	return total;
 }
+
+/**
+ * 过滤掉数组中的空值（null、undefined、空字符串 ''）后，按顺序拼接为字符串
+ * @param arr - 需要处理的数组
+ * @param separator - 分隔符，默认为空字符串 ''，与 join 的语义一致
+ * @returns 拼接后的字符串，非数组或空数组返回 ''
+ * @example
+ * arrayToString(['a', null, 'b', '', 'c']) // 'abc'
+ * arrayToString([1, 0, false, null, '', 2]) // '10false2'
+ * arrayToString(['a', 'b', 'c'], '&') // 'a&b&c'
+ */
+export function arrayToString<T>(arr: T[], separator = ''): string {
+	if (!isArray(arr)) return '';
+	return arr
+		.filter((v) => v !== undefined && v !== null && v !== '')
+		.join(separator);
+}

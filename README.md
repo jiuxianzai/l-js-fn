@@ -187,6 +187,8 @@ import {
 	arrayPluck,
 	sortBy,
 	uniq,
+	sumBy,
+	arrayToString,
 } from 'l-js-fn';
 
 // 删除元素
@@ -264,6 +266,10 @@ uniq(['a', 'b', 'a']); // ['a', 'b']
 
 // 按字段求和
 sumBy([{ price: 10 }, { price: 20 }], 'price'); // 30
+
+// 过滤空值后拼接字符串（常用于签名串）
+arrayToString(['a', null, 'b', '', 'c']); // 'abc'
+arrayToString(['a', 'b', 'c'], '&'); // 'a&b&c'
 ```
 
 #### 字符串处理 (string-kit)

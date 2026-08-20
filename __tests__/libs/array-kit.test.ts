@@ -28,6 +28,7 @@ import {
 	sortBy,
 	uniq,
 	sumBy,
+	arrayToString,
 } from '@/libs/array-kit';
 
 describe('array-kit - 数组操作工具', () => {
@@ -992,6 +993,68 @@ describe('sumBy - 按字段求和', () => {
 
 	it('单元素数组返回该元素值', () => {
 		expect(sumBy([{ val: 5 }], 'val')).toBe(5);
+	});
+});
+
+// ==================== arrayToString 测试 ====================
+describe('arrayToString - 过滤空值后拼接字符串', () => {
+	it('应该过滤 null、undefined、空字符串后按顺序拼接', () => {
+		const result = arrayToString(['a', null, 'b', undefined, '', 'c']);
+		expect(result).toBe('abc');
+	});
+
+	it('应该保留 0 和 false（非空值）', () => {
+		const result = arrayToString([1, 0, false, null, '', 2]);
+		expect(result).toBe('10false2');
+	});
+
+	it('应该将数字隐式转换为字符串拼接', () => {
+		const result = arrayToString([1, 2, 3]);
+		expect(result).toBe('123');
+	});
+
+	it('应该支持自定义分隔符', () => {
+		const result = arrayToString(['a', 'b', 'c'], '&');
+		expect(result).toBe('a&b&c');
+	});
+
+	it('使用分隔符时应过滤空值', () => {
+		const result = arrayToString(['a', null, '', 'b'], '-');
+		expect(result).toBe('a-b');
+	});
+
+	it('应保持原数组顺序拼接', () => {
+		const result = arrayToString(['b', 'a', 'c']);
+		expect(result).toBe('bac');
+	});
+
+	it('对象元素应拼接为 [object Object]', () => {
+		const result = arrayToString([{ id: 1 }, null, { id: 2 }]);
+		expect(result).toBe('[object Object][object Object]');
+	});
+
+	it('仅含空值的数组返回空字符串', () => {
+		expect(arrayToString([null, undefined, ''])).toBe('');
+	});
+
+	it('空数组返回空字符串', () => {
+		expect(arrayToString([])).toBe('');
+	});
+
+	it('非数组输入返回空字符串', () => {
+		expect(arrayToString(123 as any)).toBe('');
+		expect(arrayToString(null as any)).toBe('');
+		expect(arrayToString(undefined as any)).toBe('');
+		expect(arrayToString({} as any)).toBe('');
+	});
+
+	it('单元素数组返回该元素字符串', () => {
+		expect(arrayToString(['hello'])).toBe('hello');
+	});
+
+	it('签名拼接典型场景（signStr）', () => {
+		const signStr = arrayToString(['admin', '123456', '', null, '13800138000']);
+		expect(signStr).toBe('admin12345613800138000');
 	});
 });
 });
