@@ -32,6 +32,7 @@ export default defineConfig({
 		logo: '/logo.svg',
 		nav: [
 			{ text: '指南', link: '/guide/is-kit' },
+			{ text: '更新日志', link: '/guide/changelog' },
 			{ text: 'GitHub', link: 'https://github.com/jiuxianzai/l-js-fn' },
 		],
 
