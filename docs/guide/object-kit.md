@@ -3,7 +3,6 @@
 对象操作工具集，提供合并、过滤、转换等常用功能。
 
 ## 1. objMerge 深度合并对象
-
 深度合并两个对象（**非破坏性**），递归合并嵌套对象，数组会直接复制，返回新对象，不修改入参。
 
 > [!WARNING] v4.0 破坏性变更
@@ -100,7 +99,6 @@ objMerge(target, { b: 2 });
 :::
 
 ## 2. objFilterProp 过滤指定属性
-
 过滤对象中不需要的属性，返回新对象。
 
 **参数说明：**
@@ -150,7 +148,6 @@ objFilterProp(obj, ['a', 'c']);
 :::
 
 ## 3. objFilterNull 过滤空值
-
 过滤对象中的空值（`null` 或 `undefined`），支持通过 `options` 控制过滤行为。
 
 **参数说明：**
@@ -220,8 +217,7 @@ objFilterNull({ a: 1, b: null, c: undefined }, { null: false, undefined: true })
 > Object.prototype.hasOwnProperty.call(obj, 'a'); // true
 > ```
 
-## 5. objToFormData JSON转FormData
-
+## 4. objToFormData JSON转FormData
 将 JSON 对象转换为 `FormData`。
 
 **参数说明：**
@@ -280,8 +276,7 @@ const formData2 = objToFormData(nested);
 ```
 :::
 
-## 6. objFromFormData FormData转对象
-
+## 5. objFromFormData FormData转对象
 将 `FormData` 转换为 JSON 对象。
 
 **参数说明：**
@@ -329,8 +324,7 @@ formData.append('age', '20');
 ```
 :::
 
-## 7. objPick 选取指定属性
-
+## 6. objPick 选取指定属性
 从对象中选取指定属性，返回新对象。
 
 ::: code-group
@@ -353,8 +347,7 @@ objPick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
 ```
 :::
 
-## 8. objOmit 排除指定属性
-
+## 7. objOmit 排除指定属性
 排除对象中指定 key 的属性，返回一个新对象（objPick 的反操作）。
 
 **参数说明：**
@@ -389,8 +382,7 @@ objOmit({ a: 1, b: 2, c: 3 }, ['b']);    // { a: 1, c: 3 }
 ```
 :::
 
-## 9. objGet 安全深层取值
-
+## 8. objGet 安全深层取值
 安全获取对象深层属性值。
 
 ::: code-group

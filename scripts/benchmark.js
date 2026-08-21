@@ -5,12 +5,12 @@
 import { performance } from 'perf_hooks';
 import { deepClone } from '../dist/index.cjs';
 import { isEqual } from '../dist/index.cjs';
-import { flatten } from '../dist/index.cjs';
-import { shuffle } from '../dist/index.cjs';
+import { arrayFlatten } from '../dist/index.cjs';
+import { arrayShuffle } from '../dist/index.cjs';
 import { arrayUnique } from '../dist/index.cjs';
 import { dateFormat } from '../dist/index.cjs';
-import { groupBy } from '../dist/index.cjs';
-import { deepMerge } from '../dist/index.cjs';
+import { arrayGroupBy } from '../dist/index.cjs';
+import { objMerge } from '../dist/index.cjs';
 import { formatNumber } from '../dist/index.cjs';
 import { toCamelCase, toPascalCase } from '../dist/index.cjs';
 
@@ -67,8 +67,8 @@ bench('  large object (100 keys)', ({ a, b }) => isEqual(a, b), eqData2);
 bench('  same reference', (d) => isEqual(d, d), bigObj);
 bench('  primitives', () => isEqual(42, 42), () => null);
 
-// ── flatten ──
-console.log('\nflatten:');
+// ── arrayFlatten ──
+console.log("\narrayFlatten:");
 const nestedArr = () => {
 	const arr = [];
 	for (let i = 0; i < 5; i++) {
@@ -77,14 +77,14 @@ const nestedArr = () => {
 	return arr;
 };
 
-bench('  deeply nested (4 levels)', (d) => flatten(d), nestedArr);
-bench('  flat array', (d) => flatten(d), () => [1, 2, 3, 4, 5]);
+bench('  deeply nested (4 levels)', (d) => arrayFlatten(d), nestedArr);
+bench('  flat array', (d) => arrayFlatten(d), () => [1, 2, 3, 4, 5]);
 
-// ── shuffle ──
-console.log('\nshuffle:');
+// ── arrayShuffle ──
+console.log("\narrayShuffle:");
 const bigArr = () => Array.from({ length: 1000 }, (_, i) => i);
 
-bench('  1,000 elements', (d) => shuffle(d), bigArr);
+bench('  1,000 elements', (d) => arrayShuffle(d), bigArr);
 
 // ── arrayUnique ──
 console.log('\narrayUnique:');
@@ -103,20 +103,20 @@ console.log('\ndateFormat:');
 const now = new Date();
 bench('  Date → yyyy-MM-dd HH:mm:ss', (d) => dateFormat(d), () => now);
 
-// ── groupBy ──
-console.log('\ngroupBy:');
+// ── arrayGroupBy ──
+console.log("\narrayGroupBy:");
 const groupData = () => Array.from({ length: 1000 }, (_, i) => ({ name: `item${i}`, type: String(i % 10) }));
 
-bench('  1,000 items, 10 groups', (d) => groupBy(d, 'type'), groupData);
+bench('  1,000 items, 10 groups', (d) => arrayGroupBy(d, 'type'), groupData);
 
-// ── deepMerge ──
-console.log('\ndeepMerge:');
+// ── objMerge ──
+console.log("\nobjMerge:");
 const mergeData = () => ({
 	base: { a: 1, b: { c: 2, d: { e: 3 } } },
 	other: { b: { d: { f: 4 } }, g: 5 },
 });
 
-bench('  nested objects', ({ base, other }) => deepMerge(base, other), mergeData);
+bench('  nested objects', ({ base, other }) => objMerge(base, other), mergeData);
 
 // ── formatNumber ──
 console.log('\nformatNumber:');

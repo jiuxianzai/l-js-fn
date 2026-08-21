@@ -167,7 +167,7 @@ export const formatNumber = (value: string | number, options: FormatNumberOption
 			return `${sign}${raw.toFixed(d).replace(new RegExp(`\\.${'0'.repeat(d)}$`), '')}万`;
 		}
 		// 小于 1 万：按原值输出（不追加单位，也不加千分位）
-		if (decimals !== undefined) return `${sign}${num.toFixed(decimals)}`;
+		if (decimals !== undefined) return `${sign}${abs.toFixed(decimals)}`;
 		return String(num);
 	}
 

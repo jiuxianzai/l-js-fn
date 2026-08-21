@@ -88,6 +88,17 @@ describe('number-kit - 数字处理工具', () => {
 				expect(formatNumber(-10000, { useUnit: true })).toBe('-1万');
 				expect(formatNumber(-12345, { useUnit: true })).toBe('-1.23万');
 			});
+
+			it('应该正确处理负数且保留小数位（不产生双负号）', () => {
+				expect(formatNumber(-123.45, { useUnit: true, decimals: 2 })).toBe('-123.45');
+				expect(formatNumber(-9999.5, { useUnit: true, decimals: 1 })).toBe('-9999.5');
+				expect(formatNumber(-123.45, { useUnit: true })).toBe('-123.45');
+			});
+
+			it('小于 1 万且指定小数位时按原值输出', () => {
+				expect(formatNumber(123.45, { useUnit: true, decimals: 2 })).toBe('123.45');
+				expect(formatNumber(9999.5, { useUnit: true, decimals: 1 })).toBe('9999.5');
+			});
 		});
 
 		describe('选项对象模式（新版）', () => {

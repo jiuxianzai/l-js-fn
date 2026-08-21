@@ -203,6 +203,10 @@ describe('array-kit - 数组操作工具', () => {
 			const result = arrayRemoveBy<{ id: number }>([], () => true);
 			expect(result).toEqual([]);
 		});
+
+		it('应该处理非数组输入', () => {
+			expect(arrayRemoveBy('not array' as any, () => true)).toBe('not array');
+		});
 	});
 
 	// ==================== arrayFill 测试 ====================
@@ -746,6 +750,10 @@ describe('array-kit - 数组操作工具', () => {
 
 		it('应该处理负数', () => {
 			expect(arraySum([-1, 2, -3, 4])).toBe(2);
+		});
+
+		it('应该忽略非数字元素（当作 0）', () => {
+			expect(arraySum([1, '2', true, null, undefined, 3] as any)).toBe(4);
 		});
 
 		it('应该处理非数组输入', () => {

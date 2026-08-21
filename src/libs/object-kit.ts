@@ -22,26 +22,34 @@ export function objMerge<T extends Record<string, any>, S extends Record<string,
 		return source.slice() as unknown as T & S;
 	}
 
-	const base = isObject(target) ? ({ ...target } as Record<string, any>) : ({} as Record<string, any>);
-	if (!isObject(source)) {
-		return base as T & S;
-	}
+	// 循环引用检测：已访问过的源对象不再递归
+	const visited = new WeakSet<object>();
 
-	Object.keys(source).forEach((property) => {
-		const sourceProperty = source[property];
-
-		if (mergeType === 'soft' && !Object.prototype.hasOwnProperty.call(base, property)) {
-			return;
+	const merge = <A extends Record<string, any>, B extends Record<string, any>>(t: A, s: B): A & B => {
+		const base = isObject(t) ? ({ ...t } as Record<string, any>) : ({} as Record<string, any>);
+		if (!isObject(s) || visited.has(s as object)) {
+			return base as A & B;
 		}
+		visited.add(s as object);
 
-		if (isObject(sourceProperty)) {
-			base[property] = objMerge(base[property] ?? ({} as Record<string, any>), sourceProperty, mergeType);
-		} else {
-			base[property] = sourceProperty;
-		}
-	});
+		Object.keys(s).forEach((property) => {
+			const sourceProperty = s[property];
 
-	return base as T & S;
+			if (mergeType === 'soft' && !Object.prototype.hasOwnProperty.call(base, property)) {
+				return;
+			}
+
+			if (isObject(sourceProperty)) {
+				base[property] = merge(base[property] ?? ({} as Record<string, any>), sourceProperty);
+			} else {
+				base[property] = sourceProperty;
+			}
+		});
+
+		return base as A & B;
+	};
+
+	return merge(target, source) as T & S;
 }
 
 /**

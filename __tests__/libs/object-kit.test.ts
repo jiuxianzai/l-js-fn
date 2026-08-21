@@ -102,6 +102,16 @@ describe('object-kit - 对象操作工具', () => {
 			const result = objMerge({ a: 1 }, 'invalid' as any);
 			expect(result).toEqual({ a: 1 });
 		});
+
+		it('应该处理循环引用的源对象（不栈溢出）', () => {
+			const source: Record<string, any> = {};
+			source.self = source;
+			source.name = 'root';
+			const result = objMerge({}, source);
+			expect(result.name).toBe('root');
+			expect(result.self).toBeDefined();
+			expect(result.self).not.toBe(source);
+		});
 	});
 
 	// ==================== objFilterProp 测试 ====================

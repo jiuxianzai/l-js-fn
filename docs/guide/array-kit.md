@@ -3,7 +3,6 @@
 数组操作工具集，提供增删改查、分页、分组、随机抽样等常用功能。
 
 ## 1. arrayRemove 删除指定元素
-
 从数组中移除指定元素，返回新数组。
 
 **参数说明：**
@@ -33,7 +32,7 @@ const users = [
 arrayRemove(users, { id: 2, name: 'Bob' }, 'id');
 // [{ id: 1, name: 'Alice' }]
 
-// 对象数组（JSON 序列化匹配）
+// 对象数组（深比较匹配，支持循环引用）
 arrayRemove(users, { id: 1, name: 'Alice' });
 // [{ id: 2, name: 'Bob' }]
 ```
@@ -52,7 +51,7 @@ const users = [
 arrayRemove(users, { id: 2, name: 'Bob' }, 'id');
 // [{ id: 1, name: 'Alice' }]
 
-// 对象数组（JSON 序列化匹配）
+// 对象数组（深比较匹配，支持循环引用）
 arrayRemove(users, { id: 1, name: 'Alice' });
 // [{ id: 2, name: 'Bob' }]
 ```
@@ -71,14 +70,13 @@ const users = [
 arrayRemove(users, { id: 2, name: 'Bob' }, 'id');
 // [{ id: 1, name: 'Alice' }]
 
-// 对象数组（JSON 序列化匹配）
+// 对象数组（深比较匹配，支持循环引用）
 arrayRemove(users, { id: 1, name: 'Alice' });
 // [{ id: 2, name: 'Bob' }]
 ```
 :::
 
 ## 2. arrayRemoveAt 根据索引删除
-
 根据索引删除数组元素。
 
 **参数说明：**
@@ -118,8 +116,7 @@ arrayRemoveAt([1, 2, 3], -1);  // [1, 2, 3]（无效索引）
 ```
 :::
 
-## 4. arrayRemoveBy 根据条件删除
-
+## 3. arrayRemoveBy 根据条件删除
 根据条件函数删除数组元素。
 
 **参数说明：**
@@ -175,8 +172,7 @@ arrayRemoveBy(users, user => user.id === 2);
 `arrayRemoveBy(users, user => user.id === 2)` 等价于旧版 `arrayDelToKey(users, 'id', 2)`。
 :::
 
-## 5. arrayFill 补充到指定长度
-
+## 4. arrayFill 补充到指定长度
 补充数组到指定长度。
 
 **参数说明：**
@@ -220,8 +216,7 @@ arrayFill([1, 2, 3], 2, 0);   // [1, 2, 3]（长度已满足）
 ```
 :::
 
-## 6. arrayUnique 数组去重
-
+## 5. arrayUnique 数组去重
 数组去重（使用 `Set`，保留顺序）。
 
 **参数说明：**
@@ -257,8 +252,7 @@ arrayUnique(['a', 'b', 'a']);    // ['a', 'b']
 ```
 :::
 
-## 7. arrayPaginate 数组分页
-
+## 6. arrayPaginate 数组分页
 数组分页。
 
 **参数说明：**
@@ -308,8 +302,7 @@ arrayPaginate(arr, 5, 3); // []（超出范围）
 ```
 :::
 
-## 8. arraySplitToGroups 按大小分组
-
+## 7. arraySplitToGroups 按大小分组
 将数组按指定大小分组，返回对象。
 
 **参数说明：**
@@ -364,8 +357,7 @@ arraySplitToGroups([1, 2, 3, 4, 5, 6], 3);
 > const index = users.findIndex(user => user.name === 'Bob'); // 1
 > ```
 
-## 10. arrayMove 移动元素位置
-
+## 8. arrayMove 移动元素位置
 移动数组元素位置。
 
 > [!WARNING] v4.0 破坏性变更
@@ -421,8 +413,7 @@ arrayMove(arr, 0, 'up');     // [1, 2, 3, 4, 5]（已到边界，返回拷贝）
 ```
 :::
 
-## 11. arrayGroupBy 按字段分组
-
+## 9. arrayGroupBy 按字段分组
 按字段对数组对象进行分组。
 
 **参数说明：**
@@ -489,8 +480,7 @@ arrayGroupBy(users, 'city');
 ```
 :::
 
-## 12. arraySample 随机取一个元素
-
+## 10. arraySample 随机取一个元素
 随机获取数组中的一个元素。
 
 **参数说明：**
@@ -529,8 +519,7 @@ arraySample([]);     // undefined
 ```
 :::
 
-## 13. arraySampleSize 随机取N个元素
-
+## 11. arraySampleSize 随机取N个元素
 随机获取数组中的 `n` 个不重复元素。
 
 **参数说明：**
@@ -579,8 +568,7 @@ arraySampleSize(numbers, 0);   // []（n=0 返回空数组）
 ```
 :::
 
-## 14. arrayFlatten 数组扁平化
-
+## 12. arrayFlatten 数组扁平化
 数组扁平化，支持指定展开深度。
 
 ::: code-group
@@ -606,8 +594,7 @@ arrayFlatten([1, [2, [3, 4]], 5], 1); // [1, 2, [3, 4], 5]
 ```
 :::
 
-## 15. arrayRange 生成数字范围
-
+## 13. arrayRange 生成数字范围
 生成数字范围数组。
 
 ::: code-group
@@ -636,8 +623,7 @@ arrayRange(0, 10, 2);   // [0, 2, 4, 6, 8, 10]
 ```
 :::
 
-## 16. arrayShuffle 洗牌打乱
-
+## 14. arrayShuffle 洗牌打乱
 Fisher-Yates 洗牌算法打乱数组。
 
 ::: code-group
@@ -660,8 +646,7 @@ arrayShuffle([1, 2, 3, 4, 5]); // [3, 1, 5, 2, 4]（随机）
 ```
 :::
 
-## 17. arrayUniqueBy 按字段去重
-
+## 15. arrayUniqueBy 按字段去重
 根据对象数组中指定字段的值去重。
 
 ::: code-group
@@ -687,8 +672,7 @@ arrayUniqueBy(arr, 'id'); // [{ id: 1, name: 'a' }, { id: 2, name: 'b' }]
 ```
 :::
 
-## 18. arrayCompact 过滤falsy值
-
+## 16. arrayCompact 过滤falsy值
 过滤数组中的 falsy 值。
 
 ::: code-group
@@ -711,8 +695,7 @@ arrayCompact([0, 1, false, 2, '', 3, null, undefined, NaN]); // [1, 2, 3]
 ```
 :::
 
-## 19. arraySum 数组求和
-
+## 17. arraySum 数组求和
 计算数组元素总和。
 
 ::: code-group
@@ -735,8 +718,7 @@ arraySum([1, 2, 3, 4, 5]); // 15
 ```
 :::
 
-## 20. arrayLast 获取最后元素
-
+## 18. arrayLast 获取最后元素
 获取数组最后一个元素。
 
 ::: code-group
@@ -762,8 +744,7 @@ arrayLast([]);        // undefined
 ```
 :::
 
-## 21. arrayPluck 提取指定字段
-
+## 19. arrayPluck 提取指定字段
 递归提取对象数组中指定字段的值，返回扁平数组（自动过滤 `null` 和 `undefined`）。
 
 **参数说明：**
@@ -825,8 +806,7 @@ arrayPluck([], 'name'); // []
 ```
 :::
 
-## 22. arraySortBy 按字段排序
-
+## 20. arraySortBy 按字段排序
 根据指定字段对对象数组排序（不修改原数组）。
 
 **参数说明：**
@@ -866,8 +846,7 @@ arraySortBy([{ id: 2 }, { id: 1 }], 'id');                     // [{ id: 1 }, { 
 > [!WARNING] v4.0 破坏性变更
 > `uniq` 已在 v4.0 移除 —— 请统一使用 `arrayUnique` 去重（两者行为一致，均基于 Set 实现）。
 
-## 24. arraySumBy 按字段求和
-
+## 21. arraySumBy 按字段求和
 计算对象数组中指定字段数值的总和。
 
 **参数说明：**
@@ -904,8 +883,7 @@ arraySumBy(items, 'price'); // 30
 ```
 :::
 
-## 25. arrayToString 过滤空值后拼接字符串
-
+## 22. arrayToString 过滤空值后拼接字符串
 过滤掉数组中的空值（`null`、`undefined`、空字符串 `''`）后，按顺序拼接为字符串。常用于签名串拼接、多字段值合并等场景。
 
 **参数说明：**

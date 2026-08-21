@@ -127,7 +127,7 @@ import { md5, aesEncrypt, sm2Encrypt, sm4Encrypt } from 'l-js-fn/crypto';
 | 指标 | 数值 |
 |------|------|
 | 测试套件 | 35 passed |
-| 测试用例 | 1901 passed / 1901 total |
+| 测试用例 | 1907 passed / 1907 total |
 | 语句覆盖率 | 98.81% |
 | 分支覆盖率 | 95.67% |
 | 函数覆盖率 | 100% |
@@ -139,13 +139,13 @@ import { md5, aesEncrypt, sm2Encrypt, sm4Encrypt } from 'l-js-fn/crypto';
 |------|--------|--------|
 | color (颜色处理) | 31 | 100% |
 | is-kit (类型判断) | 88 | 100% |
-| array-kit (数组操作) | 150 | 100% |
+| array-kit (数组操作) | 152 | 100% |
 | string-kit (字符串处理) | 91 | 100% |
-| object-kit (对象操作) | 60 | 100% |
+| object-kit (对象操作) | 61 | 100% |
 | common (通用工具) | 77 | 100% |
 | date-kit (日期处理) | 75 | 100% |
-| number-kit (数字处理) | 78 | 100% |
-| url-kit (URL 处理) | 86 | 100% |
+| number-kit (数字处理) | 80 | 100% |
+| url-kit (URL 处理) | 87 | 100% |
 
 ### 子模块
 

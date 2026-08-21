@@ -30,10 +30,12 @@ export function getUrlParams<T = Record<string, any>>(url?: string): T {
 	} else if (url.startsWith('?')) {
 		// 裸查询字符串（带 ? 前缀）
 		queryString = url.slice(1);
+	} else if (url.includes('?')) {
+		// 含 ? 视为完整 URL（含无协议域名如 example.com?x=1）
+		queryString = url.slice(url.indexOf('?') + 1);
 	} else if (/^[a-z][a-z0-9+.-]*:\/\//i.test(url) || url.startsWith('//') || url.startsWith('/') || !url.includes('=')) {
-		// 完整 URL 形态（含协议/协议相对/绝对路径/无查询参数）：取 ? 后的查询部分
-		const qIndex = url.indexOf('?');
-		queryString = qIndex === -1 ? '' : url.slice(qIndex + 1);
+		// 完整 URL 形态（含协议/协议相对/绝对路径/无查询参数）：无查询参数
+		queryString = '';
 	} else {
 		// 裸查询字符串
 		queryString = url;

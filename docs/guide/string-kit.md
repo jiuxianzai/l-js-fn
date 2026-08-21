@@ -3,7 +3,6 @@
 字符串处理工具集，提供脱敏、去除空格、UUID 生成、序号生成等功能。
 
 ## 1. desensitization 字符串脱敏
-
 对字符串进行脱敏处理，将指定位置的字符替换为 `*`。
 
 **参数说明：**
@@ -47,7 +46,6 @@ desensitization('', 0);                // ''
 :::
 
 ## 2. desensitizeName 姓名脱敏
-
 对姓名进行脱敏处理，支持中间脱敏、姓氏脱敏和末位脱敏三种模式。
 
 **参数说明：**
@@ -117,7 +115,6 @@ desensitizeName('张三丰', 'last');      // '**丰'
 :::
 
 ## 3. trim 去除空格
-
 去除字符串中的空格。
 
 **参数说明：**
@@ -161,7 +158,6 @@ trim('  hello  ', 'all');  // 'hello'
 :::
 
 ## 4. getMobile 随机生成手机号
-
 随机生成中国大陆手机号码。
 
 **返回值：** `string` — 随机手机号
@@ -189,7 +185,6 @@ getMobile(); // '13800138000'（随机）
 :::
 
 ## 5. getUuid 生成UUID
-
 生成 UUID（v4 风格）。
 
 **参数说明：**
@@ -229,7 +224,6 @@ getUuid(16);  // 'xxxxxxxx-xxxx-4x'（前 16 位）
 :::
 
 ## 6. indexToLabel 索引转序号
-
 根据数组索引生成序号标识，支持大写、小写、数字、中文四种格式。
 
 **参数说明：**
@@ -285,7 +279,6 @@ indexToLabel(10, 'chinese');// '十一'
 :::
 
 ## 7. searchTextColor 匹配文字变色
-
 匹配文字并添加 HTML 颜色高亮标签（用于搜索场景）。
 
 **参数说明：**
@@ -342,8 +335,7 @@ searchTextColor('hello', 'hello world', 'blue');
 > trim('  hello  '); // 'hello'
 > ```
 
-## 9. toPascalCase 转帕斯卡命名
-
+## 8. toPascalCase 转帕斯卡命名
 将字符串转换为帕斯卡命名法（PascalCase）。
 
 **参数说明：**
@@ -385,8 +377,7 @@ toPascalCase('helloWorld');   // 'HelloWorld'
 ```
 :::
 
-## 10. toCamelCase 转驼峰命名
-
+## 9. toCamelCase 转驼峰命名
 短横线/下划线/空格命名 → 驼峰命名。
 
 ::: code-group
@@ -415,8 +406,7 @@ toCamelCase('Hello World');  // 'helloWorld'
 ```
 :::
 
-## 11. toKebabCase 转短横线命名
-
+## 10. toKebabCase 转短横线命名
 驼峰/帕斯卡/下划线 → 短横线命名。
 
 ::: code-group
@@ -445,8 +435,7 @@ toKebabCase('hello_world');  // 'hello-world'
 ```
 :::
 
-## 12. capitalize 首字母大写
-
+## 11. capitalize 首字母大写
 首字母大写。
 
 ::: code-group

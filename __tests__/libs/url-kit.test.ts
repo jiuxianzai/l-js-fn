@@ -89,6 +89,11 @@ describe('url-kit - URL 处理工具', () => {
 			const result = getUrlParams('?a=1&a=2');
 			expect(result).toEqual({ a: ['1', '2'] });
 		});
+
+		it('应该支持无协议域名的 URL（example.com?x=1）', () => {
+			const result = getUrlParams('example.com?x=1');
+			expect(result).toEqual({ x: '1' });
+		});
 	});
 
 	// ==================== getUrlParam 测试 ====================

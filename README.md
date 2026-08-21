@@ -5,7 +5,7 @@
 ![npm version](https://badge.fury.io/js/l-js-fn.svg)
 ![downloads](https://img.shields.io/npm/dm/l-js-fn)
 ![license](https://img.shields.io/npm/l/l-js-fn)
-![test pass](https://img.shields.io/badge/tests-1901%2F1901%20passed-brightgreen)
+![test pass](https://img.shields.io/badge/tests-1907%2F1907%20passed-brightgreen)
 ![coverage](https://img.shields.io/badge/coverage-99%25-brightgreen)
 ![functions](https://img.shields.io/badge/functions-100%25-brightgreen)
 ![branches](https://img.shields.io/badge/branches-96%25-brightgreen)
@@ -1207,7 +1207,7 @@ const { md5 } = require('l-js-fn/crypto');
 | 指标       | 数值                     |
 | ---------- | ------------------------ |
 | 测试套件   | 35 passed                |
-| 测试用例   | 1901 passed / 1901 total |
+| 测试用例   | 1907 passed / 1907 total |
 | 通过率     | 100%                     |
 | 语句覆盖率 | 98.81%                   |
 | 分支覆盖率 | 95.67%                   |
@@ -1220,13 +1220,13 @@ const { md5 } = require('l-js-fn/crypto');
 | ----------------------- | ------ | ---- | ---- | ------ |
 | color (颜色处理)        | 31     | 31   | 0    | 100%   |
 | is-kit (类型判断)       | 88     | 88   | 0    | 100%   |
-| array-kit (数组操作)    | 150    | 150  | 0    | 100%   |
+| array-kit (数组操作)    | 152    | 152  | 0    | 100%   |
 | string-kit (字符串处理) | 91     | 91   | 0    | 100%   |
-| object-kit (对象操作)   | 60     | 60   | 0    | 100%   |
+| object-kit (对象操作)   | 61     | 61   | 0    | 100%   |
 | common (通用工具)       | 77     | 77   | 0    | 100%   |
 | date-kit (日期处理)     | 75     | 75   | 0    | 100%   |
-| number-kit (数字处理)   | 78     | 78   | 0    | 100%   |
-| url-kit (URL 处理)      | 86     | 86   | 0    | 100%   |
+| number-kit (数字处理)   | 80     | 80   | 0    | 100%   |
+| url-kit (URL 处理)      | 87     | 87   | 0    | 100%   |
 | bugfixes (兼容修复)     | 17     | 17   | 0    | 100%   |
 
 #### 子模块
