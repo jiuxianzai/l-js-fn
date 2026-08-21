@@ -6,12 +6,15 @@
 
 格式化数字，支持千分位分割、纯数字、中文大写金额等输出类型。
 
+> [!WARNING] v4.0 破坏性变更
+> 第二参数的 `boolean` 重载已移除，请统一使用选项对象：`formatNumber(1234567, true)` → `formatNumber(1234567, { useUnit: true })`
+
 **参数说明：**
 
 | 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
 | value | `string \| number` | 是 | 数字或数字字符串 |
-| options | `boolean \| FormatNumberOptions` | 否 | 布尔值时为 useUnit（兼容旧版），对象时可配置 |
+| options | `FormatNumberOptions` | 否 | 配置项 |
 
 **FormatNumberOptions：**
 
@@ -32,8 +35,8 @@ import { formatNumber } from 'l-js-fn';
 // 千分位分割（默认）
 formatNumber(1234567);       // '1,234,567'
 
-// 中文单位（兼容旧版）
-formatNumber(1234567, true); // '123.47万'
+// 中文单位
+formatNumber(1234567, { useUnit: true }); // '123.47万'
 
 // 控制小数位
 formatNumber(1234, { decimals: 2 });           // '1,234.00'
@@ -140,7 +143,8 @@ toPercent(null);             // '0%'
 
 **返回值：** `number`
 
-**异常：** 参数非法时抛出 `Error`
+> [!NOTE] v4.0 变更
+> `min > max` 时不再抛错，自动交换边界；单参数且小于等于 0 时返回对应负区间内的值（不再抛错）。
 
 **示例：**
 
@@ -152,6 +156,7 @@ random(10);                    // 0-10 的随机整数
 random(1, 10);                 // 1-10 的随机整数
 random(1, 10, { float: true }); // 1-10 的随机浮点数
 random(-5, 5);                 // -5 到 5 的随机整数
+random(10, 5);                 // 5-10 的随机整数（自动交换边界）
 ```
 
 ```js [JavaScript (ESM)]

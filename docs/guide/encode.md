@@ -1,18 +1,22 @@
 # encode — 编码解码
 
-编码解码工具集，提供 Base64、HTML 转义、URL 编解码、查询字符串处理等功能。
+编码解码工具集，提供 Base64、HTML 转义、URL 编解码等功能。
 
 **导入方式：**
 
 > 方法已全量平铺到主包 `l-js-fn`，可直接从主包导入（Tree-shaking 只打包用到的函数）；子路径 `l-js-fn/encode` 仍保留，供 CJS 或需要精确加载的场景使用。
+
+> [!WARNING] v4.0 破坏性变更
+> `querystringify` 与 `parseQueryString` 已在 v4.0 移除，查询字符串能力统一收敛到 URL 处理模块：
+> - 对象 → 查询字符串：`transUrlParams`（`l-js-fn/url-kit`）
+> - 查询字符串 → 对象：`getUrlParams`（`l-js-fn/url-kit`，同时支持完整 URL 与裸查询字符串）
 
 ::: code-group
 ```ts [TypeScript]
 import {
   base64Encode, base64Decode,
   escapeHTML, unescapeHTML,
-  urlEncode, urlDecode,
-  querystringify, parseQueryString
+  urlEncode, urlDecode
 } from 'l-js-fn';
 ```
 
@@ -20,8 +24,7 @@ import {
 import {
   base64Encode, base64Decode,
   escapeHTML, unescapeHTML,
-  urlEncode, urlDecode,
-  querystringify, parseQueryString
+  urlEncode, urlDecode
 } from 'l-js-fn';
 ```
 
@@ -29,8 +32,7 @@ import {
 const {
   base64Encode, base64Decode,
   escapeHTML, unescapeHTML,
-  urlEncode, urlDecode,
-  querystringify, parseQueryString
+  urlEncode, urlDecode
 } = require('l-js-fn/encode');
 ```
 :::
@@ -299,94 +301,16 @@ urlDecode('Hello%20World%21', { component: true }); // 'Hello World!'
 
 ## 4. 查询字符串
 
-### 4.1 querystringify 对象转查询字符串
-
-将对象转换为 URL 查询字符串。
-
-**参数说明：**
-
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| data | `Record<string, any>` | 是 | 要转换的对象 |
-
-**返回值：** `string`
-
-**示例：**
-
-::: code-group
-```ts [TypeScript]
-import { querystringify } from 'l-js-fn';
-
-querystringify({ name: 'John', age: 20 });
-// 'name=John&age=20'
-
-querystringify({ a: [1, 2, 3] });
-// 'a=1&a=2&a=3'
-```
-
-```js [JavaScript (ESM)]
-import { querystringify } from 'l-js-fn';
-
-querystringify({ name: 'John', age: 20 });
-// 'name=John&age=20'
-
-querystringify({ a: [1, 2, 3] });
-// 'a=1&a=2&a=3'
-```
-
-```js [JavaScript (CJS)]
-const { querystringify } = require('l-js-fn/encode');
-
-querystringify({ name: 'John', age: 20 });
-// 'name=John&age=20'
-
-querystringify({ a: [1, 2, 3] });
-// 'a=1&a=2&a=3'
-```
-:::
-
-### 4.2 parseQueryString 查询字符串解析
-
-解析 URL 查询字符串为对象。
-
-**参数说明：**
-
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| str | `string` | 是 | URL 查询字符串（可包含或不包含 `?`） |
-
-**返回值：** `Record<string, string | string[]>`
-
-**示例：**
-
-::: code-group
-```ts [TypeScript]
-import { parseQueryString } from 'l-js-fn';
-
-parseQueryString('name=John&age=20');
-// { name: 'John', age: '20' }
-
-parseQueryString('?a=1&a=2');
-// { a: ['1', '2'] }
-```
-
-```js [JavaScript (ESM)]
-import { parseQueryString } from 'l-js-fn';
-
-parseQueryString('name=John&age=20');
-// { name: 'John', age: '20' }
-
-parseQueryString('?a=1&a=2');
-// { a: ['1', '2'] }
-```
-
-```js [JavaScript (CJS)]
-const { parseQueryString } = require('l-js-fn/encode');
-
-parseQueryString('name=John&age=20');
-// { name: 'John', age: '20' }
-
-parseQueryString('?a=1&a=2');
-// { a: ['1', '2'] }
-```
-:::
+> [!WARNING] v4.0 破坏性变更
+> `querystringify` / `parseQueryString` 已在 v4.0 移除，请使用 URL 处理模块的等价能力：
+> ```ts
+> import { transUrlParams, getUrlParams } from 'l-js-fn';
+>
+> // 对象 → 查询字符串
+> transUrlParams({ name: 'John', age: 20 });      // 'name=John&age=20'
+> transUrlParams({ a: [1, 2, 3] });               // 'a%5B0%5D=1&a%5B1%5D=2&a%5B2%5D=3'
+>
+> // 查询字符串 → 对象
+> getUrlParams('name=John&age=20');               // { name: 'John', age: '20' }
+> getUrlParams('?a=1&a=2');                       // { a: ['1', '2'] }
+> ```

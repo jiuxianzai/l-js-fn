@@ -2,6 +2,17 @@
 
 ## [未发布]
 
+### 破坏性变更（v4.0.0）
+
+- **统一命名前缀**：数组 `arrayXxx`、对象 `objXxx`、日期 `dateXxx`（详见迁移指南）
+- **数组删除合并**：`arrayDelEl`/`arrayDelToEl`/`arrayDelToIndex`/`arrayDelToKey` 合并为 `arrayRemove`/`arrayRemoveAt`/`arrayRemoveBy`
+- **移除废弃与冗余**：`uniq`、`findIndex`、`filterSpace`、`isHasProperties`、`querystringify`、`parseQueryString`、`Result` 类
+- **对象合并统一**：`deepMerge` 合并进 `objMerge`，且 `objMerge` 改为非破坏性（返回新对象）
+- **URL 序列化统一**：`transUrlParams` 支持数组参数，`getUrlParams` 支持裸查询字符串
+- **错误语义统一**：数组/对象类函数无效输入不再抛错，返回安全空值
+- `formatNumber` 移除 boolean 重载，`random` min>max 自动交换，`getFileInfoToUrl` 更名为 `getFileInfoFromUrl`
+- `arrayMove` 返回纯数组，`imageToBase64` 返回 `Promise<string>`（失败 reject）
+
 ### 修复
 
 - 回滚 tsup drop 配置为 `["console", "debugger"]`，esbuild 不支持细粒度移除

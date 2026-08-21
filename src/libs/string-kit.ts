@@ -203,15 +203,7 @@ export function searchTextColor(val: string, text = '', color = 'red'): string {
 }
 
 /**
- * 禁止输入空格
- * @param val 当前值字符串
- * @returns {string} 返回处理后的字符串
- */
-export function filterSpace(val: string): string {
-	return trim(val, 'both');
-}
-
-/** 将字符串转换为帕斯卡命名法 */
+ * 将字符串转换为帕斯卡命名法 */
 export function toPascalCase(str: string): string {
   if (!str) return ''; // 空字符串处理
 

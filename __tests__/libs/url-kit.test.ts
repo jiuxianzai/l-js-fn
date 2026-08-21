@@ -9,7 +9,7 @@ import {
 	appendUrlParam,
 	appendUrlParams,
 	transUrlParams,
-	getFileInfoToUrl,
+	getFileInfoFromUrl,
 } from '@/libs/url-kit';
 
 describe('url-kit - URL 处理工具', () => {
@@ -78,6 +78,16 @@ describe('url-kit - URL 处理工具', () => {
 			const url = 'https://example.com?text=Hello%20World%21';
 			const result = getUrlParams(url);
 			expect(result).toEqual({ text: 'Hello World!' });
+		});
+
+		it('应该支持裸查询字符串（不带 ?）', () => {
+			const result = getUrlParams('name=John&age=30');
+			expect(result).toEqual({ name: 'John', age: '30' });
+		});
+
+		it('应该支持带 ? 前缀的查询字符串', () => {
+			const result = getUrlParams('?a=1&a=2');
+			expect(result).toEqual({ a: ['1', '2'] });
 		});
 	});
 
@@ -388,73 +398,91 @@ describe('url-kit - URL 处理工具', () => {
 			const result = transUrlParams(params);
 			expect(result).toBe('count=100&price=99.99');
 		});
+
+		it('应该支持数组参数（key[index] 形式）', () => {
+			const params = { a: [1, 2, 3] };
+			const result = transUrlParams(params);
+			expect(result).toBe('a%5B0%5D=1&a%5B1%5D=2&a%5B2%5D=3');
+		});
+
+		it('应该支持数组参数与普通参数混合', () => {
+			const params = { name: 'John', tags: ['a', 'b'] };
+			const result = transUrlParams(params);
+			expect(result).toBe('name=John&tags%5B0%5D=a&tags%5B1%5D=b');
+		});
+
+		it('应该跳过数组中的空值', () => {
+			const params = { a: [1, null, 2] };
+			const result = transUrlParams(params);
+			expect(result).toBe('a%5B0%5D=1&a%5B2%5D=2');
+		});
 	});
 
-	// ==================== getFileInfoToUrl 测试 ====================
-	describe('getFileInfoToUrl - 从 URL 提取文件信息', () => {
+	// ==================== getFileInfoFromUrl 测试 ====================
+	describe('getFileInfoFromUrl - 从 URL 提取文件信息', () => {
 		it('应该提取文件名和扩展名', () => {
 			const url = 'https://example.com/path/to/file.txt';
-			const result = getFileInfoToUrl(url);
+			const result = getFileInfoFromUrl(url);
 			expect(result).toEqual({ fileName: 'file.txt', extension: '.txt' });
 		});
 
 		it('应该处理没有扩展名的文件', () => {
 			const url = 'https://example.com/path/to/file';
-			const result = getFileInfoToUrl(url);
+			const result = getFileInfoFromUrl(url);
 			expect(result).toEqual({ fileName: 'file', extension: '' });
 		});
 
 		it('应该处理多个扩展名（如 .tar.gz）', () => {
 			const url = 'https://example.com/path/to/archive.tar.gz';
-			const result = getFileInfoToUrl(url);
+			const result = getFileInfoFromUrl(url);
 			expect(result).toEqual({ fileName: 'archive.tar.gz', extension: '.gz' });
 		});
 
 		it('应该处理以点开头的文件名', () => {
 			const url = 'https://example.com/path/to/.gitignore';
-			const result = getFileInfoToUrl(url);
+			const result = getFileInfoFromUrl(url);
 			expect(result).toEqual({ fileName: '.gitignore', extension: '' });
 		});
 
 		it('应该处理编码的文件名', () => {
 			const url = 'https://example.com/path/to/%E6%96%87%E4%BB%B6.txt';
-			const result = getFileInfoToUrl(url);
+			const result = getFileInfoFromUrl(url);
 			expect(result.fileName).toBe('文件.txt');
 			expect(result.extension).toBe('.txt');
 		});
 
 		it('应该处理只有文件名的 URL', () => {
 			const url = 'https://example.com/file.txt';
-			const result = getFileInfoToUrl(url);
+			const result = getFileInfoFromUrl(url);
 			expect(result).toEqual({ fileName: 'file.txt', extension: '.txt' });
 		});
 
 		it('应该处理没有路径的 URL', () => {
 			const url = 'https://example.com';
-			const result = getFileInfoToUrl(url);
+			const result = getFileInfoFromUrl(url);
 			expect(result.fileName).toBe('unknown');
 		});
 
 		it('应该处理以 / 结尾的 URL', () => {
 			const url = 'https://example.com/path/';
-			const result = getFileInfoToUrl(url);
+			const result = getFileInfoFromUrl(url);
 			expect(result.fileName).toBe('unknown');
 		});
 
 		it('应该处理查询参数和 hash', () => {
 			const url = 'https://example.com/path/to/file.txt?download=true#section';
-			const result = getFileInfoToUrl(url);
+			const result = getFileInfoFromUrl(url);
 			expect(result).toEqual({ fileName: 'file.txt', extension: '.txt' });
 		});
 
 		it('应该处理无效的 URL', () => {
 			const url = 'not-a-valid-url';
-			const result = getFileInfoToUrl(url);
+			const result = getFileInfoFromUrl(url);
 			expect(result.fileName).toBe('not-a-valid-url');
 		});
 
 	it('应该处理空字符串', () => {
-		const result = getFileInfoToUrl('');
+		const result = getFileInfoFromUrl('');
 		expect(result.fileName).toBe('unknown');
 	});
 });

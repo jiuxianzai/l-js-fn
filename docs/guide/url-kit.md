@@ -4,13 +4,16 @@ URL 处理工具集，提供参数解析、拼接、转换等功能。
 
 ## 1. getUrlParams 解析URL查询参数
 
-解析 URL 查询参数，支持数组参数和嵌套对象参数。
+解析 URL 查询参数，支持数组参数、嵌套对象参数，也支持**裸查询字符串**。
+
+> [!NOTE] v4.0 变更
+> v4.0 起 `getUrlParams` 合并了原 `parseQueryString` 的能力，可直接传入裸查询字符串（含或不含 `?` 前缀）。
 
 **参数说明：**
 
 | 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
-| url | `string` | 否 | 要解析的 URL，不提供则使用当前页面 URL（浏览器环境） |
+| url | `string` | 否 | URL 或裸查询字符串，不提供则使用当前页面 URL（浏览器环境） |
 
 **返回值：** `T` — 包含查询参数的对象
 
@@ -22,14 +25,23 @@ URL 处理工具集，提供参数解析、拼接、转换等功能。
 ```ts [TypeScript]
 import { getUrlParams } from 'l-js-fn';
 
+// 完整 URL
 getUrlParams('https://example.com?id=1&name=John');
 // { id: '1', name: 'John' }
 
+// 重复 key → 数组
 getUrlParams('https://example.com?a=1&a=2');
 // { a: ['1', '2'] }
 
+// 嵌套对象
 getUrlParams('https://example.com?user[name]=John&user[age]=20');
 // { user: { name: 'John', age: '20' } }
+
+// 裸查询字符串（v4 新增，替代 parseQueryString）
+getUrlParams('name=John&age=20');
+// { name: 'John', age: '20' }
+getUrlParams('?a=1&a=2');
+// { a: ['1', '2'] }
 ```
 
 ```js [JavaScript (ESM)]
@@ -43,6 +55,9 @@ getUrlParams('https://example.com?a=1&a=2');
 
 getUrlParams('https://example.com?user[name]=John&user[age]=20');
 // { user: { name: 'John', age: '20' } }
+
+getUrlParams('name=John&age=20');
+// { name: 'John', age: '20' }
 ```
 
 ```js [JavaScript (CJS)]
@@ -56,6 +71,9 @@ getUrlParams('https://example.com?a=1&a=2');
 
 getUrlParams('https://example.com?user[name]=John&user[age]=20');
 // { user: { name: 'John', age: '20' } }
+
+getUrlParams('name=John&age=20');
+// { name: 'John', age: '20' }
 ```
 :::
 
@@ -274,7 +292,10 @@ appendUrlParams('https://example.com/user/list', { name: 'zs' });
 
 ## 5. transUrlParams 对象转查询字符串
 
-将对象转换为 URL 查询字符串，支持嵌套对象。
+将对象转换为 URL 查询字符串，支持嵌套对象和数组。
+
+> [!NOTE] v4.0 变更
+> v4.0 起 `transUrlParams` 合并了原 `querystringify` 的能力，支持数组参数（以 `key[index]` 形式输出）。
 
 **参数说明：**
 
@@ -294,7 +315,11 @@ transUrlParams({ id: 1, name: 'John' });
 // 'id=1&name=John'
 
 transUrlParams({ user: { name: 'John', age: 20 } });
-// 'user[name]=John&user[age]=20'
+// 'user%5Bname%5D=John&user%5Bage%5D=20'
+
+// 数组参数（v4 新增）
+transUrlParams({ tags: ['a', 'b'] });
+// 'tags%5B0%5D=a&tags%5B1%5D=b'
 ```
 
 ```js [JavaScript (ESM)]
@@ -304,7 +329,11 @@ transUrlParams({ id: 1, name: 'John' });
 // 'id=1&name=John'
 
 transUrlParams({ user: { name: 'John', age: 20 } });
-// 'user[name]=John&user[age]=20'
+// 'user%5Bname%5D=John&user%5Bage%5D=20'
+
+// 数组参数（v4 新增）
+transUrlParams({ tags: ['a', 'b'] });
+// 'tags%5B0%5D=a&tags%5B1%5D=b'
 ```
 
 ```js [JavaScript (CJS)]
@@ -314,11 +343,18 @@ transUrlParams({ id: 1, name: 'John' });
 // 'id=1&name=John'
 
 transUrlParams({ user: { name: 'John', age: 20 } });
-// 'user[name]=John&user[age]=20'
+// 'user%5Bname%5D=John&user%5Bage%5D=20'
+
+// 数组参数（v4 新增）
+transUrlParams({ tags: ['a', 'b'] });
+// 'tags%5B0%5D=a&tags%5B1%5D=b'
 ```
 :::
 
-## 6. getFileInfoToUrl 提取文件信息
+## 6. getFileInfoFromUrl 提取文件信息
+
+> [!WARNING] v4.0 破坏性变更
+> 原 `getFileInfoToUrl` 因命名语义相反（实际是从 URL 提取文件信息）已更名为 **`getFileInfoFromUrl`**。
 
 从 URL 中提取文件名及后缀。
 
@@ -334,32 +370,32 @@ transUrlParams({ user: { name: 'John', age: 20 } });
 
 ::: code-group
 ```ts [TypeScript]
-import { getFileInfoToUrl } from 'l-js-fn';
+import { getFileInfoFromUrl } from 'l-js-fn';
 
-getFileInfoToUrl('https://example.com/path/to/file.txt');
+getFileInfoFromUrl('https://example.com/path/to/file.txt');
 // { fileName: 'file.txt', extension: '.txt' }
 
-getFileInfoToUrl('https://example.com/image.png');
+getFileInfoFromUrl('https://example.com/image.png');
 // { fileName: 'image.png', extension: '.png' }
 ```
 
 ```js [JavaScript (ESM)]
-import { getFileInfoToUrl } from 'l-js-fn';
+import { getFileInfoFromUrl } from 'l-js-fn';
 
-getFileInfoToUrl('https://example.com/path/to/file.txt');
+getFileInfoFromUrl('https://example.com/path/to/file.txt');
 // { fileName: 'file.txt', extension: '.txt' }
 
-getFileInfoToUrl('https://example.com/image.png');
+getFileInfoFromUrl('https://example.com/image.png');
 // { fileName: 'image.png', extension: '.png' }
 ```
 
 ```js [JavaScript (CJS)]
-const { getFileInfoToUrl } = require('l-js-fn');
+const { getFileInfoFromUrl } = require('l-js-fn');
 
-getFileInfoToUrl('https://example.com/path/to/file.txt');
+getFileInfoFromUrl('https://example.com/path/to/file.txt');
 // { fileName: 'file.txt', extension: '.txt' }
 
-getFileInfoToUrl('https://example.com/image.png');
+getFileInfoFromUrl('https://example.com/image.png');
 // { fileName: 'image.png', extension: '.png' }
 ```
 :::

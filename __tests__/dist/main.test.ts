@@ -59,8 +59,8 @@ describe('dist 主包 - 类型判断 (is-kit)', () => {
 });
 
 describe('dist 主包 - 数组操作 (array-kit)', () => {
-	it('arrayDelEl - 删除元素', () => {
-		expect(dist.arrayDelEl([1, 2, 3, 2], 2)).toEqual([1, 3]);
+	it('arrayRemove - 删除元素', () => {
+		expect(dist.arrayRemove([1, 2, 3, 2], 2)).toEqual([1, 3]);
 	});
 
 	it('arrayUnique - 去重', () => {
@@ -68,34 +68,34 @@ describe('dist 主包 - 数组操作 (array-kit)', () => {
 	});
 
 	it('flatten - 扁平化', () => {
-		expect(dist.flatten([1, [2, [3]]])).toEqual([1, 2, 3]);
+		expect(dist.arrayFlatten([1, [2, [3]]])).toEqual([1, 2, 3]);
 	});
 
 	it('range - 范围数组', () => {
-		expect(dist.range(0, 3)).toEqual([0, 1, 2, 3]);
+		expect(dist.arrayRange(0, 3)).toEqual([0, 1, 2, 3]);
 	});
 
 	it('sum - 求和', () => {
-		expect(dist.sum([1, 2, 3])).toBe(6);
+		expect(dist.arraySum([1, 2, 3])).toBe(6);
 	});
 
 	it('last - 取最后一个', () => {
-		expect(dist.last([1, 2, 3])).toBe(3);
+		expect(dist.arrayLast([1, 2, 3])).toBe(3);
 	});
 
 	it('compact - 过滤 falsy', () => {
-		expect(dist.compact([0, 1, false, 2, '', 3])).toEqual([1, 2, 3]);
+		expect(dist.arrayCompact([0, 1, false, 2, '', 3])).toEqual([1, 2, 3]);
 	});
 
 	it('shuffle - 洗牌', () => {
 		const arr = [1, 2, 3, 4, 5];
-		const shuffled = dist.shuffle([...arr]);
+		const shuffled = dist.arrayShuffle([...arr]);
 		expect(shuffled.sort()).toEqual(arr);
 	});
 
 	it('groupBy - 对象数组分组', () => {
 		const data = [{ name: 'a', age: 1 }, { name: 'b', age: 1 }, { name: 'c', age: 2 }];
-		const grouped = dist.groupBy(data, 'age');
+		const grouped = dist.arrayGroupBy(data, 'age');
 		expect(grouped['1']).toHaveLength(2);
 		expect(grouped['2']).toHaveLength(1);
 	});
@@ -140,20 +140,20 @@ describe('dist 主包 - 对象操作 (object-kit)', () => {
 	});
 
 	it('pick - 选取属性', () => {
-		expect(dist.pick({ a: 1, b: 2, c: 3 }, ['a', 'c'])).toEqual({ a: 1, c: 3 });
+		expect(dist.objPick({ a: 1, b: 2, c: 3 }, ['a', 'c'])).toEqual({ a: 1, c: 3 });
 	});
 
 	it('get - 安全深层取值', () => {
-		expect(dist.get({ a: { b: { c: 1 } } }, 'a.b.c')).toBe(1);
-		expect(dist.get({ a: 1 }, 'b.c', 'default')).toBe('default');
+		expect(dist.objGet({ a: { b: { c: 1 } } }, 'a.b.c')).toBe(1);
+		expect(dist.objGet({ a: 1 }, 'b.c', 'default')).toBe('default');
 	});
 
 	it('objFilterNull - 过滤空值', () => {
 		expect(dist.objFilterNull({ a: 1, b: null })).toEqual({ a: 1 });
 	});
 
-	it('deepMerge - 深度合并', () => {
-		expect(dist.deepMerge({ a: { b: 1 } }, { a: { c: 2 } })).toEqual({ a: { b: 1, c: 2 } });
+	it('objMerge - 深度合并', () => {
+		expect(dist.objMerge({ a: { b: 1 } }, { a: { c: 2 } })).toEqual({ a: { b: 1, c: 2 } });
 	});
 });
 
@@ -214,7 +214,7 @@ describe('dist 主包 - 日期处理 (date-kit)', () => {
 	});
 
 	it('addDays - 日期加减', () => {
-		const d = dist.addDays(new Date('2024-01-01'), 1);
+		const d = dist.dateAddDays(new Date('2024-01-01'), 1);
 		expect(dist.dateFormat(d, 'yyyy-MM-dd')).toBe('2024-01-02');
 	});
 });
@@ -261,25 +261,5 @@ describe('dist 主包 - color', () => {
 
 	it('conversionColor - 颜色转换', () => {
 		expect(typeof dist.conversionColor).toBe('function');
-	});
-});
-
-describe('dist 主包 - Result', () => {
-	it('Result.ok 创建成功结果', () => {
-		const r = dist.Result.ok('data');
-		expect(r.success).toBe(true);
-		expect(r.data).toBe('data');
-	});
-
-	it('Result.ok 无数据', () => {
-		const r = dist.Result.ok();
-		expect(r.success).toBe(true);
-		expect(r.message).toBe('操作成功');
-	});
-
-	it('Result.fail 创建失败结果', () => {
-		const r = dist.Result.fail('error message');
-		expect(r.success).toBe(false);
-		expect(r.message).toBe('error message');
 	});
 });

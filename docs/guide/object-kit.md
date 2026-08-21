@@ -2,19 +2,23 @@
 
 对象操作工具集，提供合并、过滤、转换等常用功能。
 
-## 1. objMerge 合并两个对象
+## 1. objMerge 深度合并对象
 
-合并两个对象，递归合并嵌套对象，数组会直接复制。
+深度合并两个对象（**非破坏性**），递归合并嵌套对象，数组会直接复制，返回新对象，不修改入参。
+
+> [!WARNING] v4.0 破坏性变更
+> - `objMerge` 由**原地修改 target** 改为**返回新对象**，不再修改入参
+> - 原 `deepMerge` 已合并到 `objMerge`（两者本就都是深合并），`deepMerge` 移除。多个对象合并请链式调用：`objMerge(objMerge(a, b), c)`
 
 **参数说明：**
 
 | 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
-| target | `T` | 是 | 目标对象（会被修改） |
+| target | `T` | 是 | 目标对象（不会被修改） |
 | source | `S` | 是 | 源对象 |
 | mergeType | `string` | 否 | 合并类型：`'hard'`（硬合并，包含两者所有属性）、`'soft'`（软合并，只包含 target 的属性），默认 `'hard'` |
 
-**返回值：** `T & S` — 合并后的对象
+**返回值：** `T & S` — 合并后的新对象
 
 **示例：**
 
@@ -30,9 +34,18 @@ objMerge({ a: 1 }, { b: 2 });
 objMerge({ a: { x: 1 } }, { a: { y: 2 } });
 // { a: { x: 1, y: 2 } }
 
+// 深合并（source 覆盖 target 的同名字段）
+objMerge({ a: { b: 1 } }, { a: { c: 2 } });
+// { a: { b: 1, c: 2 } }
+
 // 软合并（只保留 target 的属性）
 objMerge({ a: 1, b: 2 }, { b: 3, c: 4 }, 'soft');
 // { a: 1, b: 3 }
+
+// 非破坏性：target 不会被修改
+const target = { a: 1 };
+objMerge(target, { b: 2 });
+// target 仍为 { a: 1 }
 ```
 
 ```js [JavaScript (ESM)]
@@ -46,9 +59,18 @@ objMerge({ a: 1 }, { b: 2 });
 objMerge({ a: { x: 1 } }, { a: { y: 2 } });
 // { a: { x: 1, y: 2 } }
 
+// 深合并（source 覆盖 target 的同名字段）
+objMerge({ a: { b: 1 } }, { a: { c: 2 } });
+// { a: { b: 1, c: 2 } }
+
 // 软合并（只保留 target 的属性）
 objMerge({ a: 1, b: 2 }, { b: 3, c: 4 }, 'soft');
 // { a: 1, b: 3 }
+
+// 非破坏性：target 不会被修改
+const target = { a: 1 };
+objMerge(target, { b: 2 });
+// target 仍为 { a: 1 }
 ```
 
 ```js [JavaScript (CJS)]
@@ -62,9 +84,18 @@ objMerge({ a: 1 }, { b: 2 });
 objMerge({ a: { x: 1 } }, { a: { y: 2 } });
 // { a: { x: 1, y: 2 } }
 
+// 深合并（source 覆盖 target 的同名字段）
+objMerge({ a: { b: 1 } }, { a: { c: 2 } });
+// { a: { b: 1, c: 2 } }
+
 // 软合并（只保留 target 的属性）
 objMerge({ a: 1, b: 2 }, { b: 3, c: 4 }, 'soft');
 // { a: 1, b: 3 }
+
+// 非破坏性：target 不会被修改
+const target = { a: 1 };
+objMerge(target, { b: 2 });
+// target 仍为 { a: 1 }
 ```
 :::
 
@@ -183,45 +214,13 @@ objFilterNull({ a: 1, b: null, c: undefined }, { null: false, undefined: true })
 ```
 :::
 
-## 4. isHasProperties 判断属性存在
+> [!WARNING] v4.0 破坏性变更
+> `isHasProperties` 已在 v4.0 移除 —— 它只是 `Object.prototype.hasOwnProperty` 的薄封装，请直接使用：
+> ```ts
+> Object.prototype.hasOwnProperty.call(obj, 'a'); // true
+> ```
 
-判断对象是否存在指定属性。
-
-**参数说明：**
-
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| obj | `Record<string, any>` | 是 | 对象 |
-| key | `string` | 是 | 属性键 |
-
-**返回值：** `boolean`
-
-**示例：**
-
-::: code-group
-```ts [TypeScript]
-import { isHasProperties } from 'l-js-fn';
-
-isHasProperties({ a: 1, b: 2 }, 'a'); // true
-isHasProperties({ a: 1, b: 2 }, 'c'); // false
-```
-
-```js [JavaScript (ESM)]
-import { isHasProperties } from 'l-js-fn';
-
-isHasProperties({ a: 1, b: 2 }, 'a'); // true
-isHasProperties({ a: 1, b: 2 }, 'c'); // false
-```
-
-```js [JavaScript (CJS)]
-const { isHasProperties } = require('l-js-fn');
-
-isHasProperties({ a: 1, b: 2 }, 'a'); // true
-isHasProperties({ a: 1, b: 2 }, 'c'); // false
-```
-:::
-
-## 5. jsonToFormData JSON转FormData
+## 5. objToFormData JSON转FormData
 
 将 JSON 对象转换为 `FormData`。
 
@@ -235,52 +234,53 @@ isHasProperties({ a: 1, b: 2 }, 'c'); // false
 
 **返回值：** `FormData`
 
-**异常：** 参数非法时抛出 `TypeError`
+> [!NOTE] v4.0 变更
+> `data` 不是对象时不再抛错，返回传入的 `formData`（默认空 FormData）。
 
 **示例：**
 
 ::: code-group
 ```ts [TypeScript]
-import { jsonToFormData } from 'l-js-fn';
+import { objToFormData } from 'l-js-fn';
 
 const data = { name: 'John', age: 20 };
-const formData = jsonToFormData(data);
+const formData = objToFormData(data);
 // FormData { name: 'John', age: '20' }
 
 // 嵌套对象
 const nested = { user: { name: 'John', age: 20 } };
-const formData2 = jsonToFormData(nested);
+const formData2 = objToFormData(nested);
 // FormData { 'user[name]': 'John', 'user[age]': '20' }
 ```
 
 ```js [JavaScript (ESM)]
-import { jsonToFormData } from 'l-js-fn';
+import { objToFormData } from 'l-js-fn';
 
 const data = { name: 'John', age: 20 };
-const formData = jsonToFormData(data);
+const formData = objToFormData(data);
 // FormData { name: 'John', age: '20' }
 
 // 嵌套对象
 const nested = { user: { name: 'John', age: 20 } };
-const formData2 = jsonToFormData(nested);
+const formData2 = objToFormData(nested);
 // FormData { 'user[name]': 'John', 'user[age]': '20' }
 ```
 
 ```js [JavaScript (CJS)]
-const { jsonToFormData } = require('l-js-fn');
+const { objToFormData } = require('l-js-fn');
 
 const data = { name: 'John', age: 20 };
-const formData = jsonToFormData(data);
+const formData = objToFormData(data);
 // FormData { name: 'John', age: '20' }
 
 // 嵌套对象
 const nested = { user: { name: 'John', age: 20 } };
-const formData2 = jsonToFormData(nested);
+const formData2 = objToFormData(nested);
 // FormData { 'user[name]': 'John', 'user[age]': '20' }
 ```
 :::
 
-## 6. formDataToObject FormData转对象
+## 6. objFromFormData FormData转对象
 
 将 `FormData` 转换为 JSON 对象。
 
@@ -296,66 +296,66 @@ const formData2 = jsonToFormData(nested);
 
 ::: code-group
 ```ts [TypeScript]
-import { formDataToObject } from 'l-js-fn';
+import { objFromFormData } from 'l-js-fn';
 
 const formData = new FormData();
 formData.append('name', 'John');
 formData.append('age', '20');
 
-	formDataToObject(formData);
+	objFromFormData(formData);
 	// { name: 'John', age: 20 }
 ```
 
 ```js [JavaScript (ESM)]
-import { formDataToObject } from 'l-js-fn';
+import { objFromFormData } from 'l-js-fn';
 
 const formData = new FormData();
 formData.append('name', 'John');
 formData.append('age', '20');
 
-	formDataToObject(formData);
+	objFromFormData(formData);
 	// { name: 'John', age: 20 }
 ```
 
 ```js [JavaScript (CJS)]
-const { formDataToObject } = require('l-js-fn');
+const { objFromFormData } = require('l-js-fn');
 
 const formData = new FormData();
 formData.append('name', 'John');
 formData.append('age', '20');
 
-	formDataToObject(formData);
+	objFromFormData(formData);
 	// { name: 'John', age: 20 }
 ```
 :::
 
-## 7. pick 选取指定属性
+## 7. objPick 选取指定属性
 
 从对象中选取指定属性，返回新对象。
 
 ::: code-group
 ```ts [TypeScript]
-import { pick } from 'l-js-fn';
+import { objPick } from 'l-js-fn';
 
-pick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
+objPick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
 ```
 
 ```js [JavaScript (ESM)]
-import { pick } from 'l-js-fn';
+import { objPick } from 'l-js-fn';
 
-pick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
+objPick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
 ```
 
 ```js [JavaScript (CJS)]
-const { pick } = require('l-js-fn');
+const { objPick } = require('l-js-fn');
 
-pick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
+objPick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
 ```
 :::
 
-## 8. omit 排除指定属性
+## 8. objOmit 排除指定属性
 
-排除对象中指定 key 的属性，返回一个新对象（pick 的反操作）。
+排除对象中指定 key 的属性，返回一个新对象（objPick 的反操作）。
 
 **参数说明：**
 
@@ -370,90 +370,58 @@ pick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
 
 ::: code-group
 ```ts [TypeScript]
-import { omit } from 'l-js-fn';
+import { objOmit } from 'l-js-fn';
 
-omit({ a: 1, b: 2, c: 3 }, ['b']);    // { a: 1, c: 3 }
-omit({ a: 1, b: 2 }, []);              // { a: 1, b: 2 }
+objOmit({ a: 1, b: 2, c: 3 }, ['b']);    // { a: 1, c: 3 }
+objOmit({ a: 1, b: 2 }, []);              // { a: 1, b: 2 }
 ```
 
 ```js [JavaScript (ESM)]
-import { omit } from 'l-js-fn';
+import { objOmit } from 'l-js-fn';
 
-omit({ a: 1, b: 2, c: 3 }, ['b']);    // { a: 1, c: 3 }
+objOmit({ a: 1, b: 2, c: 3 }, ['b']);    // { a: 1, c: 3 }
 ```
 
 ```js [JavaScript (CJS)]
-const { omit } = require('l-js-fn');
+const { objOmit } = require('l-js-fn');
 
-omit({ a: 1, b: 2, c: 3 }, ['b']);    // { a: 1, c: 3 }
+objOmit({ a: 1, b: 2, c: 3 }, ['b']);    // { a: 1, c: 3 }
 ```
 :::
 
-## 9. get 安全深层取值
+## 9. objGet 安全深层取值
 
 安全获取对象深层属性值。
 
 ::: code-group
 ```ts [TypeScript]
-import { get } from 'l-js-fn';
+import { objGet } from 'l-js-fn';
 
 const obj = { a: { b: { c: 1 } } };
-get(obj, 'a.b.c');           // 1
-get(obj, 'a.b.d', 'default'); // 'default'
-get({ list: [1, 2, 3] }, 'list[1]'); // 2
+objGet(obj, 'a.b.c');           // 1
+objGet(obj, 'a.b.d', 'default'); // 'default'
+objGet({ list: [1, 2, 3] }, 'list[1]'); // 2
 ```
 
 ```js [JavaScript (ESM)]
-import { get } from 'l-js-fn';
+import { objGet } from 'l-js-fn';
 
 const obj = { a: { b: { c: 1 } } };
-get(obj, 'a.b.c');           // 1
-get(obj, 'a.b.d', 'default'); // 'default'
-get({ list: [1, 2, 3] }, 'list[1]'); // 2
+objGet(obj, 'a.b.c');           // 1
+objGet(obj, 'a.b.d', 'default'); // 'default'
+objGet({ list: [1, 2, 3] }, 'list[1]'); // 2
 ```
 
 ```js [JavaScript (CJS)]
-const { get } = require('l-js-fn');
+const { objGet } = require('l-js-fn');
 
 const obj = { a: { b: { c: 1 } } };
-get(obj, 'a.b.c');           // 1
-get(obj, 'a.b.d', 'default'); // 'default'
-get({ list: [1, 2, 3] }, 'list[1]'); // 2
+objGet(obj, 'a.b.c');           // 1
+objGet(obj, 'a.b.d', 'default'); // 'default'
+objGet({ list: [1, 2, 3] }, 'list[1]'); // 2
 ```
 :::
 
-## 10. deepMerge 深度合并对象
-
-深度合并多个对象。
-
-::: code-group
-```ts [TypeScript]
-import { deepMerge } from 'l-js-fn';
-
-deepMerge({ a: { b: 1 } }, { a: { c: 2 } });
-// { a: { b: 1, c: 2 } }
-
-deepMerge({ a: 1 }, { b: 2 }, { c: 3 });
-// { a: 1, b: 2, c: 3 }
-```
-
-```js [JavaScript (ESM)]
-import { deepMerge } from 'l-js-fn';
-
-deepMerge({ a: { b: 1 } }, { a: { c: 2 } });
-// { a: { b: 1, c: 2 } }
-
-deepMerge({ a: 1 }, { b: 2 }, { c: 3 });
-// { a: 1, b: 2, c: 3 }
-```
-
-```js [JavaScript (CJS)]
-const { deepMerge } = require('l-js-fn');
-
-deepMerge({ a: { b: 1 } }, { a: { c: 2 } });
-// { a: { b: 1, c: 2 } }
-
-deepMerge({ a: 1 }, { b: 2 }, { c: 3 });
-// { a: 1, b: 2, c: 3 }
-```
-:::
+> [!WARNING] v4.0 破坏性变更
+> 原 `deepMerge` 已合并到 `objMerge`（objMerge 本身就是深度合并），`deepMerge` 不再导出。
+> 多个对象合并请链式调用：`objMerge(objMerge(a, b), c)`。

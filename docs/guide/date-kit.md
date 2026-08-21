@@ -115,7 +115,7 @@ dateSecond(-1);     // '00:00:01'（负数取绝对值处理）
 ```
 :::
 
-## 3. diffDays 计算天数差
+## 3. dateDiffDays 计算天数差
 
 计算两个日期之间相差的天数（忽略时分秒）。
 
@@ -132,28 +132,28 @@ dateSecond(-1);     // '00:00:01'（负数取绝对值处理）
 
 ::: code-group
 ```ts [TypeScript]
-import { diffDays } from 'l-js-fn';
+import { dateDiffDays } from 'l-js-fn';
 
-diffDays('2024-01-01', '2024-01-03');          // 2
-diffDays(new Date('2024-01-01'), new Date('2024-01-10')); // 9
+dateDiffDays('2024-01-01', '2024-01-03');          // 2
+dateDiffDays(new Date('2024-01-01'), new Date('2024-01-10')); // 9
 ```
 
 ```js [JavaScript (ESM)]
-import { diffDays } from 'l-js-fn';
+import { dateDiffDays } from 'l-js-fn';
 
-diffDays('2024-01-01', '2024-01-03');          // 2
-diffDays(new Date('2024-01-01'), new Date('2024-01-10')); // 9
+dateDiffDays('2024-01-01', '2024-01-03');          // 2
+dateDiffDays(new Date('2024-01-01'), new Date('2024-01-10')); // 9
 ```
 
 ```js [JavaScript (CJS)]
-const { diffDays } = require('l-js-fn');
+const { dateDiffDays } = require('l-js-fn');
 
-diffDays('2024-01-01', '2024-01-03');          // 2
-diffDays(new Date('2024-01-01'), new Date('2024-01-10')); // 9
+dateDiffDays('2024-01-01', '2024-01-03');          // 2
+dateDiffDays(new Date('2024-01-01'), new Date('2024-01-10')); // 9
 ```
 :::
 
-## 4. formatPassTime 相对时间格式化
+## 4. dateFormatPassTime 相对时间格式化
 
 格式化过去时间为相对时间字符串。
 
@@ -169,31 +169,31 @@ diffDays(new Date('2024-01-01'), new Date('2024-01-10')); // 9
 
 ::: code-group
 ```ts [TypeScript]
-import { formatPassTime } from 'l-js-fn';
+import { dateFormatPassTime } from 'l-js-fn';
 
-formatPassTime('2020-01-01 12:12:12'); // '3年前'
-formatPassTime(new Date());             // '刚刚'
-formatPassTime(Date.now() - 60000);     // '1分钟前'
+dateFormatPassTime('2020-01-01 12:12:12'); // '3年前'
+dateFormatPassTime(new Date());             // '刚刚'
+dateFormatPassTime(Date.now() - 60000);     // '1分钟前'
 ```
 
 ```js [JavaScript (ESM)]
-import { formatPassTime } from 'l-js-fn';
+import { dateFormatPassTime } from 'l-js-fn';
 
-formatPassTime('2020-01-01 12:12:12'); // '3年前'
-formatPassTime(new Date());             // '刚刚'
-formatPassTime(Date.now() - 60000);     // '1分钟前'
+dateFormatPassTime('2020-01-01 12:12:12'); // '3年前'
+dateFormatPassTime(new Date());             // '刚刚'
+dateFormatPassTime(Date.now() - 60000);     // '1分钟前'
 ```
 
 ```js [JavaScript (CJS)]
-const { formatPassTime } = require('l-js-fn');
+const { dateFormatPassTime } = require('l-js-fn');
 
-formatPassTime('2020-01-01 12:12:12'); // '3年前'
-formatPassTime(new Date());             // '刚刚'
-formatPassTime(Date.now() - 60000);     // '1分钟前'
+dateFormatPassTime('2020-01-01 12:12:12'); // '3年前'
+dateFormatPassTime(new Date());             // '刚刚'
+dateFormatPassTime(Date.now() - 60000);     // '1分钟前'
 ```
 :::
 
-## 5. monthDays 当月总天数
+## 5. dateMonthDays 当月总天数
 
 获取指定日期月份的总天数。
 
@@ -211,31 +211,31 @@ formatPassTime(Date.now() - 60000);     // '1分钟前'
 
 ::: code-group
 ```ts [TypeScript]
-import { monthDays } from 'l-js-fn';
+import { dateMonthDays } from 'l-js-fn';
 
-monthDays('2024-02-01'); // 29（闰年）
-monthDays('2023-02-01'); // 28
-monthDays('2024-01-01'); // 31
+dateMonthDays('2024-02-01'); // 29（闰年）
+dateMonthDays('2023-02-01'); // 28
+dateMonthDays('2024-01-01'); // 31
 ```
 
 ```js [JavaScript (ESM)]
-import { monthDays } from 'l-js-fn';
+import { dateMonthDays } from 'l-js-fn';
 
-monthDays('2024-02-01'); // 29（闰年）
-monthDays('2023-02-01'); // 28
-monthDays('2024-01-01'); // 31
+dateMonthDays('2024-02-01'); // 29（闰年）
+dateMonthDays('2023-02-01'); // 28
+dateMonthDays('2024-01-01'); // 31
 ```
 
 ```js [JavaScript (CJS)]
-const { monthDays } = require('l-js-fn');
+const { dateMonthDays } = require('l-js-fn');
 
-monthDays('2024-02-01'); // 29（闰年）
-monthDays('2023-02-01'); // 28
-monthDays('2024-01-01'); // 31
+dateMonthDays('2024-02-01'); // 29（闰年）
+dateMonthDays('2023-02-01'); // 28
+dateMonthDays('2024-01-01'); // 31
 ```
 :::
 
-## 6. getTimeDiff 计算时间间隔
+## 6. dateDiff 计算时间间隔
 
 计算两个时间的间隔（单位：毫秒）。
 
@@ -254,28 +254,28 @@ monthDays('2024-01-01'); // 31
 
 ::: code-group
 ```ts [TypeScript]
-import { getTimeDiff } from 'l-js-fn';
+import { dateDiff } from 'l-js-fn';
 
-getTimeDiff('2024-01-01', '2024-01-02'); // 86400000（1天）
-getTimeDiff(new Date('2024-01-01'), new Date('2024-01-02')); // 86400000
+dateDiff('2024-01-01', '2024-01-02'); // 86400000（1天）
+dateDiff(new Date('2024-01-01'), new Date('2024-01-02')); // 86400000
 ```
 
 ```js [JavaScript (ESM)]
-import { getTimeDiff } from 'l-js-fn';
+import { dateDiff } from 'l-js-fn';
 
-getTimeDiff('2024-01-01', '2024-01-02'); // 86400000（1天）
-getTimeDiff(new Date('2024-01-01'), new Date('2024-01-02')); // 86400000
+dateDiff('2024-01-01', '2024-01-02'); // 86400000（1天）
+dateDiff(new Date('2024-01-01'), new Date('2024-01-02')); // 86400000
 ```
 
 ```js [JavaScript (CJS)]
-const { getTimeDiff } = require('l-js-fn');
+const { dateDiff } = require('l-js-fn');
 
-getTimeDiff('2024-01-01', '2024-01-02'); // 86400000（1天）
-getTimeDiff(new Date('2024-01-01'), new Date('2024-01-02')); // 86400000
+dateDiff('2024-01-01', '2024-01-02'); // 86400000（1天）
+dateDiff(new Date('2024-01-01'), new Date('2024-01-02')); // 86400000
 ```
 :::
 
-## 7. diffTime 计算时间差值
+## 7. dateDiffTime 计算时间差值
 
 计算两个时间之间的差值，返回包含天/时/分/秒的结构化结果。
 
@@ -292,40 +292,40 @@ getTimeDiff(new Date('2024-01-01'), new Date('2024-01-02')); // 86400000
 
 ::: code-group
 ```ts [TypeScript]
-import { diffTime } from 'l-js-fn';
+import { dateDiffTime } from 'l-js-fn';
 
-diffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45');
+dateDiffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45');
 // { days: 1, hours: 2, minutes: 30, seconds: 45 }
 
-diffTime('2024-01-01', '2024-01-01 01:02:03');
+dateDiffTime('2024-01-01', '2024-01-01 01:02:03');
 // { days: 0, hours: 1, minutes: 2, seconds: 3 }
 
-diffTime('2024-01-01 23:30:00', '2024-01-02 01:15:30');
+dateDiffTime('2024-01-01 23:30:00', '2024-01-02 01:15:30');
 // { days: 0, hours: 1, minutes: 45, seconds: 30 }
 ```
 
 ```js [JavaScript (ESM)]
-import { diffTime } from 'l-js-fn';
+import { dateDiffTime } from 'l-js-fn';
 
-diffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45');
+dateDiffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45');
 // { days: 1, hours: 2, minutes: 30, seconds: 45 }
 
-diffTime('2024-01-01', '2024-01-01 01:02:03');
+dateDiffTime('2024-01-01', '2024-01-01 01:02:03');
 // { days: 0, hours: 1, minutes: 2, seconds: 3 }
 ```
 
 ```js [JavaScript (CJS)]
-const { diffTime } = require('l-js-fn');
+const { dateDiffTime } = require('l-js-fn');
 
-diffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45');
+dateDiffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45');
 // { days: 1, hours: 2, minutes: 30, seconds: 45 }
 
-diffTime('2024-01-01', '2024-01-01 01:02:03');
+dateDiffTime('2024-01-01', '2024-01-01 01:02:03');
 // { days: 0, hours: 1, minutes: 2, seconds: 3 }
 ```
 :::
 
-## 8. addDays 日期加减天数
+## 8. dateAddDays 日期加减天数
 
 日期加减天数，返回新 Date 对象。
 
@@ -333,24 +333,24 @@ diffTime('2024-01-01', '2024-01-01 01:02:03');
 
 ::: code-group
 ```ts [TypeScript]
-import { addDays } from 'l-js-fn';
+import { dateAddDays } from 'l-js-fn';
 
-addDays(new Date('2024-01-01'), 1);  // 2024-01-02
-addDays(new Date('2024-01-01'), -1); // 2023-12-31
+dateAddDays(new Date('2024-01-01'), 1);  // 2024-01-02
+dateAddDays(new Date('2024-01-01'), -1); // 2023-12-31
 ```
 
 ```js [JavaScript (ESM)]
-import { addDays } from 'l-js-fn';
+import { dateAddDays } from 'l-js-fn';
 
-addDays(new Date('2024-01-01'), 1);  // 2024-01-02
-addDays(new Date('2024-01-01'), -1); // 2023-12-31
+dateAddDays(new Date('2024-01-01'), 1);  // 2024-01-02
+dateAddDays(new Date('2024-01-01'), -1); // 2023-12-31
 ```
 
 ```js [JavaScript (CJS)]
-const { addDays } = require('l-js-fn');
+const { dateAddDays } = require('l-js-fn');
 
-addDays(new Date('2024-01-01'), 1);  // 2024-01-02
-addDays(new Date('2024-01-01'), -1); // 2023-12-31
+dateAddDays(new Date('2024-01-01'), 1);  // 2024-01-02
+dateAddDays(new Date('2024-01-01'), -1); // 2023-12-31
 ```
 :::
 
@@ -381,7 +381,7 @@ isLeapYear(2023); // false
 ```
 :::
 
-## 10. getWeekDay 获取中文星期
+## 10. dateWeekDay 获取中文星期
 
 获取中文星期几。
 
@@ -389,23 +389,23 @@ isLeapYear(2023); // false
 
 ::: code-group
 ```ts [TypeScript]
-import { getWeekDay } from 'l-js-fn';
+import { dateWeekDay } from 'l-js-fn';
 
-getWeekDay(new Date('2024-01-01')); // '星期一'
-getWeekDay(); // '星期一'（今天）
+dateWeekDay(new Date('2024-01-01')); // '星期一'
+dateWeekDay(); // '星期一'（今天）
 ```
 
 ```js [JavaScript (ESM)]
-import { getWeekDay } from 'l-js-fn';
+import { dateWeekDay } from 'l-js-fn';
 
-getWeekDay(new Date('2024-01-01')); // '星期一'
-getWeekDay(); // '星期一'（今天）
+dateWeekDay(new Date('2024-01-01')); // '星期一'
+dateWeekDay(); // '星期一'（今天）
 ```
 
 ```js [JavaScript (CJS)]
-const { getWeekDay } = require('l-js-fn');
+const { dateWeekDay } = require('l-js-fn');
 
-getWeekDay(new Date('2024-01-01')); // '星期一'
-getWeekDay(); // '星期一'（今天）
+dateWeekDay(new Date('2024-01-01')); // '星期一'
+dateWeekDay(); // '星期一'（今天）
 ```
 :::

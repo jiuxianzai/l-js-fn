@@ -6,14 +6,14 @@
 import {
 	dateFormat,
 	dateSecond,
-	diffDays,
-	diffTime,
-	formatPassTime,
-	monthDays,
-	getTimeDiff,
-	addDays,
+	dateDiffDays,
+	dateDiffTime,
+	dateFormatPassTime,
+	dateMonthDays,
+	dateDiff,
+	dateAddDays,
 	isLeapYear,
-	getWeekDay,
+	dateWeekDay,
 } from '@/libs/date-kit';
 
 describe('date-kit - 日期处理工具', () => {
@@ -144,296 +144,296 @@ describe('date-kit - 日期处理工具', () => {
 		});
 	});
 
-	// ==================== diffDays 测试 ====================
-	describe('diffDays - 计算日期相差天数', () => {
+	// ==================== dateDiffDays 测试 ====================
+	describe('dateDiffDays - 计算日期相差天数', () => {
 		it('应该计算同一天为0天', () => {
 			const date1 = new Date('2024-01-15 10:00:00');
 			const date2 = new Date('2024-01-15 18:30:00');
-			expect(diffDays(date1, date2)).toBe(0);
+			expect(dateDiffDays(date1, date2)).toBe(0);
 		});
 
 		it('应该计算相差1天', () => {
 			const date1 = new Date('2024-01-15');
 			const date2 = new Date('2024-01-16');
-			expect(diffDays(date1, date2)).toBe(1);
+			expect(dateDiffDays(date1, date2)).toBe(1);
 		});
 
 		it('应该计算相差多天', () => {
 			const date1 = new Date('2024-01-01');
 			const date2 = new Date('2024-01-31');
-			expect(diffDays(date1, date2)).toBe(30);
+			expect(dateDiffDays(date1, date2)).toBe(30);
 		});
 
 		it('应该忽略时分秒', () => {
 			const date1 = new Date('2024-01-15 23:59:59');
 			const date2 = new Date('2024-01-16 00:00:01');
-			expect(diffDays(date1, date2)).toBe(1);
+			expect(dateDiffDays(date1, date2)).toBe(1);
 		});
 
 		it('应该处理时间戳', () => {
 			const date1 = new Date('2024-01-15').getTime();
 			const date2 = new Date('2024-01-20').getTime();
-			expect(diffDays(date1, date2)).toBe(5);
+			expect(dateDiffDays(date1, date2)).toBe(5);
 		});
 
 		it('应该处理日期字符串', () => {
-			expect(diffDays('2024-01-15', '2024-01-20')).toBe(5);
+			expect(dateDiffDays('2024-01-15', '2024-01-20')).toBe(5);
 		});
 
 		it('应该返回绝对值（顺序无关）', () => {
 			const date1 = new Date('2024-01-20');
 			const date2 = new Date('2024-01-15');
-			expect(diffDays(date1, date2)).toBe(5);
-			expect(diffDays(date2, date1)).toBe(5);
+			expect(dateDiffDays(date1, date2)).toBe(5);
+			expect(dateDiffDays(date2, date1)).toBe(5);
 		});
 
 		it('应该处理跨年', () => {
-			expect(diffDays('2024-12-31', '2025-01-01')).toBe(1);
+			expect(dateDiffDays('2024-12-31', '2025-01-01')).toBe(1);
 		});
 
 		it('应该抛出错误如果日期字符串无效', () => {
-			expect(() => diffDays('invalid', '2024-01-15')).toThrow('Invalid date string');
+			expect(() => dateDiffDays('invalid', '2024-01-15')).toThrow('Invalid date string');
 		});
 
 		it('应该处理闰年', () => {
-			expect(diffDays('2024-02-28', '2024-03-01')).toBe(2); // 闰年
-			expect(diffDays('2023-02-28', '2023-03-01')).toBe(1); // 平年
+			expect(dateDiffDays('2024-02-28', '2024-03-01')).toBe(2); // 闰年
+			expect(dateDiffDays('2023-02-28', '2023-03-01')).toBe(1); // 平年
 		});
 	});
 
-	// ==================== formatPassTime 测试 ====================
-	describe('formatPassTime - 格式化过去时间', () => {
+	// ==================== dateFormatPassTime 测试 ====================
+	describe('dateFormatPassTime - 格式化过去时间', () => {
 		it('应该显示"刚刚"如果时间在1秒内', () => {
 			// 不使用 fake timers，使用相对时间
 			const now = new Date();
-			const result = formatPassTime(now);
+			const result = dateFormatPassTime(now);
 			expect(result).toBe('刚刚');
 		});
 
 		it('应该显示"X秒前"', () => {
 			const now = Date.now();
-			expect(formatPassTime(new Date(now - 5000))).toBe('5秒前');
-			expect(formatPassTime(new Date(now - 60000))).toBe('1分钟前'); // 60秒 = 1分钟
+			expect(dateFormatPassTime(new Date(now - 5000))).toBe('5秒前');
+			expect(dateFormatPassTime(new Date(now - 60000))).toBe('1分钟前'); // 60秒 = 1分钟
 		});
 
 		it('应该显示"X分钟前"', () => {
 			const now = Date.now();
-			expect(formatPassTime(new Date(now - 120000))).toBe('2分钟前');
-			expect(formatPassTime(new Date(now - 3600000))).toBe('1小时前'); // 60分钟 = 1小时
+			expect(dateFormatPassTime(new Date(now - 120000))).toBe('2分钟前');
+			expect(dateFormatPassTime(new Date(now - 3600000))).toBe('1小时前'); // 60分钟 = 1小时
 		});
 
 		it('应该显示"X小时前"', () => {
 			const now = Date.now();
-			expect(formatPassTime(new Date(now - 14400000))).toBe('4小时前');
-			expect(formatPassTime(new Date(now - 43200000))).toBe('12小时前');
+			expect(dateFormatPassTime(new Date(now - 14400000))).toBe('4小时前');
+			expect(dateFormatPassTime(new Date(now - 43200000))).toBe('12小时前');
 		});
 
 		it('应该显示"X天前"', () => {
 			const now = Date.now();
-			expect(formatPassTime(new Date(now - 86400000))).toBe('1天前');
-			expect(formatPassTime(new Date(now - 432000000))).toBe('5天前');
+			expect(dateFormatPassTime(new Date(now - 86400000))).toBe('1天前');
+			expect(dateFormatPassTime(new Date(now - 432000000))).toBe('5天前');
 		});
 
 		it('应该显示"X个月前"', () => {
 			const now = Date.now();
-			expect(formatPassTime(new Date(now - 2592000000))).toBe('1个月前'); // 约30天
-			expect(formatPassTime(new Date(now - 7776000000))).toBe('3个月前'); // 约90天
+			expect(dateFormatPassTime(new Date(now - 2592000000))).toBe('1个月前'); // 约30天
+			expect(dateFormatPassTime(new Date(now - 7776000000))).toBe('3个月前'); // 约90天
 		});
 
 		it('应该显示"X年前"', () => {
 			const now = Date.now();
-			expect(formatPassTime(new Date(now - 31536000000))).toBe('1年前'); // 约365天
-			expect(formatPassTime(new Date(now - 126144000000))).toBe('4年前'); // 约1460天
+			expect(dateFormatPassTime(new Date(now - 31536000000))).toBe('1年前'); // 约365天
+			expect(dateFormatPassTime(new Date(now - 126144000000))).toBe('4年前'); // 约1460天
 		});
 
 		it('应该显示"刚刚"如果时间是未来', () => {
 			const now = Date.now();
-			const result = formatPassTime(new Date(now + 3600000)); // 1小时后
+			const result = dateFormatPassTime(new Date(now + 3600000)); // 1小时后
 			expect(result).toBe('刚刚');
 		});
 
 		it('应该显示"刚刚"如果没有传入时间', () => {
-			const result = formatPassTime();
+			const result = dateFormatPassTime();
 			expect(result).toBe('刚刚');
 		});
 
 		it('应该处理时间戳', () => {
 			const now = Date.now();
-			expect(formatPassTime(now - 3600000)).toBe('1小时前');
+			expect(dateFormatPassTime(now - 3600000)).toBe('1小时前');
 		});
 
 		it('应该处理 Date 对象', () => {
 			const now = Date.now();
 			const date = new Date(now - 1800000); // 30分钟前
-			expect(formatPassTime(date)).toBe('30分钟前');
+			expect(dateFormatPassTime(date)).toBe('30分钟前');
 		});
 
 		it('应该返回"Invalid date"如果日期无效', () => {
-			expect(formatPassTime('invalid date')).toBe('Invalid date');
+			expect(dateFormatPassTime('invalid date')).toBe('Invalid date');
 		});
 	});
 
-	// ==================== monthDays 测试 ====================
-	describe('monthDays - 获取月份总天数', () => {
+	// ==================== dateMonthDays 测试 ====================
+	describe('dateMonthDays - 获取月份总天数', () => {
 		it('应该正确计算各月份天数', () => {
 			// 31天的月份
-			expect(monthDays('2024-01-15')).toBe(31); // 1月
-			expect(monthDays('2024-03-15')).toBe(31); // 3月
-			expect(monthDays('2024-05-15')).toBe(31); // 5月
-			expect(monthDays('2024-07-15')).toBe(31); // 7月
-			expect(monthDays('2024-08-15')).toBe(31); // 8月
-			expect(monthDays('2024-10-15')).toBe(31); // 10月
-			expect(monthDays('2024-12-15')).toBe(31); // 12月
+			expect(dateMonthDays('2024-01-15')).toBe(31); // 1月
+			expect(dateMonthDays('2024-03-15')).toBe(31); // 3月
+			expect(dateMonthDays('2024-05-15')).toBe(31); // 5月
+			expect(dateMonthDays('2024-07-15')).toBe(31); // 7月
+			expect(dateMonthDays('2024-08-15')).toBe(31); // 8月
+			expect(dateMonthDays('2024-10-15')).toBe(31); // 10月
+			expect(dateMonthDays('2024-12-15')).toBe(31); // 12月
 
 			// 30天的月份
-			expect(monthDays('2024-04-15')).toBe(30); // 4月
-			expect(monthDays('2024-06-15')).toBe(30); // 6月
-			expect(monthDays('2024-09-15')).toBe(30); // 9月
-			expect(monthDays('2024-11-15')).toBe(30); // 11月
+			expect(dateMonthDays('2024-04-15')).toBe(30); // 4月
+			expect(dateMonthDays('2024-06-15')).toBe(30); // 6月
+			expect(dateMonthDays('2024-09-15')).toBe(30); // 9月
+			expect(dateMonthDays('2024-11-15')).toBe(30); // 11月
 		});
 
 		it('应该正确处理闰年2月', () => {
-			expect(monthDays('2024-02-15')).toBe(29); // 闰年
-			expect(monthDays('2023-02-15')).toBe(28); // 平年
-			expect(monthDays('2000-02-15')).toBe(29); // 世纪闰年
-			expect(monthDays('1900-02-15')).toBe(28); // 世纪平年
+			expect(dateMonthDays('2024-02-15')).toBe(29); // 闰年
+			expect(dateMonthDays('2023-02-15')).toBe(28); // 平年
+			expect(dateMonthDays('2000-02-15')).toBe(29); // 世纪闰年
+			expect(dateMonthDays('1900-02-15')).toBe(28); // 世纪平年
 		});
 
 		it('应该处理 Date 对象', () => {
 			const date = new Date('2024-02-15');
-			expect(monthDays(date)).toBe(29);
+			expect(dateMonthDays(date)).toBe(29);
 		});
 
 		it('应该处理时间戳', () => {
 			const timestamp = new Date('2024-01-15').getTime();
-			expect(monthDays(timestamp)).toBe(31);
+			expect(dateMonthDays(timestamp)).toBe(31);
 		});
 	});
 
-	// ==================== getTimeDiff 测试 ====================
-	describe('getTimeDiff - 计算时间间隔（毫秒）', () => {
+	// ==================== dateDiff 测试 ====================
+	describe('dateDiff - 计算时间间隔（毫秒）', () => {
 		it('应该计算两个 Date 对象的时间差', () => {
 			const start = new Date('2024-01-15 10:00:00');
 			const end = new Date('2024-01-15 12:00:00');
-			expect(getTimeDiff(start, end)).toBe(2 * 60 * 60 * 1000); // 2小时
+			expect(dateDiff(start, end)).toBe(2 * 60 * 60 * 1000); // 2小时
 		});
 
 		it('应该计算两个时间戳的时间差', () => {
 			const start = new Date('2024-01-15 10:00:00').getTime();
 			const end = new Date('2024-01-15 12:00:00').getTime();
-			expect(getTimeDiff(start, end)).toBe(2 * 60 * 60 * 1000);
+			expect(dateDiff(start, end)).toBe(2 * 60 * 60 * 1000);
 		});
 
 		it('应该计算两个日期字符串的时间差', () => {
 			const start = '2024-01-15 10:00:00';
 			const end = '2024-01-15 12:00:00';
-			expect(getTimeDiff(start, end)).toBe(2 * 60 * 60 * 1000);
+			expect(dateDiff(start, end)).toBe(2 * 60 * 60 * 1000);
 		});
 
 		it('应该返回负数如果开始时间晚于结束时间', () => {
 			const start = new Date('2024-01-15 12:00:00');
 			const end = new Date('2024-01-15 10:00:00');
-			expect(getTimeDiff(start, end)).toBe(-2 * 60 * 60 * 1000);
+			expect(dateDiff(start, end)).toBe(-2 * 60 * 60 * 1000);
 		});
 
 		it('应该支持混合类型（Date+字符串）', () => {
 			const start = new Date('2024-01-15 10:00:00');
 			const end = '2024-01-15 12:00:00' as any;
-			expect(getTimeDiff(start, end)).toBe(2 * 60 * 60 * 1000);
+			expect(dateDiff(start, end)).toBe(2 * 60 * 60 * 1000);
 		});
 
 		it('应该抛出错误如果日期字符串无效', () => {
-			expect(() => getTimeDiff('invalid', 'invalid')).toThrow('Invalid date string');
+			expect(() => dateDiff('invalid', 'invalid')).toThrow('Invalid date string');
 		});
 
 		it('应该抛出错误如果不支持的格式', () => {
-			expect(() => getTimeDiff(true as any, false as any)).toThrow('Invalid date');
+			expect(() => dateDiff(true as any, false as any)).toThrow('Invalid date');
 		});
 
 		it('应该兼容不同格式的日期字符串（- 和 /）', () => {
 			const start = '2024-01-15 10:00:00';
 			const end = '2024/01/15 12:00:00';
-			expect(getTimeDiff(start, end)).toBe(2 * 60 * 60 * 1000);
+			expect(dateDiff(start, end)).toBe(2 * 60 * 60 * 1000);
 		});
 
 		it('应该处理小数时间差', () => {
 			const start = new Date('2024-01-15 10:00:00.000');
 			const end = new Date('2024-01-15 10:00:00.500');
-			expect(getTimeDiff(start, end)).toBe(500);
+			expect(dateDiff(start, end)).toBe(500);
 		});
 	});
 
-	// ==================== diffTime 测试 ====================
-	describe('diffTime - 计算两个时间差值（日/时/分/秒）', () => {
+	// ==================== dateDiffTime 测试 ====================
+	describe('dateDiffTime - 计算两个时间差值（日/时/分/秒）', () => {
 		it('应该分别返回日/时/分/秒', () => {
-			const result = diffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45');
+			const result = dateDiffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45');
 			expect(result).toEqual({ days: 1, hours: 2, minutes: 30, seconds: 45 });
 		});
 
 		it('应该处理 Date 对象', () => {
 			const date1 = new Date('2024-01-01 00:00:00');
 			const date2 = new Date('2024-01-01 01:02:03');
-			expect(diffTime(date1, date2)).toEqual({ days: 0, hours: 1, minutes: 2, seconds: 3 });
+			expect(dateDiffTime(date1, date2)).toEqual({ days: 0, hours: 1, minutes: 2, seconds: 3 });
 		});
 
 		it('应该处理时间戳', () => {
 			const t1 = new Date('2024-01-01 00:00:00').getTime();
 			const t2 = t1 + 90061 * 1000; // 25小时1分1秒
-			expect(diffTime(t1, t2)).toEqual({ days: 1, hours: 1, minutes: 1, seconds: 1 });
+			expect(dateDiffTime(t1, t2)).toEqual({ days: 1, hours: 1, minutes: 1, seconds: 1 });
 		});
 
 		it('应该返回全零如果是相同时间', () => {
 			const date = new Date('2024-01-01 12:00:00');
-			expect(diffTime(date, date)).toEqual({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+			expect(dateDiffTime(date, date)).toEqual({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 		});
 
 		it('应该顺序无关（返回绝对值）', () => {
 			const date1 = new Date('2024-01-02');
 			const date2 = new Date('2024-01-01');
-			expect(diffTime(date1, date2)).toEqual({ days: 1, hours: 0, minutes: 0, seconds: 0 });
-			expect(diffTime(date2, date1)).toEqual({ days: 1, hours: 0, minutes: 0, seconds: 0 });
+			expect(dateDiffTime(date1, date2)).toEqual({ days: 1, hours: 0, minutes: 0, seconds: 0 });
+			expect(dateDiffTime(date2, date1)).toEqual({ days: 1, hours: 0, minutes: 0, seconds: 0 });
 		});
 
 		it('应该处理仅秒级差异', () => {
-			expect(diffTime('2024-01-01 00:00:00', '2024-01-01 00:00:05')).toEqual({ days: 0, hours: 0, minutes: 0, seconds: 5 });
+			expect(dateDiffTime('2024-01-01 00:00:00', '2024-01-01 00:00:05')).toEqual({ days: 0, hours: 0, minutes: 0, seconds: 5 });
 		});
 
 		it('应该处理仅分钟级差异', () => {
-			expect(diffTime('2024-01-01 00:00:00', '2024-01-01 00:05:00')).toEqual({ days: 0, hours: 0, minutes: 5, seconds: 0 });
+			expect(dateDiffTime('2024-01-01 00:00:00', '2024-01-01 00:05:00')).toEqual({ days: 0, hours: 0, minutes: 5, seconds: 0 });
 		});
 
 		it('应该处理仅小时级差异', () => {
-			expect(diffTime('2024-01-01 00:00:00', '2024-01-01 03:00:00')).toEqual({ days: 0, hours: 3, minutes: 0, seconds: 0 });
+			expect(dateDiffTime('2024-01-01 00:00:00', '2024-01-01 03:00:00')).toEqual({ days: 0, hours: 3, minutes: 0, seconds: 0 });
 		});
 
 		it('应该处理跨天的时间差', () => {
-			expect(diffTime('2024-01-01 23:30:00', '2024-01-02 01:15:30')).toEqual({ days: 0, hours: 1, minutes: 45, seconds: 30 });
+			expect(dateDiffTime('2024-01-01 23:30:00', '2024-01-02 01:15:30')).toEqual({ days: 0, hours: 1, minutes: 45, seconds: 30 });
 		});
 
 		it('应该抛出错误如果日期字符串无效', () => {
-			expect(() => diffTime('invalid', '2024-01-15')).toThrow('Invalid date string');
+			expect(() => dateDiffTime('invalid', '2024-01-15')).toThrow('Invalid date string');
 		});
 	});
 
-	// ==================== addDays 测试 ====================
-	describe('addDays - 日期加减天数', () => {
+	// ==================== dateAddDays 测试 ====================
+	describe('dateAddDays - 日期加减天数', () => {
 		it('应该添加天数', () => {
-			const result = addDays(new Date('2024-01-01'), 1);
+			const result = dateAddDays(new Date('2024-01-01'), 1);
 			expect(dateFormat(result, 'yyyy-MM-dd')).toBe('2024-01-02');
 		});
 
 		it('应该减去天数', () => {
-			const result = addDays(new Date('2024-01-01'), -1);
+			const result = dateAddDays(new Date('2024-01-01'), -1);
 			expect(dateFormat(result, 'yyyy-MM-dd')).toBe('2023-12-31');
 		});
 
 		it('应该支持字符串输入', () => {
-			const result = addDays('2024-01-01', 5);
+			const result = dateAddDays('2024-01-01', 5);
 			expect(dateFormat(result, 'yyyy-MM-dd')).toBe('2024-01-06');
 		});
 
 		it('应该跨月计算', () => {
-			const result = addDays(new Date('2024-01-31'), 1);
+			const result = dateAddDays(new Date('2024-01-31'), 1);
 			expect(dateFormat(result, 'yyyy-MM-dd')).toBe('2024-02-01');
 		});
 	});
@@ -451,15 +451,15 @@ describe('date-kit - 日期处理工具', () => {
 		});
 	});
 
-	// ==================== getWeekDay 测试 ====================
-	describe('getWeekDay - 中文星期', () => {
+	// ==================== dateWeekDay 测试 ====================
+	describe('dateWeekDay - 中文星期', () => {
 		it('应该返回中文星期', () => {
-			expect(getWeekDay(new Date('2024-01-01'))).toBe('星期一');
-			expect(getWeekDay(new Date('2024-01-07'))).toBe('星期日');
+			expect(dateWeekDay(new Date('2024-01-01'))).toBe('星期一');
+			expect(dateWeekDay(new Date('2024-01-07'))).toBe('星期日');
 		});
 
 	it('应该支持默认参数（今天）', () => {
-		const result = getWeekDay();
+		const result = dateWeekDay();
 		const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
 		expect(days).toContain(result);
 	});

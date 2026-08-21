@@ -7,7 +7,25 @@ sidebar: false
 各版本发版内容，仅展示与使用相关的变更。
 
 <details open class="cl-current">
-<summary><span class="cl-ver"><code>v3.19.0</code></span><span class="cl-date">2026-08-20</span><span class="cl-current-tag">最新版本</span></summary>
+<summary><span class="cl-ver"><code>v4.0.0</code></span><span class="cl-date">待发布</span><span class="cl-current-tag">最新版本</span></summary>
+
+<p class="cl-cat cl-cat-break"><strong>破坏性变更</strong></p>
+
+- **统一命名前缀**：数组 `arrayXxx`、对象 `objXxx`、日期 `dateXxx`、判断 `isXxx`
+- 数组删除函数合并为 `arrayRemove` / `arrayRemoveAt` / `arrayRemoveBy`
+- `deepMerge` 合并进 `objMerge`，且 `objMerge` 改为非破坏性（返回新对象）
+- `querystringify` / `parseQueryString` 移除，统一到 `transUrlParams` / `getUrlParams`
+- 移除废弃与冗余：`uniq`、`findIndex`、`filterSpace`、`isHasProperties`、`Result`
+- 错误语义统一：无效输入不再抛错，返回安全空值
+- `formatNumber` 移除 boolean 重载；`getFileInfoToUrl` 更名为 `getFileInfoFromUrl`
+- `arrayMove` 返回纯数组；`imageToBase64` 返回 `Promise<string>`（失败 reject）
+
+> 完整迁移对照表见 [迁移指南](/guide/breaking-changes)
+
+</details>
+
+<details open class="cl-current">
+<summary><span class="cl-ver"><code>v3.19.0</code></span><span class="cl-date">2026-08-20</span></summary>
 
 <p class="cl-cat cl-cat-add"><strong>新增</strong></p>
 

@@ -9,18 +9,36 @@ function decodeSafe(str: string): string {
 }
 
 /**
- * 解析 URL 查询参数，支持数组参数和嵌套对象参数
- * @param url - 要解析的 URL，如果不提供则使用当前页面的 URL（仅在浏览器环境下有效）
+ * 解析 URL 查询参数，支持数组参数、嵌套对象参数，也支持裸查询字符串。
+ * @param url - 要解析的 URL 或查询字符串（如 `'a=1&b=2'` / `'?a=1'`）。不提供时使用当前页面的 URL（仅在浏览器环境下有效）
  * @returns 包含查询参数的对象
+ * @example
+ * getUrlParams('https://example.com?id=1&name=John') // { id: '1', name: 'John' }
+ * getUrlParams('a=1&b=2') // { a: '1', b: '2' }
+ * getUrlParams('?a=1&a=2') // { a: ['1', '2'] }
  */
 export function getUrlParams<T = Record<string, any>>(url?: string): T {
 	const isBrowser = typeof window !== 'undefined' && typeof window.location !== 'undefined';
 
-	if (!url && !isBrowser) {
-		throw new Error('URL must be provided in a non-browser environment.');
+	let queryString: string;
+
+	if (url === undefined || url === '') {
+		if (!isBrowser) {
+			throw new Error('URL must be provided in a non-browser environment.');
+		}
+		queryString = window.location.search.replace(/^\?/, '');
+	} else if (url.startsWith('?')) {
+		// 裸查询字符串（带 ? 前缀）
+		queryString = url.slice(1);
+	} else if (/^[a-z][a-z0-9+.-]*:\/\//i.test(url) || url.startsWith('//') || url.startsWith('/') || !url.includes('=')) {
+		// 完整 URL 形态（含协议/协议相对/绝对路径/无查询参数）：取 ? 后的查询部分
+		const qIndex = url.indexOf('?');
+		queryString = qIndex === -1 ? '' : url.slice(qIndex + 1);
+	} else {
+		// 裸查询字符串
+		queryString = url;
 	}
 
-	const queryString = url ? url.split('?')[1] : window.location.search.slice(1);
 	const params: Record<string, any> = {};
 
 	if (!queryString) return params as T;
@@ -59,7 +77,7 @@ export function getUrlParams<T = Record<string, any>>(url?: string): T {
 
 /**
  * 获取指定查询参数的值
- * @param url - 要解析的 URL，如果不提供则使用当前页面的 URL
+ * @param url - 要解析的 URL 或查询字符串，如果不提供则使用当前页面的 URL
  * @param key - 查询参数的键
  * @returns 对应的参数值或 null
  */
@@ -156,9 +174,13 @@ export function appendUrlParams<T extends Record<string, any>>(url: string, para
 }
 
 /**
- * 将对象转换为 URL 查询字符串，支持嵌套对象
+ * 将对象转换为 URL 查询字符串，支持嵌套对象和数组（数组参数以 `key[index]` 形式输出）
  * @param params - 要转换的对象
  * @returns 查询字符串
+ * @example
+ * transUrlParams({ id: 1, name: 'John' }) // 'id=1&name=John'
+ * transUrlParams({ a: [1, 2, 3] }) // 'a%5B0%5D=1&a%5B1%5D=2&a%5B2%5D=3'
+ * transUrlParams({ user: { id: 1 } }) // 'user%5Bid%5D=1'
  */
 export function transUrlParams<T extends Record<string, any>>(params: T): string {
 	let result = '';
@@ -168,7 +190,15 @@ export function transUrlParams<T extends Record<string, any>>(params: T): string
 		const part = encodeURIComponent(propName) + '=';
 
 		if (value !== null && value !== '' && typeof value !== 'undefined') {
-			if (typeof value === 'object') {
+			if (Array.isArray(value)) {
+				// 数组参数：key[0]=value0&key[1]=value1
+				value.forEach((item, index) => {
+					if (item !== null && item !== '' && typeof item !== 'undefined') {
+						const paramKey = `${propName}[${index}]`;
+						result += encodeURIComponent(paramKey) + '=' + encodeURIComponent(String(item)) + '&';
+					}
+				});
+			} else if (typeof value === 'object') {
 				for (const key of Object.keys(value)) {
 					const subValue = value[key];
 					if (subValue !== null && subValue !== '' && typeof subValue !== 'undefined') {
@@ -199,7 +229,7 @@ export function transUrlParams<T extends Record<string, any>>(params: T): string
  * // => { fileName: "file.txt", extension: ".txt" }
  * ```
  */
-export const getFileInfoToUrl = (url: string): FileInfo => {
+export const getFileInfoFromUrl = (url: string): FileInfo => {
 	let fileName = 'unknown';
 
 	try {

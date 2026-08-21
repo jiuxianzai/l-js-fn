@@ -336,42 +336,11 @@ searchTextColor('hello', 'hello world', 'blue');
 `searchTextColor` 直接生成 HTML 字符串，仅适用于通过 `v-html`/`innerHTML` 渲染的场景。请确保 `text` 参数来自可信来源，避免 XSS 风险。搜索关键词中的正则特殊字符（如 `.`、`*`、`+` 等）会被自动转义。
 :::
 
-## 8. filterSpace 禁止空格
-
-禁止输入空格，去除字符串首尾空格。
-
-**参数说明：**
-
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| val | `string` | 是 | 要处理的字符串 |
-
-**返回值：** `string`
-
-**示例：**
-
-::: code-group
-```ts [TypeScript]
-import { filterSpace } from 'l-js-fn';
-
-filterSpace('  hello  ');  // 'hello'
-filterSpace(' hello world '); // 'hello world'
-```
-
-```js [JavaScript (ESM)]
-import { filterSpace } from 'l-js-fn';
-
-filterSpace('  hello  ');  // 'hello'
-filterSpace(' hello world '); // 'hello world'
-```
-
-```js [JavaScript (CJS)]
-const { filterSpace } = require('l-js-fn');
-
-filterSpace('  hello  ');  // 'hello'
-filterSpace(' hello world '); // 'hello world'
-```
-:::
+> [!WARNING] v4.0 破坏性变更
+> `filterSpace` 已在 v4.0 移除 —— 它只是 `trim(val, 'both')` 的别名，请直接使用 `trim`：
+> ```ts
+> trim('  hello  '); // 'hello'
+> ```
 
 ## 9. toPascalCase 转帕斯卡命名
 

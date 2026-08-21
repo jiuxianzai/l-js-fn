@@ -20,6 +20,7 @@ export interface VersionItem {
  * 4. 在 docs/guide/ 下编写 v4 文档
  */
 export const versions: VersionItem[] = [
-	{ text: 'v3.x', path: '', latest: true, home: '/guide/is-kit' },
+	{ text: 'v4.x', path: '', latest: true, home: '/guide/is-kit' },
+	{ text: 'v3.x', path: 'v3', home: '/v3/guide/is-kit' },
 	{ text: 'v2.x', path: 'v2', minimal: true, home: '/v2/guide/' },
 ]

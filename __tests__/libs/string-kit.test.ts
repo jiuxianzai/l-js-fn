@@ -11,7 +11,6 @@ import {
 	getUuid,
 	indexToLabel,
 	searchTextColor,
-	filterSpace,
 	toPascalCase,
 	toCamelCase,
 	toKebabCase,
@@ -417,36 +416,6 @@ describe('string-kit - 字符串处理工具', () => {
 		it('应该忽略大小写（默认）', () => {
 			const result = searchTextColor('HELLO', 'hello world', 'red');
 			expect(result).toContain('<span');
-		});
-	});
-
-	// ==================== filterSpace 测试 ====================
-	describe('filterSpace - 过滤空格', () => {
-		it('应该去除首尾空格', () => {
-			expect(filterSpace('  hello  ')).toBe('hello');
-			expect(filterSpace('\t\thello\t\t')).toBe('hello');
-		});
-
-		it('应该只去除首尾空格，不处理中间空格', () => {
-			expect(filterSpace('  h e l l o  ')).toBe('h e l l o');
-			expect(filterSpace('hello world')).toBe('hello world');
-		});
-
-		it('应该处理只有空格的字符串', () => {
-			expect(filterSpace('     ')).toBe('');
-			expect(filterSpace('\t\t')).toBe('');
-		});
-
-		it('应该处理空字符串', () => {
-			expect(filterSpace('')).toBe('');
-		});
-
-		it('应该处理没有空格的字符串', () => {
-			expect(filterSpace('hello')).toBe('hello');
-		});
-
-		it('应该处理中间有空格的字符串', () => {
-			expect(filterSpace('hello world test')).toBe('hello world test');
 		});
 	});
 

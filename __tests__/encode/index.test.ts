@@ -5,8 +5,6 @@ import {
 	unescapeHTML,
 	urlEncode,
 	urlDecode,
-	querystringify,
-	parseQueryString,
 } from '../../src/encode/index';
 
 describe('encode 模块', () => {
@@ -201,113 +199,6 @@ describe('encode 模块', () => {
 		it('应该对非字符串参数抛出 TypeError', () => {
 			expect(() => urlDecode(null as any)).toThrow(TypeError);
 			expect(() => urlDecode(123 as any)).toThrow(TypeError);
-		});
-	});
-
-	describe('querystringify', () => {
-		it('应该正确转换简单对象', () => {
-			expect(querystringify({ name: 'John', age: '20' })).toBe('name=John&age=20');
-		});
-
-		it('应该正确转换数字值', () => {
-			expect(querystringify({ a: 1, b: 2 })).toBe('a=1&b=2');
-		});
-
-		it('应该正确处理数组值', () => {
-			const result = querystringify({ a: [1, 2, 3] });
-			expect(result).toContain('a=1');
-			expect(result).toContain('a=2');
-			expect(result).toContain('a=3');
-			expect(result).toMatch(/^a=1&a=2&a=3$/);
-		});
-
-		it('应该跳过 null 和 undefined 值', () => {
-			expect(querystringify({ a: 1, b: null, c: undefined })).toBe('a=1');
-		});
-
-		it('应该编码特殊字符', () => {
-			expect(querystringify({ name: 'Hello World' })).toBe('name=Hello%20World');
-		});
-
-		it('应该处理中文字符', () => {
-			expect(querystringify({ name: '你好' })).toContain('name=');
-			expect(querystringify({ name: '你好' })).not.toBe('name=你好');
-		});
-
-		it('应该处理空对象', () => {
-			expect(querystringify({})).toBe('');
-		});
-
-		it('应该对非对象参数抛出 TypeError', () => {
-			expect(() => querystringify(null as any)).toThrow(TypeError);
-			expect(() => querystringify(undefined as any)).toThrow(TypeError);
-			expect(() => querystringify('string' as any)).toThrow(TypeError);
-		});
-	});
-
-	describe('parseQueryString', () => {
-		it('应该正确解析查询字符串', () => {
-			expect(parseQueryString('name=John&age=20')).toEqual({ name: 'John', age: '20' });
-		});
-
-		it('应该处理带 ? 前缀的字符串', () => {
-			expect(parseQueryString('?name=John&age=20')).toEqual({ name: 'John', age: '20' });
-		});
-
-		it('应该处理空字符串', () => {
-			expect(parseQueryString('')).toEqual({});
-			expect(parseQueryString('?')).toEqual({});
-		});
-
-		it('应该正确解码 URL 编码字符', () => {
-			expect(parseQueryString('name=Hello%20World')).toEqual({ name: 'Hello World' });
-			expect(parseQueryString('name=%E4%BD%A0%E5%A5%BD')).toEqual({ name: '你好' });
-		});
-
-		it('应该处理无值的参数', () => {
-			expect(parseQueryString('key')).toEqual({ key: '' });
-			expect(parseQueryString('a=1&b&c=3')).toEqual({ a: '1', b: '', c: '3' });
-		});
-
-		it('应该将重复的 key 转为数组', () => {
-			expect(parseQueryString('a=1&a=2&a=3')).toEqual({ a: ['1', '2', '3'] });
-		});
-
-		it('应该处理混合的单值和数组值', () => {
-			expect(parseQueryString('a=1&a=2&b=3')).toEqual({
-				a: ['1', '2'],
-				b: '3',
-			});
-		});
-
-		it('应该能够往返转换', () => {
-			const original = { name: 'John', age: '20' };
-			const stringified = querystringify(original);
-			const parsed = parseQueryString(stringified);
-			expect(parsed).toEqual({ name: 'John', age: '20' });
-		});
-
-		it('应该对非字符串参数抛出 TypeError', () => {
-			expect(() => parseQueryString(null as any)).toThrow(TypeError);
-			expect(() => parseQueryString(123 as any)).toThrow(TypeError);
-		});
-
-		it('应该处理特殊字符', () => {
-			expect(parseQueryString('a=b+c')).toEqual({ a: 'b c' });
-		});
-
-		it('应该处理空的 key（&=value 格式）', () => {
-			expect(parseQueryString('=value')).toEqual({});
-		});
-	});
-
-	describe('querystringify - 原型链上有属性', () => {
-		it('应该跳过继承的属性', () => {
-			const proto = { inherited: 'value' };
-			const obj = Object.create(proto);
-			obj.ownProp = 'own';
-			const result = querystringify(obj);
-			expect(result).toBe('ownProp=own');
 		});
 	});
 });

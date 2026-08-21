@@ -1,0 +1,739 @@
+# is-kit — 类型判断
+
+类型判断工具集，提供常用的值类型检查、格式验证和深度比较功能。
+
+## 1. isEmpty 空值检查
+
+检查值是否为空。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| value | `T \| null \| undefined` | 是 | 待检查的值 |
+
+**返回值：** `boolean` — 为空返回 `true`，否则返回 `false`
+
+**判断规则：**
+- `null`、`undefined` → `true`
+- 空字符串、字符串 `"null"`、`"undefined"` → `true`
+- 空数组 → `true`
+- 空对象 → `true`
+- 其他 → `false`
+
+::: warning 注意
+`isEmpty([])` 与 `isEmpty({})` 返回 `true`——它判断的是"是否无内容/无有效值"，**不是**"是否有值"。若想判断数组/对象是否非空（有内容），请使用 `isNotEmpty(value)`，例如 `isNotEmpty([1]) === true`、`isNotEmpty([]) === false`。
+:::
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isEmpty } from 'l-js-fn';
+
+isEmpty(null);           // true
+isEmpty(undefined);      // true
+isEmpty('');             // true
+isEmpty('null');         // true
+isEmpty([]);             // true
+isEmpty({});             // true
+isEmpty('hello');        // false
+isEmpty([1, 2]);         // false
+isEmpty({ a: 1 });       // false
+isEmpty(0);              // false
+```
+
+```js [JavaScript (ESM)]
+import { isEmpty } from 'l-js-fn';
+
+isEmpty(null);           // true
+isEmpty(undefined);      // true
+isEmpty('');             // true
+isEmpty('null');         // true
+isEmpty([]);             // true
+isEmpty({});             // true
+isEmpty('hello');        // false
+isEmpty([1, 2]);         // false
+isEmpty({ a: 1 });       // false
+isEmpty(0);              // false
+```
+
+```js [JavaScript (CJS)]
+const { isEmpty } = require('l-js-fn');
+
+isEmpty(null);           // true
+isEmpty(undefined);      // true
+isEmpty('');             // true
+isEmpty('null');         // true
+isEmpty([]);             // true
+isEmpty({});             // true
+isEmpty('hello');        // false
+isEmpty([1, 2]);         // false
+isEmpty({ a: 1 });       // false
+isEmpty(0);              // false
+```
+:::
+
+## 2. isNotEmpty 非空检查
+
+检查值是否非空，是 `isEmpty` 的反向判断。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| value | `T \| null \| undefined` | 是 | 待检查的值 |
+
+**返回值：** `boolean`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isNotEmpty } from 'l-js-fn';
+
+isNotEmpty('hello');     // true
+isNotEmpty(null);        // false
+isNotEmpty([]);          // false
+```
+
+```js [JavaScript (ESM)]
+import { isNotEmpty } from 'l-js-fn';
+
+isNotEmpty('hello');     // true
+isNotEmpty(null);        // false
+isNotEmpty([]);          // false
+```
+
+```js [JavaScript (CJS)]
+const { isNotEmpty } = require('l-js-fn');
+
+isNotEmpty('hello');     // true
+isNotEmpty(null);        // false
+isNotEmpty([]);          // false
+```
+:::
+
+## 3. isObject 判断对象
+
+判断是否为普通对象（`[object Object]`）。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| value | `T` | 是 | 待检查的值 |
+
+**返回值：** `boolean` — 是对象返回 `true`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isObject } from 'l-js-fn';
+
+isObject({});            // true
+isObject({ a: 1 });      // true
+isObject([]);            // false
+isObject(null);          // false
+isObject(new Date());    // false
+```
+
+```js [JavaScript (ESM)]
+import { isObject } from 'l-js-fn';
+
+isObject({});            // true
+isObject({ a: 1 });      // true
+isObject([]);            // false
+isObject(null);          // false
+isObject(new Date());    // false
+```
+
+```js [JavaScript (CJS)]
+const { isObject } = require('l-js-fn');
+
+isObject({});            // true
+isObject({ a: 1 });      // true
+isObject([]);            // false
+isObject(null);          // false
+isObject(new Date());    // false
+```
+:::
+
+## 4. isArray 判断数组
+
+判断是否为数组。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| value | `T` | 是 | 待检查的值 |
+
+**返回值：** `boolean`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isArray } from 'l-js-fn';
+
+isArray([1, 2, 3]);      // true
+isArray([]);             // true
+isArray('hello');        // false
+isArray({});             // false
+```
+
+```js [JavaScript (ESM)]
+import { isArray } from 'l-js-fn';
+
+isArray([1, 2, 3]);      // true
+isArray([]);             // true
+isArray('hello');        // false
+isArray({});             // false
+```
+
+```js [JavaScript (CJS)]
+const { isArray } = require('l-js-fn');
+
+isArray([1, 2, 3]);      // true
+isArray([]);             // true
+isArray('hello');        // false
+isArray({});             // false
+```
+:::
+
+## 5. isInArray 地址数组检查
+
+检查指定地址是否存在于地址数组中。对于 URL 格式的字符串（含 `http(s)://`、`//`、`/` 前缀），会自动忽略 `?` 后的查询参数对比；普通字符串则进行精确匹配。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| arr | `string[]` | 是 | 地址数组 |
+| value | `string` | 是 | 需要检查的地址字符串 |
+
+**返回值：** `boolean` — 存在返回 `true`，不存在或数组为空返回 `false`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isInArray } from 'l-js-fn';
+
+// URL 类型：自动忽略 ? 查询参数
+isInArray(['https://example.com'], 'https://example.com?foo=bar'); // true
+isInArray(['https://example.com?a=1'], 'https://example.com?b=2'); // true
+isInArray(['/page/a'], '/page/a?foo=bar'); // true
+
+// 普通字符串：精确匹配
+isInArray(['a', 'b', 'c'], 'a'); // true
+isInArray(['a', 'b', 'c'], 'd'); // false
+
+// 边界
+isInArray([], 'https://example.com'); // false
+```
+
+```js [JavaScript (ESM)]
+import { isInArray } from 'l-js-fn';
+
+// URL 类型：自动忽略 ? 查询参数
+isInArray(['https://example.com'], 'https://example.com?foo=bar'); // true
+isInArray(['https://example.com?a=1'], 'https://example.com?b=2'); // true
+isInArray(['/page/a'], '/page/a?foo=bar'); // true
+
+// 普通字符串：精确匹配
+isInArray(['a', 'b', 'c'], 'a'); // true
+isInArray(['a', 'b', 'c'], 'd'); // false
+
+// 边界
+isInArray([], 'https://example.com'); // false
+```
+
+```js [JavaScript (CJS)]
+const { isInArray } = require('l-js-fn');
+
+// URL 类型：自动忽略 ? 查询参数
+isInArray(['https://example.com'], 'https://example.com?foo=bar'); // true
+isInArray(['https://example.com?a=1'], 'https://example.com?b=2'); // true
+isInArray(['/page/a'], '/page/a?foo=bar'); // true
+
+// 普通字符串：精确匹配
+isInArray(['a', 'b', 'c'], 'a'); // true
+isInArray(['a', 'b', 'c'], 'd'); // false
+
+// 边界
+isInArray([], 'https://example.com'); // false
+```
+:::
+
+## 6. isImage 判断图片
+
+判断文件名是否为图片。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| filename | `string` | 是 | 文件名 |
+
+**返回值：** `boolean`
+
+**支持的格式：** `jpg`、`jpeg`、`png`、`gif`、`bmp`、`webp`、`svg`、`ico`、`tiff`、`psd`、`raw`、`heic`、`heif`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isImage } from 'l-js-fn';
+
+isImage('photo.png');    // true
+isImage('doc.pdf');      // false
+```
+
+```js [JavaScript (ESM)]
+import { isImage } from 'l-js-fn';
+
+isImage('photo.png');    // true
+isImage('doc.pdf');      // false
+```
+
+```js [JavaScript (CJS)]
+const { isImage } = require('l-js-fn');
+
+isImage('photo.png');    // true
+isImage('doc.pdf');      // false
+```
+:::
+
+## 7. isString 判断字符串
+
+判断是否为字符串。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| value | `T` | 是 | 待检查的值 |
+
+**返回值：** `boolean`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isString } from 'l-js-fn';
+
+isString('hello');       // true
+isString(new String('a')); // true
+isString(123);           // false
+```
+
+```js [JavaScript (ESM)]
+import { isString } from 'l-js-fn';
+
+isString('hello');       // true
+isString(new String('a')); // true
+isString(123);           // false
+```
+
+```js [JavaScript (CJS)]
+const { isString } = require('l-js-fn');
+
+isString('hello');       // true
+isString(new String('a')); // true
+isString(123);           // false
+```
+:::
+
+## 8. isEmail 邮箱验证
+
+判断是否为有效邮箱地址。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| value | `string` | 是 | 邮箱字符串 |
+
+**返回值：** `boolean`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isEmail } from 'l-js-fn';
+
+isEmail('test@example.com');  // true
+isEmail('invalid-email');     // false
+```
+
+```js [JavaScript (ESM)]
+import { isEmail } from 'l-js-fn';
+
+isEmail('test@example.com');  // true
+isEmail('invalid-email');     // false
+```
+
+```js [JavaScript (CJS)]
+const { isEmail } = require('l-js-fn');
+
+isEmail('test@example.com');  // true
+isEmail('invalid-email');     // false
+```
+:::
+
+## 9. isURL URL验证
+
+判断是否为合法 URL（支持协议地址、绝对路径和协议相对路径）。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| value | `string` | 是 | URL 字符串 |
+
+**返回值：** `boolean`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isURL } from 'l-js-fn';
+
+isURL('https://example.com');  // true (完整 URL)
+isURL('/path/to/page');        // true (绝对路径)
+isURL('//cdn.example.com');    // true (协议相对路径)
+isURL('not-a-url');            // false
+```
+
+```js [JavaScript (ESM)]
+import { isURL } from 'l-js-fn';
+
+isURL('https://example.com');  // true (完整 URL)
+isURL('/path/to/page');        // true (绝对路径)
+isURL('//cdn.example.com');    // true (协议相对路径)
+isURL('not-a-url');            // false
+```
+
+```js [JavaScript (CJS)]
+const { isURL } = require('l-js-fn');
+
+isURL('https://example.com');  // true (完整 URL)
+isURL('/path/to/page');        // true (绝对路径)
+isURL('//cdn.example.com');    // true (协议相对路径)
+isURL('not-a-url');            // false
+```
+:::
+
+## 10. isHttp HTTP协议判断
+
+判断是否为 http 链接（忽略大小写）。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| value | `string` | 是 | 待检查的字符串 |
+
+**返回值：** `boolean`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isHttp } from 'l-js-fn';
+
+isHttp('http://example.com');  // true
+isHttp('HTTP://EXAMPLE.COM');  // true
+isHttp('https://example.com'); // false
+isHttp('');                    // false
+```
+
+```js [JavaScript (ESM)]
+import { isHttp } from 'l-js-fn';
+
+isHttp('http://example.com');  // true
+isHttp('HTTP://EXAMPLE.COM');  // true
+isHttp('https://example.com'); // false
+isHttp('');                    // false
+```
+
+```js [JavaScript (CJS)]
+const { isHttp } = require('l-js-fn');
+
+isHttp('http://example.com');  // true
+isHttp('HTTP://EXAMPLE.COM');  // true
+isHttp('https://example.com'); // false
+isHttp('');                    // false
+```
+:::
+
+## 11. isHttps HTTPS协议判断
+
+判断是否为 https 链接（忽略大小写）。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| value | `string` | 是 | 待检查的字符串 |
+
+**返回值：** `boolean`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isHttps } from 'l-js-fn';
+
+isHttps('https://example.com');  // true
+isHttps('HTTPS://EXAMPLE.COM');  // true
+isHttps('http://example.com');   // false
+isHttps('');                     // false
+```
+
+```js [JavaScript (ESM)]
+import { isHttps } from 'l-js-fn';
+
+isHttps('https://example.com');  // true
+isHttps('HTTPS://EXAMPLE.COM');  // true
+isHttps('http://example.com');   // false
+isHttps('');                     // false
+```
+
+```js [JavaScript (CJS)]
+const { isHttps } = require('l-js-fn');
+
+isHttps('https://example.com');  // true
+isHttps('HTTPS://EXAMPLE.COM');  // true
+isHttps('http://example.com');   // false
+isHttps('');                     // false
+```
+:::
+
+## 12. isIdCard 身份证验证
+
+判断是否为有效的中国大陆身份证号码（支持 15 位和 18 位）。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| idCard | `string` | 是 | 身份证号 |
+
+**返回值：** `boolean`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isIdCard } from 'l-js-fn';
+
+isIdCard('11010519491231002X'); // true（18位）
+isIdCard('110101900101123');    // true（15位）
+isIdCard('123456789012345678'); // false
+```
+
+```js [JavaScript (ESM)]
+import { isIdCard } from 'l-js-fn';
+
+isIdCard('11010519491231002X'); // true（18位）
+isIdCard('110101900101123');    // true（15位）
+isIdCard('123456789012345678'); // false
+```
+
+```js [JavaScript (CJS)]
+const { isIdCard } = require('l-js-fn');
+
+isIdCard('11010519491231002X'); // true（18位）
+isIdCard('110101900101123');    // true（15位）
+isIdCard('123456789012345678'); // false
+```
+:::
+
+## 13. isPhoneNumber 手机号验证
+
+判断是否为有效的中国大陆手机号码。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| phone | `string` | 是 | 手机号 |
+
+**返回值：** `boolean`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isPhoneNumber } from 'l-js-fn';
+
+isPhoneNumber('13800138000'); // true
+isPhoneNumber('1380013800');  // false
+```
+
+```js [JavaScript (ESM)]
+import { isPhoneNumber } from 'l-js-fn';
+
+isPhoneNumber('13800138000'); // true
+isPhoneNumber('1380013800');  // false
+```
+
+```js [JavaScript (CJS)]
+const { isPhoneNumber } = require('l-js-fn');
+
+isPhoneNumber('13800138000'); // true
+isPhoneNumber('1380013800');  // false
+```
+:::
+
+## 14. isEqual 深度比较
+
+深度比较两个值是否相等（支持对象、数组、Date、RegExp、Map、Set、Symbol 键、NaN、循环引用）。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| value | `T` | 是 | 第一个值 |
+| other | `T` | 是 | 第二个值 |
+
+**返回值：** `boolean`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isEqual } from 'l-js-fn';
+
+isEqual({ a: 1 }, { a: 1 });                // true
+isEqual([1, 2], [1, 2]);                    // true
+isEqual(NaN, NaN);                          // true
+isEqual(new Date('2024-01-01'), new Date('2024-01-01')); // true
+isEqual(new Map([['k', 1]]), new Map([['k', 1]]));      // true
+isEqual(new Set([1, 2]), new Set([2, 1]));             // true
+isEqual({ a: 1 }, { a: 2 });                // false
+
+// null 与对象比较
+isEqual(null, {}); // false
+isEqual(null, null); // true
+```
+
+```js [JavaScript (ESM)]
+import { isEqual } from 'l-js-fn';
+
+isEqual({ a: 1 }, { a: 1 });     // true
+isEqual([1, 2], [1, 2]);         // true
+isEqual(NaN, NaN);               // true
+isEqual({ a: { b: 1 } }, { a: { b: 1 } }); // true
+isEqual({ a: 1 }, { a: 2 });     // false
+
+// null 与对象比较
+isEqual(null, {}); // false
+isEqual(null, null); // true
+```
+
+```js [JavaScript (CJS)]
+const { isEqual } = require('l-js-fn');
+
+isEqual({ a: 1 }, { a: 1 });     // true
+isEqual([1, 2], [1, 2]);         // true
+isEqual(NaN, NaN);               // true
+isEqual({ a: { b: 1 } }, { a: { b: 1 } }); // true
+isEqual({ a: 1 }, { a: 2 });     // false
+
+// null 与对象比较
+isEqual(null, {}); // false
+isEqual(null, null); // true
+```
+:::
+
+::: warning 注意
+`isEqual(null, {})` 或 `isEqual({}, null)` 等 null 与非 null 对象的比较会返回 `false`，而不会抛出异常。
+:::
+
+## 15. validateParams 参数校验
+
+校验参数对象中必填字段是否都存在且不为 `null` 或 `undefined`（`0`、`false`、`''` 视为有效值）。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| required | `string[]` | 是 | 必填字段数组 |
+| params | `Record<string, any>` | 是 | 待校验的参数对象 |
+
+**返回值：** `string \| null` — 未通过的字段名，全部通过返回 `null`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { validateParams } from 'l-js-fn';
+
+validateParams(['name', 'age'], { name: 'John', age: 20 }); // null
+validateParams(['name'], { age: 20 });    // 'name' (字段不存在)
+validateParams(['age'], { age: null });   // 'age' (null 视为缺失)
+validateParams(['count'], { count: 0 });  // null (0 是有效值)
+validateParams(['active'], { active: false }); // null (false 是有效值)
+```
+
+```js [JavaScript (ESM)]
+import { validateParams } from 'l-js-fn';
+
+validateParams(['name', 'age'], { name: 'John', age: 20 }); // null
+validateParams(['name'], { age: 20 }); // 'name'
+```
+
+```js [JavaScript (CJS)]
+const { validateParams } = require('l-js-fn');
+
+validateParams(['name', 'age'], { name: 'John', age: 20 }); // null
+validateParams(['name'], { age: 20 }); // 'name'
+```
+:::
+
+## 16. isBankCard 银行卡号验证
+
+判断是否为合法的中国大陆银行卡号（16-19 位，首位非 0）。
+
+**参数说明：**
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| bankCard | `string` | 是 | 银行卡号 |
+
+**返回值：** `boolean`
+
+**示例：**
+
+::: code-group
+```ts [TypeScript]
+import { isBankCard } from 'l-js-fn';
+
+isBankCard('6222021234567890');      // true（16位）
+isBankCard('6217003810020650778');   // true（19位）
+isBankCard('622202123456789');       // false（15位）
+isBankCard('06222021234567890');     // false（首位为0）
+isBankCard('6222 0212 3456 7890');   // false（含空格）
+```
+
+```js [JavaScript (ESM)]
+import { isBankCard } from 'l-js-fn';
+
+isBankCard('6222021234567890');      // true（16位）
+isBankCard('6217003810020650778');   // true（19位）
+isBankCard('622202123456789');       // false（15位）
+```
+
+```js [JavaScript (CJS)]
+const { isBankCard } = require('l-js-fn');
+
+isBankCard('6222021234567890');      // true（16位）
+isBankCard('6217003810020650778');   // true（19位）
+isBankCard('622202123456789');       // false（15位）
+```
+:::

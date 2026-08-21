@@ -16,7 +16,6 @@ function buildSidebar(prefix: string) {
 				{ text: '数字处理', link: p('/guide/number-kit') },
 				{ text: 'URL 处理', link: p('/guide/url-kit') },
 				{ text: '颜色处理', link: p('/guide/color') },
-				{ text: '结果类', link: p('/guide/result') },
 			],
 		},
 		{
@@ -56,6 +55,24 @@ function buildSidebar(prefix: string) {
 	]
 }
 
+/**
+ * 历史完整归档版的专属侧边栏：
+ * 顶部为「vX.x 归档」分组（版本概览入口），下方保留完整指南分组。
+ */
+function buildArchiveSidebar(versionText: string, prefix: string) {
+	const p = (link: string) => `${prefix}${link}`
+	return [
+		{
+			text: `${versionText} 归档`,
+			items: [{ text: '版本概览', link: `${prefix}/` }],
+		},
+		...buildSidebar('').map((group) => ({
+			...group,
+			items: group.items.map((item) => ({ ...item, link: p(item.link) })),
+		})),
+	]
+}
+
 export default defineConfig({
 	lang: 'zh-CN',
 	title: 'l-js-fn',
@@ -90,7 +107,7 @@ export default defineConfig({
 			{ component: 'VersionSelect' },
 			{ text: '指南', link: '/guide/is-kit' },
 			{ text: '迁移指南', link: '/guide/breaking-changes' },
-			{ text: 'GitHub', link: 'https://github.com/jiuxianzai/l-js-fn' },
+			{ text: '更新日志', link: '/guide/changelog' },
 		],
 
 		sidebar: Object.fromEntries(
@@ -108,7 +125,11 @@ export default defineConfig({
 						],
 					]
 				}
-				return [dir, { items: buildSidebar(''), base: prefix }]
+				if (v.path) {
+					// 历史完整归档版：专属归档侧边栏（归档概览 + 完整指南），覆盖整个 /vX/ 目录（含首页 /vX/）
+					return [prefix + '/', buildArchiveSidebar(v.text, prefix)]
+				}
+				return [dir, { items: buildSidebar('') }]
 			}),
 		),
 

@@ -99,7 +99,7 @@ export function dateSecond(value: number): string {
  * @param date2 - 第二个日期，可以是 Date、时间戳或日期字符串
  * @returns 相差的天数，始终为非负数
  */
-export const diffDays = (date1: Date | string | number, date2: Date | string | number): number => {
+export const dateDiffDays = (date1: Date | string | number, date2: Date | string | number): number => {
 	let time1 = toTimestamp(date1);
 	let time2 = toTimestamp(date2);
 
@@ -118,11 +118,11 @@ export const diffDays = (date1: Date | string | number, date2: Date | string | n
  * @param startTime - 需要格式化的时间，支持 Date / 时间戳 / 字符串
  * @returns 格式化后的时间字符串
  * @example
- * formatPassTime('2020-01-01 12:12:12') // "3个月前"
- * formatPassTime(new Date()) // "刚刚"
- * formatPassTime(1577836800000) // "1年前"
+ * dateFormatPassTime('2020-01-01 12:12:12') // "3个月前"
+ * dateFormatPassTime(new Date()) // "刚刚"
+ * dateFormatPassTime(1577836800000) // "1年前"
  */
-export const formatPassTime = (startTime?: string | number | Date): string => {
+export const dateFormatPassTime = (startTime?: string | number | Date): string => {
 	const now = Date.now();
 	const start = startTime ? new Date(startTime).getTime() : now;
 
@@ -177,7 +177,7 @@ export const formatPassTime = (startTime?: string | number | Date): string => {
  * @param time - Date 对象或可被 Date 构造的字符串/数字
  * @returns 当月的天数
  */
-export const monthDays = (time: Date | string | number): number => {
+export const dateMonthDays = (time: Date | string | number): number => {
 	const date = new Date(time);
 	if (isNaN(date.getTime())) throw new Error(`Invalid date: ${time}`);
 	const year = date.getFullYear();
@@ -191,7 +191,7 @@ export const monthDays = (time: Date | string | number): number => {
  * @param {Date|string|number} end - 结束时间（Date、字符串、时间戳）
  * @returns {number} 两个时间的间隔（毫秒）
  */
-export function getTimeDiff(start: Date | string | number, end: Date | string | number): number {
+export function dateDiff(start: Date | string | number, end: Date | string | number): number {
 	const startTime = toTimestamp(start);
 	const endTime = toTimestamp(end);
 
@@ -208,12 +208,12 @@ export function getTimeDiff(start: Date | string | number, end: Date | string | 
  * @param date2 - 第二个日期，可以是 Date、时间戳或日期字符串
  * @returns 包含 days / hours / minutes / seconds 的对象，各分量均为非负数
  * @example
- * diffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45')
+ * dateDiffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45')
  * // { days: 1, hours: 2, minutes: 30, seconds: 45 }
- * diffTime(new Date('2024-01-01'), new Date('2024-01-01 01:02:03'))
+ * dateDiffTime(new Date('2024-01-01'), new Date('2024-01-01 01:02:03'))
  * // { days: 0, hours: 1, minutes: 2, seconds: 3 }
  */
-export function diffTime(
+export function dateDiffTime(
 	date1: Date | string | number,
 	date2: Date | string | number
 ): { days: number; hours: number; minutes: number; seconds: number } {
@@ -236,10 +236,10 @@ export function diffTime(
  * @param days - 要添加的天数（负数表示减少）
  * @returns 新日期
  * @example
- * addDays(new Date('2024-01-01'), 1) // 2024-01-02
- * addDays(new Date('2024-01-01'), -1) // 2023-12-31
+ * dateAddDays(new Date('2024-01-01'), 1) // 2024-01-02
+ * dateAddDays(new Date('2024-01-01'), -1) // 2023-12-31
  */
-export function addDays(date: Date | string | number, days: number): Date {
+export function dateAddDays(date: Date | string | number, days: number): Date {
 	const d = new Date(date);
 	if (isNaN(d.getTime())) throw new Error(`Invalid date: ${date}`);
 	d.setDate(d.getDate() + days);
@@ -263,9 +263,9 @@ export function isLeapYear(year: number): boolean {
  * @param date - 日期（默认今天）
  * @returns 中文星期
  * @example
- * getWeekDay(new Date('2024-01-01')) // '星期一'
+ * dateWeekDay(new Date('2024-01-01')) // '星期一'
  */
-export function getWeekDay(date: Date | string | number = new Date()): string {
+export function dateWeekDay(date: Date | string | number = new Date()): string {
 	const d = new Date(date);
 	if (isNaN(d.getTime())) throw new Error(`Invalid date: ${date}`);
 	const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];

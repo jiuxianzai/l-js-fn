@@ -5,7 +5,7 @@
 ![npm version](https://badge.fury.io/js/l-js-fn.svg)
 ![downloads](https://img.shields.io/npm/dm/l-js-fn)
 ![license](https://img.shields.io/npm/l/l-js-fn)
-![test pass](https://img.shields.io/badge/tests-1856%2F1856%20passed-brightgreen)
+![test pass](https://img.shields.io/badge/tests-1901%2F1901%20passed-brightgreen)
 ![coverage](https://img.shields.io/badge/coverage-99%25-brightgreen)
 ![functions](https://img.shields.io/badge/functions-100%25-brightgreen)
 ![branches](https://img.shields.io/badge/branches-96%25-brightgreen)
@@ -166,36 +166,34 @@ isInArray([], 'https://example.com'); // false
 
 ```typescript
 import {
-	arrayDelEl,
-	arrayDelToIndex,
+	arrayRemove,
+	arrayRemoveAt,
 	arrayFill,
 	arrayUnique,
 	arrayPaginate,
 	arraySplitToGroups,
-	moveElement,
-	groupBy,
-	sample,
-	sampleSize,
-	flatten,
-	range,
-	shuffle,
-	uniqueBy,
-	compact,
-	sum,
-	sumBy,
-	last,
+	arrayMove,
+	arrayGroupBy,
+	arraySample,
+	arraySampleSize,
+	arrayFlatten,
+	arrayRange,
+	arrayShuffle,
+	arrayUniqueBy,
+	arrayCompact,
+	arraySum,
+	arraySumBy,
+	arrayLast,
 	arrayPluck,
-	sortBy,
-	uniq,
-	sumBy,
+	arraySortBy,
 	arrayToString,
 } from 'l-js-fn';
 
 // 删除元素
-arrayDelEl([1, 2, 3, 2], 2); // [1, 3]
+arrayRemove([1, 2, 3, 2], 2); // [1, 3]
 
 // 根据索引删除
-arrayDelToIndex([1, 2, 3], 1); // [1, 3]
+arrayRemoveAt([1, 2, 3], 1); // [1, 3]
 
 // 数组补充到指定长度
 arrayFill([1, 2], 5, 0); // [1, 2, 0, 0, 0]
@@ -211,10 +209,10 @@ arraySplitToGroups([1, 2, 3, 4, 5], 2);
 // { 1: [1, 2], 2: [3, 4], 3: [5] }
 
 // 移动数组元素
-moveElement([1, 2, 3], 1, 'up'); // 移动索引1的元素向上
+arrayMove([1, 2, 3], 1, 'up'); // 移动索引1的元素向上
 
 // 按字段分组对象数组
-groupBy(
+arrayGroupBy(
 	[
 		{ name: 'Alice', age: 25 },
 		{ name: 'Bob', age: 25 },
@@ -225,47 +223,47 @@ groupBy(
 // { 25: [{ name: 'Alice', age: 25 }, { name: 'Bob', age: 25 }], 30: [{ name: 'Charlie', age: 30 }] }
 
 // 随机取一个元素
-sample([1, 2, 3, 4, 5]); // 3（随机）
+arraySample([1, 2, 3, 4, 5]); // 3（随机）
 
 // 随机取 n 个元素
-sampleSize([1, 2, 3, 4, 5], 2); // [2, 5]（随机）
+arraySampleSize([1, 2, 3, 4, 5], 2); // [2, 5]（随机）
 
 // 数组扁平化
-flatten([1, [2, [3]]]); // [1, 2, 3]
-flatten([1, [2, [3]]], 1); // [1, 2, [3]]
+arrayFlatten([1, [2, [3]]]); // [1, 2, 3]
+arrayFlatten([1, [2, [3]]], 1); // [1, 2, [3]]
 
 // 生成范围数组
-range(0, 5); // [0, 1, 2, 3, 4, 5]
-range(5, 0, -1); // [5, 4, 3, 2, 1, 0]
+arrayRange(0, 5); // [0, 1, 2, 3, 4, 5]
+arrayRange(5, 0, -1); // [5, 4, 3, 2, 1, 0]
 
 // Fisher-Yates 洗牌
-shuffle([1, 2, 3, 4, 5]); // [3, 1, 5, 2, 4]（随机）
+arrayShuffle([1, 2, 3, 4, 5]); // [3, 1, 5, 2, 4]（随机）
 
 // 按对象字段去重
-uniqueBy([{ id: 1 }, { id: 2 }, { id: 1 }], 'id'); // [{id:1},{id:2}]
+arrayUniqueBy([{ id: 1 }, { id: 2 }, { id: 1 }], 'id'); // [{id:1},{id:2}]
 
 // 过滤 falsy 值
-compact([0, 1, false, 2, '', 3]); // [1, 2, 3]
+arrayCompact([0, 1, false, 2, '', 3]); // [1, 2, 3]
 
 // 数组求和
-sum([1, 2, 3, 4, 5]); // 15
+arraySum([1, 2, 3, 4, 5]); // 15
 
 // 获取最后一个元素
-last([1, 2, 3]); // 3
+arrayLast([1, 2, 3]); // 3
 
 // 提取对象数组指定字段为扁平数组（递归深层嵌套，过滤 null/undefined）
 arrayPluck([{ name: 'zz' }, { name: 'yy' }], 'name'); // ['zz', 'yy']
 
 // 按字段排序
-sortBy([{ id: 2 }, { id: 1 }], 'id'); // [{ id: 1 }, { id: 2 }]
-sortBy([{ age: 20 }, { age: 30 }], 'age', 'desc'); // [{ age: 30 }, { age: 20 }]
+arraySortBy([{ id: 2 }, { id: 1 }], 'id'); // [{ id: 1 }, { id: 2 }]
+arraySortBy([{ age: 20 }, { age: 30 }], 'age', 'desc'); // [{ age: 30 }, { age: 20 }]
 
 // 基础类型数组去重
-uniq([1, 2, 2, 3]); // [1, 2, 3]
-uniq(['a', 'b', 'a']); // ['a', 'b']
+arrayUnique([1, 2, 2, 3]); // [1, 2, 3]
+arrayUnique(['a', 'b', 'a']); // ['a', 'b']
 
 // 按字段求和
-sumBy([{ price: 10 }, { price: 20 }], 'price'); // 30
+arraySumBy([{ price: 10 }, { price: 20 }], 'price'); // 30
 
 // 过滤空值后拼接字符串（常用于签名串）
 arrayToString(['a', null, 'b', '', 'c']); // 'abc'
@@ -295,7 +293,7 @@ desensitization('13800138000', 3, 4); // "138****8000"
 desensitizeName('张三丰'); // "张*丰"
 desensitizeName('欧阳飞飞'); // "欧**飞"
 desensitizeName('张三', 'surname'); // "*三"
-desensitizeName('张三丰', 'last'); // "**丰"
+desensitizeName('张三丰', 'arrayLast'); // "**丰"
 
 // 去除空格
 trim('  hello  '); // "hello"
@@ -329,7 +327,7 @@ capitalize('hello'); // "Hello"
 #### 对象操作 (object-kit)
 
 ```typescript
-import { objMerge, objFilterProp, objFilterNull, jsonToFormData, formDataToObject, pick, omit, get, deepMerge } from 'l-js-fn';
+import { objMerge, objFilterProp, objFilterNull, objToFormData, objFromFormData, objPick, objOmit, objGet } from 'l-js-fn';
 
 // 对象合并
 objMerge({ a: 1 }, { b: 2 }); // { a: 1, b: 2 }
@@ -347,30 +345,30 @@ objFilterNull({ a: 1, b: null, c: undefined }, { null: true, undefined: false })
 objFilterNull({ a: 1, b: null, c: undefined }, { null: false, undefined: true }); // { a: 1, b: null }
 
 // JSON 转 FormData
-jsonToFormData({ name: 'John', age: 20 }); // FormData
+objToFormData({ name: 'John', age: 20 }); // FormData
 
 // FormData 转 JSON
-formDataToObject(formData); // { name: 'John', age: 20 }
+objFromFormData(formData); // { name: 'John', age: 20 }
 
 // 选取属性
-pick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
+objPick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
 
-// 排除属性（pick 的反操作）
-omit({ a: 1, b: 2, c: 3 }, ['b']); // { a: 1, c: 3 }
+// 排除属性（objPick 的反操作）
+objOmit({ a: 1, b: 2, c: 3 }, ['b']); // { a: 1, c: 3 }
 
 // 安全深层取值
-get({ a: { b: { c: 1 } } }, 'a.b.c'); // 1
-get({ a: 1 }, 'b.c', 'default'); // 'default'
+objGet({ a: { b: { c: 1 } } }, 'a.b.c'); // 1
+objGet({ a: 1 }, 'b.c', 'default'); // 'default'
 
 // 深度合并
-deepMerge({ a: { b: 1 } }, { a: { c: 2 } });
+objMerge({ a: { b: 1 } }, { a: { c: 2 } });
 // { a: { b: 1, c: 2 } }
 ```
 
 #### 日期处理 (date-kit)
 
 ```typescript
-import { dateFormat, dateSecond, diffDays, diffTime, formatPassTime, monthDays, getTimeDiff, addDays, isLeapYear, getWeekDay } from 'l-js-fn';
+import { dateFormat, dateSecond, dateDiffDays, dateDiffTime, dateFormatPassTime, dateMonthDays, dateDiff, dateAddDays, isLeapYear, dateWeekDay } from 'l-js-fn';
 
 // 日期格式化
 dateFormat(new Date()); // "2024-01-01 12:00:00"
@@ -380,30 +378,30 @@ dateFormat(new Date(), 'yyyy-MM-dd'); // "2024-01-01"
 dateSecond(3661); // "01:01:01"
 
 // 计算天数差
-diffDays('2024-01-01', '2024-01-03'); // 2
+dateDiffDays('2024-01-01', '2024-01-03'); // 2
 
 // 计算时间差值（日/时/分/秒）
-diffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45');
+dateDiffTime('2024-01-01 10:00:00', '2024-01-02 12:30:45');
 // { days: 1, hours: 2, minutes: 30, seconds: 45 }
 
 // 格式化过去时间
-formatPassTime('2024-01-01 12:00:00'); // "3天前"
+dateFormatPassTime('2024-01-01 12:00:00'); // "3天前"
 
 // 获取当月天数
-monthDays('2024-02-01'); // 29
+dateMonthDays('2024-02-01'); // 29
 
 // 时间差计算
-getTimeDiff('2024-01-01', '2024-01-02'); // 86400000
+dateDiff('2024-01-01', '2024-01-02'); // 86400000
 
 // 日期加减天数
-addDays(new Date('2024-01-01'), 1); // 2024-01-02
-addDays(new Date('2024-01-01'), -1); // 2023-12-31
+dateAddDays(new Date('2024-01-01'), 1); // 2024-01-02
+dateAddDays(new Date('2024-01-01'), -1); // 2023-12-31
 
 // 闰年判断
 isLeapYear(2024); // true
 
 // 中文星期
-getWeekDay(new Date('2024-01-01')); // '星期一'
+dateWeekDay(new Date('2024-01-01')); // '星期一'
 ```
 
 #### 数字处理 (number-kit)
@@ -413,7 +411,7 @@ import { formatNumber, toPercent, random, getUniqueRandomIndexes, clamp, round }
 
 // 数字格式化
 formatNumber(1234567); // "1,234,567"
-formatNumber(1234567, true); // "123.47万"
+formatNumber(1234567, { useUnit: true }); // "123.47万"
 
 // 控制小数位
 formatNumber(1234, { decimals: 2 }); // "1,234.00"
@@ -445,7 +443,7 @@ round(3.14159, 2); // 3.14
 #### URL 处理 (url-kit)
 
 ```typescript
-import { getUrlParams, getUrlParam, appendUrlParam, appendUrlParams, transUrlParams, getFileInfoToUrl } from 'l-js-fn';
+import { getUrlParams, getUrlParam, appendUrlParam, appendUrlParams, transUrlParams, getFileInfoFromUrl } from 'l-js-fn';
 
 // 解析 URL 参数
 getUrlParams('https://example.com?id=1&name=John');
@@ -472,7 +470,7 @@ appendUrlParams('https://example.com/#/home', { id: '1' }, { position: 'before' 
 transUrlParams({ id: 1, name: 'John' }); // "id=1&name=John"
 
 // 从 URL 获取文件信息
-getFileInfoToUrl('https://example.com/file.txt');
+getFileInfoFromUrl('https://example.com/file.txt');
 // { fileName: 'file.txt', extension: '.txt' }
 ```
 
@@ -724,7 +722,7 @@ const iframeBridge = new IframeBridge('https://example.com');
 ### 编码/解码 (encode)
 
 ```typescript
-import { base64Encode, base64Decode, escapeHTML, unescapeHTML, urlEncode, urlDecode, querystringify, parseQueryString } from 'l-js-fn';
+import { base64Encode, base64Decode, escapeHTML, unescapeHTML, urlEncode, urlDecode } from 'l-js-fn';
 
 // Base64 编码/解码（支持 Unicode）
 base64Encode('Hello World'); // 'SGVsbG8gV29ybGQ='
@@ -739,13 +737,15 @@ unescapeHTML('&lt;div&gt;'); // '<div>'
 // URL 编码/解码
 urlEncode('Hello World!'); // 'Hello%20World!'
 urlDecode('Hello%20World'); // 'Hello World'
-
-// 查询字符串转换
-querystringify({ name: 'John', age: 20 }); // 'name=John&age=20'
-querystringify({ a: [1, 2, 3] }); // 'a=1&a=2&a=3'
-parseQueryString('name=John&age=20'); // { name: 'John', age: '20' }
-parseQueryString('?a=1&a=2'); // { a: ['1', '2'] }
 ```
+
+> **v4.0 破坏性变更**：`querystringify` / `parseQueryString` 已移除，查询字符串能力统一到 URL 处理模块：
+> ```typescript
+> import { transUrlParams, getUrlParams } from 'l-js-fn';
+>
+> transUrlParams({ name: 'John', age: 20 }); // 'name=John&age=20'
+> getUrlParams('name=John&age=20');          // { name: 'John', age: '20' }
+> ```
 
 ### 文件处理 (file)
 
@@ -886,7 +886,7 @@ router.beforeEach((to, from, next) => {
 
 // 本地存储（支持过期时间、加密，中文/Emoji 加密完整往返）
 storage.set('user', { name: 'John' }, { expire: 3600, encrypt: true });
-storage.get('user');
+storage.objGet('user');
 storage.has('user');           // 是否存在
 storage.keys();                // 所有键名
 storage.clearExpired();        // 清理已过期项，返回数量
@@ -924,10 +924,10 @@ toast.hideLoading();
 
 // 网络请求
 request.setConfig({ baseURL: 'https://api.example.com', timeout: 30000 });
-const user = await request.get('/user', { params: { id: 1 } }); // GET 参数经 transUrlParams 序列化拼接（?/& 自动判断）
+const user = await request.objGet('/user', { params: { id: 1 } }); // GET 参数经 transUrlParams 序列化拼接（?/& 自动判断）
 const result = await request.post('/user', { name: 'John' });
 // 重试 & Loading
-const data = await request.get('/api', { retry: 3, retryDelay: 1000, loading: true });
+const data = await request.objGet('/api', { retry: 3, retryDelay: 1000, loading: true });
 ```
 
 **扩展新平台：**
@@ -1206,8 +1206,8 @@ const { md5 } = require('l-js-fn/crypto');
 
 | 指标       | 数值                     |
 | ---------- | ------------------------ |
-| 测试套件   | 33 passed                |
-| 测试用例   | 1856 passed / 1856 total |
+| 测试套件   | 35 passed                |
+| 测试用例   | 1901 passed / 1901 total |
 | 通过率     | 100%                     |
 | 语句覆盖率 | 98.81%                   |
 | 分支覆盖率 | 95.67%                   |
@@ -1220,13 +1220,13 @@ const { md5 } = require('l-js-fn/crypto');
 | ----------------------- | ------ | ---- | ---- | ------ |
 | color (颜色处理)        | 31     | 31   | 0    | 100%   |
 | is-kit (类型判断)       | 88     | 88   | 0    | 100%   |
-| array-kit (数组操作)    | 151    | 151  | 0    | 100%   |
-| string-kit (字符串处理) | 97     | 97   | 0    | 100%   |
-| object-kit (对象操作)   | 67     | 67   | 0    | 100%   |
+| array-kit (数组操作)    | 150    | 150  | 0    | 100%   |
+| string-kit (字符串处理) | 91     | 91   | 0    | 100%   |
+| object-kit (对象操作)   | 60     | 60   | 0    | 100%   |
 | common (通用工具)       | 77     | 77   | 0    | 100%   |
 | date-kit (日期处理)     | 75     | 75   | 0    | 100%   |
 | number-kit (数字处理)   | 78     | 78   | 0    | 100%   |
-| url-kit (URL 处理)      | 81     | 81   | 0    | 100%   |
+| url-kit (URL 处理)      | 86     | 86   | 0    | 100%   |
 | bugfixes (兼容修复)     | 17     | 17   | 0    | 100%   |
 
 #### 子模块
@@ -1240,7 +1240,7 @@ const { md5 } = require('l-js-fn/crypto');
 | ipc (IPC 通信)       | 49     | 49   | 0    | 100%   |
 | regex (正则表达式)   | 184    | 184  | 0    | 100%   |
 | config (配置常量)    | 21     | 21   | 0    | 100%   |
-| encode (编码/解码)   | 56     | 56   | 0    | 100%   |
+| encode (编码/解码)   | 36     | 36   | 0    | 100%   |
 | file (文件处理)      | 62     | 62   | 0    | 100%   |
 | event-bus (事件总线) | 31     | 31   | 0    | 100%   |
 | crypto (加密模块)    | 132    | 132  | 0    | 100%   |
@@ -1248,7 +1248,6 @@ const { md5 } = require('l-js-fn/crypto');
 
 #### 其他
 
-| 模块              | 用例数 | 通过 | 失败 | 通过率 |
-| ----------------- | ------ | ---- | ---- | ------ |
-| Result (结果封装) | 15     | 15   | 0    | 100%   |
-| dist (构建产物)   | 84     | 84   | 0    | 100%   |
+| 模块            | 用例数 | 通过 | 失败 | 通过率 |
+| --------------- | ------ | ---- | ---- | ------ |
+| dist (构建产物) | 87     | 87   | 0    | 100%   |

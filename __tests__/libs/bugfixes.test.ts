@@ -104,11 +104,8 @@ describe('Bug 修复验证', () => {
 
 	// ==================== imageToBase64 null 输入修复 ====================
 	describe('imageToBase64 - null 输入处理', () => {
-		it('应该返回失败的 Result 而不是 undefined', async () => {
-			const result = await imageToBase64(null);
-			expect(result).toBeDefined();
-			expect(result.success).toBe(false);
-			expect(result.message).toBe('输入不能为空');
+		it('应该拒绝而不是挂起', async () => {
+			await expect(imageToBase64(null)).rejects.toHaveProperty('message', '输入不能为空');
 		});
 	});
 

@@ -56,37 +56,37 @@ describe('number-kit - 数字处理工具', () => {
 
 		describe('中文单位模式', () => {
 			it('应该使用"万"单位', () => {
-				expect(formatNumber(10000, true)).toBe('1万');
-				expect(formatNumber(12345, true)).toBe('1.23万');
-				expect(formatNumber(99999, true)).toBe('10万');
+				expect(formatNumber(10000, { useUnit: true })).toBe('1万');
+				expect(formatNumber(12345, { useUnit: true })).toBe('1.23万');
+				expect(formatNumber(99999, { useUnit: true })).toBe('10万');
 			});
 
 			it('应该使用"亿"单位', () => {
-				expect(formatNumber(100000000, true)).toBe('1亿');
-				expect(formatNumber(123456789, true)).toBe('1.23亿');
-				expect(formatNumber(999999999, true)).toBe('10亿');
+				expect(formatNumber(100000000, { useUnit: true })).toBe('1亿');
+				expect(formatNumber(123456789, { useUnit: true })).toBe('1.23亿');
+				expect(formatNumber(999999999, { useUnit: true })).toBe('10亿');
 			});
 
 			it('应该去除小数点后的 .00', () => {
-				expect(formatNumber(10000, true)).toBe('1万');
-				expect(formatNumber(100000000, true)).toBe('1亿');
-				expect(formatNumber(12300, true)).toBe('1.23万');
+				expect(formatNumber(10000, { useUnit: true })).toBe('1万');
+				expect(formatNumber(100000000, { useUnit: true })).toBe('1亿');
+				expect(formatNumber(12300, { useUnit: true })).toBe('1.23万');
 			});
 
 			it('应该保留小数位如果有的', () => {
-				expect(formatNumber(12345, true)).toBe('1.23万');
-				expect(formatNumber(123456789, true)).toBe('1.23亿');
+				expect(formatNumber(12345, { useUnit: true })).toBe('1.23万');
+				expect(formatNumber(123456789, { useUnit: true })).toBe('1.23亿');
 			});
 
 			it('应该小于1万时不加单位', () => {
-				expect(formatNumber(9999, true)).toBe('9999');
-				expect(formatNumber(123, true)).toBe('123');
-				expect(formatNumber(0, true)).toBe('0');
+				expect(formatNumber(9999, { useUnit: true })).toBe('9999');
+				expect(formatNumber(123, { useUnit: true })).toBe('123');
+				expect(formatNumber(0, { useUnit: true })).toBe('0');
 			});
 
 			it('应该处理负数', () => {
-				expect(formatNumber(-10000, true)).toBe('-1万');
-				expect(formatNumber(-12345, true)).toBe('-1.23万');
+				expect(formatNumber(-10000, { useUnit: true })).toBe('-1万');
+				expect(formatNumber(-12345, { useUnit: true })).toBe('-1.23万');
 			});
 		});
 
@@ -298,13 +298,18 @@ describe('number-kit - 数字处理工具', () => {
 			expect(result).toBeLessThan(5);
 		});
 
-		it('应该抛出错误如果最小值大于最大值', () => {
-			expect(() => random(10, 5)).toThrow('最小值不能大于最大值');
+		it('应该自动交换边界当最小值大于最大值', () => {
+			const result = random(10, 5);
+			expect(result).toBeGreaterThanOrEqual(5);
+			expect(result).toBeLessThan(10);
 		});
 
-		it('应该抛出错误如果单参数且小于等于0', () => {
-			expect(() => random(0)).toThrow('当只有一个参数时，最大值必须大于 0');
-			expect(() => random(-5)).toThrow('当只有一个参数时，最大值必须大于 0');
+		it('应该支持单参数且小于等于0', () => {
+			const r0 = random(0);
+			expect(r0).toBe(0);
+			const rNeg = random(-5);
+			expect(rNeg).toBeGreaterThanOrEqual(-5);
+			expect(rNeg).toBeLessThan(0);
 		});
 
 		it('应该包含最小值但不包含最大值', () => {

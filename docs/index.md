@@ -103,7 +103,6 @@ import { md5, aesEncrypt, sm2Encrypt, sm4Encrypt } from 'l-js-fn/crypto';
 | [number-kit](/guide/number-kit) | 数字处理（格式化、百分比、随机数等） |
 | [url-kit](/guide/url-kit) | URL 处理（参数解析、拼接、转换等） |
 | [color](/guide/color) | 颜色处理（HEX/HSL 转换、图标颜色适配等） |
-| [Result](/guide/result) | 结果类（标准化成功/失败结果封装） |
 | [bom](/guide/bom) | 浏览器对象模型（滚动、全屏、剪贴板、Cookie 等） |
 | [ws](/guide/ws) | WebSocket 管理（连接、心跳、重连等） |
 | [storage](/guide/storage) | 本地存储（localStorage/sessionStorage，支持过期时间） |
@@ -127,8 +126,8 @@ import { md5, aesEncrypt, sm2Encrypt, sm4Encrypt } from 'l-js-fn/crypto';
 
 | 指标 | 数值 |
 |------|------|
-| 测试套件 | 33 passed |
-| 测试用例 | 1856 passed / 1856 total |
+| 测试套件 | 35 passed |
+| 测试用例 | 1901 passed / 1901 total |
 | 语句覆盖率 | 98.81% |
 | 分支覆盖率 | 95.67% |
 | 函数覆盖率 | 100% |
@@ -140,13 +139,13 @@ import { md5, aesEncrypt, sm2Encrypt, sm4Encrypt } from 'l-js-fn/crypto';
 |------|--------|--------|
 | color (颜色处理) | 31 | 100% |
 | is-kit (类型判断) | 88 | 100% |
-| array-kit (数组操作) | 151 | 100% |
-| string-kit (字符串处理) | 97 | 100% |
-| object-kit (对象操作) | 67 | 100% |
+| array-kit (数组操作) | 150 | 100% |
+| string-kit (字符串处理) | 91 | 100% |
+| object-kit (对象操作) | 60 | 100% |
 | common (通用工具) | 77 | 100% |
 | date-kit (日期处理) | 75 | 100% |
 | number-kit (数字处理) | 78 | 100% |
-| url-kit (URL 处理) | 81 | 100% |
+| url-kit (URL 处理) | 86 | 100% |
 
 ### 子模块
 
@@ -159,7 +158,7 @@ import { md5, aesEncrypt, sm2Encrypt, sm4Encrypt } from 'l-js-fn/crypto';
 | ipc (IPC 通信) | 49 | 100% |
 | regex (正则表达式) | 184 | 100% |
 | config (配置常量) | 21 | 100% |
-| encode (编码/解码) | 56 | 100% |
+| encode (编码/解码) | 36 | 100% |
 | file (文件处理) | 62 | 100% |
 | event-bus (事件总线) | 31 | 100% |
 | crypto (加密模块) | 132 | 100% |
@@ -169,7 +168,7 @@ import { md5, aesEncrypt, sm2Encrypt, sm4Encrypt } from 'l-js-fn/crypto';
 
 ### 是否支持服务端/SSR 环境？
 
-大部分工具函数（`is-kit`、`array-kit`、`string-kit`、`object-kit`、`date-kit`、`number-kit`、`url-kit`、`common`、`color`、`Result`、`regex`、`config`、`encode`）可以在任何 JavaScript 环境中使用。
+大部分工具函数（`is-kit`、`array-kit`、`string-kit`、`object-kit`、`date-kit`、`number-kit`、`url-kit`、`common`、`color`、`regex`、`config`、`encode`）可以在任何 JavaScript 环境中使用。
 
 以下模块**仅在浏览器环境**中可用：
 - `bom`（DOM 滚动、全屏、剪贴板、Cookie）
@@ -186,11 +185,11 @@ import { md5, aesEncrypt, sm2Encrypt, sm4Encrypt } from 'l-js-fn/crypto';
 - 子模块用户使用 `import { isImage } from 'l-js-fn/file'`
 - 两者行为完全相同
 
-### 如何正确使用 `Result` 类？
+### `Result` 类哪里去了？
 
-`Result` 的构造函数是私有的，必须通过静态方法创建实例：
-- `Result.ok(data?, message?)` — 创建成功结果
-- `Result.fail(message?, data?)` — 创建失败结果
-::: warning 注意
-`Result.fail()` 的第一个参数是 `message`（默认 `'操作失败'`），第二个参数是 `data`。这与 `Result.ok()` 的参数顺序不同。
-:::
+`Result` 类已在 **v4.0 移除**（此前仅 `arrayMove` 与 `imageToBase64` 使用，且与库整体「返回普通值」的语义不一致）。相关调整：
+
+- `arrayMove` 返回纯数组 `T[]`，无法移动时返回原数组拷贝
+- `imageToBase64` 返回 `Promise<string>`，失败时 reject
+
+如需统一封装接口返回结果，建议自行实现或在业务层约定返回结构。

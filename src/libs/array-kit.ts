@@ -1,29 +1,26 @@
-import { MoveAction, Primitive } from "@/types";
-import { Result } from "@/utils/Result";
-import { isArray, isEmpty, isEqual } from "./is-kit";
+import { MoveAction } from "@/types";
+import { isArray, isEqual } from "./is-kit";
+
 /**
  * 从数组中移除指定的元素，返回一个新的数组。
  * @param arr - 需要操作的数组
  * @param target - 需要删除的目标元素
  * @param key - 可选属性名，如果传入则根据该属性匹配删除
- * @returns 新数组
+ * @returns 新数组，非数组或没有匹配项时返回原数组
+ * @example
+ * arrayRemove([1, 2, 3, 2], 2) // [1, 3]
+ * arrayRemove([{ id: 1 }, { id: 2 }], { id: 2 }) // [{ id: 1 }]（深比较）
+ * arrayRemove([{ id: 1 }, { id: 2 }], { id: 2 }, 'id') // [{ id: 1 }]
  */
-export function arrayDelEl<T>(
-  arr: T[],
-  target: T,
-  key: keyof T | null = null
-): T[] {
-  const isPrimitive = (value: any) => value !== Object(value);
-
-  if (isPrimitive(target)) {
-    return arr.filter((item) => item !== target);
-  } else {
-		if (key) {
-			return arr.filter((item) => item[key] !== target[key]);
-		} else {
-			return arr.filter((item) => !isEqual(item, target));
-		}
-  }
+export function arrayRemove<T>(arr: T[], target: T, key?: keyof T): T[] {
+	if (!isArray(arr)) return arr;
+	if (key) {
+		return arr.filter((item) => item[key] !== target[key]);
+	}
+	if (typeof target === 'object' && target !== null) {
+		return arr.filter((item) => !isEqual(item, target));
+	}
+	return arr.filter((item) => item !== target);
 }
 
 /**
@@ -32,46 +29,26 @@ export function arrayDelEl<T>(
  * @param index - 要删除元素的索引
  * @returns 新数组，如果索引不合法返回原数组
  * @example
- * arrayDelToIndex([1, 2, 3], 1) // [1, 3]
+ * arrayRemoveAt([1, 2, 3], 1) // [1, 3]
  */
-export function arrayDelToIndex<T>(arr: T[], index: number): T[] {
-  if (!isArray(arr)) return arr;
-  if (typeof index !== "number" || index < 0 || index >= arr.length) return arr;
-  return arr.slice(0, index).concat(arr.slice(index + 1));
+export function arrayRemoveAt<T>(arr: T[], index: number): T[] {
+	if (!isArray(arr)) return arr;
+	if (!Number.isInteger(index) || index < 0 || index >= arr.length) return arr;
+	return arr.slice(0, index).concat(arr.slice(index + 1));
 }
 
 /**
- * 根据基本类型元素删除数组元素
+ * 根据条件函数删除数组元素
  * @param arr - 原数组
- * @param el - 要删除的元素
- * @returns 新数组，如果数组中不存在该元素返回原数组
+ * @param fn - 判断函数，返回 true 表示删除该元素
+ * @returns 新数组，非数组返回原数组
  * @example
- * arrayDelToEl([1, 2, 3, 2], 2) // [1, 3]
+ * arrayRemoveBy([1, 2, 3, 4], (n) => n % 2 === 0) // [1, 3]
+ * arrayRemoveBy([{ id: 1 }, { id: 2 }], (item) => item.id === 2) // [{ id: 1 }]
  */
-export function arrayDelToEl<T extends Primitive>(arr: T[], el: T): T[] {
-  if (!isArray(arr)) return arr;
-  if (!arr.includes(el)) return arr;
-  return arr.filter((item) => item !== el);
-}
-
-/**
- * 根据对象数组的键值对删除元素
- * @param arr - 原数组
- * @param key - 对象的键
- * @param value - 要匹配删除的值（类型为 key 对应的字段类型）
- * @returns 新数组，如果没有匹配项返回原数组
- * @example
- * const arr = [{ id: 1, name: 'a' }, { id: 2, name: 'b' }]
- * arrayDelToKey(arr, 'id', 2) // [{ id: 1, name: 'a' }]
- */
-export function arrayDelToKey<T extends Record<string, any>>(
-  arr: T[],
-  key: keyof T,
-  value: T[keyof T]
-): T[] {
-  if (!isArray(arr)) return arr;
-  const filtered = arr.filter((item) => item[key] !== value);
-  return filtered.length === arr.length ? arr : filtered;
+export function arrayRemoveBy<T>(arr: T[], fn: (item: T, index: number, array: T[]) => boolean): T[] {
+	if (!isArray(arr)) return arr;
+	return arr.filter((item, index, array) => !fn(item, index, array));
 }
 
 /**
@@ -79,25 +56,27 @@ export function arrayDelToKey<T extends Record<string, any>>(
  * @param originArr - 原数组
  * @param num - 补充到指定长度
  * @param obj - 补充的元素
- * @returns 新数组
+ * @returns 新数组，非数组或 num 无效时返回原数组的拷贝
  */
 export function arrayFill<T>(originArr: T[], num: number, obj: T): T[] {
-  if (!isArray(originArr)) throw new Error("originArr 必须是数组");
-  if (!Number.isInteger(num) || num < 0) throw new Error("num 必须是非负整数");
+	if (!isArray(originArr)) return [];
+	if (!Number.isInteger(num) || num < 0) return [...originArr];
 
-  if (originArr.length >= num) return [...originArr];
-  const emptyArr = new Array(num - originArr.length).fill(obj);
-  return originArr.concat(emptyArr);
+	if (originArr.length >= num) return [...originArr];
+	const emptyArr = new Array(num - originArr.length).fill(obj);
+	return originArr.concat(emptyArr);
 }
 
 /**
  * 去重数组
  * @param arr - 数组
- * @returns 去重后的数组
- * @deprecated 请使用 `uniq` 替代
+ * @returns 去重后的新数组
+ * @example
+ * arrayUnique([1, 2, 2, 3]) // [1, 2, 3]
  */
 export function arrayUnique<T>(arr: T[]): T[] {
-	return uniq(arr);
+	if (!isArray(arr)) return [];
+	return [...new Set(arr)];
 }
 
 /**
@@ -105,166 +84,116 @@ export function arrayUnique<T>(arr: T[]): T[] {
  * @param arr - 数组
  * @param page - 当前页码（>=1）
  * @param size - 每页条数（>=1）
- * @returns 当前页数据
+ * @returns 当前页数据，参数不合法时返回空数组
  */
 export function arrayPaginate<T>(arr: T[], page: number, size: number): T[] {
-  if (!isArray(arr) || page < 1 || size < 1) return [];
+	if (!isArray(arr) || page < 1 || size < 1) return [];
 
-  const totalPages = Math.ceil(arr.length / size);
-  if (page > totalPages) return [];
+	const totalPages = Math.ceil(arr.length / size);
+	if (page > totalPages) return [];
 
-  const startIdx = (page - 1) * size;
-  const endIdx = startIdx + size;
-  return arr.slice(startIdx, endIdx);
+	const startIdx = (page - 1) * size;
+	const endIdx = startIdx + size;
+	return arr.slice(startIdx, endIdx);
 }
 
 /**
  * 把数组对象进行分组，每 groupSize 个一组，返回对象
  * @param array - 需要分组的数组
  * @param groupSize - 每组的大小，默认为 10
- * @returns 返回分组后的对象，键为组号，值为数组
+ * @returns 返回分组后的对象，键为组号，值为数组；参数不合法时返回空对象
  */
-export function arraySplitToGroups<T>(
-  array: T[],
-  groupSize: number = 10
-): Record<number, T[]> {
-  if (!isArray(array)) {
-    throw new Error("参数必须是数组");
-  }
+export function arraySplitToGroups<T>(array: T[], groupSize: number = 10): Record<number, T[]> {
+	if (!isArray(array) || array.length === 0) return {};
+	if (groupSize < 1 || !Number.isInteger(groupSize)) return {};
 
-  if (groupSize < 1 || !Number.isInteger(groupSize)) {
-    throw new Error("groupSize 必须是大于 0 的整数");
-  }
+	const result: Record<number, T[]> = {};
 
-  const result: Record<number, T[]> = {};
+	for (let i = 0; i < array.length; i++) {
+		const groupIndex = Math.floor(i / groupSize) + 1; // 计算组号
+		if (!result[groupIndex]) {
+			result[groupIndex] = []; // 初始化组
+		}
+		result[groupIndex].push(array[i]);
+	}
 
-  for (let i = 0; i < array.length; i++) {
-    const groupIndex = Math.floor(i / groupSize) + 1; // 计算组号
-    if (!result[groupIndex]) {
-      result[groupIndex] = []; // 初始化组
-    }
-    result[groupIndex].push(array[i]);
-  }
-
-  return result;
+	return result;
 }
-
-type Recordable = Record<string, any>;
-type Fn<T> = (item: T, index: number, array: T[]) => boolean;
-/**
- * 查找数组对象的某个下标
- * @param ary 查找的数组
- * @param fn 判断的方法，返回 true 表示找到
- * @returns 找到的索引，如果未找到返回 -1
- * @example
- * const users: User[] = [
- * { id: 1, name: "Alice" },
- * { id: 2, name: "Bob" },
- * { id: 3, name: "Charlie" }
- * ];
- *
- * const index = findIndex(users, user => user.name === "Bob");
- * console.log(index); // 输出 1
- */
-export const findIndex = <T = Recordable>(arr: T[], fn: Fn<T>): number => {
-	return arr.findIndex(fn);
-};
 
 /**
  * 移动数组元素
- * @param list - 数组
- * @param idx - 需要移动的元素索引
- * @param action - 移动类型，默认置顶up
+ * @param arr - 数组
+ * @param index - 需要移动的元素索引
+ * @param action - 移动类型：up 上移一位 | down 下移一位 | top 置顶 | bottom 置底，默认 'up'
+ * @returns 移动后的新数组，参数不合法时返回原数组的拷贝
+ * @example
+ * arrayMove([1, 2, 3], 1, 'up') // [2, 1, 3]
+ * arrayMove([1, 2, 3], 2, 'top') // [3, 1, 2]
  */
-export function moveElement<T>(
-  list: T[],
-  idx: number,
-  action: MoveAction = "up"
-): Result<T[]> {
-  if (!isArray(list)) {
-    return Result.fail("参数不是数组", []);
-  }
+export function arrayMove<T>(arr: T[], index: number, action: MoveAction = 'up'): T[] {
+	if (!isArray(arr) || arr.length === 0) return isArray(arr) ? [...arr] : [];
+	if (index < 0 || index >= arr.length) return [...arr];
 
-  if (isEmpty(list)) {
-    return Result.fail("数组为空", []);
-  }
+	const newList = [...arr];
+	const item = newList[index];
 
-  if (idx < 0 || idx >= list.length) {
-    return Result.fail("索引超出范围", [...list]);
-  }
+	switch (action) {
+		case 'up':
+			if (index === 0) return newList;
+			[newList[index - 1], newList[index]] = [newList[index], newList[index - 1]];
+			break;
+		case 'down':
+			if (index === arr.length - 1) return newList;
+			[newList[index + 1], newList[index]] = [newList[index], newList[index + 1]];
+			break;
+		case 'top':
+			if (index === 0) return newList;
+			newList.splice(index, 1);
+			newList.unshift(item);
+			break;
+		case 'bottom':
+			if (index === arr.length - 1) return newList;
+			newList.splice(index, 1);
+			newList.push(item);
+			break;
+		default:
+			return newList;
+	}
 
-  const newList = [...list];
-  // 需要移动的元素
-  const item = newList[idx];
-
-  switch (action) {
-    case "up":
-      if (idx === 0) return Result.fail("已经是第一个元素", newList);
-      [newList[idx - 1], newList[idx]] = [newList[idx], newList[idx - 1]];
-      break;
-
-    case "down":
-      if (idx === list.length - 1)
-        return Result.fail("已经是最后一个元素", newList);
-      [newList[idx + 1], newList[idx]] = [newList[idx], newList[idx + 1]];
-      break;
-
-    case "top":
-      if (idx === 0) return Result.fail("已经是第一个元素", newList);
-      newList.splice(idx, 1);
-      newList.unshift(item);
-      break;
-
-    case "bottom":
-      if (idx === list.length - 1)
-        return Result.fail("已经是最后一个元素", newList);
-      newList.splice(idx, 1);
-      newList.push(item);
-      break;
-
-    default:
-      return Result.fail("无效的操作", newList);
-  }
-
-  return Result.ok(newList);
+	return newList;
 }
 
 /**
  * 按字段对数组对象进行分组
  * @param array - 需要分组的数组
  * @param key - 分组依据的键名（支持嵌套路径，如 'user.id'）
- * @returns 分组后的对象，键为字段值，值为对应的数组
+ * @returns 分组后的对象，键为字段值，值为对应的数组；参数不合法时返回空对象
  * @example
  * const users = [
  *   { name: 'Alice', age: 20, city: 'Beijing' },
  *   { name: 'Bob', age: 25, city: 'Shanghai' },
  *   { name: 'Charlie', age: 20, city: 'Beijing' }
  * ]
- * groupBy(users, 'age') // { 20: [{...}, {...}], 25: [{...}] }
- * groupBy(users, 'city') // { Beijing: [{...}, {...}], Shanghai: [{...}] }
+ * arrayGroupBy(users, 'age') // { 20: [{...}, {...}], 25: [{...}] }
+ * arrayGroupBy(users, 'city') // { Beijing: [{...}, {...}], Shanghai: [{...}] }
  */
-export function groupBy<T extends Record<string, any>>(
-  array: T[],
-  key: string
-): Record<string, T[]> {
-  if (!isArray(array)) {
-    throw new Error("groupBy: 参数必须是数组");
-  }
+export function arrayGroupBy<T extends Record<string, any>>(array: T[], key: string): Record<string, T[]> {
+	if (!isArray(array) || array.length === 0) return {};
 
-  const result: Record<string, T[]> = {};
+	const result: Record<string, T[]> = {};
 
-  for (const item of array) {
-    // 支持嵌套路径，如 'user.id'
-    const groupKey = (key.split('.').reduce((obj: unknown, k) => (obj as Record<string, unknown>)?.[k], item as unknown) ?? '__undefined__') as string;
+	for (const item of array) {
+		// 支持嵌套路径，如 'user.id'
+		const groupKey = (key.split('.').reduce((obj: unknown, k) => (obj as Record<string, unknown>)?.[k], item as unknown) ?? '__undefined__') as string;
 
-    if (!result[groupKey]) {
-      result[groupKey] = [];
-    }
+		if (!result[groupKey]) {
+			result[groupKey] = [];
+		}
 
-    result[groupKey].push(item);
-  }
+		result[groupKey].push(item);
+	}
 
-  return result;
+	return result;
 }
 
 /**
@@ -273,15 +202,15 @@ export function groupBy<T extends Record<string, any>>(
  * @returns 随机的一个元素，数组为空时返回 undefined
  * @example
  * const colors = ['red', 'green', 'blue', 'yellow']
- * sample(colors) // 'blue' (随机)
+ * arraySample(colors) // 'blue' (随机)
  */
-export function sample<T>(array: T[]): T | undefined {
-  if (!isArray(array) || array.length === 0) {
-    return undefined;
-  }
+export function arraySample<T>(array: T[]): T | undefined {
+	if (!isArray(array) || array.length === 0) {
+		return undefined;
+	}
 
-  const randomIndex = Math.floor(Math.random() * array.length);
-  return array[randomIndex];
+	const randomIndex = Math.floor(Math.random() * array.length);
+	return array[randomIndex];
 }
 
 /**
@@ -291,19 +220,19 @@ export function sample<T>(array: T[]): T | undefined {
  * @returns 随机选取的元素数组，如果 n 大于数组长度则返回整个数组的乱序结果
  * @example
  * const numbers = [1, 2, 3, 4, 5]
- * sampleSize(numbers, 2) // [3, 1] (随机，不重复)
- * sampleSize(numbers, 10) // [2, 5, 1, 4, 3] (返回全部乱序)
+ * arraySampleSize(numbers, 2) // [3, 1] (随机，不重复)
+ * arraySampleSize(numbers, 10) // [2, 5, 1, 4, 3] (返回全部乱序)
  */
-export function sampleSize<T>(array: T[], n: number = 1): T[] {
+export function arraySampleSize<T>(array: T[], n: number = 1): T[] {
 	if (!isArray(array) || array.length === 0) {
 		return [];
 	}
 
 	if (n >= array.length) {
-		return shuffle(array);
+		return arrayShuffle(array);
 	}
 
-	return shuffle([...array]).slice(0, n);
+	return arrayShuffle([...array]).slice(0, n);
 }
 
 /**
@@ -312,10 +241,10 @@ export function sampleSize<T>(array: T[], n: number = 1): T[] {
  * @param depth - 展开深度，默认为 Infinity（完全展开）
  * @returns 扁平化后的新数组
  * @example
- * flatten([1, [2, [3, 4]], 5]) // [1, 2, 3, 4, 5]
- * flatten([1, [2, [3, 4]], 5], 1) // [1, 2, [3, 4], 5]
+ * arrayFlatten([1, [2, [3, 4]], 5]) // [1, 2, 3, 4, 5]
+ * arrayFlatten([1, [2, [3, 4]], 5], 1) // [1, 2, [3, 4], 5]
  */
-export function flatten<T>(arr: readonly unknown[], depth: number = Infinity): T[] {
+export function arrayFlatten<T>(arr: readonly unknown[], depth: number = Infinity): T[] {
 	if (!isArray(arr)) return [];
 	return arr.flat(depth) as T[];
 }
@@ -327,11 +256,11 @@ export function flatten<T>(arr: readonly unknown[], depth: number = Infinity): T
  * @param step - 步长，默认为 1
  * @returns 数字数组
  * @example
- * range(0, 5) // [0, 1, 2, 3, 4, 5]
- * range(5, 0, -1) // [5, 4, 3, 2, 1, 0]
- * range(0, 10, 2) // [0, 2, 4, 6, 8, 10]
+ * arrayRange(0, 5) // [0, 1, 2, 3, 4, 5]
+ * arrayRange(5, 0, -1) // [5, 4, 3, 2, 1, 0]
+ * arrayRange(0, 10, 2) // [0, 2, 4, 6, 8, 10]
  */
-export function range(start: number, end: number, step: number = 1): number[] {
+export function arrayRange(start: number, end: number, step: number = 1): number[] {
 	const result: number[] = [];
 	if (step === 0) return result;
 
@@ -356,9 +285,9 @@ export function range(start: number, end: number, step: number = 1): number[] {
  * @param arr - 需要打乱的数组
  * @returns 打乱后的新数组
  * @example
- * shuffle([1, 2, 3, 4, 5]) // [3, 1, 5, 2, 4]（随机）
+ * arrayShuffle([1, 2, 3, 4, 5]) // [3, 1, 5, 2, 4]（随机）
  */
-export function shuffle<T>(arr: T[]): T[] {
+export function arrayShuffle<T>(arr: T[]): T[] {
 	if (!isArray(arr)) return [];
 	const result = [...arr];
 	for (let i = result.length - 1; i > 0; i--) {
@@ -375,9 +304,9 @@ export function shuffle<T>(arr: T[]): T[] {
  * @returns 去重后的新数组
  * @example
  * const arr = [{ id: 1, name: 'a' }, { id: 2, name: 'b' }, { id: 1, name: 'c' }]
- * uniqueBy(arr, 'id') // [{ id: 1, name: 'a' }, { id: 2, name: 'b' }]
+ * arrayUniqueBy(arr, 'id') // [{ id: 1, name: 'a' }, { id: 2, name: 'b' }]
  */
-export function uniqueBy<T extends Record<string, any>>(arr: T[], key: keyof T): T[] {
+export function arrayUniqueBy<T extends Record<string, any>>(arr: T[], key: keyof T): T[] {
 	if (!isArray(arr)) return [];
 	const seen = new Set();
 	return arr.filter((item) => {
@@ -393,9 +322,9 @@ export function uniqueBy<T extends Record<string, any>>(arr: T[], key: keyof T):
  * @param arr - 需要处理的数组
  * @returns 去除 falsy 值后的新数组
  * @example
- * compact([0, 1, false, 2, '', 3, null, undefined, NaN]) // [1, 2, 3]
+ * arrayCompact([0, 1, false, 2, '', 3, null, undefined, NaN]) // [1, 2, 3]
  */
-export function compact<T>(arr: T[]): T[] {
+export function arrayCompact<T>(arr: T[]): T[] {
 	if (!isArray(arr)) return [];
 	return arr.filter(Boolean);
 }
@@ -405,9 +334,9 @@ export function compact<T>(arr: T[]): T[] {
  * @param arr - 数字数组
  * @returns 总和，空数组返回 0
  * @example
- * sum([1, 2, 3, 4, 5]) // 15
+ * arraySum([1, 2, 3, 4, 5]) // 15
  */
-export function sum(arr: number[]): number {
+export function arraySum(arr: number[]): number {
 	if (!isArray(arr)) return 0;
 	return arr.reduce((acc, val) => acc + (typeof val === 'number' ? val : 0), 0);
 }
@@ -417,9 +346,9 @@ export function sum(arr: number[]): number {
  * @param arr - 数组
  * @returns 最后一个元素，空数组返回 undefined
  * @example
- * last([1, 2, 3]) // 3
+ * arrayLast([1, 2, 3]) // 3
  */
-export function last<T>(arr: T[]): T | undefined {
+export function arrayLast<T>(arr: T[]): T | undefined {
 	if (!isArray(arr) || arr.length === 0) return undefined;
 	return arr[arr.length - 1];
 }
@@ -476,10 +405,10 @@ export function arrayPluck<T extends Record<string, any>>(arr: T[], key: keyof T
  * @param order - 排序方向，默认 'asc'
  * @returns 排序后的新数组
  * @example
- * sortBy([{ id: 2 }, { id: 1 }], 'id')          // [{ id: 1 }, { id: 2 }]
- * sortBy([{ age: 20 }, { age: 30 }], 'age', 'desc') // [{ age: 30 }, { age: 20 }]
+ * arraySortBy([{ id: 2 }, { id: 1 }], 'id')          // [{ id: 1 }, { id: 2 }]
+ * arraySortBy([{ age: 20 }, { age: 30 }], 'age', 'desc') // [{ age: 30 }, { age: 20 }]
  */
-export function sortBy<T extends Record<string, any>>(arr: T[], key: keyof T, order: 'asc' | 'desc' = 'asc'): T[] {
+export function arraySortBy<T extends Record<string, any>>(arr: T[], key: keyof T, order: 'asc' | 'desc' = 'asc'): T[] {
 	if (!isArray(arr)) return [];
 	const copy = [...arr];
 	const factor = order === 'desc' ? -1 : 1;
@@ -492,28 +421,15 @@ export function sortBy<T extends Record<string, any>>(arr: T[], key: keyof T, or
 }
 
 /**
- * 对基础类型数组去重（使用 Set 实现）
- * @param arr - 基础类型数组
- * @returns 去重后的新数组
- * @example
- * uniq([1, 2, 2, 3])        // [1, 2, 3]
- * uniq(['a', 'b', 'a'])      // ['a', 'b']
- */
-export function uniq<T>(arr: T[]): T[] {
-	if (!isArray(arr)) return [];
-	return [...new Set(arr)];
-}
-
-/**
  * 计算对象数组中指定字段数值的总和
  * @param arr - 对象数组
  * @param key - 需要求和的数字字段名
  * @returns 总和，空数组返回 0
  * @example
  * const items = [{ name: 'a', price: 10 }, { name: 'b', price: 20 }]
- * sumBy(items, 'price') // 30
+ * arraySumBy(items, 'price') // 30
  */
-export function sumBy<T extends Record<string, any>>(arr: T[], key: keyof T): number {
+export function arraySumBy<T extends Record<string, any>>(arr: T[], key: keyof T): number {
 	if (!isArray(arr) || arr.length === 0) return 0;
 	let total = 0;
 	for (let i = 0; i < arr.length; i++) {

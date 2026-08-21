@@ -465,6 +465,9 @@ getDevice(); // 'android' | 'ios' | 'wechat' | ...
 
 将图片转换为 Base64 字符串。
 
+> [!WARNING] v4.0 破坏性变更
+> 返回值由 `Promise<Result<string>>` 改为 **`Promise<string>`**，失败时直接 **reject**（`Error`），不再返回 `Result` 对象。
+
 **参数说明：**
 
 | 参数 | 类型 | 必填 | 说明 |
@@ -473,7 +476,7 @@ getDevice(); // 'android' | 'ios' | 'wechat' | ...
 | type | `string` | 否 | 输出类型，默认 `'image/png'` |
 | quality | `number` | 否 | 压缩质量（0-1），默认 `1` |
 
-**返回值：** `Promise<Result>` — 包含 Base64 字符串的结果对象
+**返回值：** `Promise<string>` — Base64 数据字符串
 
 **示例：**
 
@@ -482,42 +485,42 @@ getDevice(); // 'android' | 'ios' | 'wechat' | ...
 import { imageToBase64 } from 'l-js-fn';
 
 // 从 URL 转换
-const result = await imageToBase64('https://example.com/image.png');
-console.log(result.data); // 'data:image/png;base64,...'
+const base64 = await imageToBase64('https://example.com/image.png');
+console.log(base64); // 'data:image/png;base64,...'
 
 // 从 File 对象转换
 const file = document.querySelector('input[type="file"]').files[0];
-const result2 = await imageToBase64(file, 'image/jpeg', 0.8);
+const base64_2 = await imageToBase64(file, 'image/jpeg', 0.8);
 ```
 
 ```js [JavaScript (ESM)]
 import { imageToBase64 } from 'l-js-fn';
 
 // 从 URL 转换
-const result = await imageToBase64('https://example.com/image.png');
-console.log(result.data); // 'data:image/png;base64,...'
+const base64 = await imageToBase64('https://example.com/image.png');
+console.log(base64); // 'data:image/png;base64,...'
 
 // 从 File 对象转换
 const file = document.querySelector('input[type="file"]').files[0];
-const result2 = await imageToBase64(file, 'image/jpeg', 0.8);
+const base64_2 = await imageToBase64(file, 'image/jpeg', 0.8);
 ```
 
 ```js [JavaScript (CJS)]
 const { imageToBase64 } = require('l-js-fn');
 
 // 从 URL 转换
-const result = await imageToBase64('https://example.com/image.png');
-console.log(result.data); // 'data:image/png;base64,...'
+const base64 = await imageToBase64('https://example.com/image.png');
+console.log(base64); // 'data:image/png;base64,...'
 
 // 从 File 对象转换
 const file = document.querySelector('input[type="file"]').files[0];
-const result2 = await imageToBase64(file, 'image/jpeg', 0.8);
+const base64_2 = await imageToBase64(file, 'image/jpeg', 0.8);
 ```
 :::
 
 ::: warning 注意
 - `imageToBase64` 仅在浏览器环境中可用（依赖 Canvas API）
-- 当 `input` 为 `null` 时，返回 `Result.fail('输入不能为空')`，不会抛出异常
+- 失败时（`input` 为 `null`、文件读取失败、图片跨域/加载失败）会 **reject**，请用 `try/catch` 或 `.catch()` 处理
 :::
 
 ## 12. retry 异步重试

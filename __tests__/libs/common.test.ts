@@ -745,10 +745,8 @@ describe('common - 通用工具方法', () => {
 			jest.restoreAllMocks();
 		});
 
-		it('应该在输入为空时返回失败结果', async () => {
-			const result = await imageToBase64(null);
-			expect(result.success).toBe(false);
-			expect(result.message).toBe('输入不能为空');
+		it('应该在输入为空时拒绝', async () => {
+			await expect(imageToBase64(null)).rejects.toHaveProperty('message', '输入不能为空');
 		});
 
 		it('应该处理 File 输入', async () => {
@@ -770,7 +768,7 @@ describe('common - 通用工具方法', () => {
 			(global as any).FileReader = jest.fn(() => mockFileReader);
 
 			const result = await imageToBase64(mockFile);
-			expect(result.success).toBe(true);
+			expect(result).toBe('data:text/plain;base64,dGVzdA==');
 
 			(global as any).FileReader = origFileReader;
 		});
@@ -835,7 +833,7 @@ describe('common - 通用工具方法', () => {
 			mockImage.onload();
 
 			const result = await promise;
-			expect(result.success).toBe(true);
+			expect(result).toBe('data:image/png;base64,test');
 
 			(global as any).Image = origImage;
 			if (origCreateElement) {

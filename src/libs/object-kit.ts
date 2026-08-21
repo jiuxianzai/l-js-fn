@@ -1,45 +1,47 @@
 import { isObject } from './is-kit.ts';
 
 /**
- * 合并两个对象，后一个对象的属性优先。递归合并嵌套对象，数组会直接复制。
- * 如果属性不是对象，则源对象的值会覆盖目标对象的值。
+ * 深度合并两个对象（非破坏性），后一个对象的属性优先，返回新对象，不修改入参。
+ * 递归合并嵌套对象；数组或非对象属性直接以源对象值覆盖。
  *
- * @param target - 目标对象，合并结果会存储在该对象中，且该对象会被修改。
- * @param source - 源对象或数组，源对象的属性会覆盖目标对象中的同名属性。
- * @param mergeType - 合并类型：'hard' 硬合并(包含2者所有属性)、'soft' 软合并(只包含 target 对象的属性)。默认 'hard'
- * @returns 合并后的目标对象
+ * @param target - 目标对象，合并的基准（不会被修改）
+ * @param source - 源对象，其属性会覆盖目标对象中的同名属性
+ * @param mergeType - 合并类型：'hard' 硬合并(包含两者所有属性)、'soft' 软合并(只包含 target 已有的属性)。默认 'hard'
+ * @returns 合并后的新对象
+ * @example
+ * objMerge({ a: 1 }, { b: 2 }) // { a: 1, b: 2 }
+ * objMerge({ a: { b: 1 } }, { a: { c: 2 } }) // { a: { b: 1, c: 2 } }
+ * objMerge({ a: 1 }, { a: 2, b: 3 }, 'soft') // { a: 2 }
  */
 export function objMerge<T extends Record<string, any>, S extends Record<string, any>>(
 	target: T,
 	source: S,
-	mergeType: 'hard' | 'soft' = 'hard',
-	_visited: WeakSet<object> = new WeakSet()
+	mergeType: 'hard' | 'soft' = 'hard'
 ): T & S {
-	if (typeof target !== 'object' || target === null) {
-		target = {} as T;
-	}
 	if (Array.isArray(source)) {
-		return source.slice() as any;
+		return source.slice() as unknown as T & S;
 	}
 
-	if (_visited.has(source)) return target as T & S;
-	_visited.add(source);
+	const base = isObject(target) ? ({ ...target } as Record<string, any>) : ({} as Record<string, any>);
+	if (!isObject(source)) {
+		return base as T & S;
+	}
 
 	Object.keys(source).forEach((property) => {
 		const sourceProperty = source[property];
 
-		if (mergeType === 'soft' && !Object.prototype.hasOwnProperty.call(target, property)) {
+		if (mergeType === 'soft' && !Object.prototype.hasOwnProperty.call(base, property)) {
 			return;
 		}
 
 		if (isObject(sourceProperty)) {
-			(target as Record<string, any>)[property] = objMerge((target as Record<string, any>)[property] ?? {} as any, sourceProperty, mergeType, _visited);
+			base[property] = objMerge(base[property] ?? ({} as Record<string, any>), sourceProperty, mergeType);
 		} else {
-			(target as T & S)[property as keyof (T & S)] = sourceProperty as any;
+			base[property] = sourceProperty;
 		}
 	});
 
-	return target as T & S;
+	return base as T & S;
 }
 
 /**
@@ -77,24 +79,15 @@ export function objFilterNull<T extends Record<string, any>>(obj: T, options: { 
 }
 
 /**
- * 判断对象是否存在属性
- * @param obj - 对象
- * @param key - 属性键
- */
-export function isHasProperties(obj: object, key: string): boolean {
-	return Object.prototype.hasOwnProperty.call(obj, key);
-}
-
-/**
  * 将 JSON 对象转换为 FormData
  * @param data JSON 数据对象
  * @param formData 可选：已有 FormData 实例（用于递归）
- * @param parentKey 可选：父级键名前缀
+ * @param parentKey 可选：父级键名前缀（用于递归）
  * @returns FormData
  */
-export function jsonToFormData(data: Record<string, unknown>, formData: FormData = new FormData(), parentKey: string = ''): FormData {
+export function objToFormData(data: Record<string, unknown>, formData: FormData = new FormData(), parentKey: string = ''): FormData {
 	if (!data || typeof data !== 'object') {
-		throw new TypeError('jsonToFormData: 参数 data 必须是对象');
+		return formData;
 	}
 
 	Object.keys(data).forEach((key) => {
@@ -112,14 +105,14 @@ export function jsonToFormData(data: Record<string, unknown>, formData: FormData
 			value.forEach((item: unknown, index) => {
 				const arrayKey = `${fullKey}[${index}]`;
 				if (typeof item === 'object' && !(item instanceof File)) {
-					jsonToFormData(item as Record<string, unknown>, formData, arrayKey);
+					objToFormData(item as Record<string, unknown>, formData, arrayKey);
 				} else {
 					formData.append(arrayKey, item as string | Blob);
 				}
 			});
 		} else if (typeof value === 'object') {
 			// 递归嵌套对象
-			jsonToFormData(value as Record<string, unknown>, formData, fullKey);
+			objToFormData(value as Record<string, unknown>, formData, fullKey);
 		} else {
 			formData.append(fullKey, value as string | Blob);
 		}
@@ -130,9 +123,10 @@ export function jsonToFormData(data: Record<string, unknown>, formData: FormData
 
 /**
  * formData 转 json
- * @param formData
+ * @param formData - FormData 实例
+ * @returns 普通对象
  */
-export function formDataToObject(formData: FormData): Record<string, string | number> {
+export function objFromFormData(formData: FormData): Record<string, string | number> {
 	const obj: Record<string, string | number> = {};
 	for (const [key, value] of formData.entries()) {
 		const strValue = value.toString();
@@ -148,9 +142,9 @@ export function formDataToObject(formData: FormData): Record<string, string | nu
  * @param keys - 需要选取的属性名数组
  * @returns 只包含指定属性的新对象
  * @example
- * pick({ a: 1, b: 2, c: 3 }, ['a', 'c']) // { a: 1, c: 3 }
+ * objPick({ a: 1, b: 2, c: 3 }, ['a', 'c']) // { a: 1, c: 3 }
  */
-export function pick<T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
+export function objPick<T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
 	return keys.reduce((acc, key) => {
 		if (Object.prototype.hasOwnProperty.call(obj, key)) {
 			acc[key] = obj[key];
@@ -165,10 +159,10 @@ export function pick<T extends Record<string, any>, K extends keyof T>(obj: T, k
  * @param keys - 需要排除的键名数组
  * @returns 排除指定属性后的新对象
  * @example
- * omit({ a: 1, b: 2, c: 3 }, ['b']) // { a: 1, c: 3 }
- * omit({ a: 1, b: 2 }, [])           // { a: 1, b: 2 }
+ * objOmit({ a: 1, b: 2, c: 3 }, ['b']) // { a: 1, c: 3 }
+ * objOmit({ a: 1, b: 2 }, [])           // { a: 1, b: 2 }
  */
-export function omit<T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
+export function objOmit<T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
 	const keySet = new Set(keys as string[]);
 	const result = {} as Record<string, any>;
 	const ownKeys = Object.keys(obj);
@@ -188,10 +182,10 @@ export function omit<T extends Record<string, any>, K extends keyof T>(obj: T, k
  * @param defaultValue - 当路径不存在时的默认返回值
  * @returns 属性值或默认值
  * @example
- * get({ a: { b: { c: 1 } } }, 'a.b.c') // 1
- * get({ a: 1 }, 'b.c', 'default') // 'default'
+ * objGet({ a: { b: { c: 1 } } }, 'a.b.c') // 1
+ * objGet({ a: 1 }, 'b.c', 'default') // 'default'
  */
-export function get<T = unknown>(obj: unknown, path: string, defaultValue?: T): T | undefined {
+export function objGet<T = unknown>(obj: unknown, path: string, defaultValue?: T): T | undefined {
 	if (obj === null || obj === undefined) return defaultValue;
 
 	const keys = path
@@ -206,30 +200,4 @@ export function get<T = unknown>(obj: unknown, path: string, defaultValue?: T): 
 	}
 
 	return (result !== undefined ? result : defaultValue) as T | undefined;
-}
-
-/**
- * 深度合并多个对象，后一个对象的属性会覆盖前一个对象
- * @param sources - 需要合并的对象数组
- * @returns 深度合并后的新对象
- * @example
- * deepMerge({ a: { b: 1 } }, { a: { c: 2 } }) // { a: { b: 1, c: 2 } }
- */
-export function deepMerge<T extends Record<string, any>>(...sources: T[]): T {
-	const result: Record<string, any> = {};
-
-	for (const source of sources) {
-		if (!source || typeof source !== 'object') continue;
-
-		for (const key of Object.keys(source)) {
-			const val = source[key];
-			if (val && typeof val === 'object' && !Array.isArray(val) && !(val instanceof Date) && !(val instanceof RegExp)) {
-				result[key] = deepMerge((result[key] || {}) as Record<string, any>, val as Record<string, any>);
-			} else {
-				result[key] = val;
-			}
-		}
-	}
-
-	return result as T;
 }

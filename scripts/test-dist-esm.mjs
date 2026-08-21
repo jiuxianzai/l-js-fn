@@ -22,18 +22,21 @@ assert.ok(typeof main.isEmpty === 'function', 'isEmpty');
 assert.ok(typeof main.isArray === 'function', 'isArray');
 assert.ok(typeof main.isEmail === 'function', 'isEmail');
 assert.ok(typeof main.arrayUnique === 'function', 'arrayUnique');
-assert.ok(typeof main.flatten === 'function', 'flatten');
+assert.ok(typeof main.arrayFlatten === 'function', 'arrayFlatten');
+assert.ok(typeof main.arrayRemove === 'function', 'arrayRemove');
 assert.ok(typeof main.desensitization === 'function', 'desensitization');
 assert.ok(typeof main.trim === 'function', 'trim');
 assert.ok(typeof main.getUuid === 'function', 'getUuid');
 assert.ok(typeof main.objMerge === 'function', 'objMerge');
-assert.ok(typeof main.deepMerge === 'function', 'deepMerge');
+assert.ok(typeof main.objGet === 'function', 'objGet');
+assert.strictEqual(main.objMerge({ a: { b: 1 } }, { a: { c: 2 } }).a.b, 1, 'objMerge 深合并');
 assert.ok(typeof main.getType === 'function', 'getType');
 assert.ok(typeof main.deepClone === 'function', 'deepClone');
 assert.ok(typeof main.once === 'function', 'once');
 assert.ok(typeof main.dateFormat === 'function', 'dateFormat');
 assert.ok(typeof main.formatNumber === 'function', 'formatNumber');
-assert.ok(main.Result.ok('data').success === true, 'Result.ok');
+// v4 破坏性变更：Result 已移除
+assert.strictEqual(main.Result, undefined, 'Result 已移除');
 
 // 主包全量平铺 —— 子模块函数也应可直接从主包导入
 const flattened = [

@@ -1,4 +1,3 @@
-import { Result } from '@/utils/Result.ts';
 import { escapeHTML } from '@/encode/index.ts';
 
 /**
@@ -286,22 +285,22 @@ export const getDevice = ():
  * @param input 图片 URL 或 File/Blob
  * @param type 输出类型，默认 image/png
  * @param quality 压缩质量 (0-1，仅对 jpeg/webp 有效)
- * @returns {Promise<Result<string>>} Base64 数据字符串
+ * @returns {Promise<string>} Base64 数据字符串，失败时 reject
  */
 export function imageToBase64(
 	input: File | Blob | string | null,
 	type: 'image/jpeg' | 'image/png' | 'image/webp' = 'image/png',
 	quality: number = 1
-): Promise<Result<string>> {
+): Promise<string> {
 	return new Promise((resolve, reject) => {
 		if (!input) {
-			resolve(Result.fail('输入不能为空'));
+			reject(new Error('输入不能为空'));
 			return;
 		}
 		if (input instanceof File || input instanceof Blob) {
 			const reader = new FileReader();
-			reader.onload = () => resolve(Result.ok(typeof reader.result === 'string' ? reader.result : ''));
-			reader.onerror = () => reject(Result.fail('读取文件失败'));
+			reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '');
+			reader.onerror = () => reject(new Error('读取文件失败'));
 			reader.readAsDataURL(input);
 			return;
 		}
@@ -315,17 +314,17 @@ export function imageToBase64(
 			canvas.height = img.height;
 			const ctx = canvas.getContext('2d');
 			if (!ctx) {
-				reject(Result.fail('Canvas 不可用'));
+				reject(new Error('Canvas 不可用'));
 				return;
 			}
 			try {
 				ctx.drawImage(img, 0, 0);
-				resolve(Result.ok(canvas.toDataURL(type, quality)));
+				resolve(canvas.toDataURL(type, quality));
 			} catch {
-				reject(Result.fail('图片跨域或被污染，无法导出 Base64'));
+				reject(new Error('图片跨域或被污染，无法导出 Base64'));
 			}
 		};
-		img.onerror = () => reject(Result.fail('图片加载失败'));
+		img.onerror = () => reject(new Error('图片加载失败'));
 		return;
 	});
 }

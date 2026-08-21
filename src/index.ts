@@ -7,8 +7,6 @@ export * from '@/libs/string-kit.ts';
 export * from '@/libs/date-kit.ts';
 export * from '@/libs/number-kit.ts';
 export * from '@/libs/color.ts';
-// 类
-export * from '@/utils/Result.ts';
 // 子模块全量平铺（子路径 l-js-fn/<module> 仍保留，向后兼容）
 export { isImage } from '@/libs/is-kit.ts'; // 显式导出，消除与 file 模块 star 导出的歧义
 export * from '@/bom/index.ts';

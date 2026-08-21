@@ -50,12 +50,12 @@ describe('dist 子模块 - encode', () => {
 		expect(encode.urlDecode('Hello%20World')).toBe('Hello World');
 	});
 
-	it('querystringify', () => {
-		expect(encode.querystringify({ name: 'John', age: 20 })).toBe('name=John&age=20');
+	it('v4 破坏性变更：querystringify 已移除（统一到 transUrlParams）', () => {
+		expect(encode.querystringify).toBeUndefined();
 	});
 
-	it('parseQueryString', () => {
-		expect(encode.parseQueryString('name=John&age=20')).toEqual({ name: 'John', age: '20' });
+	it('v4 破坏性变更：parseQueryString 已移除（统一到 getUrlParams）', () => {
+		expect(encode.parseQueryString).toBeUndefined();
 	});
 });
 

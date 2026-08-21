@@ -78,12 +78,12 @@ function integerToChinese(sections: string[]): string {
 /**
  * 数字格式化
  * @param value - 数字或数字字符串
- * @param options - 可选，布尔值时等同于 useUnit 参数（兼容旧版），对象时可配置 type/decimals/useUnit
+ * @param options - 配置项，可配置 type/decimals/useUnit
  * @returns 格式化后的字符串
  * @example
- * // 基本用法（兼容旧版）
+ * // 基本用法
  * formatNumber(1234567)                          // "1,234,567"
- * formatNumber(1234567, true)                    // "123.47万"
+ * formatNumber(1234567, { useUnit: true })       // "123.47万"
  *
  * // 控制小数位
  * formatNumber(1234567, { decimals: 2 })         // "1,234,567.00"
@@ -100,36 +100,12 @@ function integerToChinese(sections: string[]): string {
  * // 中文单位 + 小数
  * formatNumber(12345, { useUnit: true, decimals: 2 })  // "1.23万"
  */
-export const formatNumber = (value: string | number, options: boolean | FormatNumberOptions = false): string => {
+export const formatNumber = (value: string | number, options: FormatNumberOptions = {}): string => {
 	/** 提取符号和绝对值 */
 	const signAndAbs = (num: number, negSign: string = '-') => ({
 		sign: num < 0 ? negSign : '',
 		abs: Math.abs(num),
 	});
-
-	// 兼容旧版 boolean 参数
-	if (typeof options === 'boolean') {
-		const useUnit = options;
-		if (!isFinite(value as number)) {
-			if (value === Infinity || value === -Infinity) return String(value);
-			return String(value);
-		}
-		const num = typeof value === 'string' ? parseFloat(value) : value;
-		if (isNaN(num)) return String(value);
-		if (useUnit) {
-			const { abs, sign } = signAndAbs(num);
-			if (abs >= 1e8) {
-				const raw = Math.round((abs * 100) / 1e8) / 100;
-				return `${sign}${raw.toFixed(2).replace(/\.00$/, '')}亿`;
-			}
-			if (abs >= 1e4) {
-				const raw = Math.round((abs * 100) / 1e4) / 100;
-				return `${sign}${raw.toFixed(2).replace(/\.00$/, '')}万`;
-			}
-			return String(num);
-		}
-		return num.toLocaleString('en-US');
-	}
 
 	const { type = 'comma', decimals, useUnit } = options;
 
@@ -190,6 +166,9 @@ export const formatNumber = (value: string | number, options: boolean | FormatNu
 			const raw = Math.round((abs * factor) / 1e4) / factor;
 			return `${sign}${raw.toFixed(d).replace(new RegExp(`\\.${'0'.repeat(d)}$`), '')}万`;
 		}
+		// 小于 1 万：按原值输出（不追加单位，也不加千分位）
+		if (decimals !== undefined) return `${sign}${num.toFixed(decimals)}`;
+		return String(num);
 	}
 
 	// number / comma 模式
@@ -233,21 +212,23 @@ export function toPercent(value: string | number | null | undefined, decimals: n
  * 生成一个随机数（支持负数、整数或浮点数）
  * @param min - 最小值（必填参数），可以是负数。
  *              如果只传入一个参数，则该值会作为最大值，最小值默认为 0。
- * @param max - 最大值（可选参数），必须大于 0。
+ * @param max - 最大值（可选参数）。
  *              如果不传，则函数会将 min 视为最大值，最小值默认是 0。
+ *              若 min > max 会自动交换边界。
  * @param options - 配置项
  * @param options.float - 是否返回浮点数，默认为 false（返回整数）
  * @returns 在指定范围内的随机数
  */
 export function random(min: number, max?: number, options: { float?: boolean } = {}): number {
 	if (max === undefined) {
-		if (min <= 0) throw new Error('当只有一个参数时，最大值必须大于 0');
+		// 只传入一个参数时，该值作为最大值，最小值默认为 0（若为负数会自动交换）
 		max = min;
 		min = 0;
 	}
 
 	if (min > max) {
-		throw new Error('最小值不能大于最大值');
+		// 自动交换边界，避免抛错
+		[min, max] = [max, min];
 	}
 
 	const rand = Math.random() * (max - min) + min;
