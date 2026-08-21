@@ -7,7 +7,7 @@ sidebar: false
 各版本发版内容，仅展示与使用相关的变更。
 
 <details open class="cl-current">
-<summary><span class="cl-ver"><code>v4.0.0</code></span><span class="cl-date">待发布</span><span class="cl-current-tag">最新版本</span></summary>
+<summary><span class="cl-ver"><code>v4.0.0</code></span><span class="cl-date">2026-08-21</span><span class="cl-current-tag">最新版本</span></summary>
 
 <p class="cl-cat cl-cat-break"><strong>破坏性变更</strong></p>
 
@@ -24,7 +24,7 @@ sidebar: false
 
 </details>
 
-<details open class="cl-current">
+<details open>
 <summary><span class="cl-ver"><code>v3.19.0</code></span><span class="cl-date">2026-08-20</span></summary>
 
 <p class="cl-cat cl-cat-add"><strong>新增</strong></p>
