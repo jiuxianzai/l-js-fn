@@ -105,7 +105,7 @@ export default defineConfig({
 		logo: '/logo.svg',
 		nav: [
 			{ component: 'VersionSelect' },
-			{ text: '指南', link: '/guide/is-kit' },
+			{ text: 'API文档', link: '/guide/is-kit' },
 			{ text: '迁移指南', link: '/guide/breaking-changes' },
 			{ text: '更新日志', link: '/guide/changelog' },
 		],
