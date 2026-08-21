@@ -1,4 +1,60 @@
 import { defineConfig } from 'vitepress'
+import { versions } from './versions'
+
+function buildSidebar(prefix: string) {
+	const p = (link: string) => (prefix ? `${prefix}${link}` : link)
+	return [
+		{
+			text: '主包工具函数',
+			items: [
+				{ text: '类型判断', link: p('/guide/is-kit') },
+				{ text: '数组操作', link: p('/guide/array-kit') },
+				{ text: '字符串处理', link: p('/guide/string-kit') },
+				{ text: '对象操作', link: p('/guide/object-kit') },
+				{ text: '通用工具', link: p('/guide/common') },
+				{ text: '日期处理', link: p('/guide/date-kit') },
+				{ text: '数字处理', link: p('/guide/number-kit') },
+				{ text: 'URL 处理', link: p('/guide/url-kit') },
+				{ text: '颜色处理', link: p('/guide/color') },
+				{ text: '结果类', link: p('/guide/result') },
+			],
+		},
+		{
+			text: '子模块',
+			items: [
+				{ text: '浏览器对象模型', link: p('/guide/bom') },
+				{ text: 'WebSocket', link: p('/guide/ws') },
+				{ text: '本地存储', link: p('/guide/storage') },
+				{ text: '轮询工具', link: p('/guide/polling') },
+				{ text: 'IPC 通信', link: p('/guide/ipc') },
+				{ text: '正则常量', link: p('/guide/regex') },
+				{ text: '配置常量', link: p('/guide/config') },
+				{ text: '编码解码', link: p('/guide/encode') },
+				{ text: '事件总线', link: p('/guide/event-bus') },
+				{ text: '文件处理', link: p('/guide/file') },
+				{ text: '加密模块', link: p('/guide/crypto') },
+			],
+		},
+		{
+			text: 'uniapp 小程序工具集',
+			items: [
+				{ text: '基础功能 (API)', link: p('/guide/uniapp') },
+				{ text: '文件系统 (File)', link: p('/guide/uniapp-file') },
+				{ text: '剪贴板 (Clipboard)', link: p('/guide/uniapp-clipboard') },
+				{ text: '设备适配 (Device)', link: p('/guide/uniapp-device') },
+				{ text: '网络状态 (Network)', link: p('/guide/uniapp-network') },
+				{ text: '网络请求 (Request)', link: p('/guide/uniapp-request') },
+			],
+		},
+		{
+			text: '版本迁移',
+			items: [
+				{ text: '迁移指南', link: p('/guide/breaking-changes') },
+				{ text: '更新日志', link: p('/guide/changelog') },
+			],
+		},
+	]
+}
 
 export default defineConfig({
 	lang: 'zh-CN',
@@ -31,55 +87,30 @@ export default defineConfig({
 	themeConfig: {
 		logo: '/logo.svg',
 		nav: [
+			{ component: 'VersionSelect' },
 			{ text: '指南', link: '/guide/is-kit' },
-			{ text: '更新日志', link: '/guide/changelog' },
+			{ text: '迁移指南', link: '/guide/breaking-changes' },
 			{ text: 'GitHub', link: 'https://github.com/jiuxianzai/l-js-fn' },
 		],
 
-		sidebar: [
-			{
-				text: '主包工具函数',
-				items: [
-					{ text: '类型判断', link: '/guide/is-kit' },
-					{ text: '数组操作', link: '/guide/array-kit' },
-					{ text: '字符串处理', link: '/guide/string-kit' },
-					{ text: '对象操作', link: '/guide/object-kit' },
-					{ text: '通用工具', link: '/guide/common' },
-					{ text: '日期处理', link: '/guide/date-kit' },
-					{ text: '数字处理', link: '/guide/number-kit' },
-					{ text: 'URL 处理', link: '/guide/url-kit' },
-					{ text: '颜色处理', link: '/guide/color' },
-					{ text: '结果类', link: '/guide/result' },
-				],
-			},
-			{
-				text: '子模块',
-				items: [
-					{ text: '浏览器对象模型', link: '/guide/bom' },
-					{ text: 'WebSocket', link: '/guide/ws' },
-					{ text: '本地存储', link: '/guide/storage' },
-					{ text: '轮询工具', link: '/guide/polling' },
-					{ text: 'IPC 通信', link: '/guide/ipc' },
-					{ text: '正则常量', link: '/guide/regex' },
-					{ text: '配置常量', link: '/guide/config' },
-					{ text: '编码解码', link: '/guide/encode' },
-					{ text: '事件总线', link: '/guide/event-bus' },
-					{ text: '文件处理', link: '/guide/file' },
-					{ text: '加密模块', link: '/guide/crypto' },
-				],
-			},
-			{
-				text: 'uniapp 小程序工具集',
-				items: [
-					{ text: '基础功能 (API)', link: '/guide/uniapp' },
-					{ text: '文件系统 (File)', link: '/guide/uniapp-file' },
-					{ text: '剪贴板 (Clipboard)', link: '/guide/uniapp-clipboard' },
-					{ text: '设备适配 (Device)', link: '/guide/uniapp-device' },
-					{ text: '网络状态 (Network)', link: '/guide/uniapp-network' },
-					{ text: '网络请求 (Request)', link: '/guide/uniapp-request' },
-				],
-			},
-		],
+		sidebar: Object.fromEntries(
+			versions.map((v) => {
+				const prefix = v.path ? `/${v.path}` : ''
+				const dir = v.path ? `/${v.path}/guide/` : '/guide/'
+				if (v.minimal) {
+					return [
+						dir,
+						[
+							{
+								text: `${v.text} 归档`,
+								items: [{ text: '版本概览', link: `${prefix}/guide/` }],
+							},
+						],
+					]
+				}
+				return [dir, { items: buildSidebar(''), base: prefix }]
+			}),
+		),
 
 		editLink: {
 			pattern: 'https://github.com/jiuxianzai/l-js-fn/edit/main/docs/:path',
